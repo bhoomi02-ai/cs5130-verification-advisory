@@ -1,0 +1,19 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Secrets
+.env
+
+# Tooling
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
