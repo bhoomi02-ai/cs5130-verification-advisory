@@ -1,6 +1,6 @@
 # CS 5130 Verification Strategies for Multi-Agent Financial Advisory
 
-Northeastern CS 5130, Fall 2026. Theme 6 (Agentic Systems), Track A (Verification).
+Northeastern CS 5130, Fall 2026. Theme 6 (Agentic Systems).
 
 ## Research question
 
@@ -20,7 +20,7 @@ deterministic constraint checker that is never shown to any agent.
 
 ## Team
 
-- Bhoomika
+- Bhoomika Monthy Rajashekar
 - Faisal Alsabih
 - Tejas Vanjari
 - Dhanya Kini Bailoor
