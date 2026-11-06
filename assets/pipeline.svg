@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" role="img" aria-label="Pipeline: generator, advisor, four verification conditions, final recommendation, hidden checker, logged calls">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9b948a"/></marker><marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#c8102e"/></marker></defs>
+<rect x="1" y="1" width="1198" height="598" rx="22" fill="#fbfaf8" stroke="#e4dfd7" stroke-width="2"/>
+<text x="40" y="54" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#1b1b1b">How a run works</text>
+<text x="40" y="82" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="15" fill="#5b5b5b">Same scenario, same advisor. Only the verification condition changes.</text>
+<circle cx="862" cy="50" r="6" fill="#d9a520"/><text x="876" y="55" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#5b5b5b">one scenario run</text>
+<rect x="992" y="42" width="30" height="16" rx="8" fill="#f2c94c" fill-opacity="0.25" stroke="#d9a520" stroke-width="2"/><text x="1030" y="55" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#5b5b5b">active condition</text>
+<g fill="none" stroke="#b9b2a8" stroke-width="2">
+<path d="M240 235 H296" marker-end="url(#ah)"/>
+<path d="M470 235 C505 235 505 140 536 140" marker-end="url(#ah)"/>
+<path d="M840 140 C870 140 870 235 896 235" marker-end="url(#ah)"/>
+<path d="M470 235 C505 235 505 200 536 200" marker-end="url(#ah)"/>
+<path d="M840 200 C870 200 870 235 896 235" marker-end="url(#ah)"/>
+<path d="M470 235 C505 235 505 260 536 260" marker-end="url(#ah)"/>
+<path d="M840 260 C870 260 870 235 896 235" marker-end="url(#ah)"/>
+<path d="M470 235 C505 235 505 320 536 320" marker-end="url(#ah)"/>
+<path d="M840 320 C870 320 870 235 896 235" marker-end="url(#ah)"/>
+<path d="M1030 235 H1066" marker-end="url(#ah)"/><path d="M1120 320 V356" marker-end="url(#ah)"/></g>
+<rect x="40" y="170" width="200" height="130" rx="14" fill="#ffffff" stroke="#d9d3ca" stroke-width="1.5"/>
+<text x="60" y="204" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#1b1b1b">Scenario generator</text>
+<text x="60" y="230" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#c8102e">generator.py</text>
+<text x="60" y="252" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" fill="#5b5b5b">data/scenarios/</text>
+<text x="60" y="280" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#5b5b5b">synthetic, known answers</text>
+<rect x="300" y="170" width="170" height="130" rx="14" fill="#15233d"/>
+<text x="385" y="220" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="19" font-weight="800" fill="#ffffff">Advisor</text>
+<text x="385" y="246" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" fill="#f2c94c">conditions.py</text>
+<text x="385" y="272" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" fill="#a3b1c8">→ Recommendation</text>
+<rect x="540" y="116" width="300" height="48" rx="24" fill="#ffffff" stroke="#d9d3ca" stroke-width="1.5"/>
+<rect x="540" y="116" width="300" height="48" rx="24" fill="#f2c94c" fill-opacity="0.22" stroke="#d9a520" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.262;0.292;0.511;0.561;1" dur="6.0s" begin="0.00s" repeatCount="indefinite"/></rect>
+<text x="564" y="145" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="14" fill="#5b5b5b"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#c8102e">none</tspan>  output is final</text>
+<rect x="540" y="176" width="300" height="48" rx="24" fill="#ffffff" stroke="#d9d3ca" stroke-width="1.5"/>
+<rect x="540" y="176" width="300" height="48" rx="24" fill="#f2c94c" fill-opacity="0.22" stroke="#d9a520" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.253;0.283;0.527;0.577;1" dur="6.0s" begin="1.50s" repeatCount="indefinite"/></rect>
+<text x="564" y="205" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="14" fill="#5b5b5b"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#c8102e">self</tspan>  reviews and revises itself</text>
+<rect x="540" y="236" width="300" height="48" rx="24" fill="#ffffff" stroke="#d9d3ca" stroke-width="1.5"/>
+<rect x="540" y="236" width="300" height="48" rx="24" fill="#f2c94c" fill-opacity="0.22" stroke="#d9a520" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.252;0.282;0.529;0.579;1" dur="6.0s" begin="3.00s" repeatCount="indefinite"/></rect>
+<text x="564" y="265" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="14" fill="#5b5b5b"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#c8102e">peer</tspan>  second advisor critiques</text>
+<rect x="540" y="296" width="300" height="48" rx="24" fill="#ffffff" stroke="#d9d3ca" stroke-width="1.5"/>
+<rect x="540" y="296" width="300" height="48" rx="24" fill="#f2c94c" fill-opacity="0.22" stroke="#d9a520" stroke-width="2.5" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.261;0.291;0.513;0.563;1" dur="6.0s" begin="4.50s" repeatCount="indefinite"/></rect>
+<text x="564" y="325" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="14" fill="#5b5b5b"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#c8102e">dedicated</tspan>  verifier agent checks</text>
+<rect x="900" y="170" width="130" height="130" rx="14" fill="#ffffff" stroke="#d9d3ca" stroke-width="1.5"/>
+<text x="965" y="218" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1b1b1b">Final</text>
+<text x="965" y="238" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1b1b1b">answer</text>
+<text x="965" y="266" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" fill="#5b5b5b">Trade · Claim</text>
+<rect x="1070" y="150" width="100" height="170" rx="14" fill="#fff4f5" stroke="#c8102e" stroke-width="2" stroke-dasharray="6 5"><animate attributeName="stroke-width" values="2;4;2" dur="1.5s" begin="4.50s" repeatCount="indefinite"/></rect>
+<path d="M1111 196 V188 a9 9 0 0 1 18 0 V196" fill="none" stroke="#c8102e" stroke-width="3.5"/><rect x="1107" y="195" width="26" height="19" rx="3" fill="#c8102e"/>
+<text x="1120" y="242" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#c8102e">checker.py</text>
+<text x="1120" y="264" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#5b5b5b">hidden from</text>
+<text x="1120" y="281" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#5b5b5b">every agent</text>
+<rect x="1050" y="360" width="140" height="64" rx="12" fill="#15233d"/>
+<text x="1120" y="388" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#ffffff">Metrics</text>
+<text x="1120" y="408" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12" fill="#a3b1c8">accuracy · cost</text>
+<rect x="300" y="440" width="730" height="56" rx="12" fill="#f3efe9" stroke="#e4dfd7"/>
+<text x="322" y="474" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#1b1b1b">llm.py · call_model()</text>
+<text x="820" y="474" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13.5" font-weight="700" fill="#c8102e">results/runs.jsonl</text>
+<rect x="560" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="0.0s" repeatCount="indefinite"/></rect>
+<rect x="584" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="0.3s" repeatCount="indefinite"/></rect>
+<rect x="608" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="0.6s" repeatCount="indefinite"/></rect>
+<rect x="632" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="0.9s" repeatCount="indefinite"/></rect>
+<rect x="656" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="1.2s" repeatCount="indefinite"/></rect>
+<rect x="680" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="1.5s" repeatCount="indefinite"/></rect>
+<rect x="704" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="1.8s" repeatCount="indefinite"/></rect>
+<rect x="728" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="2.1s" repeatCount="indefinite"/></rect>
+<rect x="752" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="2.4s" repeatCount="indefinite"/></rect>
+<rect x="776" y="458" width="16" height="22" rx="3" fill="#d9a520" opacity="0.15"><animate attributeName="opacity" values="0.15;0.9;0.15;0.15" keyTimes="0;0.08;0.3;1" dur="3s" begin="2.7s" repeatCount="indefinite"/></rect>
+<text x="808" y="474" text-anchor="end" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="16" fill="#9b948a">→</text>
+<path d="M385 300 V438" fill="none" stroke="#9b948a" stroke-width="1.5" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.8s" repeatCount="indefinite"/></path>
+<path d="M690 344 V438" fill="none" stroke="#9b948a" stroke-width="1.5" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.8s" repeatCount="indefinite"/></path>
+<text x="398" y="400" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#9b948a">every model call is logged</text>
+<path d="M140 300 V540 H1045 V302 H1066" fill="none" stroke="#c8102e" stroke-width="1.8" stroke-dasharray="7 6" marker-end="url(#ahr)"><animate attributeName="stroke-dashoffset" from="26" to="0" dur="1.2s" repeatCount="indefinite"/></path>
+<text x="160" y="568" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13.5" fill="#c8102e">ground truth goes straight from the generator to the checker, never through an agent</text>
+<circle r="7" fill="#d9a520" stroke="#ffffff" stroke-width="2" opacity="0"><animateMotion path="M240 235 H470 C505 235 505 140 540 140 H840 C870 140 870 235 900 235 H1070" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="6.0s" begin="0.00s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="6.0s" begin="0.00s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#d9a520" stroke="#ffffff" stroke-width="2" opacity="0"><animateMotion path="M240 235 H470 C505 235 505 200 540 200 H840 C870 200 870 235 900 235 H1070" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="6.0s" begin="1.50s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="6.0s" begin="1.50s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#d9a520" stroke="#ffffff" stroke-width="2" opacity="0"><animateMotion path="M240 235 H470 C505 235 505 260 540 260 H840 C870 260 870 235 900 235 H1070" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="6.0s" begin="3.00s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="6.0s" begin="3.00s" repeatCount="indefinite"/></circle>
+<circle r="7" fill="#d9a520" stroke="#ffffff" stroke-width="2" opacity="0"><animateMotion path="M240 235 H470 C505 235 505 320 540 320 H840 C870 320 870 235 900 235 H1070" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="6.0s" begin="4.50s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="6.0s" begin="4.50s" repeatCount="indefinite"/></circle>
+</svg>
