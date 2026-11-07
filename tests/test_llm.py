@@ -43,8 +43,12 @@ def fake(monkeypatch):
 
 
 def test_compute_cost_flash():
-    # 1M in at $0.30 + 1M out at $2.50
-    assert llm.compute_cost("gemini-2.5-flash", 1_000_000, 1_000_000) == pytest.approx(2.80)
+    # 1M in at $0.25 + 1M out at $1.50
+    assert llm.compute_cost("gemini-3.1-flash-lite", 1_000_000, 1_000_000) == pytest.approx(1.75)
+
+
+def test_compute_cost_gemma_is_free():
+    assert llm.compute_cost("gemma-4-26b-a4b-it", 5000, 5000) == 0.0
 
 
 def test_compute_cost_unknown_model_raises():
@@ -76,17 +80,17 @@ def test_to_gemini_rejects_bad_input():
 def test_gemini_call_counts_thinking_as_output(fake):
     client = fake(_response(prompt=1000, candidates=200, thoughts=300))
     text, tin, tout, cost = llm._provider_call(
-        "gemini-2.5-flash", [{"role": "user", "content": "hi"}]
+        "gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}]
     )
     assert (text, tin, tout) == ("ok", 1000, 500)
-    assert cost == pytest.approx((1000 * 0.30 + 500 * 2.50) / 1e6)
-    assert client.calls[0]["model"] == "gemini-2.5-flash"
+    assert cost == pytest.approx((1000 * 0.25 + 500 * 1.50) / 1e6)
+    assert client.calls[0]["model"] == "gemini-3.1-flash-lite"
     assert client.calls[0]["config"] is None
 
 
 def test_gemini_call_handles_missing_usage_fields(fake):
     fake(_response(text=None, prompt=None, candidates=None, thoughts=None))
-    assert llm._provider_call("gemini-2.5-flash", [{"role": "user", "content": "hi"}]) == (
+    assert llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}]) == (
         "",
         0,
         0,
@@ -96,7 +100,7 @@ def test_gemini_call_handles_missing_usage_fields(fake):
 
 def test_gemini_call_retries_on_rate_limit(fake):
     client = fake(errors.APIError(429, {}), _response())
-    text, *_ = llm._provider_call("gemini-2.5-flash", [{"role": "user", "content": "hi"}])
+    text, *_ = llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
     assert text == "ok"
     assert len(client.calls) == 2
 
@@ -104,7 +108,7 @@ def test_gemini_call_retries_on_rate_limit(fake):
 def test_gemini_call_does_not_retry_client_errors(fake):
     client = fake(errors.APIError(400, {}), _response())
     with pytest.raises(errors.APIError):
-        llm._provider_call("gemini-2.5-flash", [{"role": "user", "content": "hi"}])
+        llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
     assert len(client.calls) == 1
 
 
@@ -121,7 +125,7 @@ def test_call_model_logs_record(fake, tmp_path, monkeypatch):
         task_id="S01",
         condition="none",
         agent="advisor",
-        model="gemini-2.5-flash",
+        model="gemini-3.1-flash-lite",
         messages=[{"role": "system", "content": "sys"}, {"role": "user", "content": "hi"}],
     )
     assert out == "answer"
@@ -130,7 +134,7 @@ def test_call_model_logs_record(fake, tmp_path, monkeypatch):
         "S01",
         "none",
         "advisor",
-        "gemini-2.5-flash",
+        "gemini-3.1-flash-lite",
     )
     assert rec.tokens_in == 100 and rec.tokens_out == 50
     assert rec.raw_output == "answer"
