@@ -13,6 +13,7 @@ dependencies = [
     "numpy",
     "numpy-financial",
     "pandas",
+    "scikit-learn",
     "matplotlib",
 ]
 
