@@ -31,12 +31,18 @@ class RunRecord:
 
 
 # USD per 1M tokens (input, output), paid tier, standard (non-batch), text.
-# Source: https://ai.google.dev/gemini-api/docs/pricing, checked 2026-11-07.
+# Source: https://aistudio.google.com/docs/pricing, checked 2026-11-07.
 # Output price covers thinking tokens. Add a model here before using it, so
-# cost is never silently logged as zero.
+# cost is never silently logged as zero by accident.
+# Gemini 2.5 Flash / Flash-Lite are closed to new API users, so not listed.
 PRICING: dict[str, tuple[float, float]] = {
-    "gemini-2.5-flash": (0.30, 2.50),
-    "gemini-2.5-flash-lite": (0.10, 0.40),
+    "gemini-3.1-flash-lite": (0.25, 1.50),
+    "gemini-3.5-flash-lite": (0.30, 2.50),
+    "gemini-3.8-flash": (0.75, 3.75),  # rises to (1.50, 7.50) on 2027-01-01
+    # Gemma 4 is free tier only (no paid tier), so its cost really is zero.
+    # Used for the cross-family verifier ablation.
+    "gemma-4-26b-a4b-it": (0.0, 0.0),
+    "gemma-4-31b-it": (0.0, 0.0),
 }
 
 _MAX_RETRIES = 5
@@ -115,7 +121,7 @@ def _gemini_call(model: str, messages: list[dict]) -> tuple[str, int, int, float
 
 def _provider_call(model: str, messages: list[dict]) -> tuple[str, int, int, float]:
     """Return (text, tokens_in, tokens_out, cost_usd), dispatching on `model`."""
-    if model.startswith("gemini-"):
+    if model.startswith(("gemini-", "gemma-")):
         return _gemini_call(model, messages)
     raise ValueError(f"No provider configured for model {model!r}")
 
