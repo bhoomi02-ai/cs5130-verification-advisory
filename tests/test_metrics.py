@@ -62,7 +62,7 @@ def test_verifier_that_accepts_everything():
     # false-alarm rate = FP / (FP + TN) = 0 / 2 = 0
     # precision = TP / (TP + FP) = 0 / 0 → None
     # abstention rate = 0 / 4 = 0
-    # The predicted-positive column is all zeros, so matthews_corrcoef is 0.
+    # TP + FP = 0, so the MCC denominator is 0 and MCC is None.
     verdicts = ["accept", "accept", "accept", "accept"]
     initial = [False, False, True, True]
     metrics = verifier_metrics(verdicts, initial)
@@ -75,7 +75,7 @@ def test_verifier_that_accepts_everything():
     assert metrics["false_alarm_rate"] == 0
     assert metrics["precision"] is None
     assert metrics["abstention_rate"] == 0
-    assert metrics["mcc"] == 0
+    assert metrics["mcc"] is None
 
     rows = [
         _run(condition="weakened", task_id="t1", run_number=1, initial_correct=False, verdict="accept"),
@@ -84,7 +84,7 @@ def test_verifier_that_accepts_everything():
         _run(condition="weakened", task_id="t2", run_number=2, initial_correct=True, verdict="accept"),
     ]
     summary = summarize(rows)
-    assert summary.loc["weakened", "mcc"] == 0
+    assert summary.loc["weakened", "mcc"] is None
     assert summary.loc["weakened", "catch_rate"] == 0
 
 
@@ -139,7 +139,7 @@ def test_verifier_that_abstains_on_everything():
     # false-alarm rate = 2 / (2 + 0) = 1
     # abstention rate = 4 / 4 = 1
     # precision = 2 / (2 + 2) = 0.5
-    # TN + FN = 0, so the MCC denominator is 0 and matthews_corrcoef returns 0.
+    # TN + FN = 0, so the MCC denominator is 0 and MCC is None.
     verdicts = ["abstain", "abstain", "abstain", "abstain"]
     initial = [False, False, True, True]
     metrics = verifier_metrics(verdicts, initial)
@@ -152,7 +152,7 @@ def test_verifier_that_abstains_on_everything():
     assert metrics["false_alarm_rate"] == 1
     assert metrics["abstention_rate"] == 1
     assert metrics["precision"] == 0.5
-    assert metrics["mcc"] == 0
+    assert metrics["mcc"] is None
 
     rows = [
         _run(
@@ -168,7 +168,7 @@ def test_verifier_that_abstains_on_everything():
     assert summary.loc["dedicated", "catch_rate"] == 1
     assert summary.loc["dedicated", "false_alarm_rate"] == 1
     assert summary.loc["dedicated", "abstention_rate"] == 1
-    assert summary.loc["dedicated", "mcc"] == 0
+    assert summary.loc["dedicated", "mcc"] is None
 
 
 def test_broken_when_correct_answer_becomes_wrong():
@@ -208,23 +208,28 @@ def test_broken_when_correct_answer_becomes_wrong():
 
 
 def test_extra_cost_against_none():
-    # none:     finals correct, wrong.  costs 3 + 3 = 6.  correct runs = 1.
-    # dedicated: finals correct, correct. costs 5 + 7 = 12. correct runs = 2.
-    #   extra correct = 2 - 1 = 1
-    #   extra cost = (12 - 6) / 1 = 6
-    #   mean cost = 12 / 2 = 6
+    # Compared on per-run means, not totals.
+    # none: 2 runs, one correct. costs 3 and 3.
+    #   mean cost = 3, success rate = 1/2
+    # dedicated: 1 run, correct, cost 9.
+    #   mean cost = 9, success rate = 1
+    #   extra cost = (9 - 3) / (1 - 1/2) = 12
+    #   The old total formula would see 1 correct run against none's 1 and
+    #   return None. The rate gap is what makes this 12.
+    # self: one correct and one wrong, costs 8 and 12. success rate = 1/2,
+    #   not higher than none, so None.
     #   mean tokens_in = (10 + 30) / 2 = 20
     #   mean tokens_out = (1 + 3) / 2 = 2
-    # self: finals correct, wrong. costs 8 + 12 = 20. correct runs = 1.
-    #   extra correct = 1 - 1 = 0 → None (do not divide by zero)
-    # peer: both finals wrong. correct runs = 0.
-    #   extra correct = 0 - 1 = -1 → None (no extra correct answers)
-    # none compared with itself: 1 - 1 = 0 → None
-    # none has no verifier by design, so MCC and n_missing_verdict are None,
-    # not zero and not the count of blank verdicts.
-    assert extra_cost_per_extra_correct(12, 2, 6, 1) == 6
-    assert extra_cost_per_extra_correct(20, 1, 6, 1) is None
-    assert extra_cost_per_extra_correct(9, 0, 6, 1) is None
+    # peer: both wrong. success rate = 0, which is below none, so None.
+    # none against itself has no success-rate gap, so None.
+    # none has no verifier, so MCC and n_missing_verdict are None.
+    assert extra_cost_per_extra_correct(9, 1.0, 3, 0.5) == 12
+    # Equal run counts: per-run means agree with the old total formula.
+    # dedicated: 2 correct runs, costs 5 and 7 → mean 6, success 1
+    # none: mean 3, success 1/2 → (6 - 3) / (1 - 1/2) = 6
+    assert extra_cost_per_extra_correct(6, 1.0, 3, 0.5) == 6
+    assert extra_cost_per_extra_correct(10, 0.5, 3, 0.5) is None
+    assert extra_cost_per_extra_correct(4.5, 0.0, 3, 0.5) is None
 
     rows = [
         _run(condition="none", task_id="n1", final_correct=True, initial_correct=True, verdict=None, cost_usd=3),
@@ -235,36 +240,41 @@ def test_extra_cost_against_none():
             final_correct=True,
             initial_correct=True,
             verdict="accept",
-            cost_usd=5,
+            cost_usd=9,
+        ),
+        _run(
+            condition="self",
+            task_id="s1",
+            final_correct=True,
+            verdict="accept",
+            cost_usd=8,
             tokens_in=10,
             tokens_out=1,
         ),
         _run(
-            condition="dedicated",
-            task_id="d2",
-            final_correct=True,
-            initial_correct=False,
+            condition="self",
+            task_id="s2",
+            final_correct=False,
             verdict="accept",
-            cost_usd=7,
+            cost_usd=12,
             tokens_in=30,
             tokens_out=3,
         ),
-        _run(condition="self", task_id="s1", final_correct=True, verdict="accept", cost_usd=8),
-        _run(condition="self", task_id="s2", final_correct=False, verdict="accept", cost_usd=12),
         _run(condition="peer", task_id="p1", final_correct=False, verdict="accept", cost_usd=4),
         _run(condition="peer", task_id="p2", final_correct=False, verdict="accept", cost_usd=5),
     ]
     summary = summarize(rows)
 
-    assert summary.loc["dedicated", "extra_cost_per_extra_correct"] == 6
-    assert summary.loc["dedicated", "total_cost_usd"] == 12
-    assert summary.loc["dedicated", "mean_cost_usd"] == 6
-    assert summary.loc["dedicated", "mean_tokens_in"] == 20
-    assert summary.loc["dedicated", "mean_tokens_out"] == 2
+    assert summary.loc["dedicated", "extra_cost_per_extra_correct"] == 12
+    assert summary.loc["dedicated", "total_cost_usd"] == 9
+    assert summary.loc["dedicated", "mean_cost_usd"] == 9
     assert summary.loc["self", "extra_cost_per_extra_correct"] is None
+    assert summary.loc["self", "mean_tokens_in"] == 20
+    assert summary.loc["self", "mean_tokens_out"] == 2
     assert summary.loc["peer", "extra_cost_per_extra_correct"] is None
     assert summary.loc["none", "extra_cost_per_extra_correct"] is None
     assert summary.loc["none", "total_cost_usd"] == 6
+    assert summary.loc["none", "mean_cost_usd"] == 3
     assert summary.loc["none", "mcc"] is None
     assert summary.loc["none", "n_missing_verdict"] is None
     assert set(summary.index) == {"none", "dedicated", "self", "peer"}
@@ -402,6 +412,90 @@ def test_bootstrap_shuffled_rows_same_interval():
     assert bootstrap_task_success_ci(["b", "a"], [True, False], seed=0) == bootstrap_task_success_ci(
         ["a", "b"], [False, True], seed=0
     )
+
+
+def test_success_delta_and_net_gain():
+    # 100 runs. 90 start correct, so 10 start wrong.
+    # 5 of the wrong drafts become correct (fixed).
+    # 9 of the correct drafts become wrong (broken).
+    # The other 81 correct drafts stay correct, and the other 5 wrong drafts stay wrong.
+    #
+    # fix rate = 5 / 10 = 0.5
+    # break rate = 9 / 90 = 0.1
+    # net gain = 0.5 - 0.1 = 0.40
+    #
+    # success_delta = (fixed - broken) / n_runs = (5 - 9) / 100 = -0.04
+    # initial success = 90/100 = 0.90
+    # final success = (90 - 9 + 5) / 100 = 0.86
+    # 0.86 - 0.90 = -0.04
+    initial = [True] * 90 + [False] * 10
+    final = [True] * 81 + [False] * 9 + [True] * 5 + [False] * 5
+    metrics = fixed_broken(initial, final)
+
+    assert metrics["fixed"] == 5
+    assert metrics["broken"] == 9
+    assert metrics["net_gain"] == 0.40
+    assert metrics["success_delta"] == -0.04
+
+    rows = [
+        _run(
+            condition="dedicated",
+            task_id=f"t{index}",
+            run_number=1,
+            initial_correct=initial_ok,
+            final_correct=final_ok,
+            verdict="accept",
+        )
+        for index, (initial_ok, final_ok) in enumerate(zip(initial, final))
+    ]
+    summary = summarize(rows)
+    assert summary.loc["dedicated", "net_gain"] == 0.40
+    assert summary.loc["dedicated", "success_delta"] == -0.04
+    assert summary.loc["dedicated", "task_success"] == 0.86
+
+
+def test_mcc_is_zero_when_defined():
+    # One run in each confusion-matrix cell, so every margin is positive.
+    #   wrong, reject   → TP
+    #   wrong, accept   → FN
+    #   correct, reject → FP
+    #   correct, accept → TN
+    # TP = FP = FN = TN = 1
+    # numerator = TP*TN - FP*FN = 1 - 1 = 0
+    # denominator = sqrt((2)*(2)*(2)*(2)) = 4
+    # MCC = 0 / 4 = 0, which is defined, unlike the all-accept and all-abstain cases.
+    verdicts = ["reject", "accept", "reject", "accept"]
+    initial = [False, False, True, True]
+    metrics = verifier_metrics(verdicts, initial, condition="peer")
+
+    assert metrics["tp"] == 1
+    assert metrics["fp"] == 1
+    assert metrics["fn"] == 1
+    assert metrics["tn"] == 1
+    assert metrics["mcc"] == 0
+
+    rows = [
+        _run(condition="peer", task_id=f"t{index}", run_number=1, initial_correct=correct, verdict=verdict)
+        for index, (correct, verdict) in enumerate(zip(initial, verdicts))
+    ]
+    assert summarize(rows).loc["peer", "mcc"] == 0
+
+
+def test_duplicate_run_is_rejected():
+    # The same task, condition, and run number twice is not two runs.
+    duplicate = [
+        _run(task_id="t1", condition="peer", run_number=1),
+        _run(task_id="t1", condition="peer", run_number=1, final_correct=True),
+    ]
+    with pytest.raises(ValueError, match="duplicate"):
+        summarize(duplicate)
+
+    # The same task and run number under two conditions is allowed.
+    both = [
+        _run(task_id="t1", condition="peer", run_number=1),
+        _run(task_id="t1", condition="self", run_number=1),
+    ]
+    assert set(summarize(both).index) == {"peer", "self"}
 
 
 def test_unknown_verdict_is_rejected():
