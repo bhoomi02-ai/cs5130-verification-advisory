@@ -3,7 +3,7 @@
 Examples:
     python scripts/run_pilot.py --scenarios S01             # one quick live call
     python scripts/run_pilot.py                             # both models, all scenarios
-    python scripts/run_pilot.py --models gemini-2.5-flash --repeats 3
+    python scripts/run_pilot.py --models gemini-3.1-flash-lite --repeats 3
 
 Answers go to results/pilot/<model>/, every model call to results/runs.jsonl.
 """
@@ -14,7 +14,7 @@ import argparse
 
 from advisory.pilot import load_scenarios, run_pilot, summarize
 
-DEFAULT_MODELS = ["gemini-2.5-flash", "gemini-2.5-flash-lite"]
+DEFAULT_MODELS = ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
 
 
 def main() -> None:

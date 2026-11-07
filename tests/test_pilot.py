@@ -82,7 +82,7 @@ def test_validate_answer_catches_wrong_scenario_and_type():
 
 def test_run_advisor_valid_first_try(fake_model):
     calls = fake_model(json.dumps(GOOD))
-    r = pilot.run_advisor(SCENARIO, "gemini-2.5-flash")
+    r = pilot.run_advisor(SCENARIO, "gemini-3.1-flash-lite")
     assert r.schema_valid and r.attempts == 1 and r.answer == GOOD
     # The advisor gets the complete scenario JSON, unchanged.
     assert json.loads(calls[0]["messages"][1]["content"]) == SCENARIO
@@ -91,7 +91,7 @@ def test_run_advisor_valid_first_try(fake_model):
 
 def test_run_advisor_retries_once_with_the_problem(fake_model):
     calls = fake_model("Sure! Here is the plan...", json.dumps(GOOD))
-    r = pilot.run_advisor(SCENARIO, "gemini-2.5-flash")
+    r = pilot.run_advisor(SCENARIO, "gemini-3.1-flash-lite")
     assert r.schema_valid and r.attempts == 2
     fix_msg = calls[1]["messages"][-1]["content"]
     assert "not valid JSON" in fix_msg
@@ -99,7 +99,7 @@ def test_run_advisor_retries_once_with_the_problem(fake_model):
 
 def test_run_advisor_gives_up_after_max_attempts(fake_model):
     fake_model("nope", "still nope")
-    r = pilot.run_advisor(SCENARIO, "gemini-2.5-flash")
+    r = pilot.run_advisor(SCENARIO, "gemini-3.1-flash-lite")
     assert not r.schema_valid and r.answer is None and r.attempts == 2
 
 
