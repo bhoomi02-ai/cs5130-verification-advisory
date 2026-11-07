@@ -1,0 +1,393 @@
+{
+  "contract_id": "NEUTRAL_OUTPUT_V1",
+  "visibility": "EVALUATOR_ONLY",
+  "input_boundary": "The complete unfiltered scenario is public. This mapping, checks, ground truth, baseline, historical source files and scorer are private evaluator artifacts; never attach the whole package to an agent.",
+  "observation_key": [
+    "subject",
+    "measure",
+    "stage",
+    "rounding"
+  ],
+  "cash_timing": {
+    "cash_before_trades": "input cash + listed deposits; independent of proposed trade proceeds/costs",
+    "cash_before_withdrawal": "input cash + deposits - signed trade costs, before withdrawals"
+  },
+  "source_policy": "All calculations use the scenario plus the submitted response. No private ground-truth value is substituted for a missing reported numerical answer. Reference conversion is a separate test-only function.",
+  "scenarios": {
+    "S01": {
+      "mode": "TRADE_REPLAY",
+      "required_private_metrics": [
+        "initial_total",
+        "final_total",
+        "cash_before_trades",
+        "final_cash",
+        "allocations"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "final_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "residual cash + sum(final holding values)"
+        },
+        "cash_before_trades": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial cash + listed deposits"
+        },
+        "final_cash": {
+          "source": "REPLAY_DERIVED",
+          "formula": "cash_before_withdrawal - listed withdrawals"
+        },
+        "allocations": {
+          "source": "REPLAY_DERIVED",
+          "formula": "each final class value / final_total; cash included"
+        },
+        "final_values": {
+          "source": "REPLAY_DERIVED",
+          "formula": "(initial quantity + submitted quantity deltas) * current_price"
+        },
+        "final_quantities": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial quantity + submitted quantity deltas"
+        }
+      }
+    },
+    "S02": {
+      "mode": "TRADE_REPLAY",
+      "required_private_metrics": [
+        "initial_total",
+        "final_total",
+        "cash_before_withdrawal",
+        "final_cash",
+        "allocations",
+        "additional_liquidity_needed"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "final_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "residual cash + sum(final holding values)"
+        },
+        "cash_before_withdrawal": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial cash + deposits - sum(quantity_delta * current_price)"
+        },
+        "final_cash": {
+          "source": "REPLAY_DERIVED",
+          "formula": "cash_before_withdrawal - listed withdrawals"
+        },
+        "allocations": {
+          "source": "REPLAY_DERIVED",
+          "formula": "each final class value / final_total; cash included"
+        },
+        "final_values": {
+          "source": "REPLAY_DERIVED",
+          "formula": "(initial quantity + submitted quantity deltas) * current_price"
+        },
+        "final_quantities": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial quantity + submitted quantity deltas"
+        },
+        "additional_liquidity_needed": {
+          "source": "REPLAY_DERIVED",
+          "formula": "max(0, listed withdrawal + minimum reserve - initial cash)"
+        }
+      }
+    },
+    "S03": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "allocations",
+        "violation_count"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "allocations": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "aggregate reported INITIAL holding values by class and reported CASH / reported PORTFOLIO"
+        },
+        "violation_count": {
+          "source": "REPORTED_VIOLATION_LIST",
+          "formula": "len(response.violations)"
+        }
+      }
+    },
+    "S04": {
+      "mode": "OPTION_RESULTS",
+      "required_private_metrics": [
+        "initial_total",
+        "fund_a_final",
+        "fund_b_final",
+        "absolute_difference",
+        "better_fund"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "DERIVED_FROM_REPORTED_VALUES",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "fund_a_final": {
+          "source": "REPORTED_OPTION_VALUES",
+          "formula": "observation(Fund A, VALUE, FINAL, NONE, MONEY)"
+        },
+        "fund_b_final": {
+          "source": "REPORTED_OPTION_VALUES",
+          "formula": "observation(Fund B, VALUE, FINAL, NONE, MONEY)"
+        },
+        "absolute_difference": {
+          "source": "REPORTED_DIFFERENCE",
+          "formula": "observation(OPTIONS, DIFFERENCE, FINAL, NONE, MONEY), checked against the independently input-derived absolute option difference using the original tolerance"
+        },
+        "better_fund": {
+          "source": "REPORTED_SELECTION",
+          "formula": "response.metrics.selection"
+        }
+      }
+    },
+    "S05": {
+      "mode": "TRADE_REPLAY",
+      "required_private_metrics": [
+        "initial_total",
+        "final_total",
+        "cash_before_trades",
+        "final_cash",
+        "allocations",
+        "direct_technology_pct"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "final_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "residual cash + sum(final holding values)"
+        },
+        "cash_before_trades": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial cash + listed deposits"
+        },
+        "final_cash": {
+          "source": "REPLAY_DERIVED",
+          "formula": "cash_before_withdrawal - listed withdrawals"
+        },
+        "allocations": {
+          "source": "REPLAY_DERIVED",
+          "formula": "each final class value / final_total; cash included"
+        },
+        "final_values": {
+          "source": "REPLAY_DERIVED",
+          "formula": "(initial quantity + submitted quantity deltas) * current_price"
+        },
+        "final_quantities": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial quantity + submitted quantity deltas"
+        },
+        "direct_technology_pct": {
+          "source": "REPLAY_DERIVED",
+          "formula": "sum(final values for explicitly listed direct-sector symbols) / final_total"
+        }
+      }
+    },
+    "S06": {
+      "mode": "PROJECTION_RESULTS",
+      "required_private_metrics": [
+        "initial_total",
+        "final_balance",
+        "target_shortfall",
+        "additional_monthly_contribution",
+        "additional_monthly_contribution_cents"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "SCENARIO_INPUT",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "final_balance": {
+          "source": "REPORTED_PROJECTION",
+          "formula": "observation(PORTFOLIO, VALUE, FINAL, NONE, MONEY)"
+        },
+        "target_shortfall": {
+          "source": "REPORTED_DIFFERENCE",
+          "formula": "observation(PORTFOLIO, DIFFERENCE, FINAL, NONE, MONEY), checked against input target minus the independently projected balance using the original tolerance"
+        },
+        "additional_monthly_contribution": {
+          "source": "REPORTED_PROJECTION",
+          "formula": "observation(PORTFOLIO, PAYMENT, FINAL, NONE, MONEY)"
+        },
+        "additional_monthly_contribution_cents": {
+          "source": "REPORTED_PROJECTION",
+          "formula": "observation(PORTFOLIO, PAYMENT, FINAL, UPWARD_CENT, MONEY)"
+        }
+      }
+    },
+    "S07": {
+      "mode": "TRADE_REPLAY",
+      "required_private_metrics": [
+        "initial_total",
+        "final_total",
+        "cash_before_trades",
+        "final_cash",
+        "allocations",
+        "historical_total"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "final_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "residual cash + sum(final holding values)"
+        },
+        "cash_before_trades": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial cash + listed deposits"
+        },
+        "final_cash": {
+          "source": "REPLAY_DERIVED",
+          "formula": "cash_before_withdrawal - listed withdrawals"
+        },
+        "allocations": {
+          "source": "REPLAY_DERIVED",
+          "formula": "each final class value / final_total; cash included"
+        },
+        "final_values": {
+          "source": "REPLAY_DERIVED",
+          "formula": "(initial quantity + submitted quantity deltas) * current_price"
+        },
+        "final_quantities": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial quantity + submitted quantity deltas"
+        },
+        "historical_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "input cash + sum(input quantity * historical_price)"
+        }
+      }
+    },
+    "S08": {
+      "mode": "TRADE_REPLAY",
+      "required_private_metrics": [
+        "initial_total",
+        "final_total",
+        "cash_before_withdrawal",
+        "final_cash",
+        "allocations"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "scenario.portfolio.total_value"
+        },
+        "final_total": {
+          "source": "REPLAY_DERIVED",
+          "formula": "residual cash + sum(final holding values)"
+        },
+        "cash_before_withdrawal": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial cash + deposits - sum(quantity_delta * current_price)"
+        },
+        "final_cash": {
+          "source": "REPLAY_DERIVED",
+          "formula": "cash_before_withdrawal - listed withdrawals"
+        },
+        "allocations": {
+          "source": "REPLAY_DERIVED",
+          "formula": "each final class value / final_total; cash included"
+        },
+        "final_values": {
+          "source": "REPLAY_DERIVED",
+          "formula": "(initial quantity + submitted quantity deltas) * current_price"
+        },
+        "final_quantities": {
+          "source": "REPLAY_DERIVED",
+          "formula": "initial quantity + submitted quantity deltas"
+        }
+      }
+    },
+    "S09": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "locked_stock_value",
+        "minimum_stock_pct",
+        "maximum_target_stock_pct",
+        "stock_value_excess_above_tolerance"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "locked_stock_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of STOCK holdings prohibited from sale)"
+        },
+        "minimum_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "locked_stock_value / reported initial_total"
+        },
+        "maximum_target_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input STOCK target + input allocation tolerance"
+        },
+        "stock_value_excess_above_tolerance": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported locked_stock_value - reported initial_total * maximum_target_stock_pct"
+        }
+      }
+    },
+    "S10": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "restricted_value",
+        "sellable_value",
+        "available_liquidity",
+        "required_liquidity",
+        "liquidity_shortfall",
+        "max_withdrawal_preserving_reserve"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "restricted_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of sale-restricted holdings)"
+        },
+        "sellable_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of other holdings)"
+        },
+        "available_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported CASH + reported sellable values"
+        },
+        "required_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input withdrawal + input minimum cash reserve"
+        },
+        "liquidity_shortfall": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available/required facts yield required_liquidity - available_liquidity"
+        },
+        "max_withdrawal_preserving_reserve": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available_liquidity - input minimum reserve"
+        }
+      }
+    }
+  }
+}
