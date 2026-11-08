@@ -41,8 +41,16 @@ def check(scenario_id: str, response: dict | str) -> dict:
         return _format_failure(schema_id, schema_errors)
 
     replay_spec = _spec(checks, "REPLAY_TRADES")
-    replay_params = replay_spec["params_json"] if replay_spec else {}
-    ledger = _replay(scenario, parsed["trades"], replay_params)
+    if replay_spec:
+        ledger = _replay(scenario, parsed["trades"], replay_spec["params_json"])
+        computed = ledger["metrics"]
+        reported: dict = {}
+        analysis = None
+    else:
+        ledger = None
+        analysis = _independent_analysis(scenario, parsed, mapping)
+        computed = analysis["expected"]
+        reported = analysis["reported"]
     results = []
     restriction_results: list[dict] = []
     for spec in checks:
@@ -50,13 +58,19 @@ def check(scenario_id: str, response: dict | str) -> dict:
         if kind == "SCHEMA":
             results.append(_check_row(spec, True, None, {}))
         elif kind == "REQUIRED_METRICS":
-            results.append(_required_metrics(spec, mapping, ledger))
+            results.append(_required_metrics(spec, mapping, computed, reported))
         elif kind == "STATUS":
             results.append(_status(spec, parsed))
         elif kind == "REPLAY_TRADES":
             rows, mismatches = _judge_replay(scenario, parsed, ledger, spec["params_json"])
             restriction_results = rows
             results.append(_replay_check(spec, ledger, rows, mismatches))
+        elif kind == "INDEPENDENT_RESULTS":
+            results.append(_independent_check(spec, analysis))
+        elif kind == "EXACT_SCOPED_VIOLATIONS":
+            results.append(_exact_violations(spec, scenario, parsed))
+        elif kind == "EMPTY_TRADES":
+            results.append(_empty_trades(spec, parsed))
         else:
             results.append(
                 _check_row(
@@ -101,17 +115,20 @@ def _check_row(spec: dict, passed: bool, observed, details: dict) -> dict:
     }
 
 
-def _required_metrics(spec: dict, mapping: dict, ledger: dict) -> dict:
+def _required_metrics(spec: dict, mapping: dict, computed: dict, reported: dict) -> dict:
     routes = mapping.get("metric_routes", {})
     missing_observation = []
     not_computed = []
     observed = {}
     for key in spec["params_json"].get("keys", []):
-        source = routes.get(key, {}).get("source", "REPLAY_DERIVED")
-        if source.startswith("REPORTED"):
-            missing_observation.append(key)
+        if _uses_report(routes.get(key, {})):
+            value = reported.get(key)
+            if value is None:
+                missing_observation.append(key)
+            else:
+                observed[key] = value
             continue
-        value = ledger["metrics"].get(key)
+        value = computed.get(key)
         if value is None:
             not_computed.append(key)
         else:
@@ -130,6 +147,15 @@ def _required_metrics(spec: dict, mapping: dict, ledger: dict) -> dict:
             "not_computed": not_computed,
         }
     return _check_row(spec, reason is None, observed, details)
+
+
+def _uses_report(route: dict) -> bool:
+    """True when the metric is read from the response rather than the scenario."""
+    source = str(route.get("source", ""))
+    if not source.startswith("REPORTED"):
+        return False
+    formula = str(route.get("formula", "")).lower()
+    return any(token in formula for token in ("reported", "observation", "selection", "violations"))
 
 
 def _status(spec: dict, response: dict) -> dict:
@@ -585,6 +611,524 @@ def _rule(rule, scope, passed, observed, limit) -> dict:
         "observed": observed,
         "limit": limit,
     }
+
+
+def _independent_analysis(scenario: dict, response: dict, mapping: dict) -> dict:
+    routes = mapping.get("metric_routes", {})
+    facts = _scenario_facts(scenario)
+    index = _observation_index(response)
+    expected = {}
+    reported = {}
+    for key in mapping.get("required_private_metrics", []):
+        expected[key] = facts.get(key)
+        if _uses_report(routes.get(key, {})):
+            reported[key] = _reported_metric(key, scenario, response, index, facts)
+        else:
+            reported[key] = expected[key]
+    return {"expected": expected, "reported": reported}
+
+
+def _independent_check(spec: dict, analysis: dict) -> dict:
+    missing = []
+    not_computed = []
+    mismatches = []
+    for key, expected in analysis["expected"].items():
+        reported = analysis["reported"].get(key)
+        if reported is None:
+            missing.append(key)
+            continue
+        if expected is None:
+            not_computed.append(key)
+            continue
+        if not _metric_matches(key, reported, expected):
+            mismatches.append(
+                {
+                    "reason": "value_mismatch",
+                    "metric": key,
+                    "observed": reported,
+                    "expected": expected,
+                }
+            )
+    if missing:
+        reason = "missing_observation"
+    elif not_computed:
+        reason = "rule_violation"
+    elif mismatches:
+        reason = "value_mismatch"
+    else:
+        reason = None
+    details = {}
+    if reason:
+        details = {
+            "reason": reason,
+            "missing_observation": missing,
+            "not_computed": not_computed,
+            "items": mismatches,
+        }
+    return _check_row(spec, reason is None, analysis["expected"], details)
+
+
+def _metric_matches(key: str, reported, expected) -> bool:
+    if isinstance(expected, str):
+        return reported == expected
+    if isinstance(expected, dict):
+        if not isinstance(reported, dict) or set(reported) != set(expected):
+            return False
+        return all(
+            abs(float(reported[name]) - float(expected[name])) <= REPORTED_FRACTION_TOLERANCE
+            for name in expected
+        )
+    if key == "violation_count":
+        return reported == expected
+    if key.endswith("_cents"):
+        return abs(float(reported) - float(expected)) <= 1e-9
+    if key.endswith("_pct"):
+        return abs(float(reported) - float(expected)) <= REPORTED_FRACTION_TOLERANCE
+    return abs(float(reported) - float(expected)) <= MONEY_OBSERVATION_TOLERANCE
+
+
+def _exact_violations(spec: dict, scenario: dict, response: dict) -> dict:
+    expected_rows = _expected_violations(scenario)
+    params = spec["params_json"]
+    if expected_rows is None:
+        return _check_row(spec, False, None, {"not_computed": ["violations"]})
+    seen: dict[tuple, dict] = {}
+    duplicates = []
+    for row in response["violations"]:
+        key = (row["kind"], row["scope"])
+        if key in seen:
+            duplicates.append({"kind": key[0], "scope": key[1]})
+        else:
+            seen[key] = row
+    expected = {(row["kind"], row["scope"]): row for row in expected_rows}
+    missing = [{"kind": kind, "scope": scope} for kind, scope in expected if (kind, scope) not in seen]
+    extra = [{"kind": kind, "scope": scope} for kind, scope in seen if (kind, scope) not in expected]
+    mismatches = []
+    for key, wanted in expected.items():
+        got = seen.get(key)
+        if got is None:
+            continue
+        if (
+            abs(float(got["observed"]) - float(wanted["observed"])) > REPORTED_FRACTION_TOLERANCE
+            or abs(float(got["limit"]) - float(wanted["limit"])) > REPORTED_FRACTION_TOLERANCE
+        ):
+            mismatches.append(
+                {
+                    "reason": "value_mismatch",
+                    "kind": key[0],
+                    "scope": key[1],
+                    "observed": got["observed"],
+                    "expected": wanted["observed"],
+                    "limit": got["limit"],
+                    "expected_limit": wanted["limit"],
+                }
+            )
+    crypto_count = params.get("crypto_count")
+    crypto_problem = False
+    if isinstance(crypto_count, int) and not isinstance(crypto_count, bool):
+        found = sum(1 for row in expected_rows if row["kind"] == "PROHIBITED_CLASS")
+        crypto_problem = found != crypto_count
+    reject_extra = params.get("reject_extra_violations", True)
+    unique = params.get("unique_rule_scope", True)
+    extra_rows = extra if reject_extra else []
+    duplicate_rows = duplicates if unique else []
+    if missing:
+        reason = "missed_violation"
+    elif extra_rows or duplicate_rows or crypto_problem:
+        reason = "extra_violation"
+    elif mismatches:
+        reason = "value_mismatch"
+    else:
+        reason = None
+    details = {}
+    if reason:
+        details = {
+            "reason": reason,
+            "missing": missing,
+            "extra": extra,
+            "duplicates": duplicates,
+            "items": mismatches,
+        }
+    return _check_row(spec, reason is None, expected_rows, details)
+
+
+def _empty_trades(spec: dict, response: dict) -> dict:
+    expected = spec["params_json"].get("expected", [])
+    trades = response["trades"]
+    passed = trades == expected
+    details = {} if passed else {"reason": "rule_violation", "observed": trades, "expected": expected}
+    return _check_row(spec, passed, trades, details)
+
+
+def _scenario_facts(scenario: dict) -> dict:
+    positions, cash, total = _position_values(scenario)
+    facts: dict = {}
+    if total is not None:
+        facts["initial_total"] = total
+    allocations = _class_allocations(positions, cash, total)
+    if allocations is not None:
+        facts["allocations"] = allocations
+    violations = _expected_violations(scenario)
+    if violations is not None:
+        facts["violation_count"] = len(violations)
+    facts.update(_fund_facts(scenario))
+    facts.update(_retirement_facts(scenario))
+    facts.update(_evidence_facts(scenario, positions, cash, total))
+    return facts
+
+
+def _position_values(scenario: dict):
+    """Holding values from market_value. A null price is never a divisor or a factor."""
+    positions = []
+    for holding in scenario["portfolio"].get("holdings") or []:
+        market_value = holding.get("market_value")
+        if market_value is None:
+            quantity = holding.get("quantity")
+            price = holding.get("current_price")
+            value = None if quantity is None or price is None else float(quantity) * float(price)
+        else:
+            value = float(market_value)
+        positions.append(
+            {
+                "symbol": holding["symbol"],
+                "asset_class": holding.get("asset_class"),
+                "asset_type": holding.get("asset_type"),
+                "value": value,
+            }
+        )
+    cash = scenario["portfolio"].get("cash_balance")
+    total = scenario["portfolio"].get("total_value")
+    return (
+        positions,
+        None if cash is None else float(cash),
+        None if total is None else float(total),
+    )
+
+
+def _class_allocations(positions, cash, total):
+    if total in (None, 0) or any(position["value"] is None for position in positions):
+        return None
+    if cash is None and not positions:
+        return None
+    class_values: dict[str, float] = {}
+    for position in positions:
+        name = position["asset_class"] or "PORTFOLIO"
+        class_values[name] = class_values.get(name, 0.0) + position["value"]
+    if cash is not None:
+        class_values["CASH"] = class_values.get("CASH", 0.0) + cash
+    return {name: value / total for name, value in class_values.items()}
+
+
+def _expected_violations(scenario: dict):
+    positions, cash, total = _position_values(scenario)
+    if total in (None, 0) or any(position["value"] is None for position in positions) or cash is None:
+        return None
+    class_values: dict[str, float] = {}
+    for position in positions:
+        name = position["asset_class"] or "PORTFOLIO"
+        class_values[name] = class_values.get(name, 0.0) + position["value"]
+    class_values["CASH"] = class_values.get("CASH", 0.0) + cash
+    rows = []
+    for restriction in scenario["investment_policy"].get("restrictions") or []:
+        kind = restriction.get("restriction_type")
+        payload = restriction.get("parameters_json") or {}
+        if kind == "CLASS_RANGE":
+            scope = payload.get("asset_class") or "PORTFOLIO"
+            observed = class_values.get(scope, 0.0) / total
+            minimum = _optional_float(payload.get("min_pct"), None)
+            maximum = _optional_float(payload.get("max_pct"), None)
+            if minimum is not None and observed < minimum - 1e-12:
+                rows.append(_violation("CLASS_MIN", scope, observed, minimum))
+            if maximum is not None and observed > maximum + 1e-12:
+                rows.append(_violation("CLASS_MAX", scope, observed, maximum))
+        elif kind == "MAX_INDIVIDUAL_STOCK":
+            limit = _optional_float(payload.get("max_pct"), None)
+            if limit is None:
+                continue
+            for position in positions:
+                if position["asset_type"] != "INDIVIDUAL_STOCK":
+                    continue
+                observed = position["value"] / total
+                if observed > limit + 1e-12:
+                    rows.append(_violation("INDIVIDUAL_MAX", position["symbol"], observed, limit))
+        elif kind == "PROHIBITED_CLASS":
+            scope = payload.get("asset_class") or "PORTFOLIO"
+            limit = _optional_float(payload.get("max_pct"), 0.0)
+            observed = class_values.get(scope, 0.0) / total
+            if observed > limit + 1e-12:
+                rows.append(_violation("PROHIBITED_CLASS", scope, observed, limit))
+    return rows
+
+
+def _violation(kind: str, scope: str, observed: float, limit: float) -> dict:
+    return {"kind": kind, "scope": scope, "observed": observed, "limit": limit}
+
+
+def _fund_facts(scenario: dict) -> dict:
+    options = scenario.get("investment_options") or []
+    if not options:
+        return {}
+    finals = [(option["name"], _compound_option(option)) for option in options]
+    facts = {_option_metric_key(name): value for name, value in finals}
+    if len(finals) >= 2:
+        facts["absolute_difference"] = abs(finals[0][1] - finals[1][1])
+        facts["better_fund"] = max(finals, key=lambda item: item[1])[0]
+    return facts
+
+
+def _compound_option(option: dict) -> float:
+    """Entry fee comes off first. Each year multiplies by (1 + gross) * (1 - fee)."""
+    initial = float(option["initial_investment"])
+    entry = float(option.get("entry_fee") or 0)
+    growth = (1 + float(option["gross_annual_return"])) * (1 - float(option["annual_fee"]))
+    return initial * (1 - entry) * growth ** int(option["years"])
+
+
+def _option_metric_key(name: str) -> str:
+    slug = "".join(char.lower() if char.isalnum() else "_" for char in name.strip())
+    while "__" in slug:
+        slug = slug.replace("__", "_")
+    return f"{slug.strip('_')}_final"
+
+
+def _retirement_facts(scenario: dict) -> dict:
+    if scenario.get("calculation_type") != "RETIREMENT_PROJECTION":
+        return {}
+    assumptions = scenario.get("retirement_assumptions") or {}
+    balance = _project_balance(scenario)
+    if balance is None:
+        return {}
+    target = float(assumptions["target"])
+    shortfall = target - balance
+    rate = float(assumptions["monthly_interest_rate"])
+    periods = int(assumptions["additional_contribution_duration_months"])
+    payment = _annuity_payment(shortfall, rate, periods)
+    return {
+        "final_balance": balance,
+        "target_shortfall": shortfall,
+        "additional_monthly_contribution": payment,
+        "additional_monthly_contribution_cents": _upward_cent(payment),
+    }
+
+
+def _project_balance(scenario: dict):
+    """Interest for the month, then that month's end-of-month cash flows."""
+    assumptions = scenario.get("retirement_assumptions") or {}
+    total = scenario["portfolio"].get("total_value")
+    if total is None or "months" not in assumptions or "monthly_interest_rate" not in assumptions:
+        return None
+    balance = float(total)
+    rate = float(assumptions["monthly_interest_rate"])
+    for month in range(1, int(assumptions["months"]) + 1):
+        balance *= 1 + rate
+        for flow in scenario.get("cash_flows") or []:
+            if not _flow_covers(flow, month):
+                continue
+            amount = float(flow["amount"])
+            if flow.get("flow_type") == "WITHDRAWAL":
+                balance -= amount
+            else:
+                balance += amount
+    return balance
+
+
+def _flow_covers(flow: dict, month: int) -> bool:
+    start = flow.get("start_month")
+    duration = flow.get("duration_months")
+    if start is None or duration is None:
+        return False
+    return int(start) <= month < int(start) + int(duration)
+
+
+def _annuity_payment(shortfall: float, rate: float, periods: int) -> float:
+    if periods <= 0:
+        return shortfall
+    if rate == 0:
+        return shortfall / periods
+    return shortfall * rate / ((1 + rate) ** periods - 1)
+
+
+def _upward_cent(amount: float) -> float:
+    scaled = amount * 100
+    nearest = round(scaled)
+    if abs(scaled - nearest) <= 1e-6:
+        return nearest / 100
+    return math.ceil(scaled - 1e-9) / 100
+
+
+def _evidence_facts(scenario: dict, positions, cash, total) -> dict:
+    facts: dict = {"locked_symbols": [], "restricted_symbols": [], "sellable_symbols": []}
+    no_sell_symbols, no_sell_classes = _sale_blocks(scenario)
+    locked = [
+        position
+        for position in positions
+        if position["asset_class"] in no_sell_classes
+        or (position["symbol"] in no_sell_symbols and position["asset_class"] == "STOCK")
+    ]
+    facts["locked_symbols"] = [position["symbol"] for position in locked]
+    if locked and total not in (None, 0) and all(position["value"] is not None for position in locked):
+        facts["locked_stock_value"] = sum(position["value"] for position in locked)
+        facts["minimum_stock_pct"] = facts["locked_stock_value"] / total
+    targets = scenario["investment_policy"].get("target_allocations") or {}
+    tolerance = scenario["investment_policy"].get("allocation_tolerance")
+    if "STOCK" in targets and isinstance(tolerance, (int, float)) and not isinstance(tolerance, bool):
+        facts["maximum_target_stock_pct"] = float(targets["STOCK"]) + float(tolerance)
+        if "locked_stock_value" in facts and total not in (None, 0):
+            facts["stock_value_excess_above_tolerance"] = (
+                facts["locked_stock_value"] - total * facts["maximum_target_stock_pct"]
+            )
+    if no_sell_symbols:
+        restricted = [position for position in positions if position["symbol"] in set(no_sell_symbols)]
+        sellable = [position for position in positions if position["symbol"] not in set(no_sell_symbols)]
+        facts["restricted_symbols"] = [position["symbol"] for position in restricted]
+        facts["sellable_symbols"] = [position["symbol"] for position in sellable]
+        if all(position["value"] is not None for position in restricted):
+            facts["restricted_value"] = sum(position["value"] for position in restricted)
+        if all(position["value"] is not None for position in sellable):
+            facts["sellable_value"] = sum(position["value"] for position in sellable)
+        if "sellable_value" in facts and cash is not None:
+            facts["available_liquidity"] = cash + facts["sellable_value"]
+        reserve = _min_cash_amount(scenario)
+        if reserve is not None:
+            facts["required_liquidity"] = _flow_total(scenario, "WITHDRAWAL") + reserve
+            if "available_liquidity" in facts:
+                facts["liquidity_shortfall"] = facts["required_liquidity"] - facts["available_liquidity"]
+                facts["max_withdrawal_preserving_reserve"] = facts["available_liquidity"] - reserve
+    return facts
+
+
+def _sale_blocks(scenario: dict):
+    symbols = []
+    classes = []
+    for restriction in scenario["investment_policy"].get("restrictions") or []:
+        payload = restriction.get("parameters_json") or {}
+        if restriction.get("restriction_type") == "NO_SELL":
+            symbols.extend(payload.get("symbols") or [])
+        elif restriction.get("restriction_type") == "NO_SELL_CLASS":
+            asset_class = payload.get("asset_class")
+            if asset_class:
+                classes.append(asset_class)
+    return symbols, classes
+
+
+def _min_cash_amount(scenario: dict):
+    for restriction in scenario["investment_policy"].get("restrictions") or []:
+        if restriction.get("restriction_type") == "MIN_CASH":
+            return _optional_float((restriction.get("parameters_json") or {}).get("amount"), None)
+    return None
+
+
+def _reported_metric(key: str, scenario: dict, response: dict, index: dict, facts: dict):
+    if key == "violation_count":
+        return len(response["violations"])
+    if key == "better_fund":
+        selection = response["metrics"].get("selection")
+        return selection if isinstance(selection, str) and selection else None
+    if key == "initial_total":
+        return _lookup(index, "PORTFOLIO", "VALUE", "INITIAL", "NONE", "MONEY")
+    if key == "allocations":
+        return _reported_allocations(scenario, index)
+    if key.endswith("_final"):
+        subject = _option_subject(scenario, key)
+        if subject is None:
+            return None
+        return _lookup(index, subject, "VALUE", "FINAL", "NONE", "MONEY")
+    if key == "absolute_difference":
+        return _lookup(index, "OPTIONS", "DIFFERENCE", "FINAL", "NONE", "MONEY")
+    if key == "final_balance":
+        return _lookup(index, "PORTFOLIO", "VALUE", "FINAL", "NONE", "MONEY")
+    if key == "target_shortfall":
+        return _lookup(index, "PORTFOLIO", "DIFFERENCE", "FINAL", "NONE", "MONEY")
+    if key == "additional_monthly_contribution":
+        return _lookup(index, "PORTFOLIO", "PAYMENT", "FINAL", "NONE", "MONEY")
+    if key == "additional_monthly_contribution_cents":
+        return _lookup(index, "PORTFOLIO", "PAYMENT", "FINAL", "UPWARD_CENT", "MONEY")
+    if key == "locked_stock_value":
+        return _sum_observations(index, facts.get("locked_symbols") or [])
+    if key == "minimum_stock_pct":
+        locked = _sum_observations(index, facts.get("locked_symbols") or [])
+        portfolio = _lookup(index, "PORTFOLIO", "VALUE", "INITIAL", "NONE", "MONEY")
+        if locked is None or portfolio in (None, 0):
+            return None
+        return locked / portfolio
+    if key == "stock_value_excess_above_tolerance":
+        locked = _sum_observations(index, facts.get("locked_symbols") or [])
+        portfolio = _lookup(index, "PORTFOLIO", "VALUE", "INITIAL", "NONE", "MONEY")
+        cap = facts.get("maximum_target_stock_pct")
+        if locked is None or portfolio is None or cap is None:
+            return None
+        return locked - portfolio * cap
+    if key == "restricted_value":
+        return _sum_observations(index, facts.get("restricted_symbols") or [])
+    if key == "sellable_value":
+        return _sum_observations(index, facts.get("sellable_symbols") or [])
+    if key == "available_liquidity":
+        sellable = _sum_observations(index, facts.get("sellable_symbols") or [])
+        cash = _lookup(index, "CASH", "VALUE", "INITIAL", "NONE", "MONEY")
+        if sellable is None or cash is None:
+            return None
+        return cash + sellable
+    if key == "liquidity_shortfall":
+        available = _reported_metric("available_liquidity", scenario, response, index, facts)
+        required = facts.get("required_liquidity")
+        if available is None or required is None:
+            return None
+        return required - available
+    if key == "max_withdrawal_preserving_reserve":
+        available = _reported_metric("available_liquidity", scenario, response, index, facts)
+        reserve = _min_cash_amount(scenario)
+        if available is None or reserve is None:
+            return None
+        return available - reserve
+    return None
+
+
+def _option_subject(scenario: dict, key: str):
+    for option in scenario.get("investment_options") or []:
+        if _option_metric_key(option["name"]) == key:
+            return option["name"]
+    return None
+
+
+def _reported_allocations(scenario: dict, index: dict):
+    portfolio = _lookup(index, "PORTFOLIO", "VALUE", "INITIAL", "NONE", "MONEY")
+    cash = _lookup(index, "CASH", "VALUE", "INITIAL", "NONE", "MONEY")
+    if portfolio in (None, 0) or cash is None:
+        return None
+    class_values: dict[str, float] = {}
+    for holding in scenario["portfolio"].get("holdings") or []:
+        value = _lookup(index, holding["symbol"], "VALUE", "INITIAL", "NONE", "MONEY")
+        if value is None:
+            return None
+        name = holding.get("asset_class") or "PORTFOLIO"
+        class_values[name] = class_values.get(name, 0.0) + value
+    allocations = {name: value / portfolio for name, value in class_values.items() if name != "CASH"}
+    allocations["CASH"] = (cash + class_values.get("CASH", 0.0)) / portfolio
+    return allocations
+
+
+def _sum_observations(index: dict, symbols: list[str]):
+    total = 0.0
+    for symbol in symbols:
+        value = _lookup(index, symbol, "VALUE", "INITIAL", "NONE", "MONEY")
+        if value is None:
+            return None
+        total += value
+    return total
+
+
+def _observation_index(response: dict) -> dict:
+    return {
+        tuple(obs[field] for field in _OBSERVATION_FIELDS): obs
+        for obs in response["metrics"]["observations"]
+    }
+
+
+def _lookup(index: dict, subject: str, measure: str, stage: str, rounding: str, unit: str):
+    obs = index.get((subject, measure, stage, rounding))
+    if obs is None or obs.get("unit") != unit:
+        return None
+    return float(obs["value"])
 
 
 def _schema_errors(response: dict, scenario: dict, scenario_id: str) -> list[str]:
