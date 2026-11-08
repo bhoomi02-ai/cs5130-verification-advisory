@@ -1,0 +1,33 @@
+{
+  "scenario_id": "S05",
+  "error_type": "policy_violation",
+  "description": "Leaves direct technology at 36%, one point above the 35% cap.",
+  "expected_check": "REPLAY_TRADES",
+  "expected_reason": "rule_violation",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S05",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -60
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": 8
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}
