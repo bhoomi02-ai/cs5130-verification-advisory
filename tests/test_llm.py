@@ -211,3 +211,28 @@ def test_per_minute_rate_limit_is_still_retried(fake):
     client = fake(per_minute, _response())
     text, *_ = llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
     assert text == "ok" and len(client.calls) == 2
+
+
+def test_run_id_is_logged(fake, monkeypatch):
+    fake(_response())
+    logged = []
+    monkeypatch.setattr(llm, "log_record", lambda rec: logged.append(rec))
+    llm.call_model(
+        task_id="S01", condition="pilot", agent="advisor", model="gemini-3.1-flash-lite",
+        messages=[{"role": "user", "content": "hi"}], run_id="batch1-S01-r1",
+    )
+    assert logged[0].run_id == "batch1-S01-r1" and logged[0].error is None
+
+
+def test_failed_call_is_logged_then_raised(fake, monkeypatch):
+    fake(errors.APIError(400, {"error": {"message": "bad request"}}))
+    logged = []
+    monkeypatch.setattr(llm, "log_record", lambda rec: logged.append(rec))
+    with pytest.raises(errors.APIError):
+        llm.call_model(
+            task_id="S01", condition="pilot", agent="advisor", model="gemini-3.1-flash-lite",
+            messages=[{"role": "user", "content": "hi"}], run_id="r1", temperature=0.7,
+        )
+    rec = logged[0]
+    assert rec.error.startswith("ClientError") or rec.error.startswith("APIError")
+    assert (rec.run_id, rec.temperature, rec.tokens_in, rec.cost_usd, rec.raw_output) == ("r1", 0.7, 0, 0.0, "")

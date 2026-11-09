@@ -31,6 +31,8 @@ class RunRecord:
     temperature: float | None = None  # None means the provider default
     top_p: float | None = None  # None means the provider default
     thinking_level: str | None = None  # None means the provider default
+    run_id: str | None = None  # joins this call to the per-run result file
+    error: str | None = None  # set when the call failed; tokens and cost are then 0
 
 
 # USD per 1M tokens (input, output), paid tier, standard (non-batch), text.
@@ -191,32 +193,53 @@ def call_model(
     temperature: float | None = None,
     thinking_level: str | None = None,
     top_p: float | None = None,
+    run_id: str | None = None,
 ) -> str:
     """Call `model` with `messages`, append a record to the run log, return the text.
 
     `temperature`, `top_p` and `thinking_level` (one of THINKING_LEVELS) are
-    logged with the run; None leaves the provider default in place.
+    logged with the run; None leaves the provider default in place. `run_id`
+    lets the log be joined to per-run results. A failed call is logged too,
+    with `error` set, and then re-raised, so failures never silently vanish.
     """
     start = time.perf_counter()
-    text, tokens_in, tokens_out, cost = _provider_call(
-        model, messages, temperature, thinking_level, top_p
+    common = dict(
+        task_id=task_id,
+        condition=condition,
+        agent=agent,
+        model=model,
+        temperature=temperature,
+        top_p=top_p,
+        thinking_level=thinking_level,
+        run_id=run_id,
     )
-    latency = time.perf_counter() - start
+    try:
+        text, tokens_in, tokens_out, cost = _provider_call(
+            model, messages, temperature, thinking_level, top_p
+        )
+    except Exception as e:
+        log_record(
+            RunRecord(
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                tokens_in=0,
+                tokens_out=0,
+                latency_s=time.perf_counter() - start,
+                cost_usd=0.0,
+                raw_output="",
+                error=f"{type(e).__name__}: {e}"[:500],
+                **common,
+            )
+        )
+        raise
     log_record(
         RunRecord(
             timestamp=datetime.now(timezone.utc).isoformat(),
-            task_id=task_id,
-            condition=condition,
-            agent=agent,
-            model=model,
             tokens_in=tokens_in,
             tokens_out=tokens_out,
-            latency_s=latency,
+            latency_s=time.perf_counter() - start,
             cost_usd=cost,
             raw_output=text,
-            temperature=temperature,
-            top_p=top_p,
-            thinking_level=thinking_level,
+            **common,
         )
     )
     return text
