@@ -203,6 +203,28 @@ def test_s05_technology_left_above_35_percent_fails_sector_cap():
     assert _of_type(result, "REPLAY_TRADES")["details"]["reason"] == "rule_violation"
 
 
+def _s05_reference_plus(symbol):
+    trades = list(_ground_truth("S05")["trades"]) + [{"symbol": symbol, "quantity_delta": 1}]
+    return check("S05", _contract(_ground_truth("S05"), trades=trades))
+
+
+def _assert_only_unknown_symbol(result, symbol):
+    failed = [row for row in result["restriction_results"] if not row["passed"]]
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert [(row["rule"], row["scope"]) for row in failed] == [("EXISTING_ASSETS_ONLY", symbol)]
+
+
+def test_lowercase_bnd_fails_only_existing_assets():
+    # "bnd" is not the holding BND. The share is left out of the book, so the
+    # reference plan still meets the technology, stock and class limits.
+    _assert_only_unknown_symbol(_s05_reference_plus("bnd"), "bnd")
+
+
+def test_invented_ticker_fails_only_existing_assets():
+    _assert_only_unknown_symbol(_s05_reference_plus("ZZZZ"), "ZZZZ")
+
+
 def test_s07_selling_aapl_fails_no_sell():
     trades = [{"symbol": "AAPL", "quantity_delta": -1}]
     result = check("S07", _contract(_ground_truth("S07"), trades=trades))
