@@ -73,7 +73,7 @@ def test_guards_against_huge_or_bad_results():
     assert "ZeroDivisionError" in err("1 / 0")
     assert "too long" in err("1+" * 300 + "1")
     assert err("") and err("   ")
-    assert "list" in err("[1, 2]")
+    assert "only allowed directly inside" in err("[1, 2]")
     assert "ValueError" in err("sqrt(-1)")
     assert "syntax" in err("2 +")
 
@@ -81,3 +81,45 @@ def test_guards_against_huge_or_bad_results():
 def test_tool_spec_shape():
     assert CALCULATOR_TOOL["name"] == "calculate"
     assert CALCULATOR_TOOL["parameters"]["required"] == ["expression"]
+
+
+# Follow-ups from the #14 review.
+
+
+def test_lists_only_inside_sum_min_max():
+    assert ok("sum([1, 2, 3])") == 6
+    assert ok("min([4, 2]) + max([1, 9])") == 11
+    assert ok("min(4, 2)") == 2
+    for expr in ["[0] * 1000000000", "[1] + [2]", "abs([1])", "sum([[1], [2]])", "-[1]"]:
+        assert "only allowed directly inside" in err(expr), expr
+
+
+def test_complex_results_are_errors():
+    assert "complex" in err("(-8) ** (1/3)")
+    assert "complex" in err("1 + (-8) ** 0.5")
+    assert ok("(-8) ** 2") == 64.0  # integer powers of negatives are fine
+
+
+def test_financial_functions_accept_keywords():
+    assert ok("fv(0.005, 12, -100, 0, when=1)") == ok("fv(0.005, 12, -100, 0, 1)")
+    assert ok("pmt(rate=0.005, nper=240, pv=0, fv=-199954.26)") == pytest.approx(432.7631, abs=1e-4)
+    assert "TypeError" in err("fv(0.005, 12, -100, 0, bogus=1)")
+    assert "positional arguments only" in err("round(1.234, ndigits=1)")
+    assert "positional arguments only" in err("max(1, key=abs)")
+
+
+def test_memory_error_is_returned_not_raised(monkeypatch):
+    from advisory import calculator
+
+    def boom(*args):
+        raise MemoryError("simulated")
+
+    monkeypatch.setitem(calculator._FUNCTIONS, "sqrt", boom)
+    assert "MemoryError" in err("sqrt(4)")
+
+
+def test_every_result_is_json_serializable():
+    import json
+
+    for expr in ["2 ** 0.5", "fv(0.005, 12, -100, 0)", "ceil(2.1)", "sum([1.5, 2])"]:
+        json.dumps(calculate(expr))
