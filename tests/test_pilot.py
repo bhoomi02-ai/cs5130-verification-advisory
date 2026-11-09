@@ -1,10 +1,13 @@
 """Pilot runner tests. The model is faked; no network or key needed."""
 
 import json
+from pathlib import Path
 
 import pytest
 
 from advisory import pilot
+
+INJECTED = sorted((Path(__file__).resolve().parents[1] / "data" / "injected").glob("*.json"))
 
 SCENARIO = {
     "scenario_id": "S01",
@@ -45,18 +48,26 @@ GOOD = {
 
 @pytest.fixture
 def fake_model(monkeypatch):
+    """Replace call_model; each reply is a string to return or an exception to raise."""
+
     def install(*replies):
         replies = list(replies)
         calls = []
 
         def fake_call_model(**kwargs):
             calls.append(kwargs)
-            return replies.pop(0)
+            reply = replies.pop(0)
+            if isinstance(reply, Exception):
+                raise reply
+            return reply
 
         monkeypatch.setattr(pilot, "call_model", fake_call_model)
         return calls
 
     return install
+
+
+# Parsing and schema validation.
 
 
 def test_parse_answer_plain_and_fenced():
@@ -68,8 +79,7 @@ def test_parse_answer_plain_and_fenced():
 
 def test_validate_answer_accepts_good_and_names_problems():
     assert pilot.validate_answer(SCENARIO, GOOD) == []
-    bad = {**GOOD, "status": "MAYBE", "extra": 1}
-    errors = pilot.validate_answer(SCENARIO, bad)
+    errors = pilot.validate_answer(SCENARIO, {**GOOD, "status": "MAYBE", "extra": 1})
     assert any("status" in e for e in errors)
     assert any("extra" in e for e in errors)
 
@@ -80,82 +90,111 @@ def test_validate_answer_catches_wrong_scenario_and_type():
     assert any("expected 'TRADE_PLAN'" in e for e in errors)
 
 
-def test_run_advisor_valid_first_try(fake_model):
+# One call per run, first answer scored as it is.
+
+
+def test_run_advisor_sends_full_scenario_settings_and_run_id(fake_model):
     calls = fake_model(json.dumps(GOOD))
-    r = pilot.run_advisor(SCENARIO, "gemini-3.1-flash-lite")
-    assert r.schema_valid and r.attempts == 1 and r.answer == GOOD
-    # The advisor gets the complete scenario JSON, unchanged.
-    assert json.loads(calls[0]["messages"][1]["content"]) == SCENARIO
-    assert calls[0]["condition"] == "pilot" and calls[0]["task_id"] == "S01"
+    r = pilot.run_advisor(SCENARIO, "m1", run_id="b-m1-S01-r1", settings={"thinking_level": "low"})
+    assert r.schema_valid and r.answer == GOOD and r.api_error is None
+    call = calls[0]
+    assert json.loads(call["messages"][1]["content"]) == SCENARIO
+    assert (call["run_id"], call["condition"], call["task_id"]) == ("b-m1-S01-r1", "pilot", "S01")
+    assert (call["temperature"], call["top_p"], call["thinking_level"]) == (0.7, 0.9, "low")
+    assert r.settings == {"temperature": 0.7, "top_p": 0.9, "thinking_level": "low"}
+    assert r.prompt_version == pilot.PROMPT_VERSION
 
 
-def test_run_advisor_retries_once_with_the_problem(fake_model):
+def test_invalid_first_answer_is_not_retried(fake_model):
     calls = fake_model("Sure! Here is the plan...", json.dumps(GOOD))
-    r = pilot.run_advisor(SCENARIO, "gemini-3.1-flash-lite")
-    assert r.schema_valid and r.attempts == 2
-    fix_msg = calls[1]["messages"][-1]["content"]
-    assert "not valid JSON" in fix_msg
+    r = pilot.run_advisor(SCENARIO, "m1", run_id="r1")
+    assert len(calls) == 1
+    assert not r.schema_valid and r.answer is None
+    assert r.raw_output == "Sure! Here is the plan..."
+    assert "not valid JSON" in r.errors[0]
 
 
-def test_run_advisor_gives_up_after_max_attempts(fake_model):
-    fake_model("nope", "still nope")
-    r = pilot.run_advisor(SCENARIO, "gemini-3.1-flash-lite")
-    assert not r.schema_valid and r.answer is None and r.attempts == 2
+def test_api_failure_is_recorded_not_lost(fake_model):
+    calls = fake_model(RuntimeError("quota exceeded"))
+    r = pilot.run_advisor(SCENARIO, "m1", run_id="r1")
+    assert len(calls) == 1
+    assert r.api_error == "RuntimeError: quota exceeded"
+    assert not r.schema_valid and r.correct is None
 
 
-def test_run_pilot_saves_grades_and_summarizes(fake_model, tmp_path):
-    fake_model(json.dumps(GOOD), "garbage", "garbage")
-    results = pilot.run_pilot(
-        ["m1", "m2"], [SCENARIO], grade=lambda s, a: a["status"] == "FEASIBLE", out_dir=tmp_path
-    )
-    assert [r.correct for r in results] == [True, False]  # invalid answer counts as wrong
-    saved = json.loads((tmp_path / "m1" / "S01_run1.json").read_text())
-    assert saved["schema_valid"] and saved["correct"]
-    rows = {row["model"]: row for row in pilot.summarize(results)}
-    assert rows["m1"]["accuracy"] == 1.0 and rows["m2"]["accuracy"] == 0.0
-    assert rows["m2"]["schema_valid"] == 0.0
+# Batches, grading and the summary.
 
 
-def test_summarize_without_grader_has_no_accuracy(fake_model, tmp_path):
-    fake_model(json.dumps(GOOD))
-    rows = pilot.summarize(pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path))
-    assert rows[0]["accuracy"] is None and rows[0]["valid_first_try"] == 1.0
-
-
-# Grading with the checker.
-
-
-def test_dict_grader_records_failures(fake_model, tmp_path):
-    fake_model(json.dumps(GOOD), "garbage", "garbage")
-    verdicts = iter(
-        [{"correct": False, "checks": [{"check_type": "REPLAY_TRADES", "passed": False, "details": {"reason": "rule_violation"}},
-                                         {"check_type": "STATUS", "passed": True}]}]
-    )
-    results = pilot.run_pilot(["m1", "m2"], [SCENARIO], grade=lambda s, a: next(verdicts), out_dir=tmp_path)
-    assert results[0].correct is False and results[0].failures == ["REPLAY_TRADES:rule_violation"]
-    assert results[1].failures == ["SCHEMA:format"]  # invalid answer, never reached the grader
-    rows = {row["model"]: row for row in pilot.summarize(results)}
-    assert rows["m1"]["failures"] == {"REPLAY_TRADES:rule_violation": 1}
-    saved = json.loads((tmp_path / "m1" / "S01_run1.json").read_text())
-    assert saved["failures"] == ["REPLAY_TRADES:rule_violation"]
-
-
-def test_checker_grade_on_real_s01():
-    scenario = pilot.load_scenarios(ids=["S01"])[0]
-    answer = {
-        "scenario_id": "S01",
-        "answer_type": "TRADE_PLAN",
-        "status": "FEASIBLE",
-        "trades": [{"symbol": "MSFT", "quantity_delta": -25}, {"symbol": "BND", "quantity_delta": 125}],
-        "metrics": {"observations": [], "selection": None},
-        "violations": [],
-        "explanation": "Sell 25 MSFT and buy 125 BND to reach 60/30/10.",
+def test_run_pilot_grades_saves_and_summarizes(fake_model, tmp_path):
+    fake_model(json.dumps(GOOD), "garbage", RuntimeError("quota"))
+    verdict = {
+        "correct": False,
+        "checks": [
+            {"check_type": "REPLAY_TRADES", "passed": False, "details": {"reason": "rule_violation"}},
+            {"check_type": "STATUS", "passed": True},
+        ],
     }
-    assert pilot.validate_answer(scenario, answer) == []
-    good = pilot.checker_grade(scenario, answer)
-    assert good["correct"] and pilot.failure_labels(good) == []
+    results = pilot.run_pilot(
+        ["m1", "m2", "m3"], [SCENARIO], grade=lambda s, a: verdict, out_dir=tmp_path, batch_id="b1"
+    )
+    good, invalid, failed = results
+    assert (good.correct, good.failures) == (False, ["REPLAY_TRADES:rule_violation"])
+    assert (invalid.correct, invalid.failures) == (False, ["SCHEMA:format"])
+    assert (failed.correct, failed.failures) == (None, ["API:error"])
+    assert good.run_id == "b1-m1-S01-r1"
 
-    sells_aapl = {**answer, "trades": [{"symbol": "AAPL", "quantity_delta": -50}, {"symbol": "BND", "quantity_delta": 125}]}
-    bad = pilot.checker_grade(scenario, sells_aapl)
-    assert not bad["correct"]
-    assert "REPLAY_TRADES:rule_violation" in pilot.failure_labels(bad)
+    saved = json.loads((tmp_path / "b1" / "m1" / "S01_run1.json").read_text())
+    assert saved["run_id"] == "b1-m1-S01-r1" and saved["failures"] == ["REPLAY_TRADES:rule_violation"]
+
+    rows = {row["model"]: row for row in pilot.summarize(results)}
+    assert rows["m1"]["accuracy"] == 0.0 and rows["m1"]["api_errors"] == 0
+    assert rows["m2"]["schema_valid"] == 0.0 and rows["m2"]["accuracy"] == 0.0
+    assert rows["m3"]["api_errors"] == 1 and rows["m3"]["accuracy"] is None and rows["m3"]["graded_runs"] == 0
+
+
+def test_bool_grader_and_no_grader(fake_model, tmp_path):
+    fake_model(json.dumps(GOOD), json.dumps(GOOD))
+    graded = pilot.run_pilot(["m1"], [SCENARIO], grade=lambda s, a: True, out_dir=tmp_path, batch_id="b1")
+    ungraded = pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, batch_id="b2")
+    assert graded[0].correct is True and graded[0].failures == []
+    assert ungraded[0].correct is None and pilot.summarize(ungraded)[0]["accuracy"] is None
+
+
+def test_batches_never_overwrite(fake_model, tmp_path):
+    fake_model(json.dumps(GOOD), json.dumps(GOOD), json.dumps(GOOD))
+    pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, batch_id="b1")
+    pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, batch_id="b2")
+    assert (tmp_path / "b1" / "m1" / "S01_run1.json").exists()
+    assert (tmp_path / "b2" / "m1" / "S01_run1.json").exists()
+    with pytest.raises(FileExistsError):
+        pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, batch_id="b1")
+
+
+def test_max_calls_refuses_before_any_call(fake_model, tmp_path):
+    calls = fake_model()
+    with pytest.raises(ValueError, match="6 model calls"):
+        pilot.run_pilot(["m1", "m2"], [SCENARIO], repeats=3, max_calls=5, out_dir=tmp_path)
+    assert calls == [] and not any(tmp_path.iterdir())
+
+
+# The real checker on the seeded answers from data/injected/ (#19).
+
+
+@pytest.mark.parametrize("path", INJECTED, ids=[p.stem for p in INJECTED])
+def test_checker_grade_on_injected_answers(path):
+    case = json.loads(path.read_text())
+    scenario = pilot.load_scenarios(ids=[case["scenario_id"]])[0]
+    answer = case["response"]
+    assert pilot.validate_answer(scenario, answer) == [], "seeded answers are schema-valid"
+    result = pilot.checker_grade(scenario, answer)
+    labels = pilot.failure_labels(result)
+    if case["error_type"] == "none":
+        assert result["correct"] and labels == []
+    else:
+        assert not result["correct"]
+        assert f"{case['expected_check']}:{case['expected_reason']}" in labels
+
+
+def test_injected_set_is_present():
+    kinds = {json.loads(p.read_text())["error_type"] for p in INJECTED}
+    assert "none" in kinds and len(kinds) > 3

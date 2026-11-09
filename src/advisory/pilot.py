@@ -2,9 +2,12 @@
 
 Goal from the proposal: pick the model whose baseline accuracy is near 50-80%,
 so verification has errors to fix. This is the ``none`` condition run for
-several candidate models. Each answer is checked against the scenario's
-response schema; correctness is graded by an optional ``grade`` function
-(the hidden checker, plugged in when it is ready).
+several candidate models.
+
+Each run makes exactly one advisor call, and that first answer is the one
+scored: there is no retry, so format failures are measured rather than hidden.
+Every run gets a ``run_id`` that is written both to its result file and to the
+run log (results/runs.jsonl), so results can be joined to tokens and cost.
 """
 
 from __future__ import annotations
@@ -13,6 +16,7 @@ import json
 import re
 from collections import Counter
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -24,6 +28,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SCENARIO_DIR = ROOT / "data" / "scenarios"
 PILOT_DIR = ROOT / "results" / "pilot"
 
+# Bump the version whenever the prompt text changes, so results stay comparable.
+PROMPT_VERSION = "advisor-v1"
 ADVISOR_SYSTEM_PROMPT = """\
 You are a careful financial advisor working on a synthetic client scenario.
 You receive the complete scenario as JSON. Answer the client_request exactly as
@@ -36,14 +42,30 @@ output_requirements (trades_rule, observations_rule, task_completion,
 violations_rule, explanation_rule). Check your arithmetic before answering.
 """
 
-FIX_PROMPT = """\
-Your previous response could not be accepted: {problem}
-Respond again with only the corrected JSON object.
-"""
+# Agreed study settings (README "Study settings"); thinking level is the model default.
+DEFAULT_SETTINGS = {"temperature": 0.7, "top_p": 0.9, "thinking_level": None}
 
 # A grader takes (scenario, answer) and returns either a bool or a checker
 # result dict with "correct" and "checks" (see advisory.checker.check).
 Grader = Callable[[dict, dict], "bool | dict"]
+
+
+@dataclass
+class PilotResult:
+    run_id: str
+    batch_id: str
+    scenario_id: str
+    model: str
+    run_number: int
+    prompt_version: str
+    settings: dict
+    schema_valid: bool
+    errors: list[str]
+    answer: dict | None
+    raw_output: str
+    api_error: str | None = None  # the call failed; there is no answer to score
+    correct: bool | None = None  # None until graded, or when the call failed
+    failures: list[str] = field(default_factory=list)  # "CHECK_TYPE:reason" labels
 
 
 def checker_grade(scenario: dict, answer: dict) -> dict:
@@ -61,20 +83,6 @@ def failure_labels(result: dict) -> list[str]:
             reason = (c.get("details") or {}).get("reason", "failed")
             labels.append(f"{c.get('check_type', c.get('check_id', '?'))}:{reason}")
     return labels
-
-
-@dataclass
-class PilotResult:
-    scenario_id: str
-    model: str
-    run_number: int
-    attempts: int
-    schema_valid: bool
-    errors: list[str]
-    answer: dict | None
-    raw_outputs: list[str] = field(default_factory=list)
-    correct: bool | None = None  # None until a grader is supplied
-    failures: list[str] = field(default_factory=list)  # failed checks, from the checker
 
 
 def load_scenarios(directory: Path = SCENARIO_DIR, ids: list[str] | None = None) -> list[dict]:
@@ -113,40 +121,61 @@ def validate_answer(scenario: dict, answer: dict) -> list[str]:
     return errors
 
 
-def run_advisor(scenario: dict, model: str, run_number: int = 1, max_attempts: int = 2) -> PilotResult:
-    """Ask the advisor once; on unparseable or schema-invalid output, ask it to fix it."""
+def run_advisor(
+    scenario: dict,
+    model: str,
+    run_number: int = 1,
+    *,
+    run_id: str,
+    batch_id: str = "",
+    settings: dict | None = None,
+) -> PilotResult:
+    """Ask the advisor once and keep that first answer as it is: no retry."""
+    settings = {**DEFAULT_SETTINGS, **(settings or {})}
     sid = scenario["scenario_id"]
     messages = [
         {"role": "system", "content": ADVISOR_SYSTEM_PROMPT},
         {"role": "user", "content": json.dumps(scenario, indent=2)},
     ]
-    raw_outputs: list[str] = []
-    errors: list[str] = []
-    answer: dict | None = None
-    for _ in range(max_attempts):
-        text = call_model(task_id=sid, condition="pilot", agent="advisor", model=model, messages=messages)
-        raw_outputs.append(text)
-        try:
-            answer = parse_answer(text)
-            errors = validate_answer(scenario, answer)
-        except (json.JSONDecodeError, ValueError) as e:
-            answer, errors = None, [f"not valid JSON: {e}"]
-        if not errors:
-            break
-        messages += [
-            {"role": "assistant", "content": text},
-            {"role": "user", "content": FIX_PROMPT.format(problem="; ".join(errors[:5]))},
-        ]
-    return PilotResult(
+    result = PilotResult(
+        run_id=run_id,
+        batch_id=batch_id,
         scenario_id=sid,
         model=model,
         run_number=run_number,
-        attempts=len(raw_outputs),
-        schema_valid=not errors,
-        errors=errors,
-        answer=answer,
-        raw_outputs=raw_outputs,
+        prompt_version=PROMPT_VERSION,
+        settings=settings,
+        schema_valid=False,
+        errors=[],
+        answer=None,
+        raw_output="",
     )
+    try:
+        text = call_model(
+            task_id=sid,
+            condition="pilot",
+            agent="advisor",
+            model=model,
+            messages=messages,
+            run_id=run_id,
+            **settings,
+        )
+    except Exception as e:  # logged by call_model; recorded here so the run is not lost
+        result.api_error = f"{type(e).__name__}: {e}"[:500]
+        result.errors = ["API call failed"]
+        return result
+    result.raw_output = text
+    try:
+        result.answer = parse_answer(text)
+        result.errors = validate_answer(scenario, result.answer)
+    except (json.JSONDecodeError, ValueError) as e:
+        result.answer, result.errors = None, [f"not valid JSON: {e}"]
+    result.schema_valid = not result.errors
+    return result
+
+
+def planned_calls(models: list[str], scenarios: list[dict], repeats: int) -> int:
+    return len(models) * len(scenarios) * repeats
 
 
 def run_pilot(
@@ -155,48 +184,70 @@ def run_pilot(
     repeats: int = 1,
     grade: Grader | None = None,
     out_dir: Path = PILOT_DIR,
+    settings: dict | None = None,
+    max_calls: int | None = None,
+    batch_id: str | None = None,
 ) -> list[PilotResult]:
-    """Run every model on every scenario `repeats` times and save each result."""
+    """Run every model on every scenario `repeats` times and save each result.
+
+    Results go to out_dir/<batch_id>/<model>/<scenario>_run<n>.json, so a new
+    batch never overwrites an earlier one. Refuses to start if the run would
+    make more than `max_calls` model calls.
+    """
+    n = planned_calls(models, scenarios, repeats)
+    if max_calls is not None and n > max_calls:
+        raise ValueError(f"This pilot would make {n} model calls, more than max_calls={max_calls}")
+    batch_id = batch_id or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    settings = {**DEFAULT_SETTINGS, **(settings or {})}
     results = []
     for model in models:
         for scenario in scenarios:
+            sid = scenario["scenario_id"]
             for run in range(1, repeats + 1):
-                r = run_advisor(scenario, model, run)
-                if grade and r.schema_valid:
+                run_id = f"{batch_id}-{model}-{sid}-r{run}"
+                r = run_advisor(scenario, model, run, run_id=run_id, batch_id=batch_id, settings=settings)
+                if r.api_error:
+                    r.failures = ["API:error"]  # no answer, so correct stays None
+                elif not grade:
+                    pass
+                elif not r.schema_valid:
+                    r.correct, r.failures = False, ["SCHEMA:format"]
+                else:
                     graded = grade(scenario, r.answer)
                     if isinstance(graded, dict):
-                        r.correct = bool(graded["correct"])
-                        r.failures = failure_labels(graded)
+                        r.correct, r.failures = bool(graded["correct"]), failure_labels(graded)
                     else:
                         r.correct = bool(graded)
-                elif grade:
-                    r.correct = False  # an unusable answer counts as wrong
-                    r.failures = ["SCHEMA:format"]
-                path = out_dir / model / f"{r.scenario_id}_run{run}.json"
+                path = out_dir / batch_id / model / f"{sid}_run{run}.json"
                 path.parent.mkdir(parents=True, exist_ok=True)
+                if path.exists():
+                    raise FileExistsError(f"{path} already exists; use a new batch_id")
                 path.write_text(json.dumps(asdict(r), indent=2))
                 results.append(r)
+                status = "API ERROR" if r.api_error else ("valid" if r.schema_valid else "INVALID")
                 print(
-                    f"{model:24} {r.scenario_id} run{run}: "
-                    f"{'valid' if r.schema_valid else 'INVALID'} after {r.attempts} attempt(s)"
+                    f"{model:24} {sid} run{run}: {status}"
                     + ("" if r.correct is None else f", {'correct' if r.correct else 'wrong'}")
-                    + (f" ({', '.join(r.failures)})" if r.failures else "")
+                    + (f" ({', '.join(r.failures)})" if r.failures and not r.correct else "")
                 )
     return results
 
 
 def summarize(results: list[PilotResult]) -> list[dict]:
+    """One row per model. API errors are counted, never silently dropped."""
     rows = []
     for model in dict.fromkeys(r.model for r in results):
         rs = [r for r in results if r.model == model]
-        graded = [r for r in rs if r.correct is not None]
+        answered = [r for r in rs if not r.api_error]
+        graded = [r for r in answered if r.correct is not None]
         rows.append(
             {
                 "model": model,
                 "runs": len(rs),
-                "schema_valid": sum(r.schema_valid for r in rs) / len(rs),
-                "valid_first_try": sum(r.schema_valid and r.attempts == 1 for r in rs) / len(rs),
+                "api_errors": len(rs) - len(answered),
+                "schema_valid": (sum(r.schema_valid for r in answered) / len(answered)) if answered else None,
                 "accuracy": (sum(r.correct for r in graded) / len(graded)) if graded else None,
+                "graded_runs": len(graded),
                 "failures": dict(Counter(f for r in rs for f in r.failures).most_common()),
             }
         )
