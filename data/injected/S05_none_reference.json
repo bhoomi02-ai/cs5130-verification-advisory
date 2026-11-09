@@ -1,0 +1,35 @@
+{
+  "scenario_id": "S05",
+  "error_type": "none",
+  "description": "Untouched reference answer.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S05",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -50
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -25
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": 10
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

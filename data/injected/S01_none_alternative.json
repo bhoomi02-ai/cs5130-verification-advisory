@@ -1,0 +1,31 @@
+{
+  "scenario_id": "S01",
+  "error_type": "none",
+  "description": "Alternative valid trade plan.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S01",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "TSLA",
+        "quantity_delta": -20
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -8
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

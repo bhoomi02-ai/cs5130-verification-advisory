@@ -1,0 +1,46 @@
+{
+  "scenario_id": "S05",
+  "error_type": "unit",
+  "description": "Reports the technology allocation as 35 instead of 0.35.",
+  "expected_check": "REPLAY_TRADES",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S05",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -50
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -25
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": 10
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "TECHNOLOGY",
+          "measure": "ALLOCATION",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "FRACTION",
+          "value": 35
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

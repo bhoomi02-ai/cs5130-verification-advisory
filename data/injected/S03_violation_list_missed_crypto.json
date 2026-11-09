@@ -1,0 +1,107 @@
+{
+  "scenario_id": "S03",
+  "error_type": "violation_list",
+  "description": "Leaves out the CRYPTO prohibition.",
+  "expected_check": "EXACT_SCOPED_VIOLATIONS",
+  "expected_reason": "missed_violation",
+  "also_fails": [
+    {
+      "check": "INDEPENDENT_RESULTS",
+      "reason": "value_mismatch"
+    }
+  ],
+  "response": {
+    "scenario_id": "S03",
+    "answer_type": "VIOLATION_LIST",
+    "status": "VIOLATIONS_FOUND",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 5000
+        },
+        {
+          "subject": "AAPL",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "MSFT",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "VOO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "BND",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 30000
+        },
+        {
+          "subject": "BTC",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 5000.0
+        }
+      ],
+      "selection": null
+    },
+    "violations": [
+      {
+        "kind": "CLASS_MAX",
+        "scope": "STOCK",
+        "observed": 0.6,
+        "limit": 0.4
+      },
+      {
+        "kind": "CLASS_MIN",
+        "scope": "BOND",
+        "observed": 0.3,
+        "limit": 0.45
+      },
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "AAPL",
+        "observed": 0.2,
+        "limit": 0.15
+      },
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "MSFT",
+        "observed": 0.2,
+        "limit": 0.15
+      }
+    ],
+    "explanation": "plan"
+  }
+}

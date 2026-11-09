@@ -1,0 +1,37 @@
+{
+  "scenario_id": "S01",
+  "error_type": "policy_violation",
+  "description": "Sells 1 share of AAPL, which the policy forbids.",
+  "expected_check": "REPLAY_TRADES",
+  "expected_reason": "rule_violation",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S01",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "TSLA",
+        "quantity_delta": -30
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -2
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      },
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -1
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

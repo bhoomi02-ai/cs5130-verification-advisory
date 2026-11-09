@@ -1,0 +1,53 @@
+{
+  "scenario_id": "S06",
+  "error_type": "grounding",
+  "description": "Projects the balance without the month-180 withdrawal.",
+  "expected_check": "INDEPENDENT_RESULTS",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 1040511.2399358178
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 159488.76006418222
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 345.18321156062285
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 345.19
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

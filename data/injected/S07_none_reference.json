@@ -1,0 +1,27 @@
+{
+  "scenario_id": "S07",
+  "error_type": "none",
+  "description": "Untouched reference answer.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S07",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "VOO",
+        "quantity_delta": -30
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 220
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

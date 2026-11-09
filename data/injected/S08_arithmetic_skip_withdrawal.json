@@ -1,0 +1,42 @@
+{
+  "scenario_id": "S08",
+  "error_type": "arithmetic",
+  "description": "Reports final cash as the balance before the withdrawal is paid.",
+  "expected_check": "REPLAY_TRADES",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S08",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -25
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -40
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 30000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

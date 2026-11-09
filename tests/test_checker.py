@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from advisory.checker import check
+from advisory.evaluation.reference import reference_response
 
 _ROOT = Path(__file__).resolve().parents[1]
 _GROUND_TRUTH = json.loads((_ROOT / "data" / "evaluation" / "ground_truth.json").read_text())
@@ -350,52 +351,8 @@ def _money(subject, stage, value, measure="VALUE", rounding="NONE"):
     }
 
 
-def _initial_evidence(scenario):
-    portfolio = scenario["portfolio"]
-    observations = [
-        _money("PORTFOLIO", "INITIAL", portfolio["total_value"]),
-        _money("CASH", "INITIAL", portfolio["cash_balance"]),
-    ]
-    for holding in portfolio["holdings"]:
-        observations.append(_money(holding["symbol"], "INITIAL", holding["market_value"]))
-    return observations
-
-
 def _result_response(scenario_id):
-    ground_truth = _ground_truth(scenario_id)
-    metrics = ground_truth["metrics"]
-    if scenario_id == "S03":
-        response = _contract(ground_truth, observations=_initial_evidence(_scenario("S03")))
-        response["violations"] = ground_truth["violations"]
-        return response
-    if scenario_id == "S04":
-        response = _contract(
-            ground_truth,
-            observations=[
-                _money("Fund A", "FINAL", metrics["fund_a_final"]),
-                _money("Fund B", "FINAL", metrics["fund_b_final"]),
-                _money("OPTIONS", "FINAL", metrics["absolute_difference"], measure="DIFFERENCE"),
-            ],
-        )
-        response["metrics"]["selection"] = metrics["better_fund"]
-        return response
-    if scenario_id == "S06":
-        return _contract(
-            ground_truth,
-            observations=[
-                _money("PORTFOLIO", "FINAL", metrics["final_balance"]),
-                _money("PORTFOLIO", "FINAL", metrics["target_shortfall"], measure="DIFFERENCE"),
-                _money("PORTFOLIO", "FINAL", metrics["additional_monthly_contribution"], measure="PAYMENT"),
-                _money(
-                    "PORTFOLIO",
-                    "FINAL",
-                    metrics["additional_monthly_contribution_cents"],
-                    measure="PAYMENT",
-                    rounding="UPWARD_CENT",
-                ),
-            ],
-        )
-    return _contract(ground_truth, observations=_initial_evidence(_scenario(scenario_id)))
+    return reference_response(scenario_id)
 
 
 def _assert_independent_matches_ground_truth(result, ground_truth):
