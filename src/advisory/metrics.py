@@ -5,7 +5,7 @@ those decisions. Every distinct ``condition`` value gets a row; the condition
 list is not hard-coded. Condition ``none`` has no verifier, so its verifier
 metrics, including ``n_missing_verdict``, are ``None``. Every other condition
 is scored on the runs that have a verdict, and ``n_missing_verdict`` counts
-the rest. Extra cost is compared with ``none``.
+the rest. Extra cost compares mean cost and success rate with ``none``.
 """
 
 from __future__ import annotations
@@ -51,6 +51,7 @@ METRIC_COLUMNS = (
     "fix_rate",
     "break_rate",
     "net_gain",
+    "success_delta",
     "total_cost_usd",
     "mean_cost_usd",
     "mean_tokens_in",
@@ -94,9 +95,9 @@ __all__ = [
 def validate_runs(runs: list[dict] | pd.DataFrame) -> pd.DataFrame:
     """Return a cleaned copy of ``runs``, or raise if the input is unusable.
 
-    Missing required columns and verdicts other than ``accept``, ``reject``,
-    ``abstain``, or missing (``None``) are errors. Missing verdicts are kept
-    as ``None``.
+    Missing required columns, unknown verdicts, and duplicate
+    ``(task_id, condition, run_number)`` rows are errors. Missing verdicts
+    are kept as ``None``.
     """
     if isinstance(runs, pd.DataFrame):
         frame = runs.copy()
@@ -116,6 +117,8 @@ def validate_runs(runs: list[dict] | pd.DataFrame) -> pd.DataFrame:
         raise ValueError("task_id must be present on every run")
     if frame["condition"].isna().any():
         raise ValueError("condition must be present on every run")
+    if frame.duplicated(subset=["task_id", "condition", "run_number"]).any():
+        raise ValueError("duplicate rows for the same task_id, condition, and run_number")
 
     frame["initial_correct"] = _as_bool(frame["initial_correct"], "initial_correct")
     frame["final_correct"] = _as_bool(frame["final_correct"], "final_correct")
@@ -143,8 +146,8 @@ def verifier_metrics(verdict, initial_correct, condition=None) -> dict[str, floa
     Condition ``none`` is not a verifier, so its rates and
     ``n_missing_verdict`` stay ``None``. Any other condition is scored only
     on runs that have a verdict, and ``n_missing_verdict`` counts the runs
-    left out. MCC is scikit-learn's coefficient, which is 0 when the
-    coefficient is undefined.
+    left out. MCC is scikit-learn's coefficient when the denominator is
+    positive, and ``None`` when that denominator is zero.
     """
     labels = _checked_verdicts(_as_series(verdict))
     initial = _as_bool(_as_series(initial_correct), "initial_correct")
@@ -167,7 +170,7 @@ def verifier_metrics(verdict, initial_correct, condition=None) -> dict[str, floa
     # labels=[False, True] forces [[TN, FP], [FN, TP]] even if a cell is zero.
     matrix = confusion_matrix(actually_wrong, flagged, labels=[False, True])
     tn, fp, fn, tp = (int(value) for value in matrix.ravel())
-    mcc = float(matthews_corrcoef(actually_wrong, flagged))
+    mcc = _mcc(tp, fp, fn, tn, actually_wrong, flagged)
     return {
         "tp": tp,
         "fp": fp,
@@ -189,7 +192,8 @@ def fixed_broken(initial_correct, final_correct) -> dict[str, float | int | None
     correct and finally wrong. Fix rate divides by the number of initially
     wrong runs, and break rate by the number of initially correct runs.
     Either rate is ``None`` when its denominator is zero, and then net gain
-    is ``None`` too.
+    is ``None`` too. ``success_delta`` is ``(fixed - broken) / n_runs``,
+    which is final success minus initial success.
     """
     initial = _as_bool(_as_series(initial_correct), "initial_correct")
     final = _as_bool(_as_series(final_correct), "final_correct")
@@ -207,12 +211,14 @@ def fixed_broken(initial_correct, final_correct) -> dict[str, float | int | None
     fix_rate = _rate(fixed, initially_wrong)
     break_rate = _rate(broken, initially_correct)
     net_gain = None if fix_rate is None or break_rate is None else fix_rate - break_rate
+    n_runs = len(initial_np)
     return {
         "fixed": fixed,
         "broken": broken,
         "fix_rate": fix_rate,
         "break_rate": break_rate,
         "net_gain": net_gain,
+        "success_delta": (fixed - broken) / n_runs,
     }
 
 
@@ -238,20 +244,21 @@ def cost_metrics(cost_usd, tokens_in, tokens_out, latency_s) -> dict[str, float]
 
 
 def extra_cost_per_extra_correct(
-    total_cost: float,
-    n_correct: int,
-    none_total_cost: float,
-    none_n_correct: int,
+    mean_cost: float,
+    success_rate: float,
+    none_mean_cost: float,
+    none_success_rate: float,
 ) -> float | None:
-    """Extra dollars per extra correct run, relative to condition ``none``.
+    """Extra mean dollars per extra point of success rate, versus ``none``.
 
-    Returns ``None`` when this condition has no more correct runs than
-    ``none``, so the denominator is never zero or negative.
+    Uses per-run means, so conditions with different numbers of runs compare
+    on the same scale. Returns ``None`` when this success rate is not higher
+    than ``none``.
     """
-    extra_correct = n_correct - none_n_correct
-    if extra_correct <= 0:
+    extra_success = success_rate - none_success_rate
+    if extra_success <= 0:
         return None
-    return (total_cost - none_total_cost) / extra_correct
+    return (mean_cost - none_mean_cost) / extra_success
 
 
 def bootstrap_task_success_ci(task_id, final_correct, seed: int = 0) -> tuple[float, float]:
@@ -289,16 +296,17 @@ def summarize(runs: list[dict] | pd.DataFrame, seed: int = 0) -> pd.DataFrame:
     ``task_success_ci_high``. Task success itself is the share of runs with
     ``final_correct``, which matches the mean of the task means when every
     task has the same number of runs. Extra cost is ``None`` when condition
-    ``none`` is absent or when a condition has no additional correct runs.
+    ``none`` is absent or when a condition's success rate is not higher
+    than ``none``. It divides the gap in mean cost by the gap in success rate.
     """
     frame = validate_runs(runs)
     none = frame.loc[frame["condition"] == "none"]
     if none.empty:
-        none_cost = None
-        none_correct = None
+        none_mean_cost = None
+        none_success = None
     else:
-        none_cost = float(none["cost_usd"].sum())
-        none_correct = int(none["final_correct"].sum())
+        none_mean_cost = float(none["cost_usd"].mean())
+        none_success = task_success(none["final_correct"])
 
     rows: list[dict] = []
     for condition, group in frame.groupby("condition", sort=False):
@@ -306,20 +314,20 @@ def summarize(runs: list[dict] | pd.DataFrame, seed: int = 0) -> pd.DataFrame:
         low, high = bootstrap_task_success_ci(
             group["task_id"], group["final_correct"], seed=seed
         )
-        n_correct = int(group["final_correct"].sum())
-        if none_cost is None or none_correct is None:
+        success = task_success(group["final_correct"])
+        if none_mean_cost is None or none_success is None:
             extra = None
         else:
             extra = extra_cost_per_extra_correct(
-                float(group["cost_usd"].sum()),
-                n_correct,
-                none_cost,
-                none_correct,
+                float(group["cost_usd"].mean()),
+                success,
+                none_mean_cost,
+                none_success,
             )
         rows.append(
             {
                 "condition": condition_name,
-                "task_success": task_success(group["final_correct"]),
+                "task_success": success,
                 "task_success_ci_low": low,
                 "task_success_ci_high": high,
                 **verifier_metrics(
@@ -423,6 +431,13 @@ def _aligned_floats(*columns: tuple[str, object]) -> list[np.ndarray]:
             raise ValueError(f"{name} must be numeric on every run")
         arrays.append(array)
     return arrays
+
+
+def _mcc(tp: int, fp: int, fn: int, tn: int, actually_wrong, flagged) -> float | None:
+    """Matthews correlation, or ``None`` when its denominator is zero."""
+    if (tp + fp) == 0 or (tp + fn) == 0 or (tn + fp) == 0 or (tn + fn) == 0:
+        return None
+    return float(matthews_corrcoef(actually_wrong, flagged))
 
 
 def _rate(numerator: int, denominator: int) -> float | None:

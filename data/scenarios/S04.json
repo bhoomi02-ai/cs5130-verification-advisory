@@ -1,0 +1,254 @@
+{
+  "scenario_id": "S04",
+  "schema_version": "2.0-revised-draft",
+  "answer_type": "NUMERIC_RESULT",
+  "client": {},
+  "valuation_date": null,
+  "portfolio": {
+    "holdings": [],
+    "cash_balance": null,
+    "total_value": 100000
+  },
+  "investment_policy": {
+    "target_allocations": {},
+    "restrictions": []
+  },
+  "cash_flows": [],
+  "client_request": "Compare the five-year final values after all stated fees. Report each fund final value, absolute difference and better-performing fund.",
+  "assumptions": [],
+  "calculation_type": "FUND_COMPARISON",
+  "investment_options": [
+    {
+      "name": "Fund A",
+      "initial_investment": 100000,
+      "gross_annual_return": 0.09,
+      "annual_fee": 0.02,
+      "entry_fee": 0.01,
+      "years": 5
+    },
+    {
+      "name": "Fund B",
+      "initial_investment": 100000,
+      "gross_annual_return": 0.08,
+      "annual_fee": 0.002,
+      "entry_fee": 0,
+      "years": 5
+    }
+  ],
+  "calculation_convention": {
+    "entry_fee": "Deduct before compounding",
+    "annual_growth_factor": "(1 + gross_annual_return) * (1 - annual_fee)",
+    "compounding": "ANNUAL"
+  },
+  "output_requirements": {
+    "contract_id": "NEUTRAL_OUTPUT_V1",
+    "delivery": "Every Advisor and verifier receives this COMPLETE scenario JSON unchanged plus its role-specific prompt. No scenario-specific filtering, field removal or special delivery logic. The same full scenario and output contract are used by all four conditions. checks.json and ground_truth.json are evaluator-only and must never be supplied to any Advisor or verifier.",
+    "required_metrics": [
+      "observations",
+      "selection"
+    ],
+    "response_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_id",
+        "answer_type",
+        "status",
+        "trades",
+        "metrics",
+        "violations",
+        "explanation"
+      ],
+      "properties": {
+        "scenario_id": {
+          "enum": [
+            "S01",
+            "S02",
+            "S03",
+            "S04",
+            "S05",
+            "S06",
+            "S07",
+            "S08",
+            "S09",
+            "S10"
+          ]
+        },
+        "answer_type": {
+          "enum": [
+            "TRADE_PLAN",
+            "VIOLATION_LIST",
+            "NUMERIC_RESULT"
+          ]
+        },
+        "status": {
+          "enum": [
+            "FEASIBLE",
+            "INFEASIBLE",
+            "VIOLATIONS_FOUND",
+            "INSUFFICIENT_INFORMATION"
+          ]
+        },
+        "trades": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "symbol",
+              "quantity_delta"
+            ],
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "minLength": 1
+              },
+              "quantity_delta": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observations",
+            "selection"
+          ],
+          "properties": {
+            "observations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "subject",
+                  "measure",
+                  "stage",
+                  "rounding",
+                  "unit",
+                  "value"
+                ],
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "measure": {
+                    "enum": [
+                      "VALUE",
+                      "ALLOCATION",
+                      "QUANTITY",
+                      "PAYMENT",
+                      "DIFFERENCE"
+                    ]
+                  },
+                  "stage": {
+                    "enum": [
+                      "INITIAL",
+                      "HISTORICAL",
+                      "BEFORE_TRADES",
+                      "BEFORE_WITHDRAWAL",
+                      "FINAL"
+                    ]
+                  },
+                  "rounding": {
+                    "enum": [
+                      "NONE",
+                      "UPWARD_CENT"
+                    ]
+                  },
+                  "unit": {
+                    "enum": [
+                      "MONEY",
+                      "FRACTION",
+                      "SHARES"
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "selection": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "violations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "scope",
+              "observed",
+              "limit"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "CLASS_MAX",
+                  "CLASS_MIN",
+                  "INDIVIDUAL_MAX",
+                  "PROHIBITED_CLASS"
+                ]
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observed": {
+                "type": "number"
+              },
+              "limit": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "$comment": "Neutral contract shared by every scenario and condition. Output status is chosen from the analysis; no status or outcome is prescribed by a scenario-specific output requirement."
+    },
+    "status_meanings": {
+      "FEASIBLE": "The requested plan or calculation is achievable under the supplied conditions.",
+      "INFEASIBLE": "The requested requirements cannot jointly be met under the supplied conditions.",
+      "VIOLATIONS_FOUND": "The analysis identified one or more current policy violations.",
+      "INSUFFICIENT_INFORMATION": "Essential information is unavailable; identify what is missing."
+    },
+    "trades_rule": "Always include trades as an array. Positive quantity_delta means buy; negative means sell. [] means no transactions are proposed and does not itself establish feasibility. Use [] for calculations or policy audits that do not propose transactions, or when no executable plan is offered. Enforce whole shares only where stated in the scenario.",
+    "observations_rule": "Each observation is identified by (subject, measure, stage, rounding); do not duplicate that key. Use PORTFOLIO for the whole account, CASH for cash, exact supplied symbols or asset-class names for holdings, or exact supplied option names; use OPTIONS for a comparison of named options. VALUE and DIFFERENCE use MONEY, ALLOCATION uses FRACTION, QUANTITY uses SHARES, and PAYMENT uses MONEY per monthly payment. Normally rounding is NONE; use UPWARD_CENT only for the upward-rounded payment requested by the client. selection is the exact chosen option name when the client asks to compare named options, otherwise null.",
+    "task_completion": "Answer only the supplied client request. For executable portfolio plans the evaluator derives balances and allocations from the supplied inputs and your trades; supporting observations may be supplied and must be consistent. For portfolio analysis without an executable plan, include INITIAL VALUE observations for PORTFOLIO, CASH and each supplied holding to support the analysis. For numerical questions report the requested final amounts as FINAL VALUE observations; report requested differences as FINAL DIFFERENCE observations (OPTIONS for absolute option-value differences, PORTFOLIO for target minus projected balance), and any requested exact and upward-cent recurring payment as FINAL PAYMENT observations. This reporting convention applies uniformly; it does not prescribe an outcome.",
+    "stage_meanings": {
+      "INITIAL": "Supplied current portfolio before listed external cash flows and trades.",
+      "HISTORICAL": "The supplied historical snapshot.",
+      "BEFORE_TRADES": "After listed deposits, immediately before any proposed trades; no withdrawal has been executed.",
+      "BEFORE_WITHDRAWAL": "After proposed trades and deposits, immediately before listed withdrawals.",
+      "FINAL": "After listed trades and external flows, or at the requested calculation horizon."
+    },
+    "violation_meanings": {
+      "CLASS_MAX": "An asset class exceeds its permitted maximum.",
+      "CLASS_MIN": "An asset class is below its permitted minimum.",
+      "INDIVIDUAL_MAX": "An individual stock exceeds its permitted concentration maximum.",
+      "PROHIBITED_CLASS": "A prohibited asset class is present. Report each rule/scope once."
+    },
+    "violations_rule": "Always include violations as an array, [] if none are reported. scope is the exact supplied symbol or class. observed and limit are fractions of the relevant portfolio value. Do not infer a violation merely because the answer_type permits an audit.",
+    "explanation_rule": "Explain the recommendation and supporting calculation or bound concisely, including any unresolved assumption used conditionally. Do not treat a listed status choice, metric vocabulary or empty array as a hint to the reference outcome."
+  }
+}
