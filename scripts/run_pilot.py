@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import argparse
 
-from advisory.pilot import load_scenarios, run_pilot, summarize
+from advisory.pilot import checker_grade, load_scenarios, run_pilot, summarize
 
 DEFAULT_MODELS = ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
 
@@ -22,10 +22,15 @@ def main() -> None:
     p.add_argument("--models", nargs="+", default=DEFAULT_MODELS)
     p.add_argument("--scenarios", nargs="+", help="scenario ids, e.g. S01 S02 (default: all)")
     p.add_argument("--repeats", type=int, default=1)
+    p.add_argument("--no-grade", action="store_true", help="skip grading with the checker")
     args = p.parse_args()
 
-    # TODO: pass grade=<checker function> once checker.py is ready (Dhanya).
-    results = run_pilot(args.models, load_scenarios(ids=args.scenarios), repeats=args.repeats)
+    results = run_pilot(
+        args.models,
+        load_scenarios(ids=args.scenarios),
+        repeats=args.repeats,
+        grade=None if args.no_grade else checker_grade,
+    )
 
     print("\nmodel                     runs  schema-valid  valid-1st-try  accuracy")
     for row in summarize(results):
@@ -34,6 +39,11 @@ def main() -> None:
             f"{row['model']:24} {row['runs']:5}  {row['schema_valid']:12.0%}"
             f"  {row['valid_first_try']:13.0%}  {acc}"
         )
+    for row in summarize(results):
+        if row["failures"]:
+            print(f"\n{row['model']} failed checks:")
+            for label, n in row["failures"].items():
+                print(f"  {n:3}  {label}")
 
 
 if __name__ == "__main__":

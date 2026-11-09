@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections import Counter
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -40,7 +41,26 @@ Your previous response could not be accepted: {problem}
 Respond again with only the corrected JSON object.
 """
 
-Grader = Callable[[dict, dict], bool]
+# A grader takes (scenario, answer) and returns either a bool or a checker
+# result dict with "correct" and "checks" (see advisory.checker.check).
+Grader = Callable[[dict, dict], "bool | dict"]
+
+
+def checker_grade(scenario: dict, answer: dict) -> dict:
+    """Grade with the hidden checker. Evaluation-side only: never pass to an agent."""
+    from advisory.checker import check
+
+    return check(scenario["scenario_id"], answer)
+
+
+def failure_labels(result: dict) -> list[str]:
+    """Summarize a checker result as "CHECK_TYPE:reason" labels, e.g. "REPLAY_TRADES:rule_violation"."""
+    labels = []
+    for c in result.get("checks", []):
+        if not c.get("passed"):
+            reason = (c.get("details") or {}).get("reason", "failed")
+            labels.append(f"{c.get('check_type', c.get('check_id', '?'))}:{reason}")
+    return labels
 
 
 @dataclass
@@ -54,6 +74,7 @@ class PilotResult:
     answer: dict | None
     raw_outputs: list[str] = field(default_factory=list)
     correct: bool | None = None  # None until a grader is supplied
+    failures: list[str] = field(default_factory=list)  # failed checks, from the checker
 
 
 def load_scenarios(directory: Path = SCENARIO_DIR, ids: list[str] | None = None) -> list[dict]:
@@ -142,9 +163,15 @@ def run_pilot(
             for run in range(1, repeats + 1):
                 r = run_advisor(scenario, model, run)
                 if grade and r.schema_valid:
-                    r.correct = bool(grade(scenario, r.answer))
+                    graded = grade(scenario, r.answer)
+                    if isinstance(graded, dict):
+                        r.correct = bool(graded["correct"])
+                        r.failures = failure_labels(graded)
+                    else:
+                        r.correct = bool(graded)
                 elif grade:
                     r.correct = False  # an unusable answer counts as wrong
+                    r.failures = ["SCHEMA:format"]
                 path = out_dir / model / f"{r.scenario_id}_run{run}.json"
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(json.dumps(asdict(r), indent=2))
@@ -153,6 +180,7 @@ def run_pilot(
                     f"{model:24} {r.scenario_id} run{run}: "
                     f"{'valid' if r.schema_valid else 'INVALID'} after {r.attempts} attempt(s)"
                     + ("" if r.correct is None else f", {'correct' if r.correct else 'wrong'}")
+                    + (f" ({', '.join(r.failures)})" if r.failures else "")
                 )
     return results
 
@@ -169,6 +197,7 @@ def summarize(results: list[PilotResult]) -> list[dict]:
                 "schema_valid": sum(r.schema_valid for r in rs) / len(rs),
                 "valid_first_try": sum(r.schema_valid and r.attempts == 1 for r in rs) / len(rs),
                 "accuracy": (sum(r.correct for r in graded) / len(graded)) if graded else None,
+                "failures": dict(Counter(f for r in rs for f in r.failures).most_common()),
             }
         )
     return rows

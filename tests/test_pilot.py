@@ -120,3 +120,42 @@ def test_summarize_without_grader_has_no_accuracy(fake_model, tmp_path):
     fake_model(json.dumps(GOOD))
     rows = pilot.summarize(pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path))
     assert rows[0]["accuracy"] is None and rows[0]["valid_first_try"] == 1.0
+
+
+# Grading with the checker.
+
+
+def test_dict_grader_records_failures(fake_model, tmp_path):
+    fake_model(json.dumps(GOOD), "garbage", "garbage")
+    verdicts = iter(
+        [{"correct": False, "checks": [{"check_type": "REPLAY_TRADES", "passed": False, "details": {"reason": "rule_violation"}},
+                                         {"check_type": "STATUS", "passed": True}]}]
+    )
+    results = pilot.run_pilot(["m1", "m2"], [SCENARIO], grade=lambda s, a: next(verdicts), out_dir=tmp_path)
+    assert results[0].correct is False and results[0].failures == ["REPLAY_TRADES:rule_violation"]
+    assert results[1].failures == ["SCHEMA:format"]  # invalid answer, never reached the grader
+    rows = {row["model"]: row for row in pilot.summarize(results)}
+    assert rows["m1"]["failures"] == {"REPLAY_TRADES:rule_violation": 1}
+    saved = json.loads((tmp_path / "m1" / "S01_run1.json").read_text())
+    assert saved["failures"] == ["REPLAY_TRADES:rule_violation"]
+
+
+def test_checker_grade_on_real_s01():
+    scenario = pilot.load_scenarios(ids=["S01"])[0]
+    answer = {
+        "scenario_id": "S01",
+        "answer_type": "TRADE_PLAN",
+        "status": "FEASIBLE",
+        "trades": [{"symbol": "MSFT", "quantity_delta": -25}, {"symbol": "BND", "quantity_delta": 125}],
+        "metrics": {"observations": [], "selection": None},
+        "violations": [],
+        "explanation": "Sell 25 MSFT and buy 125 BND to reach 60/30/10.",
+    }
+    assert pilot.validate_answer(scenario, answer) == []
+    good = pilot.checker_grade(scenario, answer)
+    assert good["correct"] and pilot.failure_labels(good) == []
+
+    sells_aapl = {**answer, "trades": [{"symbol": "AAPL", "quantity_delta": -50}, {"symbol": "BND", "quantity_delta": 125}]}
+    bad = pilot.checker_grade(scenario, sells_aapl)
+    assert not bad["correct"]
+    assert "REPLAY_TRADES:rule_violation" in pilot.failure_labels(bad)
