@@ -19,6 +19,7 @@
 **[Scenarios](#scenarios)** ·
 **[File formats](#file-formats)** ·
 **[Metrics](#what-we-measure)** ·
+**[Models](#models)** ·
 **[Architecture](#architecture-tools-and-flow)** ·
 **[Quickstart](#quickstart)** ·
 **[Glossary](#glossary)** ·
@@ -34,6 +35,9 @@
 - **The experiment:** one advisor drafts an answer, then four verification strategies (none, self, peer, and a dedicated verifier with a calculator) check the same draft.
 - **The grading:** synthetic client scenarios with known answers, graded by a deterministic scorer that no agent ever sees.
 - **The goal:** find out which kind of check makes the advisor most reliable, and what each one costs in tokens and time.
+
+> [!NOTE]
+> **Status: in progress.** Built so far: the scenario files, the model wrapper (`llm.py`), the dedicated verifier's calculator and the metrics. The checker and the model pilot are in review. The scenario generator, the four conditions and the verifier prompts are still to come, so parts of this README describe the planned design.
 
 ## Research question
 
@@ -175,14 +179,15 @@ Metrics come from `src/advisory/metrics.py`, which turns one row per run into on
 | | **Precision** | Share of flags that point at a real error |
 | | **False-alarm rate** | Share of correct drafts the verifier wrongly flags |
 | | **MCC** | One balanced score for how well the flags separate wrong drafts from correct ones |
-| | **Abstention rate** | Share of runs sent to human review |
+| | **Abstention rate** | Share of scored verdicts that are `abstain` (sent to human review) |
 | **Fixed vs broken** | **Fix rate** | Share of wrong drafts that end up correct after verification |
 | | **Break rate** | Share of correct drafts that verification turns wrong |
 | | **Net gain** | Fix rate minus break rate |
+| | **Success delta** | (fixed − broken) ÷ all runs, i.e. final success minus first-draft success |
 | **Cost** | **Cost, tokens and latency** | Total and mean cost, mean tokens, median and p95 latency |
-| | **Extra cost per extra correct answer** | What each condition pays, compared with `none`, for every additional correct answer |
+| | **Extra cost per extra correct answer** | (mean cost − mean cost of `none`) ÷ (success rate − success rate of `none`) |
 
-Verifier metrics use runs that have a verdict, and an abstain counts as a flag, just like a reject. Runs without a verdict are reported as `n_missing_verdict`. Rates that can't be computed are reported as `None`; MCC follows scikit-learn and is 0 when it can't be computed.
+Verifier metrics use runs that have a verdict, and an abstain counts as a flag, just like a reject. Runs without a verdict are counted in `n_missing_verdict`, which is `None` for `none` because it has no verifier by design. Rates that can't be computed are reported as `None`, and so is MCC. Net gain and success delta are reported together because net gain can be positive while overall success drops. Extra cost per extra correct answer is `None` when a condition is not more accurate than `none`.
 
 **Study settings**
 
@@ -190,6 +195,22 @@ Verifier metrics use runs that have a verdict, and an abstain counts as a flag, 
 - **Statistics:** the bootstrap resamples tasks, not runs, and conditions are compared in pairs on the same tasks.
 - **Budget:** at most about 7M tokens across all six settings (four conditions plus two ablations).
 - **Something to catch:** a model that never makes mistakes leaves verification nothing to do, and one that breaks the output format fails before the math matters. The advisor model is chosen with a pilot run so that it is right about **50–80%** of the time, and answers with **known injected errors** are added so every verifier faces real mistakes.
+
+## Models
+
+All model calls go through the Gemini API with one key (`GOOGLE_API_KEY`). Prices are per 1M tokens, paid tier, and the output price includes thinking tokens.
+
+| Model | Input / output | Role |
+|---|---|---|
+| `gemini-3.1-flash-lite` | $0.25 / $1.50 | Advisor candidate |
+| `gemini-3.5-flash-lite` | $0.30 / $2.50 | Advisor candidate |
+| `gemini-3.8-flash` | $0.75 / $3.75 (doubles on 2027-01-01) | Stronger advisor candidate |
+| `gemma-4-26b-a4b-it` | free tier only | Cross-family verifier candidate |
+
+- **Why not the proposal's models:** Gemini 2.5 Flash and Flash-Lite now return *"no longer available to new users"*, so the candidates moved to the Gemini 3.x family.
+- **Picking the advisor:** a pilot run (`none` condition, all ten scenarios, three repeats) picks the model whose baseline accuracy lands near 50–80%. The two Flash-Lite models scored far below that in a first pilot, so stronger models are being tested.
+- **Cross-family caveat:** Gemma is also built by Google, so it may share Gemini's blind spots. A verifier from another company would make the cross-family ablation stronger.
+- `llm.py` refuses any model without an entry in its `PRICING` table, so a run never logs a cost of $0 by accident.
 
 ## Architecture, tools and flow
 
@@ -223,16 +244,18 @@ Two rules hold everywhere: no agent ever reads the evaluation files, and the sco
 
 ```text
 src/advisory/
-  llm.py          single wrapper for all model calls; logs to results/runs.jsonl
+  llm.py          single wrapper for all model calls (Gemini API); logs to results/runs.jsonl
+  calculator.py   sandboxed calculator tool for the dedicated verifier
   schemas.py      Pydantic models for the advisor's structured answer
   conditions.py   the four conditions and the CONDITIONS registry
   checker.py      deterministic constraint checker (hidden from agents)
   generator.py    synthetic client scenario generator
   metrics.py      per-condition metrics: task success, verifier, fixed vs broken, cost
 tests/            pytest suite
-data/scenarios/   scenario files (S01.json … S10.json)
+data/scenarios/   scenario files (S01.json … S10.json), given to agents
+data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
 results/          run logs and metrics (runs.jsonl)
-docs/             proposal, notes
+docs/             proposal.pdf, topic_selection.pdf, notes
 assets/           README images and animations
 scripts/          entry points for generating, running and analysing
 pyproject.toml    package metadata and dependencies (pip install -e ".[dev]")
@@ -248,14 +271,20 @@ cd cs5130-verification-advisory
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
-cp .env.example .env   # fill in your own keys; .env is gitignored
+cp .env.example .env   # make your own copy, then edit .env (not .env.example)
 pytest
+```
+
+Then open `.env` and add your Gemini key from [Google AI Studio](https://aistudio.google.com/apikey):
+
+```bash
+GOOGLE_API_KEY=your-key-here
 ```
 
 Requires **Python 3.10 or newer**. Entry points for generating scenarios, running conditions and analysing results live in `scripts/`.
 
 > [!WARNING]
-> Never commit `.env` or any API key. If a key is ever pushed, revoke it right away; deleting the commit is not enough.
+> Keys go only in `.env`, which git ignores. `.env.example` is tracked by git, so never put a real key in it. Never commit `.env` or any API key. If a key is ever pushed, revoke it right away; deleting the commit is not enough.
 
 ## Contributing workflow
 
@@ -272,7 +301,7 @@ flowchart LR
 - **Open a pull request into `main`** and link the issue (`Closes #N`).
 - **At least one teammate reviews** before merging, and `pytest` must pass.
 - **Every model call goes through `advisory.llm.call_model`** so it is logged.
-- **Pin exact model strings** (dated snapshots), never aliases, so runs are reproducible.
+- **Use exact model names**, never aliases such as `-latest`, so runs are reproducible. Gemini model names have no date suffix, so the exact name is the pin, and every run logs the model it used.
 
 ## About the animated diagrams
 
