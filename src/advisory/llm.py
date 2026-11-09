@@ -22,12 +22,17 @@ class RunRecord:
     task_id: str
     condition: str
     agent: str
-    model: str  # pinned model string, e.g. a dated snapshot, never an alias
+    model: str  # exact model name, never an alias
     tokens_in: int
     tokens_out: int
     latency_s: float
     cost_usd: float
     raw_output: str
+    temperature: float | None = None  # None means the provider default
+    top_p: float | None = None  # None means the provider default
+    thinking_level: str | None = None  # None means the provider default
+    run_id: str | None = None  # joins this call to the per-run result file
+    error: str | None = None  # set when the call failed; tokens and cost are then 0
 
 
 # USD per 1M tokens (input, output), paid tier, standard (non-batch), text.
@@ -38,6 +43,7 @@ class RunRecord:
 PRICING: dict[str, tuple[float, float]] = {
     "gemini-3.1-flash-lite": (0.25, 1.50),
     "gemini-3.5-flash-lite": (0.30, 2.50),
+    "gemini-3.6-flash": (0.75, 3.75),  # rises to (1.50, 7.50) on 2027-01-01
     "gemini-3.8-flash": (0.75, 3.75),  # rises to (1.50, 7.50) on 2027-01-01
     # Gemma 4 is free tier only (no paid tier), so its cost really is zero.
     # Used for the cross-family verifier ablation.
@@ -47,6 +53,9 @@ PRICING: dict[str, tuple[float, float]] = {
 
 _MAX_RETRIES = 5
 _RETRY_STATUS = (429, 500, 503)
+
+# How much the model reasons before answering (Gemini 3 thinking_level).
+THINKING_LEVELS = ("minimal", "low", "medium", "high")
 
 
 def compute_cost(model: str, tokens_in: int, tokens_out: int) -> float:
@@ -96,11 +105,47 @@ def _get_gemini_client():
     return _gemini_client
 
 
-def _gemini_call(model: str, messages: list[dict]) -> tuple[str, int, int, float]:
+def gemini_config(
+    system: str | None,
+    temperature: float | None,
+    thinking_level: str | None,
+    top_p: float | None = None,
+) -> dict | None:
+    """Build the Gemini request config; settings left as None use the model default."""
+    config: dict = {}
+    if system:
+        config["system_instruction"] = system
+    if temperature is not None:
+        if not 0 <= temperature <= 2:
+            raise ValueError(f"temperature must be between 0 and 2, got {temperature}")
+        config["temperature"] = temperature
+    if top_p is not None:
+        if not 0 < top_p <= 1:
+            raise ValueError(f"top_p must be in (0, 1], got {top_p}")
+        config["top_p"] = top_p
+    if thinking_level is not None:
+        if thinking_level not in THINKING_LEVELS:
+            raise ValueError(f"thinking_level must be one of {THINKING_LEVELS}, got {thinking_level!r}")
+        config["thinking_config"] = {"thinking_level": thinking_level.upper()}
+    return config or None
+
+
+def _is_daily_quota(error) -> bool:
+    """A per-day quota will not reset for hours, so retrying is pointless."""
+    return error.code == 429 and "PerDay" in json.dumps(getattr(error, "details", None), default=str)
+
+
+def _gemini_call(
+    model: str,
+    messages: list[dict],
+    temperature: float | None = None,
+    thinking_level: str | None = None,
+    top_p: float | None = None,
+) -> tuple[str, int, int, float]:
     from google.genai import errors
 
     system, contents = to_gemini(messages)
-    config = {"system_instruction": system} if system else None
+    config = gemini_config(system, temperature, thinking_level, top_p)
     client = _get_gemini_client()
     for attempt in range(_MAX_RETRIES):
         try:
@@ -109,7 +154,7 @@ def _gemini_call(model: str, messages: list[dict]) -> tuple[str, int, int, float
             )
             break
         except errors.APIError as e:
-            if e.code not in _RETRY_STATUS or attempt == _MAX_RETRIES - 1:
+            if e.code not in _RETRY_STATUS or attempt == _MAX_RETRIES - 1 or _is_daily_quota(e):
                 raise
             time.sleep(2**attempt * 5)  # 5, 10, 20, 40 s; free tier is rate limited
     usage = response.usage_metadata
@@ -119,10 +164,16 @@ def _gemini_call(model: str, messages: list[dict]) -> tuple[str, int, int, float
     return response.text or "", tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
 
 
-def _provider_call(model: str, messages: list[dict]) -> tuple[str, int, int, float]:
+def _provider_call(
+    model: str,
+    messages: list[dict],
+    temperature: float | None = None,
+    thinking_level: str | None = None,
+    top_p: float | None = None,
+) -> tuple[str, int, int, float]:
     """Return (text, tokens_in, tokens_out, cost_usd), dispatching on `model`."""
     if model.startswith(("gemini-", "gemma-")):
-        return _gemini_call(model, messages)
+        return _gemini_call(model, messages, temperature, thinking_level, top_p)
     raise ValueError(f"No provider configured for model {model!r}")
 
 
@@ -139,23 +190,56 @@ def call_model(
     agent: str,
     model: str,
     messages: list[dict],
+    temperature: float | None = None,
+    thinking_level: str | None = None,
+    top_p: float | None = None,
+    run_id: str | None = None,
 ) -> str:
-    """Call `model` with `messages`, append a record to the run log, return the text."""
+    """Call `model` with `messages`, append a record to the run log, return the text.
+
+    `temperature`, `top_p` and `thinking_level` (one of THINKING_LEVELS) are
+    logged with the run; None leaves the provider default in place. `run_id`
+    lets the log be joined to per-run results. A failed call is logged too,
+    with `error` set, and then re-raised, so failures never silently vanish.
+    """
     start = time.perf_counter()
-    text, tokens_in, tokens_out, cost = _provider_call(model, messages)
-    latency = time.perf_counter() - start
+    common = dict(
+        task_id=task_id,
+        condition=condition,
+        agent=agent,
+        model=model,
+        temperature=temperature,
+        top_p=top_p,
+        thinking_level=thinking_level,
+        run_id=run_id,
+    )
+    try:
+        text, tokens_in, tokens_out, cost = _provider_call(
+            model, messages, temperature, thinking_level, top_p
+        )
+    except Exception as e:
+        log_record(
+            RunRecord(
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                tokens_in=0,
+                tokens_out=0,
+                latency_s=time.perf_counter() - start,
+                cost_usd=0.0,
+                raw_output="",
+                error=f"{type(e).__name__}: {e}"[:500],
+                **common,
+            )
+        )
+        raise
     log_record(
         RunRecord(
             timestamp=datetime.now(timezone.utc).isoformat(),
-            task_id=task_id,
-            condition=condition,
-            agent=agent,
-            model=model,
             tokens_in=tokens_in,
             tokens_out=tokens_out,
-            latency_s=latency,
+            latency_s=time.perf_counter() - start,
             cost_usd=cost,
             raw_output=text,
+            **common,
         )
     )
     return text
