@@ -29,6 +29,7 @@ class RunRecord:
     cost_usd: float
     raw_output: str
     temperature: float | None = None  # None means the provider default
+    top_p: float | None = None  # None means the provider default
     thinking_level: str | None = None  # None means the provider default
 
 
@@ -103,7 +104,10 @@ def _get_gemini_client():
 
 
 def gemini_config(
-    system: str | None, temperature: float | None, thinking_level: str | None
+    system: str | None,
+    temperature: float | None,
+    thinking_level: str | None,
+    top_p: float | None = None,
 ) -> dict | None:
     """Build the Gemini request config; settings left as None use the model default."""
     config: dict = {}
@@ -113,6 +117,10 @@ def gemini_config(
         if not 0 <= temperature <= 2:
             raise ValueError(f"temperature must be between 0 and 2, got {temperature}")
         config["temperature"] = temperature
+    if top_p is not None:
+        if not 0 < top_p <= 1:
+            raise ValueError(f"top_p must be in (0, 1], got {top_p}")
+        config["top_p"] = top_p
     if thinking_level is not None:
         if thinking_level not in THINKING_LEVELS:
             raise ValueError(f"thinking_level must be one of {THINKING_LEVELS}, got {thinking_level!r}")
@@ -130,11 +138,12 @@ def _gemini_call(
     messages: list[dict],
     temperature: float | None = None,
     thinking_level: str | None = None,
+    top_p: float | None = None,
 ) -> tuple[str, int, int, float]:
     from google.genai import errors
 
     system, contents = to_gemini(messages)
-    config = gemini_config(system, temperature, thinking_level)
+    config = gemini_config(system, temperature, thinking_level, top_p)
     client = _get_gemini_client()
     for attempt in range(_MAX_RETRIES):
         try:
@@ -158,10 +167,11 @@ def _provider_call(
     messages: list[dict],
     temperature: float | None = None,
     thinking_level: str | None = None,
+    top_p: float | None = None,
 ) -> tuple[str, int, int, float]:
     """Return (text, tokens_in, tokens_out, cost_usd), dispatching on `model`."""
     if model.startswith(("gemini-", "gemma-")):
-        return _gemini_call(model, messages, temperature, thinking_level)
+        return _gemini_call(model, messages, temperature, thinking_level, top_p)
     raise ValueError(f"No provider configured for model {model!r}")
 
 
@@ -180,14 +190,17 @@ def call_model(
     messages: list[dict],
     temperature: float | None = None,
     thinking_level: str | None = None,
+    top_p: float | None = None,
 ) -> str:
     """Call `model` with `messages`, append a record to the run log, return the text.
 
-    `temperature` and `thinking_level` (one of THINKING_LEVELS) are logged with
-    the run; None leaves the provider default in place.
+    `temperature`, `top_p` and `thinking_level` (one of THINKING_LEVELS) are
+    logged with the run; None leaves the provider default in place.
     """
     start = time.perf_counter()
-    text, tokens_in, tokens_out, cost = _provider_call(model, messages, temperature, thinking_level)
+    text, tokens_in, tokens_out, cost = _provider_call(
+        model, messages, temperature, thinking_level, top_p
+    )
     latency = time.perf_counter() - start
     log_record(
         RunRecord(
@@ -202,6 +215,7 @@ def call_model(
             cost_usd=cost,
             raw_output=text,
             temperature=temperature,
+            top_p=top_p,
             thinking_level=thinking_level,
         )
     )

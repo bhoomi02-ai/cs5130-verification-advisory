@@ -150,21 +150,25 @@ def test_gemini_config_defaults_to_none():
 def test_gemini_config_is_accepted_by_the_sdk():
     from google.genai import types
 
-    config = llm.gemini_config("sys", 0.7, "low")
+    config = llm.gemini_config("sys", 0.7, "low", 0.9)
     assert config == {
         "system_instruction": "sys",
         "temperature": 0.7,
+        "top_p": 0.9,
         "thinking_config": {"thinking_level": "LOW"},
     }
     parsed = types.GenerateContentConfig.model_validate(config)
-    assert parsed.temperature == 0.7
+    assert parsed.temperature == 0.7 and parsed.top_p == 0.9
     assert parsed.thinking_config.thinking_level == types.ThinkingLevel.LOW
 
 
-@pytest.mark.parametrize("temperature, level", [(-0.1, None), (2.5, None), (None, "max"), (None, "LOW")])
-def test_gemini_config_rejects_bad_settings(temperature, level):
+@pytest.mark.parametrize(
+    "temperature, level, top_p",
+    [(-0.1, None, None), (2.5, None, None), (None, "max", None), (None, "LOW", None), (None, None, 0), (None, None, 1.5)],
+)
+def test_gemini_config_rejects_bad_settings(temperature, level, top_p):
     with pytest.raises(ValueError):
-        llm.gemini_config(None, temperature, level)
+        llm.gemini_config(None, temperature, level, top_p)
 
 
 def test_settings_reach_the_request_and_the_log(fake, monkeypatch):
@@ -178,10 +182,15 @@ def test_settings_reach_the_request_and_the_log(fake, monkeypatch):
         model="gemini-3.1-flash-lite",
         messages=[{"role": "user", "content": "hi"}],
         temperature=0.7,
+        top_p=0.9,
         thinking_level="low",
     )
-    assert client.calls[0]["config"] == {"temperature": 0.7, "thinking_config": {"thinking_level": "LOW"}}
-    assert (logged[0].temperature, logged[0].thinking_level) == (0.7, "low")
+    assert client.calls[0]["config"] == {
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "thinking_config": {"thinking_level": "LOW"},
+    }
+    assert (logged[0].temperature, logged[0].top_p, logged[0].thinking_level) == (0.7, 0.9, "low")
 
 
 def test_daily_quota_is_not_retried(fake):
