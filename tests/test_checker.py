@@ -1,10 +1,12 @@
-"""Checker tests for the trade-replay scenarios.
+"""Checker tests.
 
-Reference plans come from ground_truth.json. The checker does not read that
-file; these tests do, and they compare its recorded results with the replay.
+Reference answers come from ground_truth.json. The checker does not read that
+file; these tests do, and they compare its recorded results with a fresh
+calculation from each scenario.
 """
 
 import json
+import math
 from pathlib import Path
 
 import pytest
@@ -14,6 +16,7 @@ from advisory.checker import check
 _ROOT = Path(__file__).resolve().parents[1]
 _GROUND_TRUTH = json.loads((_ROOT / "data" / "evaluation" / "ground_truth.json").read_text())
 _REPLAY_SCENARIOS = ("S01", "S02", "S05", "S07", "S08")
+_RESULT_SCENARIOS = ("S03", "S04", "S06", "S09", "S10")
 
 
 def _ground_truth(scenario_id):
@@ -330,3 +333,223 @@ def test_s05_alternative_reporting_its_own_tech_share_passes():
     result = check("S05", response)
     assert result["format_failure"] is False
     assert result["correct"] is True
+
+
+def _scenario(scenario_id):
+    return json.loads((_ROOT / "data" / "scenarios" / f"{scenario_id}.json").read_text())
+
+
+def _money(subject, stage, value, measure="VALUE", rounding="NONE"):
+    return {
+        "subject": subject,
+        "measure": measure,
+        "stage": stage,
+        "rounding": rounding,
+        "unit": "MONEY",
+        "value": value,
+    }
+
+
+def _initial_evidence(scenario):
+    portfolio = scenario["portfolio"]
+    observations = [
+        _money("PORTFOLIO", "INITIAL", portfolio["total_value"]),
+        _money("CASH", "INITIAL", portfolio["cash_balance"]),
+    ]
+    for holding in portfolio["holdings"]:
+        observations.append(_money(holding["symbol"], "INITIAL", holding["market_value"]))
+    return observations
+
+
+def _result_response(scenario_id):
+    ground_truth = _ground_truth(scenario_id)
+    metrics = ground_truth["metrics"]
+    if scenario_id == "S03":
+        response = _contract(ground_truth, observations=_initial_evidence(_scenario("S03")))
+        response["violations"] = ground_truth["violations"]
+        return response
+    if scenario_id == "S04":
+        response = _contract(
+            ground_truth,
+            observations=[
+                _money("Fund A", "FINAL", metrics["fund_a_final"]),
+                _money("Fund B", "FINAL", metrics["fund_b_final"]),
+                _money("OPTIONS", "FINAL", metrics["absolute_difference"], measure="DIFFERENCE"),
+            ],
+        )
+        response["metrics"]["selection"] = metrics["better_fund"]
+        return response
+    if scenario_id == "S06":
+        return _contract(
+            ground_truth,
+            observations=[
+                _money("PORTFOLIO", "FINAL", metrics["final_balance"]),
+                _money("PORTFOLIO", "FINAL", metrics["target_shortfall"], measure="DIFFERENCE"),
+                _money("PORTFOLIO", "FINAL", metrics["additional_monthly_contribution"], measure="PAYMENT"),
+                _money(
+                    "PORTFOLIO",
+                    "FINAL",
+                    metrics["additional_monthly_contribution_cents"],
+                    measure="PAYMENT",
+                    rounding="UPWARD_CENT",
+                ),
+            ],
+        )
+    return _contract(ground_truth, observations=_initial_evidence(_scenario(scenario_id)))
+
+
+def _assert_independent_matches_ground_truth(result, ground_truth):
+    expected = _of_type(result, "INDEPENDENT_RESULTS")["observed"]
+    for key, recorded in ground_truth["metrics"].items():
+        assert key in expected, key
+        if key == "allocations":
+            for name, fraction in recorded.items():
+                assert expected["allocations"][name] == pytest.approx(fraction, abs=1e-9)
+        elif key == "additional_monthly_contribution_cents":
+            assert expected[key] == recorded
+        elif isinstance(recorded, str) or key == "violation_count":
+            assert expected[key] == recorded
+        elif key.endswith("_pct"):
+            assert expected[key] == pytest.approx(recorded, abs=1e-9)
+        else:
+            assert expected[key] == pytest.approx(recorded, abs=0.01)
+
+
+@pytest.mark.parametrize("scenario_id", _RESULT_SCENARIOS)
+def test_ground_truth_result_passes(scenario_id):
+    result = check(scenario_id, _result_response(scenario_id))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+    _assert_independent_matches_ground_truth(result, _ground_truth(scenario_id))
+
+
+def test_s03_missing_crypto_violation_fails():
+    ground_truth = _ground_truth("S03")
+    response = _result_response("S03")
+    response["violations"] = [
+        row
+        for row in ground_truth["violations"]
+        if not (row["kind"] == "PROHIBITED_CLASS" and row["scope"] == "CRYPTO")
+    ]
+    result = check("S03", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    violations = _of_type(result, "EXACT_SCOPED_VIOLATIONS")
+    assert violations["passed"] is False
+    assert violations["details"]["reason"] == "missed_violation"
+
+
+def test_s03_cash_at_five_percent_is_not_a_violation():
+    # Cash is 5_000 / 100_000 = 0.05, which is the minimum and not a breach.
+    response = _result_response("S03")
+    response["violations"] = list(_ground_truth("S03")["violations"]) + [
+        {"kind": "CLASS_MIN", "scope": "CASH", "observed": 0.05, "limit": 0.05}
+    ]
+    result = check("S03", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    violations = _of_type(result, "EXACT_SCOPED_VIOLATIONS")
+    assert violations["passed"] is False
+    assert violations["details"]["reason"] == "extra_violation"
+    assert {"kind": "CLASS_MIN", "scope": "CASH"} in violations["details"]["extra"]
+
+
+def _fund_ignoring_entry_fee(option):
+    # Same annual factor as the scenario, but the opening value is not reduced by the entry fee.
+    growth = (1 + option["gross_annual_return"]) * (1 - option["annual_fee"])
+    return option["initial_investment"] * growth ** option["years"]
+
+
+def test_s04_ignoring_the_entry_fee_fails():
+    scenario = _scenario("S04")
+    finals = [_fund_ignoring_entry_fee(option) for option in scenario["investment_options"]]
+    response = _result_response("S04")
+    response["metrics"]["observations"] = [
+        _money("Fund A", "FINAL", finals[0]),
+        _money("Fund B", "FINAL", finals[1]),
+        _money("OPTIONS", "FINAL", abs(finals[0] - finals[1]), measure="DIFFERENCE"),
+    ]
+    response["metrics"]["selection"] = scenario["investment_options"][0]["name"] if finals[0] > finals[1] else scenario["investment_options"][1]["name"]
+    result = check("S04", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    independent = _of_type(result, "INDEPENDENT_RESULTS")
+    assert independent["passed"] is False
+    assert independent["details"]["reason"] == "value_mismatch"
+
+
+def _project_skipping_withdrawals(scenario):
+    # Interest, then the month's contributions. The month-180 withdrawal is left out.
+    assumptions = scenario["retirement_assumptions"]
+    balance = scenario["portfolio"]["total_value"]
+    rate = assumptions["monthly_interest_rate"]
+    for month in range(1, assumptions["months"] + 1):
+        balance *= 1 + rate
+        for flow in scenario["cash_flows"]:
+            if flow["flow_type"] == "WITHDRAWAL":
+                continue
+            start = flow["start_month"]
+            if start <= month < start + flow["duration_months"]:
+                balance += flow["amount"]
+    shortfall = assumptions["target"] - balance
+    periods = assumptions["additional_contribution_duration_months"]
+    payment = shortfall * rate / ((1 + rate) ** periods - 1)
+    cents = math.ceil(payment * 100 - 1e-9) / 100
+    return balance, shortfall, payment, cents
+
+
+def test_s06_omitting_the_month_180_withdrawal_fails():
+    balance, shortfall, payment, cents = _project_skipping_withdrawals(_scenario("S06"))
+    response = _contract(
+        _ground_truth("S06"),
+        observations=[
+            _money("PORTFOLIO", "FINAL", balance),
+            _money("PORTFOLIO", "FINAL", shortfall, measure="DIFFERENCE"),
+            _money("PORTFOLIO", "FINAL", payment, measure="PAYMENT"),
+            _money("PORTFOLIO", "FINAL", cents, measure="PAYMENT", rounding="UPWARD_CENT"),
+        ],
+    )
+    result = check("S06", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    independent = _of_type(result, "INDEPENDENT_RESULTS")
+    assert independent["passed"] is False
+    assert independent["details"]["reason"] == "value_mismatch"
+
+
+def test_s09_feasible_with_trades_fails():
+    response = _result_response("S09")
+    response["status"] = "FEASIBLE"
+    response["trades"] = [{"symbol": "BND", "quantity_delta": -10}]
+    result = check("S09", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "STATUS")["details"]["reason"] == "wrong_status"
+    assert _of_type(result, "EMPTY_TRADES")["details"]["reason"] == "rule_violation"
+
+
+def test_s10_proposing_trades_fails():
+    response = _result_response("S10")
+    response["trades"] = [{"symbol": "VOO", "quantity_delta": -10}]
+    result = check("S10", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "STATUS")["passed"] is True
+    empty = _of_type(result, "EMPTY_TRADES")
+    assert empty["passed"] is False
+    assert empty["details"]["reason"] == "rule_violation"
+
+
+def test_s09_missing_symbol_observation_is_not_a_value_mismatch():
+    response = _result_response("S09")
+    response["metrics"]["observations"] = [
+        observation
+        for observation in response["metrics"]["observations"]
+        if observation["subject"] != "AAPL"
+    ]
+    result = check("S09", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    failed = [row for row in result["checks"] if not row["passed"]]
+    assert failed
+    assert {row["details"]["reason"] for row in failed} == {"missing_observation"}
