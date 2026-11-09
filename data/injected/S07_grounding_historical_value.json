@@ -1,0 +1,38 @@
+{
+  "scenario_id": "S07",
+  "error_type": "grounding",
+  "description": "Reports the final portfolio value at historical prices.",
+  "expected_check": "REPLAY_TRADES",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S07",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "VOO",
+        "quantity_delta": -30
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 220
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 92000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

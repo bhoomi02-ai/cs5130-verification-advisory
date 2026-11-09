@@ -1,0 +1,51 @@
+{
+  "scenario_id": "S06",
+  "error_type": "none",
+  "description": "Untouched reference answer.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 1000045.735359339
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 199954.26464066096
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 432.76313143402
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 432.77
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "scenario_id": "S02",
+  "error_type": "none",
+  "description": "Untouched reference answer.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S02",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "VOO",
+        "quantity_delta": -38
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

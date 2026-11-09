@@ -1,0 +1,43 @@
+{
+  "scenario_id": "S04",
+  "error_type": "none",
+  "description": "Untouched reference answer.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S04",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "Fund A",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 137688.62493758881
+        },
+        {
+          "subject": "Fund B",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 145469.34517263254
+        },
+        {
+          "subject": "OPTIONS",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 7780.720235043729
+        }
+      ],
+      "selection": "Fund B"
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

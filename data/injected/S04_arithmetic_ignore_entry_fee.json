@@ -1,0 +1,45 @@
+{
+  "scenario_id": "S04",
+  "error_type": "arithmetic",
+  "description": "Compounds Fund A from the full investment, without the entry fee.",
+  "expected_check": "INDEPENDENT_RESULTS",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S04",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "Fund A",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 139079.41912887755
+        },
+        {
+          "subject": "Fund B",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 145469.3451726326
+        },
+        {
+          "subject": "OPTIONS",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 6389.926043755055
+        }
+      ],
+      "selection": "Fund B"
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

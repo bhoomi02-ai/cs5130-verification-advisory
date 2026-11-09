@@ -1,0 +1,67 @@
+{
+  "scenario_id": "S10",
+  "error_type": "none",
+  "description": "Untouched reference answer.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S10",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 10000
+        },
+        {
+          "subject": "AAPL",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "MSFT",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 30000
+        },
+        {
+          "subject": "VOO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "BND",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

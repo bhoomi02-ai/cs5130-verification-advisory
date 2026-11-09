@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img" aria-label="Verification Strategies for Multi-Agent Financial Advisory">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1424"/><stop offset="1" stop-color="#1b2c4a"/></linearGradient>
+  <linearGradient id="tg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5a6e"/><stop offset="1" stop-color="#f2c94c"/></linearGradient>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.05"/></pattern>
+  <clipPath id="clip"><rect width="1280" height="320" rx="20"/></clipPath>
+</defs>
+<g clip-path="url(#clip)">
+<rect width="1280" height="320" fill="url(#bg)"/><rect width="1280" height="320" fill="url(#grid)"/>
+<text x="0" y="70" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#f2c94c" fill-opacity="0.10">$<animateTransform attributeName="transform" type="translate" from="-60 0" to="1340 0" dur="38s" begin="-0s" repeatCount="indefinite"/></text>
+<text x="0" y="150" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#f2c94c" fill-opacity="0.10">%<animateTransform attributeName="transform" type="translate" from="-60 0" to="1340 0" dur="46s" begin="-7s" repeatCount="indefinite"/></text>
+<text x="0" y="250" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#f2c94c" fill-opacity="0.10">✓<animateTransform attributeName="transform" type="translate" from="-60 0" to="1340 0" dur="42s" begin="-14s" repeatCount="indefinite"/></text>
+<text x="0" y="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#f2c94c" fill-opacity="0.10">$<animateTransform attributeName="transform" type="translate" from="-60 0" to="1340 0" dur="52s" begin="-21s" repeatCount="indefinite"/></text>
+<text x="0" y="40" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#f2c94c" fill-opacity="0.10">%<animateTransform attributeName="transform" type="translate" from="-60 0" to="1340 0" dur="58s" begin="-28s" repeatCount="indefinite"/></text>
+<text x="0" y="210" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#f2c94c" fill-opacity="0.10">?<animateTransform attributeName="transform" type="translate" from="-60 0" to="1340 0" dur="48s" begin="-35s" repeatCount="indefinite"/></text>
+<rect x="56" y="50" width="352" height="30" rx="15" fill="#ff5a6e" fill-opacity="0.14"/>
+<text x="74" y="70" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" letter-spacing="1.6" fill="#ff5a6e">CS 5130 · NORTHEASTERN UNIVERSITY</text>
+<text x="56" y="142" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="#eef2f8">Verification Strategies for</text>
+<text x="56" y="196" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="url(#tg)">Multi-Agent Financial Advisory</text>
+<text x="58" y="244" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="17" fill="#a3b1c8">Does a second look make an AI advisor more reliable, and is it worth the cost?</text>
+<text x="58" y="282" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="13" fill="#6f7f99" letter-spacing="0.5">Theme 6 · Agentic Systems</text>
+<path d="M935 158 C960 158 965 86 990 86" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M1130 86 C1152 86 1150 158 1172 158" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M935 158 C960 158 965 134 990 134" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M1130 134 C1152 134 1150 158 1172 158" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M935 158 C960 158 965 182 990 182" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M1130 182 C1152 182 1150 158 1172 158" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M935 158 C960 158 965 230 990 230" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<path d="M1130 230 C1152 230 1150 158 1172 158" fill="none" stroke="#2c4166" stroke-width="1.5"/>
+<circle cx="905" cy="158" r="30" fill="#ff5a6e"><animate attributeName="r" values="30;33;30" dur="0.8s" repeatCount="indefinite"/></circle>
+<text x="905" y="164" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">AI</text>
+<text x="905" y="212" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#a3b1c8">advisor</text>
+<rect x="990" y="69" width="140" height="34" rx="17" fill="#1b2c4a" stroke="#2c4166"/>
+<rect x="990" y="69" width="140" height="34" rx="17" fill="#f2c94c" fill-opacity="0.16" stroke="#f2c94c" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.201;0.241;0.526;0.596;1" dur="3.2s" begin="0.00s" repeatCount="indefinite"/></rect>
+<text x="1060.0" y="91" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#eef2f8">none</text>
+<circle r="5.5" fill="#f2c94c" opacity="0"><animateMotion path="M935 158 C960 158 965 86 990 86 L1130 86 C1152 86 1150 158 1172 158" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="3.2s" begin="0.00s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="3.2s" begin="0.00s" repeatCount="indefinite"/></circle>
+<rect x="990" y="117" width="140" height="34" rx="17" fill="#1b2c4a" stroke="#2c4166"/>
+<rect x="990" y="117" width="140" height="34" rx="17" fill="#f2c94c" fill-opacity="0.16" stroke="#f2c94c" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.163;0.203;0.580;0.650;1" dur="3.2s" begin="0.80s" repeatCount="indefinite"/></rect>
+<text x="1060.0" y="139" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#eef2f8">self</text>
+<circle r="5.5" fill="#f2c94c" opacity="0"><animateMotion path="M935 158 C960 158 965 134 990 134 L1130 134 C1152 134 1150 158 1172 158" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="3.2s" begin="0.80s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="3.2s" begin="0.80s" repeatCount="indefinite"/></circle>
+<rect x="990" y="165" width="140" height="34" rx="17" fill="#1b2c4a" stroke="#2c4166"/>
+<rect x="990" y="165" width="140" height="34" rx="17" fill="#f2c94c" fill-opacity="0.16" stroke="#f2c94c" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.163;0.203;0.580;0.650;1" dur="3.2s" begin="1.60s" repeatCount="indefinite"/></rect>
+<text x="1060.0" y="187" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#eef2f8">peer</text>
+<circle r="5.5" fill="#f2c94c" opacity="0"><animateMotion path="M935 158 C960 158 965 182 990 182 L1130 182 C1152 182 1150 158 1172 158" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="3.2s" begin="1.60s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="3.2s" begin="1.60s" repeatCount="indefinite"/></circle>
+<rect x="990" y="213" width="140" height="34" rx="17" fill="#1b2c4a" stroke="#2c4166"/>
+<rect x="990" y="213" width="140" height="34" rx="17" fill="#f2c94c" fill-opacity="0.16" stroke="#f2c94c" stroke-width="2" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.201;0.241;0.526;0.596;1" dur="3.2s" begin="2.40s" repeatCount="indefinite"/></rect>
+<text x="1060.0" y="235" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#eef2f8">dedicated</text>
+<circle r="5.5" fill="#f2c94c" opacity="0"><animateMotion path="M935 158 C960 158 965 230 990 230 L1130 230 C1152 230 1150 158 1172 158" keyPoints="0;1;1" keyTimes="0;0.75;1" calcMode="linear" dur="3.2s" begin="2.40s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.74;0.76;1" dur="3.2s" begin="2.40s" repeatCount="indefinite"/></circle>
+<rect x="1172" y="126" width="64" height="64" rx="14" fill="#0b1424" stroke="#ff5a6e" stroke-width="2" stroke-dasharray="5 4"><animate attributeName="stroke-opacity" values="1;0.35;1" dur="0.8s" begin="2.40s" repeatCount="indefinite"/></rect>
+<path d="M1195 156 V149 a9 9 0 0 1 18 0 V156" fill="none" stroke="#ff5a6e" stroke-width="3.5"/><rect x="1191" y="155" width="26" height="19" rx="3" fill="#ff5a6e"/>
+<text x="1204" y="212" text-anchor="middle" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif" font-size="12.5" fill="#a3b1c8">hidden checker</text>
+</g></svg>
