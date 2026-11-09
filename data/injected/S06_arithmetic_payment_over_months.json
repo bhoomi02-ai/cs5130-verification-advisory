@@ -1,0 +1,53 @@
+{
+  "scenario_id": "S06",
+  "error_type": "arithmetic",
+  "description": "Divides the shortfall by 240 months instead of the annuity factor.",
+  "expected_check": "INDEPENDENT_RESULTS",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 1000045.735359339
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 199954.26464066096
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 833.1427693360873
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 833.15
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}
