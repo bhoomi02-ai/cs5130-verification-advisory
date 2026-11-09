@@ -236,3 +236,10 @@ def test_failed_call_is_logged_then_raised(fake, monkeypatch):
     rec = logged[0]
     assert rec.error.startswith("ClientError") or rec.error.startswith("APIError")
     assert (rec.run_id, rec.temperature, rec.tokens_in, rec.cost_usd, rec.raw_output) == ("r1", 0.7, 0, 0.0, "")
+
+
+def test_unpriced_model_fails_before_calling_the_api(fake):
+    client = fake(_response())
+    with pytest.raises(ValueError, match="No pricing"):
+        llm._provider_call("gemini-9-unpriced", [{"role": "user", "content": "hi"}])
+    assert client.calls == []  # no request sent, so no tokens spent
