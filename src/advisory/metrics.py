@@ -2,10 +2,13 @@
 
 The scorer decides whether an answer is correct. This module only aggregates
 those decisions. Every distinct ``condition`` value gets a row; the condition
-list is not hard-coded. Condition ``none`` has no verifier, so its verifier
-metrics, including ``n_missing_verdict``, are ``None``. Every other condition
-is scored on the runs that have a verdict, and ``n_missing_verdict`` counts
-the rest. Extra cost compares mean cost and success rate with ``none``.
+list is not hard-coded. When an optional ``model`` column is present, each
+``(condition, model)`` pair gets its own row and extra cost compares with
+``none`` for the same model. An optional ``status`` column may mark runs as
+``failed``; those runs are left out of the rates and counted in ``n_failed``.
+Condition ``none`` has no verifier, so its verifier metrics, including
+``n_missing_verdict``, are ``None``. Every other condition is scored on the
+runs that have a verdict, and ``n_missing_verdict`` counts the rest.
 """
 
 from __future__ import annotations
@@ -59,6 +62,7 @@ METRIC_COLUMNS = (
     "median_latency_s",
     "p95_latency_s",
     "extra_cost_per_extra_correct",
+    "n_failed",
 )
 
 _NULLABLE_COLUMNS = (
@@ -95,9 +99,11 @@ __all__ = [
 def validate_runs(runs: list[dict] | pd.DataFrame) -> pd.DataFrame:
     """Return a cleaned copy of ``runs``, or raise if the input is unusable.
 
-    Missing required columns, unknown verdicts, and duplicate
-    ``(task_id, condition, run_number)`` rows are errors. Missing verdicts
-    are kept as ``None``.
+    Missing required columns, unknown verdicts, and duplicate identity rows
+    are errors. With a ``model`` column the identity is
+    ``(task_id, condition, run_number, model)``; without it the identity is
+    ``(task_id, condition, run_number)``. Missing verdicts are kept as
+    ``None``.
     """
     if isinstance(runs, pd.DataFrame):
         frame = runs.copy()
@@ -117,8 +123,16 @@ def validate_runs(runs: list[dict] | pd.DataFrame) -> pd.DataFrame:
         raise ValueError("task_id must be present on every run")
     if frame["condition"].isna().any():
         raise ValueError("condition must be present on every run")
-    if frame.duplicated(subset=["task_id", "condition", "run_number"]).any():
-        raise ValueError("duplicate rows for the same task_id, condition, and run_number")
+    if "model" in frame.columns:
+        if frame["model"].isna().any():
+            raise ValueError("model must be present on every run")
+        identity = ["task_id", "condition", "run_number", "model"]
+        duplicate_message = "duplicate rows for the same task_id, condition, run_number, and model"
+    else:
+        identity = ["task_id", "condition", "run_number"]
+        duplicate_message = "duplicate rows for the same task_id, condition, and run_number"
+    if frame.duplicated(subset=identity).any():
+        raise ValueError(duplicate_message)
 
     frame["initial_correct"] = _as_bool(frame["initial_correct"], "initial_correct")
     frame["final_correct"] = _as_bool(frame["final_correct"], "final_correct")
@@ -290,60 +304,68 @@ def bootstrap_task_success_ci(task_id, final_correct, seed: int = 0) -> tuple[fl
 
 
 def summarize(runs: list[dict] | pd.DataFrame, seed: int = 0) -> pd.DataFrame:
-    """One row per condition and one column per metric.
+    """One row per condition (or per condition and model) and one column per metric.
 
     ``seed`` fixes the task bootstrap for ``task_success_ci_low`` and
-    ``task_success_ci_high``. Task success itself is the share of runs with
-    ``final_correct``, which matches the mean of the task means when every
-    task has the same number of runs. Extra cost is ``None`` when condition
-    ``none`` is absent or when a condition's success rate is not higher
-    than ``none``. It divides the gap in mean cost by the gap in success rate.
+    ``task_success_ci_high``. Task success itself is the share of scored runs
+    with ``final_correct``, which matches the mean of the task means when
+    every task has the same number of scored runs. Runs with ``status``
+    ``failed`` are left out of every rate and counted in ``n_failed``. Extra
+    cost is ``None`` when the matching ``none`` baseline is absent or when a
+    condition's success rate is not higher than that baseline. With a
+    ``model`` column the baseline is ``none`` for the same model; without it
+    the baseline is every ``none`` run.
     """
     frame = validate_runs(runs)
-    none = frame.loc[frame["condition"] == "none"]
-    if none.empty:
-        none_mean_cost = None
-        none_success = None
-    else:
-        none_mean_cost = float(none["cost_usd"].mean())
-        none_success = task_success(none["final_correct"])
+    has_model = "model" in frame.columns
+    group_columns = ["condition", "model"] if has_model else "condition"
+    none_baselines = _none_baselines(frame, has_model)
 
     rows: list[dict] = []
-    for condition, group in frame.groupby("condition", sort=False):
-        condition_name = _python_scalar(condition)
+    for key, group in frame.groupby(group_columns, sort=False):
+        condition_name, model_name, scored, n_failed = _group_parts(key, group, has_model)
+        if scored.empty:
+            raise ValueError(
+                f"no scored runs for condition {condition_name!r}"
+                + (f" and model {model_name!r}" if has_model else "")
+            )
         low, high = bootstrap_task_success_ci(
-            group["task_id"], group["final_correct"], seed=seed
+            scored["task_id"], scored["final_correct"], seed=seed
         )
-        success = task_success(group["final_correct"])
-        if none_mean_cost is None or none_success is None:
+        success = task_success(scored["final_correct"])
+        baseline = none_baselines.get(model_name) if has_model else none_baselines.get(None)
+        if baseline is None:
             extra = None
         else:
+            none_mean_cost, none_success = baseline
             extra = extra_cost_per_extra_correct(
-                float(group["cost_usd"].mean()),
+                float(scored["cost_usd"].mean()),
                 success,
                 none_mean_cost,
                 none_success,
             )
-        rows.append(
-            {
-                "condition": condition_name,
-                "task_success": success,
-                "task_success_ci_low": low,
-                "task_success_ci_high": high,
-                **verifier_metrics(
-                    group["verdict"], group["initial_correct"], condition_name
-                ),
-                **fixed_broken(group["initial_correct"], group["final_correct"]),
-                **cost_metrics(
-                    group["cost_usd"],
-                    group["tokens_in"],
-                    group["tokens_out"],
-                    group["latency_s"],
-                ),
-                "extra_cost_per_extra_correct": extra,
-            }
-        )
-    return _metrics_frame(rows)
+        row = {
+            "condition": condition_name,
+            "task_success": success,
+            "task_success_ci_low": low,
+            "task_success_ci_high": high,
+            **verifier_metrics(
+                scored["verdict"], scored["initial_correct"], condition_name
+            ),
+            **fixed_broken(scored["initial_correct"], scored["final_correct"]),
+            **cost_metrics(
+                scored["cost_usd"],
+                scored["tokens_in"],
+                scored["tokens_out"],
+                scored["latency_s"],
+            ),
+            "extra_cost_per_extra_correct": extra,
+            "n_failed": n_failed,
+        }
+        if has_model:
+            row["model"] = model_name
+        rows.append(row)
+    return _metrics_frame(rows, has_model=has_model)
 
 
 def _blank_verifier(n_missing: int | None) -> dict[str, float | int | None]:
@@ -365,8 +387,59 @@ def _blank_verifier(n_missing: int | None) -> dict[str, float | int | None]:
     return blank
 
 
-def _metrics_frame(rows: list[dict]) -> pd.DataFrame:
-    frame = pd.DataFrame({"condition": [row["condition"] for row in rows]})
+def _none_baselines(frame: pd.DataFrame, has_model: bool) -> dict:
+    """Mean cost and success for each ``none`` baseline used by extra cost."""
+    baselines: dict = {}
+    none = frame.loc[frame["condition"] == "none"]
+    if none.empty:
+        return baselines
+    if has_model:
+        for model, group in none.groupby("model", sort=False):
+            scored = _scored_runs(group)
+            if scored.empty:
+                continue
+            baselines[_python_scalar(model)] = (
+                float(scored["cost_usd"].mean()),
+                task_success(scored["final_correct"]),
+            )
+    else:
+        scored = _scored_runs(none)
+        if not scored.empty:
+            baselines[None] = (
+                float(scored["cost_usd"].mean()),
+                task_success(scored["final_correct"]),
+            )
+    return baselines
+
+
+def _group_parts(key, group: pd.DataFrame, has_model: bool):
+    if has_model:
+        condition_name = _python_scalar(key[0])
+        model_name = _python_scalar(key[1])
+    else:
+        condition_name = _python_scalar(key)
+        model_name = None
+    scored = _scored_runs(group)
+    n_failed = int(len(group) - len(scored))
+    return condition_name, model_name, scored, n_failed
+
+
+def _scored_runs(group: pd.DataFrame) -> pd.DataFrame:
+    if "status" not in group.columns:
+        return group
+    return group.loc[group["status"] != "failed"]
+
+
+def _metrics_frame(rows: list[dict], has_model: bool = False) -> pd.DataFrame:
+    if has_model:
+        frame = pd.DataFrame(
+            {
+                "condition": [row["condition"] for row in rows],
+                "model": [row["model"] for row in rows],
+            }
+        )
+    else:
+        frame = pd.DataFrame({"condition": [row["condition"] for row in rows]})
     nullable = set(_NULLABLE_COLUMNS)
     for column in METRIC_COLUMNS:
         values = [row[column] for row in rows]
@@ -374,6 +447,8 @@ def _metrics_frame(rows: list[dict]) -> pd.DataFrame:
             frame[column] = pd.Series(values, dtype=object)
         else:
             frame[column] = values
+    if has_model:
+        return frame.set_index(["condition", "model"])
     return frame.set_index("condition")
 
 

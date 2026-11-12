@@ -508,3 +508,150 @@ def test_unknown_verdict_is_rejected():
     del incomplete["cost_usd"]
     with pytest.raises(ValueError, match="missing columns: cost_usd"):
         summarize([incomplete])
+
+
+def test_two_models_share_a_file_and_compare_extra_cost_within_model():
+    # Same task, condition and run number under two models is allowed once
+    # model is present. Extra cost uses none for that model only.
+    #
+    # model a: none mean cost 3, success 1/2; dedicated mean cost 9, success 1
+    #   extra = (9 - 3) / (1 - 1/2) = 12
+    # model b: none mean cost 1, success 0; dedicated mean cost 2, success 1
+    #   extra = (2 - 1) / (1 - 0) = 1
+    rows = [
+        _run(
+            condition="none",
+            model="a",
+            task_id="t1",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict=None,
+            cost_usd=3,
+        ),
+        _run(
+            condition="none",
+            model="a",
+            task_id="t2",
+            run_number=1,
+            initial_correct=True,
+            final_correct=False,
+            verdict=None,
+            cost_usd=3,
+        ),
+        _run(
+            condition="dedicated",
+            model="a",
+            task_id="t1",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="accept",
+            cost_usd=9,
+        ),
+        _run(
+            condition="none",
+            model="b",
+            task_id="t1",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict=None,
+            cost_usd=1,
+        ),
+        _run(
+            condition="dedicated",
+            model="b",
+            task_id="t1",
+            run_number=1,
+            initial_correct=False,
+            final_correct=True,
+            verdict="reject",
+            cost_usd=2,
+        ),
+    ]
+    summary = summarize(rows)
+    assert set(summary.index) == {("none", "a"), ("dedicated", "a"), ("none", "b"), ("dedicated", "b")}
+    assert summary.loc[("dedicated", "a"), "extra_cost_per_extra_correct"] == 12
+    assert summary.loc[("dedicated", "b"), "extra_cost_per_extra_correct"] == 1
+    assert summary.loc[("none", "a"), "n_failed"] == 0
+
+    # The same model twice with the same identity is still a duplicate.
+    with pytest.raises(ValueError, match="duplicate"):
+        summarize(
+            [
+                _run(condition="peer", model="a", task_id="t1", run_number=1),
+                _run(condition="peer", model="a", task_id="t1", run_number=1, final_correct=True),
+            ]
+        )
+
+
+def test_failed_run_is_left_out_of_rates():
+    # Three dedicated runs. Two are scored: one wrong-and-flagged, one
+    # correct-and-accepted. The third is status failed and must not change
+    # catch rate or task success, only n_failed.
+    #
+    # Scored: TP = 1, TN = 1 → catch rate = 1, task success = 1/2.
+    # If the failed run (final_correct True) were kept, task success would be 2/3.
+    rows = [
+        _run(
+            condition="dedicated",
+            task_id="t1",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict="reject",
+            status="unchecked",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="t2",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="accept",
+            status="accepted",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="t3",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict=None,
+            status="failed",
+            cost_usd=99,
+            tokens_in=1000,
+        ),
+    ]
+    summary = summarize(rows)
+    assert summary.loc["dedicated", "n_failed"] == 1
+    assert summary.loc["dedicated", "task_success"] == 0.5
+    assert summary.loc["dedicated", "catch_rate"] == 1
+    assert summary.loc["dedicated", "tp"] == 1
+    assert summary.loc["dedicated", "tn"] == 1
+    assert summary.loc["dedicated", "total_cost_usd"] == 0
+    assert summary.loc["dedicated", "mean_tokens_in"] == 0
+
+
+def test_single_model_rows_without_model_column_are_unchanged():
+    # No model column: one summary row per condition, indexed by condition
+    # alone, and none is the shared baseline for every condition.
+    rows = [
+        _run(condition="none", task_id="n1", final_correct=True, initial_correct=True, verdict=None, cost_usd=3),
+        _run(condition="none", task_id="n2", final_correct=False, initial_correct=True, verdict=None, cost_usd=3),
+        _run(
+            condition="dedicated",
+            task_id="d1",
+            final_correct=True,
+            initial_correct=True,
+            verdict="accept",
+            cost_usd=9,
+        ),
+    ]
+    summary = summarize(rows)
+    assert list(summary.index) == ["none", "dedicated"]
+    assert summary.index.names == ["condition"]
+    assert summary.loc["dedicated", "extra_cost_per_extra_correct"] == 12
+    assert summary.loc["none", "n_failed"] == 0
+    assert summary.loc["dedicated", "n_failed"] == 0
