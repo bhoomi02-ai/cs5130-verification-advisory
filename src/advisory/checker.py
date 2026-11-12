@@ -13,9 +13,6 @@ import json
 import math
 from pathlib import Path
 
-# Reported fractions in the files use 1e-6, which rejects a figure rounded to
-# three decimals. Compare those reports at 5e-4. Replayed limits stay strict.
-REPORTED_FRACTION_TOLERANCE = 5e-4
 MONEY_OBSERVATION_TOLERANCE = 0.01
 
 _ROOT = Path(__file__).resolve().parents[2]
@@ -193,6 +190,8 @@ def _replay_check(spec: dict, ledger: dict, rows: list[dict], mismatches: list[d
 
 def _judge_replay(scenario: dict, response: dict, ledger: dict, params: dict):
     rows = _restriction_rows(scenario, ledger, params)
+    if not any(row["rule"] == "EXISTING_ASSETS_ONLY" for row in rows):
+        rows.extend(_unknown_asset_rows(ledger, ledger["roundoff"]))
     rows.extend(ledger["assumption_failures"])
     mismatches = _reported_mismatches(response, ledger, params)
     return rows, mismatches
@@ -201,6 +200,7 @@ def _judge_replay(scenario: dict, response: dict, ledger: dict, params: dict):
 def _reported_mismatches(response: dict, ledger: dict, params: dict) -> list[dict]:
     """Observations are optional on a trade plan. Present ones must match."""
     money_tolerance = _optional_float(params.get("money_tolerance"), MONEY_OBSERVATION_TOLERANCE)
+    fraction_tolerance = _optional_float(params.get("reported_allocation_tolerance"), 0.0)
     expected = ledger["reports"]
     mismatches = []
     for obs in response["metrics"]["observations"]:
@@ -208,7 +208,7 @@ def _reported_mismatches(response: dict, ledger: dict, params: dict) -> list[dic
         if key not in expected:
             continue
         unit, value, kind = expected[key]
-        tolerance = REPORTED_FRACTION_TOLERANCE if kind == "FRACTION" else money_tolerance
+        tolerance = fraction_tolerance if kind == "FRACTION" else money_tolerance
         reported = obs["value"]
         if obs["unit"] != unit or abs(reported - value) > tolerance:
             mismatches.append(
@@ -243,9 +243,12 @@ def _replay(scenario: dict, trades: list[dict], params: dict) -> dict:
         prices[symbol] = _optional_float(holding.get("current_price"), None)
 
     net: dict[str, float] = {}
+    unknown_net: dict[str, float] = {}
     for trade in trades:
         symbol = trade["symbol"]
-        net[symbol] = net.get(symbol, 0.0) + float(trade["quantity_delta"])
+        # A name that is not a holding, including a different case, is not replayed.
+        bucket = net if symbol in holdings else unknown_net
+        bucket[symbol] = bucket.get(symbol, 0.0) + float(trade["quantity_delta"])
 
     assumption_failures = []
     priced = True
@@ -345,6 +348,7 @@ def _replay(scenario: dict, trades: list[dict], params: dict) -> dict:
         "reports": reports,
         "observed": observed,
         "assumption_failures": assumption_failures,
+        "unknown_net": unknown_net,
     }
 
 
@@ -504,16 +508,10 @@ def _one_restriction(kind, payload, ledger, roundoff, whole_share) -> list[dict]
             rows.append(_rule("WHOLE_SHARES", symbol, passed, delta, nearest))
         return rows
     if kind == "EXISTING_ASSETS_ONLY":
-        unknown = [
-            symbol
-            for symbol, delta in ledger["net"].items()
-            if abs(delta) > roundoff and symbol not in ledger["holdings"]
-        ]
+        unknown = _unknown_asset_rows(ledger, roundoff)
         if not unknown:
             return [_rule("EXISTING_ASSETS_ONLY", "PORTFOLIO", True, 0, 0)]
-        return [
-            _rule("EXISTING_ASSETS_ONLY", symbol, False, ledger["net"][symbol], 0) for symbol in unknown
-        ]
+        return unknown
     if kind == "NO_BORROWING":
         cash = ledger["final_cash"]
         passed = cash is not None and cash >= -roundoff
@@ -603,6 +601,14 @@ def _weight(ledger, symbols):
     return sum(ledger["final_values"].get(symbol, 0.0) for symbol in symbols) / total
 
 
+def _unknown_asset_rows(ledger: dict, roundoff: float = 0.0) -> list[dict]:
+    return [
+        _rule("EXISTING_ASSETS_ONLY", symbol, False, delta, 0)
+        for symbol, delta in ledger.get("unknown_net", {}).items()
+        if abs(delta) > roundoff
+    ]
+
+
 def _rule(rule, scope, passed, observed, limit) -> dict:
     return {
         "rule": rule,
@@ -629,6 +635,7 @@ def _independent_analysis(scenario: dict, response: dict, mapping: dict) -> dict
 
 
 def _independent_check(spec: dict, analysis: dict) -> dict:
+    fraction_tolerance = _optional_float(spec["params_json"].get("fraction_tolerance"), 0.0)
     missing = []
     not_computed = []
     mismatches = []
@@ -640,7 +647,7 @@ def _independent_check(spec: dict, analysis: dict) -> dict:
         if expected is None:
             not_computed.append(key)
             continue
-        if not _metric_matches(key, reported, expected):
+        if not _metric_matches(key, reported, expected, fraction_tolerance):
             mismatches.append(
                 {
                     "reason": "value_mismatch",
@@ -668,14 +675,14 @@ def _independent_check(spec: dict, analysis: dict) -> dict:
     return _check_row(spec, reason is None, analysis["expected"], details)
 
 
-def _metric_matches(key: str, reported, expected) -> bool:
+def _metric_matches(key: str, reported, expected, fraction_tolerance: float) -> bool:
     if isinstance(expected, str):
         return reported == expected
     if isinstance(expected, dict):
         if not isinstance(reported, dict) or set(reported) != set(expected):
             return False
         return all(
-            abs(float(reported[name]) - float(expected[name])) <= REPORTED_FRACTION_TOLERANCE
+            abs(float(reported[name]) - float(expected[name])) <= fraction_tolerance
             for name in expected
         )
     if key == "violation_count":
@@ -683,7 +690,7 @@ def _metric_matches(key: str, reported, expected) -> bool:
     if key.endswith("_cents"):
         return abs(float(reported) - float(expected)) <= 1e-9
     if key.endswith("_pct"):
-        return abs(float(reported) - float(expected)) <= REPORTED_FRACTION_TOLERANCE
+        return abs(float(reported) - float(expected)) <= fraction_tolerance
     return abs(float(reported) - float(expected)) <= MONEY_OBSERVATION_TOLERANCE
 
 
@@ -703,14 +710,15 @@ def _exact_violations(spec: dict, scenario: dict, response: dict) -> dict:
     expected = {(row["kind"], row["scope"]): row for row in expected_rows}
     missing = [{"kind": kind, "scope": scope} for kind, scope in expected if (kind, scope) not in seen]
     extra = [{"kind": kind, "scope": scope} for kind, scope in seen if (kind, scope) not in expected]
+    fraction_tolerance = _optional_float(params.get("fraction_tolerance"), 0.0)
     mismatches = []
     for key, wanted in expected.items():
         got = seen.get(key)
         if got is None:
             continue
         if (
-            abs(float(got["observed"]) - float(wanted["observed"])) > REPORTED_FRACTION_TOLERANCE
-            or abs(float(got["limit"]) - float(wanted["limit"])) > REPORTED_FRACTION_TOLERANCE
+            abs(float(got["observed"]) - float(wanted["observed"])) > fraction_tolerance
+            or abs(float(got["limit"]) - float(wanted["limit"])) > fraction_tolerance
         ):
             mismatches.append(
                 {
