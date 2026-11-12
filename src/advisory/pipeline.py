@@ -3,7 +3,16 @@
 Each row grades both the first draft (initial_correct) and the final answer
 (final_correct) with the shared checker, and adds up the tokens, cost and time
 of every model call in the run, including the shared first draft. The rows in
-results/results.jsonl are the input to metrics.summarize().
+results/results.jsonl are the input to metrics.summarize(). Each row also
+records whether the checker's STATUS check passed (initial_status_correct,
+final_status_correct), for status-only accuracy in the report.
+
+A run whose model call fails with an API error (after llm.call_model's own
+retries) is saved too, with status "failed" and the error, so failed runs are
+counted per condition instead of disappearing. Two errors are not saved as
+runs, because they say nothing about the condition: the daily quota (the run
+is simply not done yet; run the same command again tomorrow) and errors in our
+own code or setup (a bug to fix, not a failed run).
 """
 
 from __future__ import annotations
@@ -11,10 +20,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from google.genai import errors as genai_errors
+
 from advisory import llm
 from advisory.checker import check
 from advisory.conditions import CONDITIONS, make_run_id
-from advisory.drafts import DRAFT_DIR, Settings, get_draft
+from advisory.drafts import DRAFT_DIR, PROMPT_VERSION, Settings, draft_run_id, get_draft
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIO_DIR = ROOT / "data" / "scenarios"
@@ -53,7 +64,11 @@ def usage_for(run_ids: list[str], log_path: Path | None = None) -> dict:
 
 
 def done_keys(results_path: Path = RESULTS_PATH) -> set[tuple]:
-    """(task_id, condition, run_number, model) of every run already saved, so reruns skip them."""
+    """(task_id, condition, run_number, model) of every run already saved, so reruns skip them.
+
+    Failed runs count as saved: they are results, and running them again would
+    add a second row for the same run, which metrics.summarize() rejects.
+    """
     if not results_path.exists():
         return set()
     keys = set()
@@ -63,6 +78,20 @@ def done_keys(results_path: Path = RESULTS_PATH) -> set[tuple]:
                 row = json.loads(line)
                 keys.add((row["task_id"], row["condition"], row["run_number"], row["model"]))
     return keys
+
+
+def status_correct(graded: dict) -> bool | None:
+    """Whether check()'s STATUS check passed.
+
+    A format failure has no readable status, so it counts as wrong, like
+    initial_correct. None means the scenario has no STATUS check.
+    """
+    if graded.get("format_failure"):
+        return False
+    for row in graded.get("checks", []):
+        if row["check_type"] == "STATUS":
+            return bool(row["passed"])
+    return None
 
 
 def run_one(
@@ -76,18 +105,17 @@ def run_one(
     scenario_dir: Path = SCENARIO_DIR,
     log_path: Path | None = None,
 ) -> dict:
-    """Run `condition` once on `task_id`, grade it, append the row to results_path and return it."""
+    """Run `condition` once on `task_id`, grade it, append the row to results_path and return it.
+
+    An API error is saved as a row with status "failed". The daily quota and
+    any other exception are raised, and nothing is saved for the run.
+    """
     scenario = load_scenario(task_id, scenario_dir)
-    draft = get_draft(scenario, run_number, settings, root=draft_dir)
     run_id = make_run_id(condition, task_id, run_number, settings.model)
-    result = CONDITIONS[condition](scenario, draft, run_id=run_id, settings=settings)
-
-    first = check(task_id, result.draft)
-    final = first if result.final == result.draft else check(task_id, result.final)
-
-    row = {
+    draft_id = draft_run_id(settings.model, task_id, run_number)
+    base = {
         "run_id": run_id,
-        "draft_run_id": draft.run_id,
+        "draft_run_id": draft_id,
         "task_id": task_id,
         "condition": condition,
         "run_number": run_number,
@@ -95,16 +123,56 @@ def run_one(
         "temperature": settings.temperature,
         "top_p": settings.top_p,
         "thinking_level": settings.thinking_level,
+    }
+
+    try:
+        draft = get_draft(scenario, run_number, settings, root=draft_dir)
+        result = CONDITIONS[condition](scenario, draft, run_id=run_id, settings=settings)
+    except genai_errors.APIError as e:
+        if llm._is_daily_quota(e):  # not done yet, not failed: rerun tomorrow
+            raise
+        row = {
+            **base,
+            "prompt_version": PROMPT_VERSION,
+            # A failed run has no answer to grade. metrics.summarize() leaves
+            # status "failed" out of every rate, so these only keep the
+            # columns boolean.
+            "initial_correct": False,
+            "final_correct": False,
+            "initial_format_failure": False,
+            "final_format_failure": False,
+            "initial_status_correct": False,
+            "final_status_correct": False,
+            "verdict": None,
+            "status": "failed",
+            "error": f"{type(e).__name__}: {e}"[:500],
+            **usage_for([draft_id, run_id], log_path),
+        }
+        _append(row, results_path)
+        return row
+
+    first = check(task_id, result.draft)
+    final = first if result.final == result.draft else check(task_id, result.final)
+
+    row = {
+        **base,
         "prompt_version": draft.prompt_version,
         "initial_correct": bool(first["correct"]),
         "final_correct": bool(final["correct"]),
         "initial_format_failure": bool(first.get("format_failure", False)),
         "final_format_failure": bool(final.get("format_failure", False)),
+        "initial_status_correct": status_correct(first),
+        "final_status_correct": status_correct(final),
         "verdict": result.verdict,
         "status": result.status,
+        "error": None,
         **usage_for([draft.run_id, run_id], log_path),
     }
+    _append(row, results_path)
+    return row
+
+
+def _append(row: dict, results_path: Path) -> None:
     results_path.parent.mkdir(parents=True, exist_ok=True)
     with results_path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(row) + "\n")
-    return row

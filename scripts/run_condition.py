@@ -6,6 +6,11 @@ Real API calls: start small, the free tier has a daily limit. Example:
 
 Runs already in results/results.jsonl are skipped, so after hitting the daily
 limit you can run the same command again the next day and it continues.
+
+A run whose API call fails (after call_model's retries) is saved with status
+"failed" and the script moves on; after 3 failed runs in a row it stops, since
+that points to an outage rather than the condition. The daily quota and errors
+in the code stop the script without saving a row for that run.
 """
 
 from __future__ import annotations
@@ -16,6 +21,8 @@ import sys
 from advisory.conditions import CONDITIONS
 from advisory.drafts import Settings
 from advisory.pipeline import RESULTS_PATH, all_task_ids, done_keys, run_one
+
+MAX_FAILED_IN_A_ROW = 3
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -32,6 +39,7 @@ def main(argv: list[str] | None = None) -> int:
     settings = Settings(args.model, args.temperature, args.top_p, args.thinking_level)
     tasks = args.tasks or all_task_ids()
     done = done_keys()
+    failed_in_a_row = 0
 
     for task_id in tasks:
         for run_number in range(1, args.repeats + 1):
@@ -40,9 +48,17 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             try:
                 row = run_one(args.condition, task_id, run_number, settings)
-            except Exception as e:  # e.g. the daily quota; finished runs are already saved
+            except Exception as e:  # daily quota or a code/setup error: nothing saved for this run
                 print(f"stop  {task_id} r{run_number}: {type(e).__name__}: {e}")
                 return 1
+            if row["status"] == "failed":
+                failed_in_a_row += 1
+                print(f"fail  {task_id} r{run_number} {args.condition}: {row['error']} (saved as a failed run)")
+                if failed_in_a_row >= MAX_FAILED_IN_A_ROW:
+                    print(f"stop  {failed_in_a_row} failed runs in a row; check the API before running again")
+                    return 1
+                continue
+            failed_in_a_row = 0
             print(
                 f"done  {task_id} r{run_number} {args.condition}: "
                 f"first draft {'right' if row['initial_correct'] else 'wrong'}, "
