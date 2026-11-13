@@ -38,7 +38,7 @@
         },
         "final_cash": {
           "source": "REPLAY_DERIVED",
-          "formula": "cash_before_withdrawal - listed withdrawals"
+          "formula": "cash_before_trades - net trade cost"
         },
         "allocations": {
           "source": "REPLAY_DERIVED",
@@ -178,7 +178,7 @@
         },
         "final_cash": {
           "source": "REPLAY_DERIVED",
-          "formula": "cash_before_withdrawal - listed withdrawals"
+          "formula": "cash_before_trades - net trade cost"
         },
         "allocations": {
           "source": "REPLAY_DERIVED",
@@ -255,7 +255,7 @@
         },
         "final_cash": {
           "source": "REPLAY_DERIVED",
-          "formula": "cash_before_withdrawal - listed withdrawals"
+          "formula": "cash_before_trades - net trade cost"
         },
         "allocations": {
           "source": "REPLAY_DERIVED",
