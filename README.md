@@ -37,7 +37,7 @@
 - **The goal:** find out which kind of check makes the advisor most reliable, and what each one costs in tokens and time.
 
 > [!NOTE]
-> **Status: in progress.** Built so far: the scenario files, the model wrapper (`llm.py`), the dedicated verifier's calculator and the metrics. The checker and the model pilot are in review. The scenario generator, the four conditions and the verifier prompts are still to come, so parts of this README describe the planned design.
+> **Status: in progress.** Built so far: the scenario files, the model wrapper (`llm.py`), the dedicated verifier's calculator, the checker, the seeded error set and the metrics. In review: the model pilot, the pipeline with the `none` condition, per-model metrics and the results report. The scenario generator, the other three conditions and the verifier prompts are still to come, so parts of this README describe the planned design.
 
 ## Research question
 
@@ -204,6 +204,7 @@ All model calls go through the Gemini API with one key (`GOOGLE_API_KEY`). Price
 |---|---|---|
 | `gemini-3.1-flash-lite` | $0.25 / $1.50 | Advisor candidate |
 | `gemini-3.5-flash-lite` | $0.30 / $2.50 | Advisor candidate |
+| `gemini-3.6-flash` | $0.75 / $3.75 (doubles on 2027-01-01) | Stronger advisor candidate |
 | `gemini-3.8-flash` | $0.75 / $3.75 (doubles on 2027-01-01) | Stronger advisor candidate |
 | `gemma-4-26b-a4b-it` | free tier only | Cross-family verifier candidate |
 
