@@ -220,3 +220,14 @@ def test_checker_grade_on_injected_answers(path):
 def test_injected_set_is_present():
     kinds = {json.loads(p.read_text())["error_type"] for p in INJECTED}
     assert "none" in kinds and len(kinds) > 3
+
+
+def test_pilot_uses_the_shared_advisor_prompt(fake_model):
+    """The pilot must use the exact prompt of the experiment, or its accuracy would not carry over."""
+    from advisory.prompts import ADVISOR_SYSTEM, PROMPT_VERSION, advisor_messages
+
+    calls = fake_model(json.dumps(GOOD))
+    r = pilot.run_advisor(SCENARIO, "m1", run_id="r1")
+    assert calls[0]["messages"] == advisor_messages(SCENARIO)
+    assert calls[0]["messages"][0]["content"] == ADVISOR_SYSTEM
+    assert r.prompt_version == PROMPT_VERSION == "advisor-v1"

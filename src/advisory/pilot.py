@@ -24,24 +24,11 @@ from google.genai import errors as genai_errors
 from jsonschema import Draft202012Validator
 
 from advisory.llm import _is_daily_quota, call_model
+from advisory.prompts import PROMPT_VERSION, advisor_messages  # same prompt as every condition
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIO_DIR = ROOT / "data" / "scenarios"
 PILOT_DIR = ROOT / "results" / "pilot"
-
-# Bump the version whenever the prompt text changes, so results stay comparable.
-PROMPT_VERSION = "advisor-v1"
-ADVISOR_SYSTEM_PROMPT = """\
-You are a careful financial advisor working on a synthetic client scenario.
-You receive the complete scenario as JSON. Answer the client_request exactly as
-asked, respecting every restriction, cash flow and approved assumption in it.
-
-Respond with a single JSON object and nothing else: no prose before or after,
-no markdown code fences. The object must conform to
-output_requirements.response_schema in the scenario, and follow every rule in
-output_requirements (trades_rule, observations_rule, task_completion,
-violations_rule, explanation_rule). Check your arithmetic before answering.
-"""
 
 # Agreed study settings (README "Study settings"); thinking level is the model default.
 DEFAULT_SETTINGS = {"temperature": 0.7, "top_p": 0.9, "thinking_level": None}
@@ -134,10 +121,7 @@ def run_advisor(
     """Ask the advisor once and keep that first answer as it is: no retry."""
     settings = {**DEFAULT_SETTINGS, **(settings or {})}
     sid = scenario["scenario_id"]
-    messages = [
-        {"role": "system", "content": ADVISOR_SYSTEM_PROMPT},
-        {"role": "user", "content": json.dumps(scenario, indent=2)},
-    ]
+    messages = advisor_messages(scenario)
     result = PilotResult(
         run_id=run_id,
         batch_id=batch_id,
