@@ -630,8 +630,110 @@ def test_failed_run_is_left_out_of_rates():
     assert summary.loc["dedicated", "catch_rate"] == 1
     assert summary.loc["dedicated", "tp"] == 1
     assert summary.loc["dedicated", "tn"] == 1
-    assert summary.loc["dedicated", "total_cost_usd"] == 0
+    # Failed cost counts in the total; averages use scored runs only.
+    assert summary.loc["dedicated", "total_cost_usd"] == 99
+    assert summary.loc["dedicated", "mean_cost_usd"] == 0
     assert summary.loc["dedicated", "mean_tokens_in"] == 0
+
+
+def test_all_failed_group_returns_n_failed_and_none_rates():
+    # none has one scored run. self is entirely failed: still a row, with
+    # n_failed set and every rate / CI / cost average as None. total cost
+    # still sums the failed runs.
+    rows = [
+        _run(
+            condition="none",
+            model="m",
+            task_id="t1",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict=None,
+            status="unchecked",
+            cost_usd=1,
+        ),
+        _run(
+            condition="self",
+            model="m",
+            task_id="t1",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict=None,
+            status="failed",
+            cost_usd=4,
+        ),
+        _run(
+            condition="self",
+            model="m",
+            task_id="t2",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict=None,
+            status="failed",
+            cost_usd=6,
+        ),
+    ]
+    summary = summarize(rows)
+    assert ("self", "m") in summary.index
+    self_row = summary.loc[("self", "m")]
+    assert self_row["n_failed"] == 2
+    assert self_row["task_success"] is None
+    assert self_row["task_success_ci_low"] is None
+    assert self_row["task_success_ci_high"] is None
+    assert self_row["catch_rate"] is None
+    assert self_row["fix_rate"] is None
+    assert self_row["mean_cost_usd"] is None
+    assert self_row["mean_tokens_in"] is None
+    assert self_row["median_latency_s"] is None
+    assert self_row["extra_cost_per_extra_correct"] is None
+    assert self_row["total_cost_usd"] == 10
+    assert summary.loc[("none", "m"), "task_success"] == 1.0
+
+
+def test_failed_run_cost_counts_in_total_not_mean():
+    # One scored run (cost 2) and one failed run (cost 8). Total is 10;
+    # mean cost is the scored mean 2.
+    rows = [
+        _run(
+            condition="peer",
+            task_id="t1",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="accept",
+            status="accepted",
+            cost_usd=2,
+            tokens_in=10,
+            latency_s=1.0,
+        ),
+        _run(
+            condition="peer",
+            task_id="t2",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict=None,
+            status="failed",
+            cost_usd=8,
+            tokens_in=999,
+            latency_s=99.0,
+        ),
+    ]
+    summary = summarize(rows)
+    assert summary.loc["peer", "n_failed"] == 1
+    assert summary.loc["peer", "total_cost_usd"] == 10
+    assert summary.loc["peer", "mean_cost_usd"] == 2
+    assert summary.loc["peer", "mean_tokens_in"] == 10
+    assert summary.loc["peer", "median_latency_s"] == 1.0
+
+
+def test_unknown_status_is_rejected():
+    # "Failed" is not one of unchecked / failed / accepted / revised /
+    # human_review.
+    with pytest.raises(ValueError, match="unknown status"):
+        summarize([_run(status="Failed")])
 
 
 def test_single_model_rows_without_model_column_are_unchanged():
