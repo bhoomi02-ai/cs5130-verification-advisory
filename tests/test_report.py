@@ -73,7 +73,7 @@ def test_normal_results_file(tmp_path):
                 run_number=1,
                 final_correct=False,
                 initial_correct=False,
-                answer_status="INFEASIBLE",
+                final_status_correct=True,
                 cost_usd=1,
             ),
             _row(
@@ -82,7 +82,7 @@ def test_normal_results_file(tmp_path):
                 run_number=1,
                 final_correct=False,
                 initial_correct=False,
-                answer_status="FEASIBLE",
+                final_status_correct=False,
                 cost_usd=1,
             ),
         ],
@@ -214,3 +214,57 @@ def test_malformed_row_is_reported_not_dropped(tmp_path):
     assert len(rejected_csv) == 2
     rejected_md = (tmp_path / "report" / "rejected.md").read_text(encoding="utf-8")
     assert "2 row(s) were not summarised" in rejected_md
+
+
+def test_all_failed_condition_still_writes(tmp_path):
+    # none has a scored run; self is entirely failed. The report still writes,
+    # and the self row shows n_failed with empty rates.
+    path = _write_jsonl(
+        tmp_path / "results.jsonl",
+        [
+            _row(
+                condition="none",
+                task_id="S01",
+                run_number=1,
+                final_correct=True,
+                initial_correct=True,
+                status="unchecked",
+                cost_usd=1,
+            ),
+            _row(
+                condition="self",
+                task_id="S01",
+                run_number=1,
+                final_correct=False,
+                initial_correct=False,
+                verdict=None,
+                status="failed",
+                cost_usd=4,
+            ),
+            _row(
+                condition="self",
+                task_id="S02",
+                run_number=1,
+                final_correct=False,
+                initial_correct=False,
+                verdict=None,
+                status="failed",
+                cost_usd=6,
+            ),
+        ],
+    )
+    outcome = analyze(results_path=path, out_dir=tmp_path / "report", seed=0)
+    assert outcome["rejected"] == []
+    assert (tmp_path / "report" / "summary.csv").exists()
+    assert (tmp_path / "report" / "task_success.png").stat().st_size > 0
+    summary = outcome["report"]["summary"]
+    self_row = summary[summary.condition == "self"].iloc[0]
+    assert self_row.n_failed == 2
+    assert self_row.task_success is None or pd.isna(self_row.task_success)
+    assert self_row.catch_rate is None or pd.isna(self_row.catch_rate)
+    assert self_row.mean_cost_usd is None or pd.isna(self_row.mean_cost_usd)
+    assert self_row.extra_cost_per_extra_correct is None or pd.isna(
+        self_row.extra_cost_per_extra_correct
+    )
+    none_row = summary[summary.condition == "none"].iloc[0]
+    assert none_row.task_success == 1.0

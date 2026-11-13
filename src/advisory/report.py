@@ -49,9 +49,12 @@ def load_results(path: Path = RESULTS_PATH) -> tuple[list[dict], list[dict]]:
 
     Returns ``(accepted, rejected)``. Every rejected entry is
     ``{"line": n, "reason": ..., "raw": ...}`` (and ``row`` when JSON parsed).
+    Each row is validated on its own; duplicates are checked with a set of
+    identity keys so loading stays linear in the number of lines.
     """
     accepted: list[dict] = []
     rejected: list[dict] = []
+    seen: set[tuple] = set()
     if not path.exists():
         raise FileNotFoundError(f"results file not found: {path}")
     with path.open(encoding="utf-8") as handle:
@@ -66,10 +69,22 @@ def load_results(path: Path = RESULTS_PATH) -> tuple[list[dict], list[dict]]:
             if not isinstance(row, dict):
                 rejected.append({"line": line_number, "reason": "row is not a JSON object", "raw": line.rstrip("\n"), "row": row})
                 continue
-            reason = _row_problem(row, accepted)
+            reason = _row_problem(row)
             if reason:
                 rejected.append({"line": line_number, "reason": reason, "raw": line.rstrip("\n"), "row": row})
                 continue
+            key = _identity_key(row)
+            if key in seen:
+                rejected.append(
+                    {
+                        "line": line_number,
+                        "reason": _duplicate_message(row),
+                        "raw": line.rstrip("\n"),
+                        "row": row,
+                    }
+                )
+                continue
+            seen.add(key)
             accepted.append(row)
     return accepted, rejected
 
@@ -81,7 +96,7 @@ def build_report(runs: list[dict], seed: int = 0) -> dict:
     summary = summarize(runs, seed=seed).reset_index()
     for column in SUMMARY_COLUMNS:
         if column not in summary.columns:
-            summary[column] = None if column == "model" else 0
+            summary[column] = None
     summary = summary[list(SUMMARY_COLUMNS)]
     return {
         "summary": summary,
@@ -138,15 +153,27 @@ def analyze(
     return {"accepted": accepted, "rejected": rejected, "report": report, "paths": paths}
 
 
-def _row_problem(row: dict, already_accepted: list[dict]) -> str | None:
+def _row_problem(row: dict) -> str | None:
     missing = [column for column in REQUIRED_COLUMNS if column not in row]
     if missing:
         return f"missing columns: {', '.join(missing)}"
     try:
-        validate_runs(already_accepted + [row])
+        validate_runs([row])
     except (TypeError, ValueError) as exc:
         return str(exc)
     return None
+
+
+def _identity_key(row: dict) -> tuple:
+    if "model" in row:
+        return (row["task_id"], row["condition"], row["run_number"], row["model"])
+    return (row["task_id"], row["condition"], row["run_number"])
+
+
+def _duplicate_message(row: dict) -> str:
+    if "model" in row:
+        return "duplicate rows for the same task_id, condition, run_number, and model"
+    return "duplicate rows for the same task_id, condition, and run_number"
 
 
 def _scored(runs: list[dict]) -> list[dict]:
@@ -184,11 +211,11 @@ def _by_scenario(runs: list[dict]) -> pd.DataFrame:
 
 
 def _infeasible_status(runs: list[dict]) -> pd.DataFrame:
-    """Strict success vs answer-status-only success for S09 and S10.
+    """Strict success vs status-only success for S09 and S10.
 
-    Status-only uses optional ``answer_status`` on the result row (the final
-    answer's FEASIBLE / INFEASIBLE / ...). Pipeline rows without that field
-    get a null status-only rate.
+    Status-only uses ``final_status_correct`` from the pipeline (the checker's
+    STATUS verdict on the final answer). Rows without that field get a null
+    status-only rate.
     """
     scored = [row for row in _scored(runs) if row.get("task_id") in INFEASIBLE_TASKS]
     has_model = any("model" in row for row in scored)
@@ -200,8 +227,8 @@ def _infeasible_status(runs: list[dict]) -> pd.DataFrame:
             "final_correct": bool(row["final_correct"]),
             "status_only_correct": (
                 None
-                if "answer_status" not in row
-                else row.get("answer_status") == "INFEASIBLE"
+                if "final_status_correct" not in row
+                else bool(row["final_status_correct"])
             ),
         }
         if has_model:
@@ -288,9 +315,10 @@ def _write_success_chart(summary: pd.DataFrame, path: Path) -> None:
             labels.append(f"{row['condition']}\n{row['model']}")
         else:
             labels.append(str(row["condition"]))
-    success = summary["task_success"].astype(float).to_numpy()
-    low = summary["task_success_ci_low"].astype(float).to_numpy()
-    high = summary["task_success_ci_high"].astype(float).to_numpy()
+    # All-failed groups leave rates as None; coerce so the chart still writes.
+    success = pd.to_numeric(summary["task_success"], errors="coerce").to_numpy(dtype=float)
+    low = pd.to_numeric(summary["task_success_ci_low"], errors="coerce").to_numpy(dtype=float)
+    high = pd.to_numeric(summary["task_success_ci_high"], errors="coerce").to_numpy(dtype=float)
     # Error bars are distance from the point to each CI end.
     yerr = [success - low, high - success]
     fig, axis = plt.subplots(figsize=(8, 4.5))
