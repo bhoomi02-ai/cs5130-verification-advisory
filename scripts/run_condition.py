@@ -5,12 +5,14 @@ Real API calls: start small, the free tier has a daily limit. Example:
     python scripts/run_condition.py --condition none --model gemini-3.1-flash-lite --tasks S01 --repeats 1
 
 Runs already in results/results.jsonl are skipped, so after hitting the daily
-limit you can run the same command again the next day and it continues.
+limit you can run the same command again the next day and it continues. A
+results file with runs for the same model made with other settings is refused.
 
 A run whose API call fails (after call_model's retries) is saved with status
 "failed" and the script moves on; after 3 failed runs in a row it stops, since
-that points to an outage rather than the condition. The daily quota and errors
-in the code stop the script without saving a row for that run.
+that points to an outage rather than the condition. Add --retry-failed to run
+the failed ones again, replacing their rows. The daily quota and errors in the
+code stop the script without saving a row for that run.
 """
 
 from __future__ import annotations
@@ -20,7 +22,7 @@ import sys
 
 from advisory.conditions import CONDITIONS
 from advisory.drafts import Settings
-from advisory.pipeline import RESULTS_PATH, all_task_ids, done_keys, run_one
+from advisory.pipeline import RESULTS_PATH, all_task_ids, done_keys, drop_failed, failed_keys, run_one
 
 MAX_FAILED_IN_A_ROW = 3
 
@@ -34,20 +36,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--top-p", type=float, default=0.9)
     parser.add_argument("--thinking-level", choices=["minimal", "low", "medium", "high"])
+    parser.add_argument("--retry-failed", action="store_true", help="run the runs saved as failed again, replacing their rows")
     args = parser.parse_args(argv)
 
     settings = Settings(args.model, args.temperature, args.top_p, args.thinking_level)
     tasks = args.tasks or all_task_ids()
-    done = done_keys()
+    try:
+        done = done_keys(RESULTS_PATH, settings=settings)
+    except ValueError as e:
+        print(f"stop  {e}")
+        return 1
+    retry = failed_keys(RESULTS_PATH) if args.retry_failed else set()
     failed_in_a_row = 0
 
     for task_id in tasks:
         for run_number in range(1, args.repeats + 1):
-            if (task_id, args.condition, run_number, args.model) in done:
+            key = (task_id, args.condition, run_number, args.model)
+            if key in done and key not in retry:
                 print(f"skip  {task_id} r{run_number}: already in {RESULTS_PATH.name}")
                 continue
+            if key in retry:
+                drop_failed({key}, RESULTS_PATH)
+                print(f"retry {task_id} r{run_number}: replacing the failed row")
             try:
-                row = run_one(args.condition, task_id, run_number, settings)
+                row = run_one(args.condition, task_id, run_number, settings, results_path=RESULTS_PATH)
             except Exception as e:  # daily quota or a code/setup error: nothing saved for this run
                 print(f"stop  {task_id} r{run_number}: {type(e).__name__}: {e}")
                 return 1

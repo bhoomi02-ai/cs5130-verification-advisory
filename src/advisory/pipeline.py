@@ -2,10 +2,14 @@
 
 Each row grades both the first draft (initial_correct) and the final answer
 (final_correct) with the shared checker, and adds up the tokens, cost and time
-of every model call in the run, including the shared first draft. The rows in
+of the run's model calls, including the shared first draft. The rows in
 results/results.jsonl are the input to metrics.summarize(). Each row also
 records whether the checker's STATUS check passed (initial_status_correct,
 final_status_correct), for status-only accuracy in the report.
+
+Usage is counted per attempt: a rerun is charged only for its own calls, plus
+the call that made a first draft saved earlier, never for calls from an earlier
+attempt that stopped on the daily quota.
 
 A run whose model call fails with an API error (after llm.call_model's own
 retries) is saved too, with status "failed" and the error, so failed runs are
@@ -18,6 +22,8 @@ own code or setup (a bug to fix, not a failed run).
 from __future__ import annotations
 
 import json
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 from google.genai import errors as genai_errors
@@ -40,44 +46,112 @@ def all_task_ids(root: Path = SCENARIO_DIR) -> list[str]:
     return sorted(p.stem for p in root.glob("*.json"))
 
 
-def usage_for(run_ids: list[str], log_path: Path | None = None) -> dict:
-    """Add up tokens, cost and time of every logged call whose run_id is in run_ids."""
+def _log_records(run_ids: set[str], log_path: Path | None) -> list[dict]:
+    """Logged calls whose run_id is in run_ids, in the order they were written."""
     log_path = log_path or llm.RUN_LOG
-    totals = {"tokens_in": 0, "tokens_out": 0, "cost_usd": 0.0, "latency_s": 0.0, "n_calls": 0, "n_failed_calls": 0}
     if not log_path.exists():
-        return totals
-    wanted = set(run_ids)
+        return []
+    records = []
     with log_path.open(encoding="utf-8") as f:
         for line in f:
-            if not line.strip():
-                continue
-            rec = json.loads(line)
-            if rec.get("run_id") not in wanted:
-                continue
-            totals["tokens_in"] += rec.get("tokens_in", 0)
-            totals["tokens_out"] += rec.get("tokens_out", 0)
-            totals["cost_usd"] += rec.get("cost_usd", 0.0)
-            totals["latency_s"] += rec.get("latency_s", 0.0)
-            totals["n_calls"] += 1
-            totals["n_failed_calls"] += 1 if rec.get("error") else 0
+            if line.strip():
+                rec = json.loads(line)
+                if rec.get("run_id") in run_ids:
+                    records.append(rec)
+    return records
+
+
+def _totals(records: list[dict]) -> dict:
+    totals = {"tokens_in": 0, "tokens_out": 0, "cost_usd": 0.0, "latency_s": 0.0, "n_calls": 0, "n_failed_calls": 0}
+    for rec in records:
+        totals["tokens_in"] += rec.get("tokens_in", 0)
+        totals["tokens_out"] += rec.get("tokens_out", 0)
+        totals["cost_usd"] += rec.get("cost_usd", 0.0)
+        totals["latency_s"] += rec.get("latency_s", 0.0)
+        totals["n_calls"] += 1
+        totals["n_failed_calls"] += 1 if rec.get("error") else 0
     return totals
 
 
-def done_keys(results_path: Path = RESULTS_PATH) -> set[tuple]:
+def _logged_at(rec: dict) -> datetime | None:
+    try:
+        when = datetime.fromisoformat(rec["timestamp"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
+
+
+def usage_for(run_ids: list[str], log_path: Path | None = None) -> dict:
+    """Add up tokens, cost and time of every logged call whose run_id is in run_ids."""
+    return _totals(_log_records(set(run_ids), log_path))
+
+
+def attempt_usage(draft_id: str, run_id: str, started: datetime, log_path: Path | None = None) -> dict:
+    """Tokens, cost and time of one attempt of a run.
+
+    Counts the calls logged at or after `started` for the run and its first
+    draft. If the first draft was saved by an earlier attempt, the call that
+    made it (its latest successful record) is added. Calls from earlier
+    attempts, like one that stopped on the daily quota, are left out.
+    """
+    records = _log_records({draft_id, run_id}, log_path)
+    picked = [r for r in records if (_logged_at(r) or datetime.min.replace(tzinfo=timezone.utc)) >= started]
+    if not any(r.get("run_id") == draft_id for r in picked):
+        made = [r for r in records if r.get("run_id") == draft_id and not r.get("error")]
+        if made:
+            picked.append(made[-1])
+    return _totals(picked)
+
+
+def _rows(results_path: Path) -> list[dict]:
+    if not results_path.exists():
+        return []
+    with results_path.open(encoding="utf-8") as f:
+        return [json.loads(line) for line in f if line.strip()]
+
+
+def _key(row: dict) -> tuple:
+    return (row["task_id"], row["condition"], row["run_number"], row["model"])
+
+
+def done_keys(results_path: Path = RESULTS_PATH, settings: Settings | None = None) -> set[tuple]:
     """(task_id, condition, run_number, model) of every run already saved, so reruns skip them.
 
     Failed runs count as saved: they are results, and running them again would
-    add a second row for the same run, which metrics.summarize() rejects.
+    add a second row for the same run, which metrics.summarize() rejects
+    (scripts/run_condition.py --retry-failed replaces them instead).
+
+    With `settings`, rows for the same model made with other settings or another
+    prompt version are refused, the same way get_draft refuses a saved draft.
     """
-    if not results_path.exists():
-        return set()
-    keys = set()
-    with results_path.open(encoding="utf-8") as f:
-        for line in f:
-            if line.strip():
-                row = json.loads(line)
-                keys.add((row["task_id"], row["condition"], row["run_number"], row["model"]))
-    return keys
+    rows = _rows(results_path)
+    if settings is not None:
+        wanted = (settings.temperature, settings.top_p, settings.thinking_level, PROMPT_VERSION)
+        for row in rows:
+            made = (row.get("temperature"), row.get("top_p"), row.get("thinking_level"), row.get("prompt_version"))
+            if row["model"] == settings.model and made != wanted:
+                raise ValueError(
+                    f"{results_path.name} already has {settings.model} runs made with other settings {made}, not {wanted}. "
+                    "Use the same settings, or move the file aside to start a new one."
+                )
+    return {_key(row) for row in rows}
+
+
+def failed_keys(results_path: Path = RESULTS_PATH) -> set[tuple]:
+    """Keys of the runs saved with status "failed"."""
+    return {_key(row) for row in _rows(results_path) if row.get("status") == "failed"}
+
+
+def drop_failed(keys: set[tuple], results_path: Path = RESULTS_PATH) -> int:
+    """Remove the failed rows whose key is in `keys`, so those runs can be run again. Returns how many."""
+    rows = _rows(results_path)
+    kept = [row for row in rows if not (row.get("status") == "failed" and _key(row) in keys)]
+    if len(kept) == len(rows):
+        return 0
+    tmp = results_path.with_suffix(".tmp")
+    tmp.write_text("".join(json.dumps(row) + "\n" for row in kept), encoding="utf-8")
+    os.replace(tmp, results_path)
+    return len(rows) - len(kept)
 
 
 def status_correct(graded: dict) -> bool | None:
@@ -110,6 +184,7 @@ def run_one(
     An API error is saved as a row with status "failed". The daily quota and
     any other exception are raised, and nothing is saved for the run.
     """
+    started = datetime.now(timezone.utc)
     scenario = load_scenario(task_id, scenario_dir)
     run_id = make_run_id(condition, task_id, run_number, settings.model)
     draft_id = draft_run_id(settings.model, task_id, run_number)
@@ -146,7 +221,7 @@ def run_one(
             "verdict": None,
             "status": "failed",
             "error": f"{type(e).__name__}: {e}"[:500],
-            **usage_for([draft_id, run_id], log_path),
+            **attempt_usage(draft_id, run_id, started, log_path),
         }
         _append(row, results_path)
         return row
@@ -166,7 +241,7 @@ def run_one(
         "verdict": result.verdict,
         "status": result.status,
         "error": None,
-        **usage_for([draft.run_id, run_id], log_path),
+        **attempt_usage(draft.run_id, run_id, started, log_path),
     }
     _append(row, results_path)
     return row
