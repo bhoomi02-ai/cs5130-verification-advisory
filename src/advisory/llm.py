@@ -54,6 +54,51 @@ PRICING: dict[str, tuple[float, float]] = {
 _MAX_RETRIES = 5
 _RETRY_STATUS = (429, 500, 503)
 
+# Spending cap for the whole project, in USD (team decision, 2026-11-13).
+# Override with ADVISORY_BUDGET_USD in .env, e.g. to give each teammate a share
+# when several people spend from the same paid key on their own machines.
+DEFAULT_BUDGET_USD = 20.0
+# A call is refused unless this much budget is left, so the last call cannot
+# overshoot the cap. One advisor call costs about $0.02; this leaves room for
+# the longest calls.
+_CALL_HEADROOM_USD = 0.10
+
+
+class BudgetExceeded(RuntimeError):
+    """Raised before a model call that could push total spend past the budget."""
+
+
+def budget_usd() -> float:
+    value = os.environ.get("ADVISORY_BUDGET_USD")
+    return DEFAULT_BUDGET_USD if value in (None, "") else float(value)
+
+
+def spent_usd(path: Path | None = None) -> float:
+    """Total cost_usd of every call logged in the run log so far.
+
+    Free-tier calls are logged at paid prices too, so this errs on the side of
+    counting too much, never too little.
+    """
+    path = path or RUN_LOG
+    if not path.exists():
+        return 0.0
+    total = 0.0
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                total += json.loads(line).get("cost_usd") or 0.0
+    return total
+
+
+def check_budget(path: Path | None = None) -> None:
+    """Raise BudgetExceeded if the next call could take spend past the budget."""
+    budget, spent = budget_usd(), spent_usd(path)
+    if spent + _CALL_HEADROOM_USD > budget:
+        raise BudgetExceeded(
+            f"Spent ${spent:.2f} of the ${budget:.2f} budget (results/runs.jsonl); "
+            f"refusing a call that could go over. Raise ADVISORY_BUDGET_USD only if the team agrees."
+        )
+
 # How much the model reasons before answering (Gemini 3 thinking_level).
 THINKING_LEVELS = ("minimal", "low", "medium", "high")
 
@@ -201,7 +246,13 @@ def call_model(
     logged with the run; None leaves the provider default in place. `run_id`
     lets the log be joined to per-run results. A failed call is logged too,
     with `error` set, and then re-raised, so failures never silently vanish.
+
+    Before calling, the total cost in the run log is checked against the
+    budget (see check_budget); a call that could go over raises BudgetExceeded
+    and is not made or logged.
     """
+    if PRICING.get(model, (0.0, 0.0)) != (0.0, 0.0):  # free models (Gemma) cost nothing
+        check_budget()
     start = time.perf_counter()
     common = dict(
         task_id=task_id,

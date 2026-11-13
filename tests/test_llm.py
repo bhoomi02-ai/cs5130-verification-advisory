@@ -1,5 +1,6 @@
 """Tests for the model wrapper. No network: the Gemini client is faked."""
 
+import json
 from types import SimpleNamespace
 
 import pytest
@@ -236,3 +237,59 @@ def test_failed_call_is_logged_then_raised(fake, monkeypatch):
     rec = logged[0]
     assert rec.error.startswith("ClientError") or rec.error.startswith("APIError")
     assert (rec.run_id, rec.temperature, rec.tokens_in, rec.cost_usd, rec.raw_output) == ("r1", 0.7, 0, 0.0, "")
+
+
+# Spending cap.
+
+
+def _log_with_spend(path, *costs):
+    path.write_text("".join(json.dumps({"cost_usd": c}) + "\n" for c in costs))
+
+
+def test_budget_defaults_to_20_and_reads_the_env(monkeypatch):
+    monkeypatch.delenv("ADVISORY_BUDGET_USD", raising=False)
+    assert llm.budget_usd() == 20.0
+    monkeypatch.setenv("ADVISORY_BUDGET_USD", "5")
+    assert llm.budget_usd() == 5.0
+
+
+def test_spent_adds_up_the_run_log(tmp_path):
+    log = tmp_path / "runs.jsonl"
+    assert llm.spent_usd(log) == 0.0
+    _log_with_spend(log, 1.5, 0.25, None)
+    assert llm.spent_usd(log) == pytest.approx(1.75)
+
+
+def test_call_is_refused_before_it_could_go_over_budget(fake, monkeypatch, tmp_path):
+    log = tmp_path / "runs.jsonl"
+    _log_with_spend(log, 19.95)
+    monkeypatch.setattr(llm, "RUN_LOG", log)
+    monkeypatch.delenv("ADVISORY_BUDGET_USD", raising=False)
+    client = fake(_response())
+    with pytest.raises(llm.BudgetExceeded, match=r"\$19.95 of the \$20.00"):
+        llm.call_model(task_id="S01", condition="none", agent="advisor", model="gemini-3.6-flash",
+                       messages=[{"role": "user", "content": "hi"}])
+    assert client.calls == []  # nothing sent, nothing spent
+    assert llm.spent_usd(log) == pytest.approx(19.95)  # and nothing logged
+
+
+def test_call_goes_ahead_under_budget(fake, monkeypatch, tmp_path):
+    log = tmp_path / "runs.jsonl"
+    _log_with_spend(log, 5.0)
+    monkeypatch.setattr(llm, "RUN_LOG", log)
+    monkeypatch.setattr(llm, "log_record", lambda rec: None)
+    monkeypatch.delenv("ADVISORY_BUDGET_USD", raising=False)
+    fake(_response())
+    assert llm.call_model(task_id="S01", condition="none", agent="advisor", model="gemini-3.6-flash",
+                          messages=[{"role": "user", "content": "hi"}]) == "ok"
+
+
+def test_free_models_are_not_blocked_by_the_budget(fake, monkeypatch, tmp_path):
+    log = tmp_path / "runs.jsonl"
+    _log_with_spend(log, 20.0)
+    monkeypatch.setattr(llm, "RUN_LOG", log)
+    monkeypatch.setattr(llm, "log_record", lambda rec: None)
+    monkeypatch.delenv("ADVISORY_BUDGET_USD", raising=False)
+    fake(_response())
+    assert llm.call_model(task_id="S01", condition="cross", agent="verifier", model="gemma-4-31b-it",
+                          messages=[{"role": "user", "content": "hi"}]) == "ok"
