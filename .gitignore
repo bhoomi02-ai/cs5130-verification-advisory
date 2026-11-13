@@ -17,3 +17,8 @@ dist/
 .pytest_cache/
 .ipynb_checkpoints/
 .DS_Store
+
+# run outputs (local only)
+results/runs.jsonl
+results/results.jsonl
+results/drafts/
