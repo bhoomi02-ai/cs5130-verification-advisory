@@ -178,23 +178,56 @@ def run_pilot(
     settings: dict | None = None,
     max_calls: int | None = None,
     batch_id: str | None = None,
+    resume: bool = False,
 ) -> list[PilotResult]:
     """Run every model on every scenario `repeats` times and save each result.
 
     Results go to out_dir/<batch_id>/<model>/<scenario>_run<n>.json, so a new
     batch never overwrites an earlier one. Refuses to start if the run would
     make more than `max_calls` model calls.
+
+    With `resume`, an existing batch is continued: runs already saved there are
+    loaded instead of called again (after checking they used the same prompt
+    and settings), and runs saved with an API error are tried again. This is
+    for finishing a batch the next day after the daily quota stopped it.
     """
-    n = planned_calls(models, scenarios, repeats)
-    if max_calls is not None and n > max_calls:
-        raise ValueError(f"This pilot would make {n} model calls, more than max_calls={max_calls}")
+    if resume and not batch_id:
+        raise ValueError("resume needs the batch_id of the batch to continue")
     batch_id = batch_id or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     settings = {**DEFAULT_SETTINGS, **(settings or {})}
+
+    def path_for(model: str, sid: str, run: int) -> Path:
+        return out_dir / batch_id / model / f"{sid}_run{run}.json"
+
+    saved: dict[Path, PilotResult] = {}
+    if resume:
+        for model in models:
+            for scenario in scenarios:
+                for run in range(1, repeats + 1):
+                    path = path_for(model, scenario["scenario_id"], run)
+                    if path.exists():
+                        r = load_result(path)
+                        made_with = (r.prompt_version, r.settings)
+                        if made_with != (PROMPT_VERSION, settings):
+                            raise ValueError(
+                                f"{path} was made with prompt/settings {made_with}, not "
+                                f"{(PROMPT_VERSION, settings)}; start a new batch instead of mixing them"
+                            )
+                        if not r.api_error:
+                            saved[path] = r
+
+    n = planned_calls(models, scenarios, repeats) - len(saved)
+    if max_calls is not None and n > max_calls:
+        raise ValueError(f"This pilot would make {n} model calls, more than max_calls={max_calls}")
     results = []
     for model in models:
         for scenario in scenarios:
             sid = scenario["scenario_id"]
             for run in range(1, repeats + 1):
+                path = path_for(model, sid, run)
+                if path in saved:
+                    results.append(saved[path])
+                    continue
                 run_id = f"{batch_id}-{model}-{sid}-r{run}"
                 r = run_advisor(scenario, model, run, run_id=run_id, batch_id=batch_id, settings=settings)
                 if r.api_error:
@@ -209,9 +242,8 @@ def run_pilot(
                         r.correct, r.failures = bool(graded["correct"]), failure_labels(graded)
                     else:
                         r.correct = bool(graded)
-                path = out_dir / batch_id / model / f"{sid}_run{run}.json"
                 path.parent.mkdir(parents=True, exist_ok=True)
-                if path.exists():
+                if path.exists() and not resume:
                     raise FileExistsError(f"{path} already exists; use a new batch_id")
                 path.write_text(json.dumps(asdict(r), indent=2))
                 results.append(r)
@@ -222,6 +254,11 @@ def run_pilot(
                     + (f" ({', '.join(r.failures)})" if r.failures and not r.correct else "")
                 )
     return results
+
+
+def load_result(path: Path) -> PilotResult:
+    """Read one saved run back from its JSON file."""
+    return PilotResult(**json.loads(path.read_text()))
 
 
 def summarize(results: list[PilotResult]) -> list[dict]:

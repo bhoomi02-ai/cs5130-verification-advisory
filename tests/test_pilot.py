@@ -231,3 +231,47 @@ def test_pilot_uses_the_shared_advisor_prompt(fake_model):
     assert calls[0]["messages"] == advisor_messages(SCENARIO)
     assert calls[0]["messages"][0]["content"] == ADVISOR_SYSTEM
     assert r.prompt_version == PROMPT_VERSION == "advisor-v1"
+
+
+def test_resume_does_only_the_missing_runs(fake_model, tmp_path):
+    daily = _api_error(429, "GenerateRequestsPerDayPerProjectPerModel-FreeTier")
+    fake_model(json.dumps(GOOD), daily)
+    with pytest.raises(errors.APIError):
+        pilot.run_pilot(["m1"], [SCENARIO], repeats=3, out_dir=tmp_path, batch_id="b1")
+
+    calls = fake_model(json.dumps(GOOD), json.dumps(GOOD))  # next day: only run2 and run3 are called
+    results = pilot.run_pilot(["m1"], [SCENARIO], repeats=3, out_dir=tmp_path, batch_id="b1", resume=True)
+    assert len(calls) == 2
+    assert [r.run_number for r in results] == [1, 2, 3]
+    assert results[0].run_id == "b1-m1-S01-r1"  # loaded from disk, not called again
+
+
+def test_resume_retries_runs_saved_with_an_api_error(fake_model, tmp_path):
+    fake_model(_api_error(503), json.dumps(GOOD))
+    pilot.run_pilot(["m1"], [SCENARIO], repeats=2, out_dir=tmp_path, batch_id="b1")
+    calls = fake_model(json.dumps(GOOD))
+    results = pilot.run_pilot(["m1"], [SCENARIO], repeats=2, out_dir=tmp_path, batch_id="b1", resume=True)
+    assert len(calls) == 1 and calls[0]["run_id"] == "b1-m1-S01-r1"
+    assert all(r.api_error is None for r in results)
+
+
+def test_resume_refuses_a_batch_made_with_other_settings(fake_model, tmp_path):
+    fake_model(json.dumps(GOOD))
+    pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, batch_id="b1", settings={"temperature": 0.2})
+    calls = fake_model()
+    with pytest.raises(ValueError, match="start a new batch"):
+        pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, batch_id="b1", resume=True)
+    assert calls == []
+
+
+def test_resume_needs_a_batch_id(tmp_path):
+    with pytest.raises(ValueError, match="batch_id"):
+        pilot.run_pilot(["m1"], [SCENARIO], out_dir=tmp_path, resume=True)
+
+
+def test_max_calls_counts_only_the_runs_still_to_do(fake_model, tmp_path):
+    fake_model(json.dumps(GOOD), json.dumps(GOOD))
+    pilot.run_pilot(["m1"], [SCENARIO], repeats=2, out_dir=tmp_path, batch_id="b1")
+    calls = fake_model(json.dumps(GOOD))
+    pilot.run_pilot(["m1"], [SCENARIO], repeats=3, out_dir=tmp_path, batch_id="b1", resume=True, max_calls=1)
+    assert len(calls) == 1
