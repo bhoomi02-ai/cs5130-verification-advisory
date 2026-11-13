@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
+from google.genai import errors
 
 from advisory import pilot
 
@@ -114,19 +115,40 @@ def test_invalid_first_answer_is_not_retried(fake_model):
     assert "not valid JSON" in r.errors[0]
 
 
+def _api_error(code=503, quota_id=None):
+    details = [{"violations": [{"quotaId": quota_id}]}] if quota_id else []
+    return errors.APIError(code, {"error": {"code": code, "message": "unavailable", "details": details}})
+
+
 def test_api_failure_is_recorded_not_lost(fake_model):
-    calls = fake_model(RuntimeError("quota exceeded"))
+    calls = fake_model(_api_error(503))
     r = pilot.run_advisor(SCENARIO, "m1", run_id="r1")
     assert len(calls) == 1
-    assert r.api_error == "RuntimeError: quota exceeded"
+    assert r.api_error.startswith(("ServerError", "APIError"))
     assert not r.schema_valid and r.correct is None
+
+
+def test_daily_quota_stops_the_batch(fake_model, tmp_path):
+    daily = _api_error(429, "GenerateRequestsPerDayPerProjectPerModel-FreeTier")
+    calls = fake_model(json.dumps(GOOD), daily, json.dumps(GOOD))
+    with pytest.raises(errors.APIError):
+        pilot.run_pilot(["m1", "m2", "m3"], [SCENARIO], out_dir=tmp_path, batch_id="b1")
+    assert len(calls) == 2  # m3 is never called
+    assert (tmp_path / "b1" / "m1" / "S01_run1.json").exists()  # finished runs stay saved
+    assert not (tmp_path / "b1" / "m2").exists()
+
+
+def test_errors_that_are_not_api_errors_are_not_failed_runs(fake_model):
+    fake_model(ValueError("No pricing for model 'm1'"))
+    with pytest.raises(ValueError, match="No pricing"):
+        pilot.run_advisor(SCENARIO, "m1", run_id="r1")
 
 
 # Batches, grading and the summary.
 
 
 def test_run_pilot_grades_saves_and_summarizes(fake_model, tmp_path):
-    fake_model(json.dumps(GOOD), "garbage", RuntimeError("quota"))
+    fake_model(json.dumps(GOOD), "garbage", _api_error(503))
     verdict = {
         "correct": False,
         "checks": [

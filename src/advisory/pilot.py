@@ -20,9 +20,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
+from google.genai import errors as genai_errors
 from jsonschema import Draft202012Validator
 
-from advisory.llm import call_model
+from advisory.llm import _is_daily_quota, call_model
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIO_DIR = ROOT / "data" / "scenarios"
@@ -160,7 +161,13 @@ def run_advisor(
             run_id=run_id,
             **settings,
         )
-    except Exception as e:  # logged by call_model; recorded here so the run is not lost
+    except genai_errors.APIError as e:  # logged by call_model; recorded here so the run is not lost
+        # The daily quota will not reset for hours: every later call would fail
+        # the same way, so stop the batch instead of recording a string of
+        # API errors. Errors that are not API errors (no pricing, a bad
+        # setting, a bug) are not failed runs either, so they are not caught.
+        if _is_daily_quota(e):
+            raise
         result.api_error = f"{type(e).__name__}: {e}"[:500]
         result.errors = ["API call failed"]
         return result
