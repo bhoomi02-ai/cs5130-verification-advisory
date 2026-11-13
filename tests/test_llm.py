@@ -138,3 +138,101 @@ def test_call_model_logs_record(fake, tmp_path, monkeypatch):
     )
     assert rec.tokens_in == 100 and rec.tokens_out == 50
     assert rec.raw_output == "answer"
+
+
+# Generation settings: temperature, thinking level, daily quota.
+
+
+def test_gemini_config_defaults_to_none():
+    assert llm.gemini_config(None, None, None) is None
+
+
+def test_gemini_config_is_accepted_by_the_sdk():
+    from google.genai import types
+
+    config = llm.gemini_config("sys", 0.7, "low", 0.9)
+    assert config == {
+        "system_instruction": "sys",
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "thinking_config": {"thinking_level": "LOW"},
+    }
+    parsed = types.GenerateContentConfig.model_validate(config)
+    assert parsed.temperature == 0.7 and parsed.top_p == 0.9
+    assert parsed.thinking_config.thinking_level == types.ThinkingLevel.LOW
+
+
+@pytest.mark.parametrize(
+    "temperature, level, top_p",
+    [(-0.1, None, None), (2.5, None, None), (None, "max", None), (None, "LOW", None), (None, None, 0), (None, None, 1.5)],
+)
+def test_gemini_config_rejects_bad_settings(temperature, level, top_p):
+    with pytest.raises(ValueError):
+        llm.gemini_config(None, temperature, level, top_p)
+
+
+def test_settings_reach_the_request_and_the_log(fake, monkeypatch):
+    client = fake(_response(text="answer"))
+    logged = []
+    monkeypatch.setattr(llm, "log_record", lambda rec: logged.append(rec))
+    llm.call_model(
+        task_id="S01",
+        condition="none",
+        agent="advisor",
+        model="gemini-3.1-flash-lite",
+        messages=[{"role": "user", "content": "hi"}],
+        temperature=0.7,
+        top_p=0.9,
+        thinking_level="low",
+    )
+    assert client.calls[0]["config"] == {
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "thinking_config": {"thinking_level": "LOW"},
+    }
+    assert (logged[0].temperature, logged[0].top_p, logged[0].thinking_level) == (0.7, 0.9, "low")
+
+
+def test_daily_quota_is_not_retried(fake):
+    daily = errors.APIError(
+        429,
+        {"error": {"code": 429, "details": [{"violations": [{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}]}},
+    )
+    client = fake(daily, _response())
+    with pytest.raises(errors.APIError):
+        llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
+    assert len(client.calls) == 1
+
+
+def test_per_minute_rate_limit_is_still_retried(fake):
+    per_minute = errors.APIError(
+        429, {"error": {"code": 429, "details": [{"violations": [{"quotaId": "GenerateRequestsPerMinutePerProjectPerModel"}]}]}}
+    )
+    client = fake(per_minute, _response())
+    text, *_ = llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
+    assert text == "ok" and len(client.calls) == 2
+
+
+def test_run_id_is_logged(fake, monkeypatch):
+    fake(_response())
+    logged = []
+    monkeypatch.setattr(llm, "log_record", lambda rec: logged.append(rec))
+    llm.call_model(
+        task_id="S01", condition="pilot", agent="advisor", model="gemini-3.1-flash-lite",
+        messages=[{"role": "user", "content": "hi"}], run_id="batch1-S01-r1",
+    )
+    assert logged[0].run_id == "batch1-S01-r1" and logged[0].error is None
+
+
+def test_failed_call_is_logged_then_raised(fake, monkeypatch):
+    fake(errors.APIError(400, {"error": {"message": "bad request"}}))
+    logged = []
+    monkeypatch.setattr(llm, "log_record", lambda rec: logged.append(rec))
+    with pytest.raises(errors.APIError):
+        llm.call_model(
+            task_id="S01", condition="pilot", agent="advisor", model="gemini-3.1-flash-lite",
+            messages=[{"role": "user", "content": "hi"}], run_id="r1", temperature=0.7,
+        )
+    rec = logged[0]
+    assert rec.error.startswith("ClientError") or rec.error.startswith("APIError")
+    assert (rec.run_id, rec.temperature, rec.tokens_in, rec.cost_usd, rec.raw_output) == ("r1", 0.7, 0, 0.0, "")

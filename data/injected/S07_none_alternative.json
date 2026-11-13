@@ -1,0 +1,27 @@
+{
+  "scenario_id": "S07",
+  "error_type": "none",
+  "description": "Alternative valid trade plan.",
+  "expected_correct": true,
+  "response": {
+    "scenario_id": "S07",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "VOO",
+        "quantity_delta": -29
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 216
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}

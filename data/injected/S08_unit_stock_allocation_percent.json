@@ -1,0 +1,42 @@
+{
+  "scenario_id": "S08",
+  "error_type": "unit",
+  "description": "Reports the stock allocation as 50 instead of 0.5.",
+  "expected_check": "REPLAY_TRADES",
+  "expected_reason": "value_mismatch",
+  "also_fails": [],
+  "response": {
+    "scenario_id": "S08",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -25
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -40
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "STOCK",
+          "measure": "ALLOCATION",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "FRACTION",
+          "value": 50
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "plan"
+  }
+}
