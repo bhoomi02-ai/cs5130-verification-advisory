@@ -38,7 +38,7 @@
         },
         "final_cash": {
           "source": "REPLAY_DERIVED",
-          "formula": "cash_before_trades - net trade cost"
+          "formula": "cash_before_withdrawal - listed withdrawals"
         },
         "allocations": {
           "source": "REPLAY_DERIVED",
@@ -178,7 +178,7 @@
         },
         "final_cash": {
           "source": "REPLAY_DERIVED",
-          "formula": "cash_before_trades - net trade cost"
+          "formula": "cash_before_withdrawal - listed withdrawals"
         },
         "allocations": {
           "source": "REPLAY_DERIVED",
@@ -255,7 +255,7 @@
         },
         "final_cash": {
           "source": "REPLAY_DERIVED",
-          "formula": "cash_before_trades - net trade cost"
+          "formula": "cash_before_withdrawal - listed withdrawals"
         },
         "allocations": {
           "source": "REPLAY_DERIVED",
@@ -386,6 +386,28 @@
         "max_withdrawal_preserving_reserve": {
           "source": "REPORTED_INITIAL_EVIDENCE",
           "formula": "reported available_liquidity - input minimum reserve"
+        }
+      }
+    },
+    "T03-v001": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "allocations",
+        "violation_count"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "allocations": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "aggregate reported INITIAL holding values by class and reported CASH / reported PORTFOLIO"
+        },
+        "violation_count": {
+          "source": "REPORTED_VIOLATION_LIST",
+          "formula": "len(response.violations)"
         }
       }
     }

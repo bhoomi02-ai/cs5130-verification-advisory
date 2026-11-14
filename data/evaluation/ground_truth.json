@@ -20,7 +20,7 @@
     "metrics": {
       "initial_total": 100000,
       "final_total": 100000,
-      "cash_before_trades": 10000,
+      "cash_before_withdrawal": 10000,
       "final_cash": 10000,
       "allocations": {
         "CASH": 0.1,
@@ -171,7 +171,7 @@
     "metrics": {
       "initial_total": 100000,
       "final_total": 100000,
-      "cash_before_trades": 0,
+      "cash_before_withdrawal": 10000,
       "final_cash": 10000,
       "allocations": {
         "CASH": 0.1,
@@ -210,7 +210,7 @@
       "additional_monthly_contribution_cents": 432.77
     },
     "violations": [],
-    "explanation": "Monthly growth precedes end-of-month flows; the month-180 withdrawal and contribution follow growth. Extra end-of-month payment applies for months 1\u2013240. Target shortfall means target minus projected balance."
+    "explanation": "Monthly growth precedes end-of-month flows; the month-180 withdrawal and contribution follow growth. Extra end-of-month payment applies for months 1–240. Target shortfall means target minus projected balance."
   },
   "S07": {
     "scenario_id": "S07",
@@ -229,7 +229,7 @@
     "metrics": {
       "initial_total": 100000,
       "final_total": 112000,
-      "cash_before_trades": 14000,
+      "cash_before_withdrawal": 11400,
       "final_cash": 11400,
       "allocations": {
         "CASH": 0.10178571428571428,
@@ -328,5 +328,48 @@
     },
     "violations": [],
     "explanation": "AAPL ($20,000) and MSFT ($30,000) cannot be sold. VOO+BND provide only $40,000 plus $10,000 cash, versus $85,000 required including reserve: $35,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
+  },
+  "T03-v001": {
+    "scenario_id": "T03-v001",
+    "answer_type": "VIOLATION_LIST",
+    "status": "VIOLATIONS_FOUND",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "allocations": {
+        "STOCK": 0.55,
+        "BOND": 0.35,
+        "CRYPTO": 0.05,
+        "CASH": 0.05
+      },
+      "violation_count": 4
+    },
+    "violations": [
+      {
+        "kind": "CLASS_MAX",
+        "scope": "STOCK",
+        "observed": 0.55,
+        "limit": 0.4
+      },
+      {
+        "kind": "CLASS_MIN",
+        "scope": "BOND",
+        "observed": 0.35,
+        "limit": 0.45
+      },
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "MSFT",
+        "observed": 0.2,
+        "limit": 0.15
+      },
+      {
+        "kind": "PROHIBITED_CLASS",
+        "scope": "CRYPTO",
+        "observed": 0.05,
+        "limit": 0
+      }
+    ],
+    "explanation": "Exactly four violations: STOCK overweight (55% > 40%), BOND underweight (35% < 45%), MSFT individual concentration (20% > 15%), and prohibited CRYPTO (5% > 0%). AAPL is exactly at its 15% limit and is not a violation. No remediation trades."
   }
 }
