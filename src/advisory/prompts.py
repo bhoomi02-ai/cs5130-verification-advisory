@@ -130,3 +130,78 @@ def revision_messages(scenario: dict, answer: str, issues: list[str], reason: st
         {"role": "assistant", "content": answer},
         {"role": "user", "content": REVISION_REQUEST.format(issues=listed, reason=reason or "(none given)")},
     ]
+
+
+# ---------------------------------------------------------------------------
+# Dedicated verifier (with the calculator).
+#
+# A separate agent with its own role prompt and the sandboxed calculator. It
+# uses the same REVIEW_INSTRUCTIONS and verdict format as self and peer, so the
+# differences from peer are only the independent verifier role and the tool.
+# The tool works through plain JSON replies rather than provider function
+# calling, so it runs with any model (including Gemma for the cross-family
+# ablation) and every round is an ordinary, logged call_model call.
+
+DEDICATED_PROMPT_VERSION = "dedicated-v1"
+
+# Rounds of calculator requests before the verifier must give its verdict, and
+# expressions per round. Together they bound the cost of one verification.
+MAX_CALCULATOR_ROUNDS = 3
+MAX_EXPRESSIONS_PER_ROUND = 15
+
+DEDICATED_SYSTEM = f"""\
+You are an independent verifier at a financial advisory firm. You did not write
+the answer you are given. Your only job is to decide whether it is correct before
+it reaches the client. You receive the complete client scenario as JSON and the
+advisor's answer.
+
+You have a calculator. Use it to recompute every number the answer depends on
+instead of doing arithmetic in your head. To use it, reply with only this JSON
+object:
+{{"calculate": ["<expression>", "<expression>"]}}
+with at most {MAX_EXPRESSIONS_PER_ROUND} expressions. You will get the results back
+and can ask again, up to {MAX_CALCULATOR_ROUNDS} times in total, so put every
+expression you need into as few requests as you can. Calculator rules: + - * / // % **
+and parentheses; the functions abs, round, min, max, sum, sqrt, log, log10, exp,
+ceil, floor; list literals only inside sum/min/max, e.g. sum([1, 2, 3]);
+fv(rate, nper, pmt, pv, when=0), pv(rate, nper, pmt, fv=0, when=0) and
+pmt(rate, nper, pv, fv=0, when=0) with numpy-financial conventions (rate per
+period, cash paid out is negative; when=0 end of period, 1 start). One expression
+per item; no variables, so write the numbers out.
+
+When you have checked everything, reply with your verdict instead.
+"""
+
+FINAL_VERDICT_REQUEST = (
+    "You have used all your calculator rounds. Give your verdict now, as the "
+    "verdict JSON object only."
+)
+
+
+def dedicated_review_messages(scenario: dict, answer: str) -> list[dict]:
+    """First message to the dedicated verifier: the full scenario, the answer and the review task."""
+    return [
+        {"role": "system", "content": DEDICATED_SYSTEM},
+        {
+            "role": "user",
+            "content": (
+                "Scenario:\n"
+                + json.dumps(scenario, indent=2)
+                + "\n\nThe advisor's answer:\n"
+                + answer
+                + "\n\n"
+                + REVIEW_INSTRUCTIONS
+            ),
+        },
+    ]
+
+
+def calculator_results_message(results: list[dict]) -> dict:
+    """The user turn that returns calculator results to the verifier."""
+    lines = []
+    for i, r in enumerate(results, 1):
+        if "result" in r:
+            lines.append(f"{i}. {r['expression']} = {r['result']!r}")
+        else:
+            lines.append(f"{i}. {r['expression']} -> error: {r['error']}")
+    return {"role": "user", "content": "Calculator results:\n" + "\n".join(lines)}
