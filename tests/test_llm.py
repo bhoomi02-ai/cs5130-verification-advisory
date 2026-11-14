@@ -293,3 +293,10 @@ def test_free_models_are_not_blocked_by_the_budget(fake, monkeypatch, tmp_path):
     fake(_response())
     assert llm.call_model(task_id="S01", condition="cross", agent="verifier", model="gemma-4-31b-it",
                           messages=[{"role": "user", "content": "hi"}]) == "ok"
+
+
+def test_unpriced_model_fails_before_calling_the_api(fake):
+    client = fake(_response())
+    with pytest.raises(ValueError, match="No pricing"):
+        llm._provider_call("gemini-9-unpriced", [{"role": "user", "content": "hi"}])
+    assert client.calls == []  # no request sent, so no tokens spent

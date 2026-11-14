@@ -189,6 +189,8 @@ def _gemini_call(
 ) -> tuple[str, int, int, float]:
     from google.genai import errors
 
+    if model not in PRICING:  # fail before any tokens are spent, not after
+        raise ValueError(f"No pricing for model {model!r}; add it to PRICING")
     system, contents = to_gemini(messages)
     config = gemini_config(system, temperature, thinking_level, top_p)
     client = _get_gemini_client()
