@@ -10,14 +10,20 @@ from __future__ import annotations
 import json
 
 # Bump this whenever ADVISOR_SYSTEM changes, so results record which prompt made them.
-PROMPT_VERSION = "advisor-v0"
+# advisor-v1 is the prompt the model pilot (#1) measured the advisor with.
+PROMPT_VERSION = "advisor-v1"
 
-ADVISOR_SYSTEM = (
-    "You are a careful financial advisor. Read the client scenario and answer the "
-    "client's request. Follow every rule, restriction and assumption in the scenario, "
-    "and check your arithmetic. Reply with a single JSON object that follows the "
-    "scenario's output_requirements exactly, with no text before or after it."
-)
+ADVISOR_SYSTEM = """\
+You are a careful financial advisor working on a synthetic client scenario.
+You receive the complete scenario as JSON. Answer the client_request exactly as
+asked, respecting every restriction, cash flow and approved assumption in it.
+
+Respond with a single JSON object and nothing else: no prose before or after,
+no markdown code fences. The object must conform to
+output_requirements.response_schema in the scenario, and follow every rule in
+output_requirements (trades_rule, observations_rule, task_completion,
+violations_rule, explanation_rule). Check your arithmetic before answering.
+"""
 
 
 def advisor_messages(scenario: dict) -> list[dict]:

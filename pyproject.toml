@@ -17,6 +17,7 @@ dependencies = [
     "matplotlib",
     "google-genai",
     "python-dotenv",
+    "jsonschema",
 ]
 
 [project.optional-dependencies]
