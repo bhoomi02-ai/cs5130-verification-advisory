@@ -17,6 +17,7 @@ dist/
 .pytest_cache/
 .ipynb_checkpoints/
 .DS_Store
+.matplotlib-cache/
 
 # run outputs (local only)
 results/runs.jsonl
