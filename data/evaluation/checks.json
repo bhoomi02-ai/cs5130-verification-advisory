@@ -407,5 +407,54 @@
         "expected": []
       }
     }
+  ],
+  "T03-v001": [
+    {
+      "check_id": "T03-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T03-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "allocations",
+          "violation_count"
+        ]
+      }
+    },
+    {
+      "check_id": "T03-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "VIOLATIONS_FOUND"
+      }
+    },
+    {
+      "check_id": "T03-v001_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v001_violations",
+      "check_type": "EXACT_SCOPED_VIOLATIONS",
+      "params_json": {
+        "unique_rule_scope": true,
+        "reject_extra_violations": true,
+        "crypto_count": 1,
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v001_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
   ]
 }
