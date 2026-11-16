@@ -90,7 +90,8 @@ def test_lists_only_inside_sum_min_max():
     assert ok("sum([1, 2, 3])") == 6
     assert ok("min([4, 2]) + max([1, 9])") == 11
     assert ok("min(4, 2)") == 2
-    for expr in ["[0] * 1000000000", "[1] + [2]", "abs([1])", "sum([[1], [2]])", "-[1]"]:
+    assert ok("sum((1, 2, 3))") == 6  # tuples are fine inside sum/min/max
+    for expr in ["[0] * 1000000000", "(1,) * 1000000000", "(0, 1) + (2,)", "[1] + [2]", "abs([1])", "sum([[1], [2]])", "-[1]"]:
         assert "only allowed directly inside" in err(expr), expr
 
 

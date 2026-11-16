@@ -18,3 +18,8 @@ dist/
 .ipynb_checkpoints/
 .DS_Store
 .matplotlib-cache/
+
+# run outputs (local only)
+results/runs.jsonl
+results/results.jsonl
+results/drafts/
