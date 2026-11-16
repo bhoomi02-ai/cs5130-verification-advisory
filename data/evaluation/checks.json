@@ -31,7 +31,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 0.0005,
+        "reported_allocation_tolerance": 5e-4,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -73,7 +73,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 0.0005,
+        "reported_allocation_tolerance": 5e-4,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": null,
@@ -110,7 +110,7 @@
       "check_id": "S03_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 0.0005
+        "fraction_tolerance": 5e-4
       }
     },
     {
@@ -120,7 +120,7 @@
         "unique_rule_scope": true,
         "reject_extra_violations": true,
         "crypto_count": 1,
-        "fraction_tolerance": 0.0005
+        "fraction_tolerance": 5e-4
       }
     },
     {
@@ -161,7 +161,7 @@
       "check_id": "S04_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 0.0005
+        "fraction_tolerance": 5e-4
       }
     }
   ],
@@ -198,7 +198,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 0.0005,
+        "reported_allocation_tolerance": 5e-4,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -237,7 +237,7 @@
       "check_id": "S06_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 0.0005
+        "fraction_tolerance": 5e-4
       }
     }
   ],
@@ -274,7 +274,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 0.0005,
+        "reported_allocation_tolerance": 5e-4,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -315,7 +315,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 0.0005,
+        "reported_allocation_tolerance": 5e-4,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -354,7 +354,7 @@
       "check_id": "S09_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 0.0005
+        "fraction_tolerance": 5e-4
       }
     },
     {
@@ -397,7 +397,7 @@
       "check_id": "S10_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 0.0005
+        "fraction_tolerance": 5e-4
       }
     },
     {

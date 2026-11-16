@@ -210,7 +210,7 @@
       "additional_monthly_contribution_cents": 432.77
     },
     "violations": [],
-    "explanation": "Monthly growth precedes end-of-month flows; the month-180 withdrawal and contribution follow growth. Extra end-of-month payment applies for months 1–240. Target shortfall means target minus projected balance."
+    "explanation": "Monthly growth precedes end-of-month flows; the month-180 withdrawal and contribution follow growth. Extra end-of-month payment applies for months 1\u2013240. Target shortfall means target minus projected balance."
   },
   "S07": {
     "scenario_id": "S07",
