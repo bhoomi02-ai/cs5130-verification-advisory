@@ -99,6 +99,21 @@ def check_budget(path: Path | None = None) -> None:
             f"refusing a call that could go over. Raise ADVISORY_BUDGET_USD only if the team agrees."
         )
 
+
+
+def _network_errors() -> tuple[type[BaseException], ...]:
+    """Connection resets, timeouts and other transport failures of the SDK's HTTP client."""
+    errors: list[type[BaseException]] = [ConnectionError, TimeoutError]
+    for module in ("httpx2", "httpx"):  # google-genai uses one of these
+        try:
+            errors.append(__import__(module).TransportError)
+        except (ImportError, AttributeError):
+            pass
+    return tuple(errors)
+
+
+_NETWORK_ERRORS = _network_errors()
+
 # How much the model reasons before answering (Gemini 3 thinking_level).
 THINKING_LEVELS = ("minimal", "low", "medium", "high")
 
@@ -204,6 +219,13 @@ def _gemini_call(
             if e.code not in _RETRY_STATUS or attempt == _MAX_RETRIES - 1 or _is_daily_quota(e):
                 raise
             time.sleep(2**attempt * 5)  # 5, 10, 20, 40 s; free tier is rate limited
+        except _NETWORK_ERRORS:
+            # A dropped connection or a timeout says nothing about the model, so
+            # retry it like a 503. If the server had already answered, that call
+            # may be billed twice, which costs cents, not a lost run.
+            if attempt == _MAX_RETRIES - 1:
+                raise
+            time.sleep(2**attempt * 5)
     usage = response.usage_metadata
     tokens_in = usage.prompt_token_count or 0
     # Thinking tokens are billed as output, so count them as output.

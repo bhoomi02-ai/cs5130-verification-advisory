@@ -300,3 +300,21 @@ def test_unpriced_model_fails_before_calling_the_api(fake):
     with pytest.raises(ValueError, match="No pricing"):
         llm._provider_call("gemini-9-unpriced", [{"role": "user", "content": "hi"}])
     assert client.calls == []  # no request sent, so no tokens spent
+
+
+# Network errors.
+
+
+def test_dropped_connection_is_retried(fake):
+    import httpx2
+
+    client = fake(httpx2.ReadError("[Errno 54] Connection reset by peer"), _response())
+    text, *_ = llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
+    assert text == "ok" and len(client.calls) == 2
+
+
+def test_network_errors_give_up_after_the_retries(fake):
+    client = fake(*[ConnectionResetError("reset")] * llm._MAX_RETRIES)
+    with pytest.raises(ConnectionResetError):
+        llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
+    assert len(client.calls) == llm._MAX_RETRIES
