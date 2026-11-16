@@ -63,7 +63,7 @@ def test_saved_draft_counts_the_call_that_made_it_once(monkeypatch, paths):
 def test_results_made_with_other_settings_are_refused(paths):
     paths["results_path"].write_text(json.dumps({
         "task_id": "S01", "condition": "none", "run_number": 1, "model": SETTINGS.model,
-        "temperature": 0.2, "top_p": 0.9, "thinking_level": None, "prompt_version": "advisor-v0"}) + "\n")
+        "temperature": 0.2, "top_p": 0.9, "thinking_level": None, "prompt_version": pipeline.PROMPT_VERSION}) + "\n")
     with pytest.raises(ValueError, match="other settings"):
         pipeline.done_keys(paths["results_path"], settings=SETTINGS)
     assert pipeline.done_keys(paths["results_path"]) == {("S01", "none", 1, SETTINGS.model)}
@@ -84,7 +84,7 @@ def test_retry_failed_reruns_only_the_failed_runs(monkeypatch, paths):
     script = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(script)
     base = {"condition": "none", "run_number": 1, "model": SETTINGS.model, "temperature": 0.7, "top_p": 0.9,
-            "thinking_level": None, "prompt_version": "advisor-v0"}
+            "thinking_level": None, "prompt_version": pipeline.PROMPT_VERSION}
     rows = [{**base, "task_id": "S01", "status": "failed"}, {**base, "task_id": "S02", "status": "unchecked"}]
     paths["results_path"].write_text("".join(json.dumps(r) + "\n" for r in rows))
     ran = []
