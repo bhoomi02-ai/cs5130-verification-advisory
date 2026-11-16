@@ -16,8 +16,41 @@ from advisory.evaluation.reference import reference_response
 
 _ROOT = Path(__file__).resolve().parents[1]
 _GROUND_TRUTH = json.loads((_ROOT / "data" / "evaluation" / "ground_truth.json").read_text())
-_REPLAY_SCENARIOS = ("S01", "S02", "S05", "S07", "S08")
-_RESULT_SCENARIOS = ("S03", "S04", "S06", "S09", "S10")
+_CHECKS = json.loads((_ROOT / "data" / "evaluation" / "checks.json").read_text())
+_METRIC_MAPPING = json.loads((_ROOT / "data" / "evaluation" / "metric_mapping.json").read_text())[
+    "scenarios"
+]
+_SCENARIO_DIR = _ROOT / "data" / "scenarios"
+
+
+def _evaluated_scenario_ids() -> list[str]:
+    """Scenario files that have checks, metric mapping and ground truth."""
+    ids = []
+    for path in sorted(_SCENARIO_DIR.glob("*.json")):
+        scenario_id = path.stem
+        if (
+            scenario_id in _CHECKS
+            and scenario_id in _METRIC_MAPPING
+            and scenario_id in _GROUND_TRUTH
+        ):
+            ids.append(scenario_id)
+    return ids
+
+
+def _check_types(scenario_id: str) -> set[str]:
+    return {row["check_type"] for row in _CHECKS[scenario_id]}
+
+
+_REPLAY_SCENARIOS = tuple(
+    scenario_id
+    for scenario_id in _evaluated_scenario_ids()
+    if "REPLAY_TRADES" in _check_types(scenario_id)
+)
+_RESULT_SCENARIOS = tuple(
+    scenario_id
+    for scenario_id in _evaluated_scenario_ids()
+    if "REPLAY_TRADES" not in _check_types(scenario_id)
+)
 
 
 def _ground_truth(scenario_id):
@@ -431,6 +464,49 @@ def test_s03_cash_at_five_percent_is_not_a_violation():
     assert violations["passed"] is False
     assert violations["details"]["reason"] == "extra_violation"
     assert {"kind": "CLASS_MIN", "scope": "CASH"} in violations["details"]["extra"]
+
+
+@pytest.mark.skipif("T03-v001" not in _GROUND_TRUTH, reason="T03-v001 evaluation data not on this branch; rebase onto #34")
+def test_t03_v001_missing_crypto_violation_fails():
+    ground_truth = _ground_truth("T03-v001")
+    response = _result_response("T03-v001")
+    response["violations"] = [
+        row
+        for row in ground_truth["violations"]
+        if not (row["kind"] == "PROHIBITED_CLASS" and row["scope"] == "CRYPTO")
+    ]
+    result = check("T03-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    violations = _of_type(result, "EXACT_SCOPED_VIOLATIONS")
+    assert violations["passed"] is False
+    assert violations["details"]["reason"] == "missed_violation"
+
+
+@pytest.mark.skipif("T03-v001" not in _GROUND_TRUTH, reason="T03-v001 evaluation data not on this branch; rebase onto #34")
+def test_t03_v001_aapl_at_limit_is_extra_violation():
+    # AAPL is 15_000 / 100_000 = 0.15, exactly the individual max, so not a breach.
+    response = _result_response("T03-v001")
+    response["violations"] = list(_ground_truth("T03-v001")["violations"]) + [
+        {"kind": "INDIVIDUAL_MAX", "scope": "AAPL", "observed": 0.15, "limit": 0.15}
+    ]
+    result = check("T03-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    violations = _of_type(result, "EXACT_SCOPED_VIOLATIONS")
+    assert violations["passed"] is False
+    assert violations["details"]["reason"] == "extra_violation"
+    assert {"kind": "INDIVIDUAL_MAX", "scope": "AAPL"} in violations["details"]["extra"]
+
+
+@pytest.mark.skipif("T03-v001" not in _GROUND_TRUTH, reason="T03-v001 evaluation data not on this branch; rebase onto #34")
+def test_t03_v001_feasible_status_is_wrong_status():
+    response = _result_response("T03-v001")
+    response["status"] = "FEASIBLE"
+    result = check("T03-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "STATUS")["details"]["reason"] == "wrong_status"
 
 
 def _fund_ignoring_entry_fee(option):
