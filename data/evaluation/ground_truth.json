@@ -20,7 +20,7 @@
     "metrics": {
       "initial_total": 100000,
       "final_total": 100000,
-      "cash_before_withdrawal": 10000,
+      "cash_before_trades": 10000,
       "final_cash": 10000,
       "allocations": {
         "CASH": 0.1,
@@ -171,7 +171,7 @@
     "metrics": {
       "initial_total": 100000,
       "final_total": 100000,
-      "cash_before_withdrawal": 10000,
+      "cash_before_trades": 0,
       "final_cash": 10000,
       "allocations": {
         "CASH": 0.1,
@@ -229,7 +229,7 @@
     "metrics": {
       "initial_total": 100000,
       "final_total": 112000,
-      "cash_before_withdrawal": 11400,
+      "cash_before_trades": 14000,
       "final_cash": 11400,
       "allocations": {
         "CASH": 0.10178571428571428,
