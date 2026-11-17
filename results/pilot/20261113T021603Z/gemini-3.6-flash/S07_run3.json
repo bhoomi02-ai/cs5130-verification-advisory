@@ -1,0 +1,89 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S07-r3",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S07",
+  "model": "gemini-3.6-flash",
+  "run_number": 3,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S07",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "VOO",
+        "quantity_delta": -30
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 220
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "BEFORE_TRADES",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 112000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 112000
+        },
+        {
+          "subject": "STOCK",
+          "measure": "ALLOCATION",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "FRACTION",
+          "value": 0.5982142857142857
+        },
+        {
+          "subject": "BOND",
+          "measure": "ALLOCATION",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "FRACTION",
+          "value": 0.3
+        },
+        {
+          "subject": "CASH",
+          "measure": "ALLOCATION",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "FRACTION",
+          "value": 0.10178571428571428
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "With the $12,000 deposit, total portfolio value increases to $112,000. Rebalancing to the 60/30/10 target allocations (within \u00b10.5%) requires purchasing 220 shares of BND ($17,600) and selling 30 shares of VOO ($15,000). AAPL is left untouched to honor the NO_SELL restriction. Post-trade asset class allocations are 59.82% Stock, 30.00% Bond, and 10.18% Cash ($11,400), satisfying all policy tolerances and individual stock concentration caps."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S07\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": -30\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 220\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"BEFORE_TRADES\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 112000\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 112000\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.5982142857142857\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.3\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.10178571428571428\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"With the $12,000 deposit, total portfolio value increases to $112,000. Rebalancing to the 60/30/10 target allocations (within \u00b10.5%) requires purchasing 220 shares of BND ($17,600) and selling 30 shares of VOO ($15,000). AAPL is left untouched to honor the NO_SELL restriction. Post-trade asset class allocations are 59.82% Stock, 30.00% Bond, and 10.18% Cash ($11,400), satisfying all policy tolerances and individual stock concentration caps.\"\n}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

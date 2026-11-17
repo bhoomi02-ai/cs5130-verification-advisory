@@ -1,0 +1,24 @@
+{
+  "run_id": "20261109T050351Z-gemini-3.6-flash-S07-r2",
+  "batch_id": "20261109T050351Z",
+  "scenario_id": "S07",
+  "model": "gemini-3.6-flash",
+  "run_number": 2,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": "low"
+  },
+  "schema_valid": false,
+  "errors": [
+    "API call failed"
+  ],
+  "answer": null,
+  "raw_output": "",
+  "api_error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit e",
+  "correct": null,
+  "failures": [
+    "API:error"
+  ]
+}

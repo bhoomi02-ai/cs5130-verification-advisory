@@ -1,0 +1,64 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S06-r1",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S06",
+  "model": "gemini-3.6-flash",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 1000045.735359077
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 199954.264640923
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 432.76313171501
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 432.77
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "Starting with $150,000 at a monthly interest rate of 0.5% (6% annual nominal compounded monthly), the initial balance grows to $496,530.67 at month 240. The $1,000 monthly contributions for months 1\u2013120 grow to $298,161.55 by month 240. The $1,500 monthly contributions for months 121\u2013240 grow to $245,819.02 by month 240. The $30,000 withdrawal at month 180 reduces the month-240 balance by $40,465.50. This yields a projected month-240 total balance of $1,000,045.74. The shortfall relative to the $1,200,000 target is $199,954.26. To accumulate this shortfall over 240 months at 0.5% per month, an exact additional monthly end-of-month contribution of $432.76313171501 is required, which rounds upward to $432.77 per month."
+  },
+  "raw_output": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.735359077},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.264640923},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.76313171501},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with $150,000 at a monthly interest rate of 0.5% (6% annual nominal compounded monthly), the initial balance grows to $496,530.67 at month 240. The $1,000 monthly contributions for months 1\u2013120 grow to $298,161.55 by month 240. The $1,500 monthly contributions for months 121\u2013240 grow to $245,819.02 by month 240. The $30,000 withdrawal at month 180 reduces the month-240 balance by $40,465.50. This yields a projected month-240 total balance of $1,000,045.74. The shortfall relative to the $1,200,000 target is $199,954.26. To accumulate this shortfall over 240 months at 0.5% per month, an exact additional monthly end-of-month contribution of $432.76313171501 is required, which rounds upward to $432.77 per month.\"}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

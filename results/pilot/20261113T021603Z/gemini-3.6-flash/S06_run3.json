@@ -1,0 +1,66 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S06-r3",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S06",
+  "model": "gemini-3.6-flash",
+  "run_number": 3,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 999945.7345182946
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 200054.2654817054
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 432.9795622119106
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 432.98
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "Starting with an initial portfolio value of $150,000 at a monthly compounding interest rate of 0.5% (6% nominal annual rate), the portfolio grows under the scheduled cash flows (contributions of $1,000/month for months 1\u2013120, $1,500/month for months 121\u2013240, and a single $30,000 withdrawal at month 180) to a projected month-240 balance of $999,945.734518. Compared to the target of $1,200,000, the shortfall is $200,054.265482. To bridge this gap with an additional fixed end-of-month contribution over all 240 months, the exact monthly amount required is $432.979562, which rounds upward to $432.98 per month."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S06\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 999945.7345182946\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 200054.2654817054\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 432.9795622119106\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 432.98\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"Starting with an initial portfolio value of $150,000 at a monthly compounding interest rate of 0.5% (6% nominal annual rate), the portfolio grows under the scheduled cash flows (contributions of $1,000/month for months 1\u2013120, $1,500/month for months 121\u2013240, and a single $30,000 withdrawal at month 180) to a projected month-240 balance of $999,945.734518. Compared to the target of $1,200,000, the shortfall is $200,054.265482. To bridge this gap with an additional fixed end-of-month contribution over all 240 months, the exact monthly amount required is $432.979562, which rounds upward to $432.98 per month.\"\n}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "INDEPENDENT_RESULTS:value_mismatch"
+  ]
+}

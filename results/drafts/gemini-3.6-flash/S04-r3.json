@@ -1,0 +1,11 @@
+{
+  "task_id": "S04",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S04\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":137688.62494240332},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":145469.36444854497},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":7780.73950614165}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A starts with $99,000 after its 1% entry fee and grows at an annual growth factor of (1 + 0.09) * (1 - 0.02) = 1.0682, reaching $137,688.62 after 5 years. Fund B starts with $100,000 with no entry fee and grows at an annual growth factor of (1 + 0.08) * (1 - 0.002) = 1.07784, reaching $145,469.36 after 5 years. Fund B is the better-performing fund by an absolute difference of $7,780.74.\"}",
+  "run_id": "draft-gemini-3.6-flash-S04-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

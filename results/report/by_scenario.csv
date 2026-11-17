@@ -1,0 +1,11 @@
+task_id,condition,model,n_runs,success_rate
+S01,none,gemini-3.6-flash,5,1.0
+S02,none,gemini-3.6-flash,5,1.0
+S03,none,gemini-3.6-flash,5,1.0
+S04,none,gemini-3.6-flash,5,0.2
+S05,none,gemini-3.6-flash,5,1.0
+S06,none,gemini-3.6-flash,5,0.2
+S07,none,gemini-3.6-flash,5,1.0
+S08,none,gemini-3.6-flash,5,1.0
+S09,none,gemini-3.6-flash,5,1.0
+S10,none,gemini-3.6-flash,5,1.0

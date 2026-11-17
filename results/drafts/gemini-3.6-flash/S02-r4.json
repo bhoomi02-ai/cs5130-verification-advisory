@@ -1,0 +1,11 @@
+{
+  "task_id": "S02",
+  "run_number": 4,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S02\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"VOO\",\"quantity_delta\":-38}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":98000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":18000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_WITHDRAWAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":37000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":73000}],\"selection\":null},\"violations\":[],\"explanation\":\"To fund the $25,000 withdrawal and maintain the required minimum cash balance of $12,000, total cash needed prior to withdrawal is $37,000. Starting from $18,000 cash, selling 38 shares of VOO at $500 per share generates $19,000 in proceeds. This brings cash to $37,000 before the withdrawal, leaving exactly $12,000 in cash afterward and satisfying all policy constraints without borrowing or external deposits.\"}",
+  "run_id": "draft-gemini-3.6-flash-S02-r4",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

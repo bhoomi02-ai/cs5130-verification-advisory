@@ -1,0 +1,79 @@
+{
+  "run_id": "20261113T022642Z-gemini-3.5-flash-lite-S02-r1",
+  "batch_id": "20261113T022642Z",
+  "scenario_id": "S02",
+  "model": "gemini-3.5-flash-lite",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S02",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -35
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 98000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 18000
+        },
+        {
+          "subject": "AAPL",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 10000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 73000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 12000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "To fund the $25,000 withdrawal while retaining at least $12,000 in cash, we need $19,000 in total cash ($18,000 initial cash + $7,000 from sales = $25,000 cash available, leaving $12,000 after the $13,000 net outflow). Selling 35 shares of AAPL at $200 generates $7,000. This meets all policy constraints with no borrowing or external deposits."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S02\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"AAPL\",\n      \"quantity_delta\": -35\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 98000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 18000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 73000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 12000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To fund the $25,000 withdrawal while retaining at least $12,000 in cash, we need $19,000 in total cash ($18,000 initial cash + $7,000 from sales = $25,000 cash available, leaving $12,000 after the $13,000 net outflow). Selling 35 shares of AAPL at $200 generates $7,000. This meets all policy constraints with no borrowing or external deposits.\"\n}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "REPLAY_TRADES:rule_violation"
+  ]
+}

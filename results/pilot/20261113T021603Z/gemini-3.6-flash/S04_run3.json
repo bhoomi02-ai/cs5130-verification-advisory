@@ -1,0 +1,58 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S04-r3",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S04",
+  "model": "gemini-3.6-flash",
+  "run_number": 3,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S04",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "Fund A",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 137688.62493653124
+        },
+        {
+          "subject": "Fund B",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 145469.95484379245
+        },
+        {
+          "subject": "OPTIONS",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 7781.329907261208
+        }
+      ],
+      "selection": "Fund B"
+    },
+    "violations": [],
+    "explanation": "Fund A net starting capital after the 1% entry fee is $99,000. With an annual net compounding factor of (1 + 0.09) * (1 - 0.02) = 1.0682, Fund A reaches $137,688.62 after 5 years. Fund B has no entry fee, starting at $100,000, with an annual net compounding factor of (1 + 0.08) * (1 - 0.002) = 1.07784, reaching $145,469.95 after 5 years. Fund B is the better-performing fund, outperforming Fund A by an absolute difference of $7,781.33."
+  },
+  "raw_output": "{\"scenario_id\":\"S04\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":137688.62493653123},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":145469.95484379244},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":7781.329907261208}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A net starting capital after the 1% entry fee is $99,000. With an annual net compounding factor of (1 + 0.09) * (1 - 0.02) = 1.0682, Fund A reaches $137,688.62 after 5 years. Fund B has no entry fee, starting at $100,000, with an annual net compounding factor of (1 + 0.08) * (1 - 0.002) = 1.07784, reaching $145,469.95 after 5 years. Fund B is the better-performing fund, outperforming Fund A by an absolute difference of $7,781.33.\"}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "INDEPENDENT_RESULTS:value_mismatch"
+  ]
+}

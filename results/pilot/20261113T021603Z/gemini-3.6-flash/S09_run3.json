@@ -1,0 +1,80 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S09-r3",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S09",
+  "model": "gemini-3.6-flash",
+  "run_number": 3,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S09",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 10000
+        },
+        {
+          "subject": "AAPL",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "MSFT",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "VOO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "BND",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 30000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "Rebalancing to the target STOCK allocation of 40% (tolerance range 39.5% to 40.5%) is infeasible. The current portfolio holds $60,000 in STOCK assets (AAPL $20,000, MSFT $20,000, VOO $20,000), which represents 60% of the total $100,000 portfolio value. Because selling STOCK assets is explicitly prohibited and no external deposits, borrowing, or short selling are allowed, the STOCK allocation cannot be reduced to meet the target requirement."
+  },
+  "raw_output": "{\"scenario_id\":\"S09\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000}],\"selection\":null},\"violations\":[],\"explanation\":\"Rebalancing to the target STOCK allocation of 40% (tolerance range 39.5% to 40.5%) is infeasible. The current portfolio holds $60,000 in STOCK assets (AAPL $20,000, MSFT $20,000, VOO $20,000), which represents 60% of the total $100,000 portfolio value. Because selling STOCK assets is explicitly prohibited and no external deposits, borrowing, or short selling are allowed, the STOCK allocation cannot be reduced to meet the target requirement.\"}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

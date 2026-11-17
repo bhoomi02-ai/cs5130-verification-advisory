@@ -1,0 +1,58 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S04-r2",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S04",
+  "model": "gemini-3.6-flash",
+  "run_number": 2,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S04",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "Fund A",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 137688.62493658875
+        },
+        {
+          "subject": "Fund B",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 145470.3447104715
+        },
+        {
+          "subject": "OPTIONS",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 7781.71977388273
+        }
+      ],
+      "selection": "Fund B"
+    },
+    "violations": [],
+    "explanation": "Fund A starts at $99,000 after a 1% entry fee and grows at an annual factor of (1 + 0.09) * (1 - 0.02) = 1.0682, resulting in a 5-year final value of $137,688.62. Fund B has no entry fee, starting at $100,000, and grows at an annual factor of (1 + 0.08) * (1 - 0.002) = 1.07784, resulting in a 5-year final value of $145,470.34. Fund B outperforms Fund A by an absolute difference of $7,781.72."
+  },
+  "raw_output": "{\"scenario_id\":\"S04\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":137688.62493658875},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":145470.34471047148},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":7781.71977388273}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A starts at $99,000 after a 1% entry fee and grows at an annual factor of (1 + 0.09) * (1 - 0.02) = 1.0682, resulting in a 5-year final value of $137,688.62. Fund B has no entry fee, starting at $100,000, and grows at an annual factor of (1 + 0.08) * (1 - 0.002) = 1.07784, resulting in a 5-year final value of $145,470.34. Fund B outperforms Fund A by an absolute difference of $7,781.72.\"}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "INDEPENDENT_RESULTS:value_mismatch"
+  ]
+}

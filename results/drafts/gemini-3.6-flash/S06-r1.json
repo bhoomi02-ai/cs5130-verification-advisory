@@ -1,0 +1,11 @@
+{
+  "task_id": "S06",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.83},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.17},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.762964},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with $150,000 and taking into account scheduled monthly contributions ($1,000/month for months 1\u2013120 and $1,500/month for months 121\u2013240) alongside a $30,000 withdrawal at month 180, compounding at 0.5% monthly (6% nominal annual rate) yields a projected month-240 portfolio balance of $1,000,045.83. The shortfall relative to the $1,200,000 target is $199,954.17. To bridge this gap with an additional equal end-of-month contribution over all 240 months, the required exact monthly extra payment is $432.762964, which rounds upward to $432.77.\"}",
+  "run_id": "draft-gemini-3.6-flash-S06-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

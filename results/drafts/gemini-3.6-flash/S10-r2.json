@@ -1,0 +1,11 @@
+{
+  "task_id": "S10",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"S10\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"INFEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To fund the $80,000 withdrawal while maintaining the required minimum cash balance of $5,000, total cash of $85,000 is needed. Starting cash is $10,000, creating an $75,000 cash requirement. Due to NO_SELL restrictions on AAPL ($20,000) and MSFT ($30,000), only VOO ($20,000) and BND ($20,000) can be liquidated. Selling all available shares of VOO and BND yields $40,000, resulting in maximum available cash of $50,000, which is insufficient to cover the withdrawal and minimum cash requirement.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-S10-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

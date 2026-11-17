@@ -1,0 +1,66 @@
+{
+  "run_id": "20261113T022642Z-gemini-3.5-flash-lite-S06-r1",
+  "batch_id": "20261113T022642Z",
+  "scenario_id": "S06",
+  "model": "gemini-3.5-flash-lite",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 1152912.44
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 47087.56
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 142.1485
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 142.15
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "Projecting the portfolio with the initial $150,000, monthly contributions of $1,000 for months 1-120, monthly contributions of $1,500 for months 121-240, and a $30,000 withdrawal at month 180 at a monthly interest rate of 0.5% yields a month-240 balance of $1,152,912.44. The shortfall from the $1,200,000 target is $47,087.56. To reach the target, an additional monthly contribution of $142.1485 (rounded upward to cents as $142.15) across months 1-240 is required."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S06\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 1152912.44\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 47087.56\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 142.1485\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 142.15\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"Projecting the portfolio with the initial $150,000, monthly contributions of $1,000 for months 1-120, monthly contributions of $1,500 for months 121-240, and a $30,000 withdrawal at month 180 at a monthly interest rate of 0.5% yields a month-240 balance of $1,152,912.44. The shortfall from the $1,200,000 target is $47,087.56. To reach the target, an additional monthly contribution of $142.1485 (rounded upward to cents as $142.15) across months 1-240 is required.\"\n}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "INDEPENDENT_RESULTS:value_mismatch"
+  ]
+}

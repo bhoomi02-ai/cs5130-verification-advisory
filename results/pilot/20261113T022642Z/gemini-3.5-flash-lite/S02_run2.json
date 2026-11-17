@@ -1,0 +1,71 @@
+{
+  "run_id": "20261113T022642Z-gemini-3.5-flash-lite-S02-r2",
+  "batch_id": "20261113T022642Z",
+  "scenario_id": "S02",
+  "model": "gemini-3.5-flash-lite",
+  "run_number": 2,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S02",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -35
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 98000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 18000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 73000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 12000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "To fund the $25,000 withdrawal while retaining at least $12,000 in cash, we need $7,000 in additional liquidity ($25,000 withdrawal minus the excess cash above the $12,000 minimum, which is $6,000 currently available above the cash floor; wait, current cash is $18,000, min cash is $12,000, so $6,000 cash can be used toward the withdrawal. The remaining $19,000 must be raised by selling assets). Selling 35 shares of AAPL at $200 per share raises $7,000. Combined with $18,000 initial cash, total cash before withdrawal becomes $25,000. After the $25,000 withdrawal, the remaining cash is exactly the required minimum of $12,000. All constraints are satisfied."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S02\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"AAPL\",\n      \"quantity_delta\": -35\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 98000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 18000\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 73000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 12000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To fund the $25,000 withdrawal while retaining at least $12,000 in cash, we need $7,000 in additional liquidity ($25,000 withdrawal minus the excess cash above the $12,000 minimum, which is $6,000 currently available above the cash floor; wait, current cash is $18,000, min cash is $12,000, so $6,000 cash can be used toward the withdrawal. The remaining $19,000 must be raised by selling assets). Selling 35 shares of AAPL at $200 per share raises $7,000. Combined with $18,000 initial cash, total cash before withdrawal becomes $25,000. After the $25,000 withdrawal, the remaining cash is exactly the required minimum of $12,000. All constraints are satisfied.\"\n}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "REPLAY_TRADES:rule_violation"
+  ]
+}

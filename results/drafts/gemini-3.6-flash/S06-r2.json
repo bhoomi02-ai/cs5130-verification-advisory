@@ -1,0 +1,11 @@
+{
+  "task_id": "S06",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.8290892965},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.1709107035},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.7629701026049},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with $150,000, compounding at 0.5% monthly over 240 months yields $496,530.67. Monthly contributions of $1,000 in months 1\u2013120 accumulate to $298,161.64 by month 240, and $1,500 in months 121\u2013240 accumulates to $245,819.02. The $30,000 withdrawal at month 180 reduces the final balance by $40,465.50, resulting in a projected month-240 balance of $1,000,045.83. To bridge the $199,954.17 shortfall to the $1,200,000 target, an additional monthly payment of $432.76297... is required across months 1\u2013240, which rounds upward to $432.77.\"}",
+  "run_id": "draft-gemini-3.6-flash-S06-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "S04",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S04\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":137688.62492701357},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":145469.34245607765},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":7780.71752906408}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A deducts a 1% entry fee ($1,000), leaving $99,000 to compound at an annual factor of (1 + 0.09) * (1 - 0.02) = 1.0682. Over 5 years, Fund A reaches $137,688.62. Fund B has no entry fee, investing $100,000 at an annual compounding factor of (1 + 0.08) * (1 - 0.002) = 1.07784, reaching $145,469.34 after 5 years. Fund B is the better-performing fund by $7,780.72.\"}",
+  "run_id": "draft-gemini-3.6-flash-S04-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

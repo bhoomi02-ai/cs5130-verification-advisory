@@ -1,0 +1,21 @@
+{
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": "low"
+  },
+  "summary": [
+    {
+      "model": "gemini-3.6-flash",
+      "runs": 20,
+      "api_errors": 17,
+      "schema_valid": 1.0,
+      "accuracy": 1.0,
+      "graded_runs": 3,
+      "failures": {
+        "API:error": 17
+      }
+    }
+  ]
+}

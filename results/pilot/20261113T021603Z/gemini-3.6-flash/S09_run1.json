@@ -1,0 +1,80 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S09-r1",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S09",
+  "model": "gemini-3.6-flash",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S09",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 10000
+        },
+        {
+          "subject": "AAPL",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "MSFT",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "VOO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "BND",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 30000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "The current portfolio has $60,000 in STOCK-class assets (AAPL $20,000 + MSFT $20,000 + VOO $20,000), representing 60% of the $100,000 total portfolio value. Rebalancing to a target STOCK allocation of 40% \u00b1 0.5% requires reducing the STOCK allocation to at most 40.5% ($40,500). Because selling STOCK-class assets is explicitly prohibited by policy and no external deposits or borrowing are permitted to increase the total portfolio size, the STOCK allocation cannot be reduced to the target range. Therefore, the requested rebalancing plan is infeasible."
+  },
+  "raw_output": "{\"scenario_id\":\"S09\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000}],\"selection\":null},\"violations\":[],\"explanation\":\"The current portfolio has $60,000 in STOCK-class assets (AAPL $20,000 + MSFT $20,000 + VOO $20,000), representing 60% of the $100,000 total portfolio value. Rebalancing to a target STOCK allocation of 40% \u00b1 0.5% requires reducing the STOCK allocation to at most 40.5% ($40,500). Because selling STOCK-class assets is explicitly prohibited by policy and no external deposits or borrowing are permitted to increase the total portfolio size, the STOCK allocation cannot be reduced to the target range. Therefore, the requested rebalancing plan is infeasible.\"}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

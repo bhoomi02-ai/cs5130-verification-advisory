@@ -1,0 +1,95 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S07-r1",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S07",
+  "model": "gemini-3.6-flash",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S07",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "BND",
+        "quantity_delta": 220
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -28
+      },
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -2
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "BEFORE_TRADES",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 112000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 112000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 2000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "BEFORE_TRADES",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 14000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 112000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "The initial portfolio of $100,000 increases to $112,000 after depositing $12,000 cash. To achieve exact 60% Stock ($67,200), 30% Bond ($33,600), and 10% Cash ($11,200) allocations: buy 220 shares of BND ($17,600 cost), sell 28 shares of VOO ($14,000 proceeds), and sell 2 shares of MSFT ($800 proceeds). AAPL is held without selling (value $22,000 = 19.64% of portfolio), maintaining compliance with the 25% individual stock limit and whole share constraints."
+  },
+  "raw_output": "{\"scenario_id\":\"S07\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"BND\",\"quantity_delta\":220},{\"symbol\":\"VOO\",\"quantity_delta\":-28},{\"symbol\":\"MSFT\",\"quantity_delta\":-2}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":2000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000}],\"selection\":null},\"violations\":[],\"explanation\":\"The initial portfolio of $100,000 increases to $112,000 after depositing $12,000 cash. To achieve exact 60% Stock ($67,200), 30% Bond ($33,600), and 10% Cash ($11,200) allocations: buy 220 shares of BND ($17,600 cost), sell 28 shares of VOO ($14,000 proceeds), and sell 2 shares of MSFT ($800 proceeds). AAPL is held without selling (value $22,000 = 19.64% of portfolio), maintaining compliance with the 25% individual stock limit and whole share constraints.\"}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "REPLAY_TRADES:value_mismatch"
+  ]
+}

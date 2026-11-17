@@ -1,0 +1,58 @@
+{
+  "run_id": "20261113T022642Z-gemini-3.5-flash-lite-S04-r1",
+  "batch_id": "20261113T022642Z",
+  "scenario_id": "S04",
+  "model": "gemini-3.5-flash-lite",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S04",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "Fund A",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 142100.99
+        },
+        {
+          "subject": "Fund B",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 146609.57
+        },
+        {
+          "subject": "OPTIONS",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 4508.58
+        }
+      ],
+      "selection": "Fund B"
+    },
+    "violations": [],
+    "explanation": "Fund A initial investment of 100,000 is reduced by a 1% entry fee ($1,000) to $99,000, then compounds annually for 5 years at a net growth factor of (1 + 0.09) * (1 - 0.02) = 1.09 * 0.98 = 1.0682, resulting in a final value of $142,100.99. Fund B initial investment of 100,000 has no entry fee and compounds annually for 5 years at a net growth factor of (1 + 0.08) * (1 - 0.002) = 1.08 * 0.998 = 1.07784, resulting in a final value of $146,609.57. The absolute difference between the two fund final values is $4,508.58. Fund B is the better-performing fund."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S04\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"Fund A\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 142100.99\n      },\n      {\n        \"subject\": \"Fund B\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 146609.57\n      },\n      {\n        \"subject\": \"OPTIONS\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 4508.58\n      }\n    ],\n    \"selection\": \"Fund B\"\n  },\n  \"violations\": [],\n  \"explanation\": \"Fund A initial investment of 100,000 is reduced by a 1% entry fee ($1,000) to $99,000, then compounds annually for 5 years at a net growth factor of (1 + 0.09) * (1 - 0.02) = 1.09 * 0.98 = 1.0682, resulting in a final value of $142,100.99. Fund B initial investment of 100,000 has no entry fee and compounds annually for 5 years at a net growth factor of (1 + 0.08) * (1 - 0.002) = 1.08 * 0.998 = 1.07784, resulting in a final value of $146,609.57. The absolute difference between the two fund final values is $4,508.58. Fund B is the better-performing fund.\"\n}",
+  "api_error": null,
+  "correct": false,
+  "failures": [
+    "INDEPENDENT_RESULTS:value_mismatch"
+  ]
+}

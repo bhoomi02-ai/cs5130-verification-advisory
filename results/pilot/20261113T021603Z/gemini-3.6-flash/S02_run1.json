@@ -1,0 +1,69 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S02-r1",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S02",
+  "model": "gemini-3.6-flash",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S02",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "VOO",
+        "quantity_delta": -38
+      }
+    ],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 98000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 18000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 12000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 73000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "To fund the $25,000 cash withdrawal due in 90 days and retain the required minimum $12,000 cash balance afterward, a total cash balance of $37,000 is needed prior to the withdrawal. Selling 38 shares of VOO at $500 per share raises $19,000, increasing cash from $18,000 to $37,000 before the withdrawal and leaving exactly $12,000 in cash afterward."
+  },
+  "raw_output": "{\"scenario_id\":\"S02\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"VOO\",\"quantity_delta\":-38}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":98000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":18000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":73000}],\"selection\":null},\"violations\":[],\"explanation\":\"To fund the $25,000 cash withdrawal due in 90 days and retain the required minimum $12,000 cash balance afterward, a total cash balance of $37,000 is needed prior to the withdrawal. Selling 38 shares of VOO at $500 per share raises $19,000, increasing cash from $18,000 to $37,000 before the withdrawal and leaving exactly $12,000 in cash afterward.\"}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "S05",
+  "run_number": 5,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"S05\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -45\n    },\n    {\n      \"symbol\": \"NVDA\",\n      \"quantity_delta\": -35\n    },\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": 10\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 125\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To rebalance the $100,000 portfolio to the 60/30/10 target asset allocation while satisfying all restrictions: 1) Sell 45 shares of MSFT (-$18,000) and 35 shares of NVDA (-$7,000), bringing direct technology holdings (AAPL, MSFT, NVDA) down from 60% to exactly 35% ($35,000), satisfying the direct technology sector cap and individual stock cap. AAPL is held unchanged at 100 shares ($20,000) per the NO_SELL restriction. 2) Buy 10 shares of VOO (+$5,000) to keep total stock exposure at exactly 60% ($60,000). 3) Buy 125 shares of BND (+$10,000) to bring bond exposure from $20,000 to $30,000 (30%). Net cash proceeds are $10,000, achieving exactly 10% cash balance.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-S05-r5",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

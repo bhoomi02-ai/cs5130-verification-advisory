@@ -1,0 +1,56 @@
+{
+  "run_id": "20261109T050351Z-gemini-3.6-flash-S04-r1",
+  "batch_id": "20261109T050351Z",
+  "scenario_id": "S04",
+  "model": "gemini-3.6-flash",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": "low"
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S04",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "Fund A",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 137688.62493547332
+        },
+        {
+          "subject": "Fund B",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 145469.34246080293
+        },
+        {
+          "subject": "OPTIONS",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 7780.7175253296
+        }
+      ],
+      "selection": "Fund B"
+    },
+    "violations": [],
+    "explanation": "Fund A has an annual growth factor of (1 + 0.09) * (1 - 0.02) = 1.0682. After deducting the 1% entry fee from $100,000 to get $99,000, the 5-year final value is $99,000 * (1.0682)^5 = $137,688.62. Fund B has an annual growth factor of (1 + 0.08) * (1 - 0.002) = 1.07784. With no entry fee, the 5-year final value is $100,000 * (1.07784)^5 = $145,469.34. Fund B outperforms Fund A by $7,780.72."
+  },
+  "raw_output": "{\n  \"scenario_id\": \"S04\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"Fund A\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 137688.62493547332\n      },\n      {\n        \"subject\": \"Fund B\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 145469.34246080292\n      },\n      {\n        \"subject\": \"OPTIONS\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 7780.7175253296\n      }\n    ],\n    \"selection\": \"Fund B\"\n  },\n  \"violations\": [],\n  \"explanation\": \"Fund A has an annual growth factor of (1 + 0.09) * (1 - 0.02) = 1.0682. After deducting the 1% entry fee from $100,000 to get $99,000, the 5-year final value is $99,000 * (1.0682)^5 = $137,688.62. Fund B has an annual growth factor of (1 + 0.08) * (1 - 0.002) = 1.07784. With no entry fee, the 5-year final value is $100,000 * (1.07784)^5 = $145,469.34. Fund B outperforms Fund A by $7,780.72.\"\n}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

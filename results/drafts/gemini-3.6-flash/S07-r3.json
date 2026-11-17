@@ -1,0 +1,11 @@
+{
+  "task_id": "S07",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S07\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-37},{\"symbol\":\"BND\",\"quantity_delta\":220}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":11200}],\"selection\":null},\"violations\":[],\"explanation\":\"The $12,000 deposit increases portfolio value to $112,000 and cash to $14,000 before trades. To achieve exact target allocations of 60% Stock ($67,200), 30% Bond ($33,600), and 10% Cash ($11,200), we sell 37 shares of MSFT at $400 (generating $14,800) and buy 220 shares of BND at $80 (costing $17,600). AAPL is held without selling (100 shares, $22,000 = 19.64% of portfolio), complying with the NO_SELL restriction and individual stock limit of 25%. MSFT post-trade concentration is 4.64%. All trades use whole shares.\"}",
+  "run_id": "draft-gemini-3.6-flash-S07-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

@@ -1,0 +1,48 @@
+{
+  "run_id": "20261109T050351Z-gemini-3.6-flash-S05-r1",
+  "batch_id": "20261109T050351Z",
+  "scenario_id": "S05",
+  "model": "gemini-3.6-flash",
+  "run_number": 1,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": "low"
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S05",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -38
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -50
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": 10
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 125
+      }
+    ],
+    "metrics": {
+      "observations": [],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "The proposed trade plan rebalances the portfolio to meet all asset allocation targets within the allowable \u00b10.5% tolerance while complying with all investment restrictions. Selling 38 shares of MSFT ($15,200) and 50 shares of NVDA ($10,000) generates $25,200 in cash while keeping AAPL untouched. Purchasing 125 shares of BND ($10,000) and 10 shares of VOO ($5,000) uses $15,000, leaving $10,200 (10.2%) in cash. Post-rebalance allocations are Stock at 59.8% ($59,800), Bond at 30.0% ($30,000), and Cash at 10.2% ($10,200). Direct technology sector exposure (AAPL + MSFT) is brought down to 34.8% ($34,800), satisfying the 35% cap, and all individual stock positions remain below the 25% individual maximum."
+  },
+  "raw_output": "```json\n{\n  \"scenario_id\": \"S05\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -38\n    },\n    {\n      \"symbol\": \"NVDA\",\n      \"quantity_delta\": -50\n    },\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": 10\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 125\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"The proposed trade plan rebalances the portfolio to meet all asset allocation targets within the allowable \u00b10.5% tolerance while complying with all investment restrictions. Selling 38 shares of MSFT ($15,200) and 50 shares of NVDA ($10,000) generates $25,200 in cash while keeping AAPL untouched. Purchasing 125 shares of BND ($10,000) and 10 shares of VOO ($5,000) uses $15,000, leaving $10,200 (10.2%) in cash. Post-rebalance allocations are Stock at 59.8% ($59,800), Bond at 30.0% ($30,000), and Cash at 10.2% ($10,200). Direct technology sector exposure (AAPL + MSFT) is brought down to 34.8% ($34,800), satisfying the 35% cap, and all individual stock positions remain below the 25% individual maximum.\"\n}\n```",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "S06",
+  "run_number": 5,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"S06\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 1000035.8351782756\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 199964.1648217244\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 432.78455823795805\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 432.79\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"Starting with $150,000 compounding at 0.5% monthly over 240 months yields $496,530.67. Monthly contributions of $1,000 for months 1\u2013120 grow to $298,151.65 by month 240. Contributions of $1,500 for months 121\u2013240 grow to $245,819.02. The $30,000 withdrawal at month 180 reduces the final balance by $40,465.50. The projected month-240 balance is $1,000,035.84, leaving a shortfall of $199,964.16 relative to the $1,200,000 target. Dividing this shortfall by the 240-month annuity factor of 462.040895 requires an exact additional end-of-month contribution of $432.784558, which rounds upward to $432.79 per month.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-S06-r5",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

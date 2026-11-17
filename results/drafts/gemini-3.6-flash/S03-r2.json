@@ -1,0 +1,11 @@
+{
+  "task_id": "S03",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"S03\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"BTC\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000}],\"selection\":null},\"violations\":[{\"kind\":\"CLASS_MAX\",\"scope\":\"STOCK\",\"observed\":0.6,\"limit\":0.4},{\"kind\":\"CLASS_MIN\",\"scope\":\"BOND\",\"observed\":0.3,\"limit\":0.45},{\"kind\":\"PROHIBITED_CLASS\",\"scope\":\"CRYPTO\",\"observed\":0.05,\"limit\":0},{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.2,\"limit\":0.15},{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"MSFT\",\"observed\":0.2,\"limit\":0.15}],\"explanation\":\"The portfolio currently has five investment policy violations: (1) STOCK allocation is 60.0% (limit max 40.0%), (2) BOND allocation is 30.0% (limit min 45.0%), (3) CRYPTO allocation is 5.0% (prohibited class, limit 0%), (4) AAPL concentration is 20.0% (individual stock limit max 15.0%), and (5) MSFT concentration is 20.0% (individual stock limit max 15.0%). CASH is at 5.0%, which meets the 5.0%-25.0% range minimum.\"}",
+  "run_id": "draft-gemini-3.6-flash-S03-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

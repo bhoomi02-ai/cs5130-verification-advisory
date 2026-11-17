@@ -1,0 +1,3 @@
+task_id,condition,model,n_runs,strict_success,status_only_success
+S09,none,gemini-3.6-flash,5,1.0,1.0
+S10,none,gemini-3.6-flash,5,1.0,1.0

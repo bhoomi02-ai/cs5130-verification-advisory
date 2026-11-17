@@ -1,0 +1,113 @@
+{
+  "scenario_id": "S03",
+  "model": "gemini-3.5-flash-lite",
+  "run_number": 1,
+  "attempts": 1,
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S03",
+    "answer_type": "VIOLATION_LIST",
+    "status": "VIOLATIONS_FOUND",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 100000
+        },
+        {
+          "subject": "CASH",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 5000
+        },
+        {
+          "subject": "AAPL",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "MSFT",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "VOO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 20000
+        },
+        {
+          "subject": "BND",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 30000
+        },
+        {
+          "subject": "BTC",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 5000
+        }
+      ],
+      "selection": null
+    },
+    "violations": [
+      {
+        "kind": "CLASS_MAX",
+        "scope": "STOCK",
+        "observed": 0.6,
+        "limit": 0.4
+      },
+      {
+        "kind": "CLASS_MIN",
+        "scope": "BOND",
+        "observed": 0.3,
+        "limit": 0.45
+      },
+      {
+        "kind": "PROHIBITED_CLASS",
+        "scope": "CRYPTO",
+        "observed": 0.05,
+        "limit": 0.0
+      },
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "AAPL",
+        "observed": 0.2,
+        "limit": 0.15
+      },
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "MSFT",
+        "observed": 0.2,
+        "limit": 0.15
+      }
+    ],
+    "explanation": "The portfolio has a total value of $100,000. Current asset class allocations and individual holdings violate several policy rules: STOCK allocation is 60% ($60,000), exceeding the maximum limit of 40%; BOND allocation is 30% ($30,000), falling below the minimum limit of 45%; CRYPTO is present at 5% ($5,000), violating the prohibited class rule (max 0%); and both individual stocks AAPL and MSFT are at 20% ($20,000) each, exceeding the maximum individual stock limit of 15%."
+  },
+  "raw_outputs": [
+    "{\n  \"scenario_id\": \"S03\",\n  \"answer_type\": \"VIOLATION_LIST\",\n  \"status\": \"VIOLATIONS_FOUND\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 5000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"BTC\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 5000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [\n    {\n      \"kind\": \"CLASS_MAX\",\n      \"scope\": \"STOCK\",\n      \"observed\": 0.6,\n      \"limit\": 0.4\n    },\n    {\n      \"kind\": \"CLASS_MIN\",\n      \"scope\": \"BOND\",\n      \"observed\": 0.3,\n      \"limit\": 0.45\n    },\n    {\n      \"kind\": \"PROHIBITED_CLASS\",\n      \"scope\": \"CRYPTO\",\n      \"observed\": 0.05,\n      \"limit\": 0.0\n    },\n    {\n      \"kind\": \"INDIVIDUAL_MAX\",\n      \"scope\": \"AAPL\",\n      \"observed\": 0.2,\n      \"limit\": 0.15\n    },\n    {\n      \"kind\": \"INDIVIDUAL_MAX\",\n      \"scope\": \"MSFT\",\n      \"observed\": 0.2,\n      \"limit\": 0.15\n    }\n  ],\n  \"explanation\": \"The portfolio has a total value of $100,000. Current asset class allocations and individual holdings violate several policy rules: STOCK allocation is 60% ($60,000), exceeding the maximum limit of 40%; BOND allocation is 30% ($30,000), falling below the minimum limit of 45%; CRYPTO is present at 5% ($5,000), violating the prohibited class rule (max 0%); and both individual stocks AAPL and MSFT are at 20% ($20,000) each, exceeding the maximum individual stock limit of 15%.\"\n}"
+  ],
+  "correct": true,
+  "failures": []
+}

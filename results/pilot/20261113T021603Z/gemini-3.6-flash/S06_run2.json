@@ -1,0 +1,72 @@
+{
+  "run_id": "20261113T021603Z-gemini-3.6-flash-S06-r2",
+  "batch_id": "20261113T021603Z",
+  "scenario_id": "S06",
+  "model": "gemini-3.6-flash",
+  "run_number": 2,
+  "prompt_version": "advisor-v1",
+  "settings": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "thinking_level": null
+  },
+  "schema_valid": true,
+  "errors": [],
+  "answer": {
+    "scenario_id": "S06",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "observations": [
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "INITIAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 150000
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "VALUE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 1000045.735359016
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "DIFFERENCE",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 199954.264640984
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "NONE",
+          "unit": "MONEY",
+          "value": 432.7631316262943
+        },
+        {
+          "subject": "PORTFOLIO",
+          "measure": "PAYMENT",
+          "stage": "FINAL",
+          "rounding": "UPWARD_CENT",
+          "unit": "MONEY",
+          "value": 432.77
+        }
+      ],
+      "selection": null
+    },
+    "violations": [],
+    "explanation": "Starting with $150,000 and applying the monthly contributions ($1,000 for months 1\u2013120, $1,500 for months 121\u2013240) and the $30,000 withdrawal at month 180 at a 0.5% monthly return results in a month-240 balance of $1,000,045.74. The shortfall relative to the $1,200,000 target is $199,954.26. To accumulate this shortfall over 240 months, an additional end-of-month contribution of $432.7631 (rounded upward to $432.77 per month) is required."
+  },
+  "raw_output": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":150000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.735359016},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.264640984},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.7631316262943},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with $150,000 and applying the monthly contributions ($1,000 for months 1\u2013120, $1,500 for months 121\u2013240) and the $30,000 withdrawal at month 180 at a 0.5% monthly return results in a month-240 balance of $1,000,045.74. The shortfall relative to the $1,200,000 target is $199,954.26. To accumulate this shortfall over 240 months, an additional end-of-month contribution of $432.7631 (rounded upward to $432.77 per month) is required.\"}",
+  "api_error": null,
+  "correct": true,
+  "failures": []
+}
