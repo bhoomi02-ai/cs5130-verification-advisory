@@ -218,8 +218,9 @@ def calculator_results_message(results: list[dict]) -> dict:
 #
 # Same independent-verifier role (the exact first paragraph of DEDICATED_SYSTEM),
 # same REVIEW_INSTRUCTIONS and verdict format, one call, no tool. Dedicated vs
-# weakened therefore differs only in the calculator, so the comparison measures
-# what the tool adds.
+# weakened therefore differs in the calculator and the extra turns it enables
+# (calculator rounds and the final verdict request), so report calls per review
+# next to the results.
 
 WEAKENED_PROMPT_VERSION = "weakened-v1"
 

@@ -192,3 +192,9 @@ def test_a_reply_that_does_not_start_with_json_is_still_unreadable():
 def test_text_dropped_after_a_request_is_kept_for_auditing():
     review = dedicated_review(SCENARIO, ANSWER, scripted(GEMMA_REPLY, ACCEPT))
     assert len(review.ignored) == 1 and review.ignored[0].startswith("**Calculator Results:**")
+
+
+def test_weakened_user_turn_never_mentions_the_calculator():
+    # Locks in that REVIEW_INSTRUCTIONS stays tool-free, so the weakened verifier is never told about a tool.
+    msgs = prompts.weakened_review_messages(SCENARIO, ANSWER)
+    assert "calculat" not in msgs[1]["content"].lower()
