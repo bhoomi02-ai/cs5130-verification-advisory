@@ -26,6 +26,7 @@ from advisory.prompts import (
     MAX_EXPRESSIONS_PER_ROUND,
     calculator_results_message,
     dedicated_review_messages,
+    weakened_review_messages,
 )
 from advisory.verdict import Verdict, parse_verdict
 
@@ -90,3 +91,20 @@ def dedicated_review(scenario: dict, answer: str, call: Callable[[list[dict]], s
         if rounds >= MAX_CALCULATOR_ROUNDS:
             result_turn["content"] += "\n\n" + FINAL_VERDICT_REQUEST
         messages.append(result_turn)
+
+
+def weakened_review(scenario: dict, answer: str, call: Callable[[list[dict]], str]) -> DedicatedReview:
+    """The weakened verifier (ablation): one call, no calculator, same verdict rules.
+
+    Returns a DedicatedReview so the pipeline handles both verifiers the same
+    way; `calculations` stays empty. An unreadable reply gives verdict None.
+    """
+    messages = weakened_review_messages(scenario, answer)
+    reply = call(messages)
+    messages.append({"role": "assistant", "content": reply})
+    review = DedicatedReview(verdict=None, messages=messages, n_calls=1)
+    try:
+        review.verdict = parse_verdict(reply)
+    except ValueError as e:
+        review.error = f"unreadable reply: {e}"
+    return review

@@ -211,3 +211,34 @@ def calculator_results_message(results: list[dict]) -> dict:
         else:
             lines.append(f"{i}. {r['expression']} -> error: {r['error']}")
     return {"role": "user", "content": "Calculator results:\n" + "\n".join(lines)}
+
+
+# ---------------------------------------------------------------------------
+# Weakened verifier (ablation): the dedicated verifier without the calculator.
+#
+# Same independent-verifier role (the exact first paragraph of DEDICATED_SYSTEM),
+# same REVIEW_INSTRUCTIONS and verdict format, one call, no tool. Dedicated vs
+# weakened therefore differs only in the calculator, so the comparison measures
+# what the tool adds.
+
+WEAKENED_PROMPT_VERSION = "weakened-v1"
+
+WEAKENED_SYSTEM = DEDICATED_SYSTEM.split("\n\nYou have a calculator.")[0] + "\n"
+
+
+def weakened_review_messages(scenario: dict, answer: str) -> list[dict]:
+    """The weakened verifier's only message: the same scenario, answer and instructions, no calculator."""
+    return [
+        {"role": "system", "content": WEAKENED_SYSTEM},
+        {
+            "role": "user",
+            "content": (
+                "Scenario:\n"
+                + json.dumps(scenario, indent=2)
+                + "\n\nThe advisor's answer:\n"
+                + answer
+                + "\n\n"
+                + REVIEW_INSTRUCTIONS
+            ),
+        },
+    ]

@@ -128,3 +128,34 @@ def test_errors_from_the_model_call_propagate():
 
     with pytest.raises(RuntimeError, match="API down"):
         dedicated_review(SCENARIO, ANSWER, failing)
+
+
+# Weakened verifier (ablation): dedicated without the calculator.
+
+from advisory.dedicated import weakened_review  # noqa: E402
+
+
+def test_weakened_prompt_is_the_dedicated_role_without_the_calculator():
+    assert prompts.DEDICATED_SYSTEM.startswith(prompts.WEAKENED_SYSTEM.rstrip("\n"))
+    assert "calculat" not in prompts.WEAKENED_SYSTEM.lower()
+    msgs = prompts.weakened_review_messages(SCENARIO, ANSWER)
+    assert msgs[0]["content"] == prompts.WEAKENED_SYSTEM
+    # Same user turn as the dedicated verifier: only the system prompt (the tool) differs.
+    assert msgs[1] == prompts.dedicated_review_messages(SCENARIO, ANSWER)[1]
+
+
+def test_weakened_prompt_leaks_no_evaluation_details():
+    for word in ("checker", "answer key", "ground truth", "injected", "seeded", "grade"):
+        assert word not in prompts.WEAKENED_SYSTEM.lower(), word
+
+
+def test_weakened_review_is_one_call_with_a_verdict():
+    call = scripted(REJECT)
+    review = weakened_review(SCENARIO, ANSWER, call)
+    assert review.verdict.verdict == "reject" and review.n_calls == 1 and review.calculations == []
+    assert len(call.sent) == 1
+
+
+def test_weakened_review_does_not_run_calculator_requests():
+    review = weakened_review(SCENARIO, ANSWER, scripted(calc("1+1")))
+    assert review.verdict is None and review.calculations == [] and review.error.startswith("unreadable reply")
