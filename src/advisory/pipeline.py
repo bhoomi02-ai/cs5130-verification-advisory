@@ -6,10 +6,12 @@ of the run's model calls, including the shared first draft. The rows in
 results/results.jsonl are the input to metrics.summarize(). Each row also
 records whether the checker's STATUS check passed (initial_status_correct,
 final_status_correct), for status-only accuracy in the report. self and peer
-rows also record the second verdict (on the revision) and the verifier and
-revision prompt versions, and every graded run saves its answers (draft,
-revision, final), the verifier replies and both check() results to
-results/answers/<run_id>.json, so fixed and broken answers can be checked.
+rows, and dedicated, weakened and cross_family rows, also record the second
+verdict (on the revision), the verifier's model, its prompt version, the
+revision prompt version and the verifier's model calls, and every graded run
+saves its answers (draft, revision, final), the verifier replies (with any
+calculator use) and both check() results to results/answers/<run_id>.json, so
+fixed and broken answers can be checked.
 
 Usage is counted per attempt: a rerun is charged only for its own calls, plus
 the call that made a first draft saved earlier, never for calls from an earlier
@@ -20,7 +22,9 @@ retries) is saved too, with status "failed" and the error, so failed runs are
 counted per condition instead of disappearing. Two errors are not saved as
 runs, because they say nothing about the condition: the daily quota (the run
 is simply not done yet; run the same command again tomorrow) and errors in our
-own code or setup (a bug to fix, not a failed run).
+own code or setup (a bug to fix, not a failed run). Groq's ProviderError is
+handled like Gemini's APIError, and both providers' daily limits count as the
+daily quota.
 """
 
 from __future__ import annotations
@@ -34,9 +38,9 @@ from google.genai import errors as genai_errors
 
 from advisory import llm
 from advisory.checker import check
-from advisory.conditions import CONDITIONS, VERIFIED, make_run_id
+from advisory.conditions import CONDITIONS, VERIFIED, VERIFIER_PROMPTS, make_run_id, verifier_settings
 from advisory.drafts import DRAFT_DIR, PROMPT_VERSION, Settings, draft_run_id, get_draft
-from advisory.prompts import REVISION_PROMPT_VERSION, VERIFIER_PROMPT_VERSION
+from advisory.prompts import REVISION_PROMPT_VERSION
 
 ROOT = Path(__file__).resolve().parents[2]
 SCENARIO_DIR = ROOT / "data" / "scenarios"
@@ -128,12 +132,12 @@ def done_keys(results_path: Path = RESULTS_PATH, settings: Settings | None = Non
 
     With `settings`, rows for the same model made with other settings or another
     prompt version are refused, the same way get_draft refuses a saved draft.
-    For self and peer rows the verifier and revision prompt versions must match too.
+    For the checked conditions the verifier prompt, the revision prompt and the
+    verifier's model and thinking level must match too.
     """
     rows = _rows(results_path)
     if settings is not None:
         wanted = (settings.temperature, settings.top_p, settings.thinking_level, PROMPT_VERSION)
-        wanted_review = (VERIFIER_PROMPT_VERSION, REVISION_PROMPT_VERSION)
         for row in rows:
             if row["model"] != settings.model:
                 continue
@@ -143,13 +147,34 @@ def done_keys(results_path: Path = RESULTS_PATH, settings: Settings | None = Non
                     f"{results_path.name} already has {settings.model} runs made with other settings {made}, not {wanted}. "
                     "Use the same settings, or move the file aside to start a new one."
                 )
-            made_review = (row.get("verifier_prompt_version"), row.get("revision_prompt_version"))
-            if row["condition"] in VERIFIED and made_review != wanted_review:
+            if row["condition"] not in VERIFIED:
+                continue
+            wanted_review = _review_setup(row["condition"], settings)
+            made_review = (
+                row.get("verifier_prompt_version"),
+                row.get("revision_prompt_version"),
+                row.get("verifier_model", row["model"]),  # rows from before verifier_model was recorded
+                row.get("verifier_thinking_level", row.get("thinking_level")),
+            )
+            if made_review != wanted_review:
                 raise ValueError(
-                    f"{results_path.name} already has {row['condition']} runs made with other verifier prompts "
-                    f"{made_review}, not {wanted_review}. Move the file aside to start a new one."
+                    f"{results_path.name} already has {row['condition']} runs made with other verifier prompts or "
+                    f"verifier model {made_review}, not {wanted_review}. Move the file aside to start a new one."
                 )
     return {_key(row) for row in rows}
+
+
+def _review_setup(condition: str, settings: Settings) -> tuple:
+    """(verifier prompt, revision prompt, verifier model, verifier thinking level) a checked condition uses."""
+    verifier = verifier_settings(condition, settings)
+    return (VERIFIER_PROMPTS[condition], REVISION_PROMPT_VERSION, verifier.model, verifier.thinking_level)
+
+
+def _daily_quota(error: Exception) -> bool:
+    """Whether a provider error is a daily limit (Gemini's quota or Groq's per-day limit)."""
+    if isinstance(error, llm.ProviderError):
+        return bool(error.daily_quota)
+    return llm._is_daily_quota(error)
 
 
 def failed_keys(results_path: Path = RESULTS_PATH) -> set[tuple]:
@@ -196,13 +221,14 @@ def run_one(
 ) -> dict:
     """Run `condition` once on `task_id`, grade it, append the row to results_path and return it.
 
-    An API error is saved as a row with status "failed". The daily quota and
-    any other exception are raised, and nothing is saved for the run.
+    An API error (Gemini or Groq) is saved as a row with status "failed". A daily
+    limit and any other exception are raised, and nothing is saved for the run.
     """
     started = datetime.now(timezone.utc)
     scenario = load_scenario(task_id, scenario_dir)
     run_id = make_run_id(condition, task_id, run_number, settings.model)
     draft_id = draft_run_id(settings.model, task_id, run_number)
+    verifier = verifier_settings(condition, settings)
     base = {
         "run_id": run_id,
         "draft_run_id": draft_id,
@@ -213,15 +239,17 @@ def run_one(
         "temperature": settings.temperature,
         "top_p": settings.top_p,
         "thinking_level": settings.thinking_level,
-        "verifier_prompt_version": VERIFIER_PROMPT_VERSION if condition in VERIFIED else None,
+        "verifier_model": verifier.model if verifier else None,
+        "verifier_thinking_level": verifier.thinking_level if verifier else None,
+        "verifier_prompt_version": VERIFIER_PROMPTS.get(condition),
         "revision_prompt_version": REVISION_PROMPT_VERSION if condition in VERIFIED else None,
     }
 
     try:
         draft = get_draft(scenario, run_number, settings, root=draft_dir)
         result = CONDITIONS[condition](scenario, draft, run_id=run_id, settings=settings)
-    except genai_errors.APIError as e:
-        if llm._is_daily_quota(e):  # not done yet, not failed: rerun tomorrow
+    except (genai_errors.APIError, llm.ProviderError) as e:
+        if _daily_quota(e):  # not done yet, not failed: rerun tomorrow
             raise
         row = {
             **base,
@@ -237,6 +265,7 @@ def run_one(
             "final_status_correct": False,
             "verdict": None,
             "second_verdict": None,
+            "verifier_calls": None,
             "status": "failed",
             "error": f"{type(e).__name__}: {e}"[:500],
             **attempt_usage(draft_id, run_id, started, log_path),
@@ -258,6 +287,7 @@ def run_one(
         "final_status_correct": status_correct(final),
         "verdict": result.verdict,
         "second_verdict": result.second_verdict,
+        "verifier_calls": result.verifier_calls,
         "status": result.status,
         "error": None,
         **attempt_usage(draft.run_id, run_id, started, log_path),
@@ -280,6 +310,7 @@ def _save_answers(result, first_check: dict, final_check: dict, answers_dir: Pat
         "verdict": result.verdict,
         "second_verdict": result.second_verdict,
         "status": result.status,
+        "verifier_calls": result.verifier_calls,
         "reviews": result.reviews,
         "draft_check": first_check,
         "final_check": final_check,
