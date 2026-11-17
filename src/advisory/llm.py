@@ -49,7 +49,18 @@ PRICING: dict[str, tuple[float, float]] = {
     # Used for the cross-family verifier ablation.
     "gemma-4-26b-a4b-it": (0.0, 0.0),
     "gemma-4-31b-it": (0.0, 0.0),
+    # Groq, for the cross-family verifier (another company's model). Source:
+    # https://console.groq.com/docs/model/openai/gpt-oss-20b, checked 2026-11-17.
+    "openai/gpt-oss-20b": (0.075, 0.30),
 }
+
+# Models served by Groq's OpenAI-compatible API (exact Groq model IDs).
+GROQ_MODELS = frozenset({"openai/gpt-oss-20b"})
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+# Groq's default output limit (1,024) can cut off a reasoning model mid-thought.
+GROQ_MAX_COMPLETION_TOKENS = 8192
+# Groq's reasoning_effort values for gpt-oss.
+GROQ_REASONING_EFFORTS = ("low", "medium", "high")
 
 _MAX_RETRIES = 5
 _RETRY_STATUS = (429, 500, 503)
@@ -233,6 +244,131 @@ def _gemini_call(
     return response.text or "", tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
 
 
+class ProviderError(RuntimeError):
+    """A failed call to a provider without its own SDK error type (Groq). `code` is the HTTP status."""
+
+    def __init__(self, code: int | None, message: str, *, daily_quota: bool = False):
+        super().__init__(f"{code} {message}" if code else message)
+        self.code = code
+        self.daily_quota = daily_quota
+
+
+def to_groq(messages: list[dict]) -> list[dict]:
+    """OpenAI-style messages for Groq, with the system prompt moved into the first user turn.
+
+    Groq advises against system prompts for its reasoning models ("include all
+    instructions in the user message"), so the system text goes first in the
+    first user message, unchanged. Every other turn is passed as is.
+    """
+    system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
+    out: list[dict] = []
+    for m in messages:
+        if m["role"] == "system":
+            continue
+        if m["role"] not in ("user", "assistant"):
+            raise ValueError(f"Unknown message role {m['role']!r}")
+        out.append({"role": m["role"], "content": m["content"]})
+    if not any(m["role"] == "user" for m in out):
+        raise ValueError("messages must contain at least one user message")
+    if system:
+        first = next(i for i, m in enumerate(out) if m["role"] == "user")
+        out[first] = {"role": "user", "content": system + "\n\n" + out[first]["content"]}
+    return out
+
+
+def groq_usage_tokens(usage: dict, content: str, reasoning: str) -> tuple[int, int]:
+    """(tokens_in, tokens_out) from Groq's usage, never undercounting output.
+
+    Groq's docs don't say whether reasoning is included in completion_tokens,
+    so output is at least total minus input, and at least about a quarter of
+    the characters of the answer plus the reasoning.
+    """
+    tokens_in = int(usage.get("prompt_tokens") or 0)
+    reported = int(usage.get("completion_tokens") or 0)
+    from_total = int(usage.get("total_tokens") or 0) - tokens_in
+    from_text = -(-(len(content) + len(reasoning)) // 4)
+    return tokens_in, max(reported, from_total, from_text)
+
+
+def _groq_post(body: dict, key: str) -> dict:
+    import urllib.error
+    import urllib.request
+
+    request = urllib.request.Request(
+        GROQ_URL,
+        data=json.dumps(body).encode("utf-8"),
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=300) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode("utf-8", "replace")[:500]
+        remaining = e.headers.get("x-ratelimit-remaining-requests") if e.headers else None
+        daily = e.code == 429 and (remaining == "0" or "per day" in detail.lower() or "(rpd)" in detail.lower() or "(tpd)" in detail.lower())
+        error = ProviderError(e.code, detail, daily_quota=daily)
+        error.retry_after = e.headers.get("retry-after") if e.headers else None
+        raise error from e
+    except urllib.error.URLError as e:  # DNS, refused, reset: a network error, retried like one
+        raise ConnectionError(str(e.reason)) from e
+
+
+def _groq_call(
+    model: str,
+    messages: list[dict],
+    temperature: float | None = None,
+    thinking_level: str | None = None,
+    top_p: float | None = None,
+) -> tuple[str, int, int, float]:
+    if model not in PRICING:  # fail before any tokens are spent, not after
+        raise ValueError(f"No pricing for model {model!r}; add it to PRICING")
+    body: dict = {"model": model, "messages": to_groq(messages), "max_completion_tokens": GROQ_MAX_COMPLETION_TOKENS}
+    if temperature is not None:
+        if not 0 <= temperature <= 2:
+            raise ValueError(f"temperature must be between 0 and 2, got {temperature}")
+        body["temperature"] = temperature
+    if top_p is not None:
+        if not 0 < top_p <= 1:
+            raise ValueError(f"top_p must be in (0, 1], got {top_p}")
+        body["top_p"] = top_p
+    if thinking_level is not None:
+        if thinking_level not in GROQ_REASONING_EFFORTS:
+            raise ValueError(f"thinking_level for Groq must be one of {GROQ_REASONING_EFFORTS}, got {thinking_level!r}")
+        body["reasoning_effort"] = thinking_level
+
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+    key = os.environ.get("GROQ_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("GROQ_API_KEY is not set; add it to .env")
+
+    for attempt in range(_MAX_RETRIES):
+        try:
+            data = _groq_post(body, key)
+            break
+        except ProviderError as e:
+            if e.code not in _RETRY_STATUS + (502,) or e.daily_quota or attempt == _MAX_RETRIES - 1:
+                raise
+            wait = 2**attempt * 5
+            if getattr(e, "retry_after", None):
+                try:
+                    wait = max(wait, float(e.retry_after))
+                except ValueError:
+                    pass
+            time.sleep(wait)
+        except _NETWORK_ERRORS:
+            if attempt == _MAX_RETRIES - 1:
+                raise
+            time.sleep(2**attempt * 5)
+    message = (data.get("choices") or [{}])[0].get("message") or {}
+    content = message.get("content") or ""
+    reasoning = message.get("reasoning") or ""
+    tokens_in, tokens_out = groq_usage_tokens(data.get("usage") or {}, content, reasoning)
+    return content, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
+
+
 def _provider_call(
     model: str,
     messages: list[dict],
@@ -243,6 +379,8 @@ def _provider_call(
     """Return (text, tokens_in, tokens_out, cost_usd), dispatching on `model`."""
     if model.startswith(("gemini-", "gemma-")):
         return _gemini_call(model, messages, temperature, thinking_level, top_p)
+    if model in GROQ_MODELS:
+        return _groq_call(model, messages, temperature, thinking_level, top_p)
     raise ValueError(f"No provider configured for model {model!r}")
 
 
