@@ -226,11 +226,26 @@ def _gemini_call(
             if attempt == _MAX_RETRIES - 1:
                 raise
             time.sleep(2**attempt * 5)
-    usage = response.usage_metadata
-    tokens_in = usage.prompt_token_count or 0
-    # Thinking tokens are billed as output, so count them as output.
-    tokens_out = (usage.candidates_token_count or 0) + (usage.thoughts_token_count or 0)
+    tokens_in, tokens_out = usage_tokens(response.usage_metadata)
     return response.text or "", tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
+
+
+def usage_tokens(usage) -> tuple[int, int]:
+    """(tokens_in, tokens_out) from Gemini's usage metadata.
+
+    Output is the answer plus thinking tokens, since both are billed as output.
+    Some replies report no candidates count even though they have text, so the
+    output is never taken as less than total minus input: total_token_count
+    covers every token of the call, and anything in it that is not input is
+    billed as output. This way cost is never undercounted.
+    """
+    tokens_in = getattr(usage, "prompt_token_count", None) or 0
+    tool_in = getattr(usage, "tool_use_prompt_token_count", None) or 0  # billed as input
+    reported_out = (getattr(usage, "candidates_token_count", None) or 0) + (
+        getattr(usage, "thoughts_token_count", None) or 0
+    )
+    total = getattr(usage, "total_token_count", None) or 0
+    return tokens_in + tool_in, max(reported_out, total - tokens_in - tool_in)
 
 
 def _provider_call(

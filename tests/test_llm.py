@@ -318,3 +318,39 @@ def test_network_errors_give_up_after_the_retries(fake):
     with pytest.raises(ConnectionResetError):
         llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
     assert len(client.calls) == llm._MAX_RETRIES
+
+
+# Usage metadata.
+
+
+def _usage(**counts):
+    return SimpleNamespace(**counts)
+
+
+def test_output_is_answer_plus_thinking():
+    assert llm.usage_tokens(_usage(prompt_token_count=100, candidates_token_count=20,
+                                   thoughts_token_count=30, total_token_count=150)) == (100, 50)
+
+
+def test_missing_candidates_count_falls_back_to_total_minus_input():
+    # Seen live: a short reply with text, candidates_token_count missing.
+    assert llm.usage_tokens(_usage(prompt_token_count=3291, candidates_token_count=None,
+                                   thoughts_token_count=None, total_token_count=3791)) == (3291, 500)
+
+
+def test_tool_prompt_tokens_count_as_input_not_output():
+    assert llm.usage_tokens(_usage(prompt_token_count=100, tool_use_prompt_token_count=40,
+                                   candidates_token_count=10, total_token_count=150)) == (140, 10)
+
+
+def test_missing_total_keeps_the_reported_counts():
+    assert llm.usage_tokens(_usage(prompt_token_count=100, candidates_token_count=20,
+                                   thoughts_token_count=30)) == (100, 50)
+
+
+def test_fallback_is_used_for_the_logged_cost(fake):
+    fake(SimpleNamespace(text="ok", usage_metadata=_usage(prompt_token_count=1_000_000,
+                                                          total_token_count=2_000_000)))
+    _, tokens_in, tokens_out, cost = llm._provider_call("gemini-3.6-flash", [{"role": "user", "content": "hi"}])
+    assert (tokens_in, tokens_out) == (1_000_000, 1_000_000)
+    assert cost == pytest.approx(0.75 + 3.75)
