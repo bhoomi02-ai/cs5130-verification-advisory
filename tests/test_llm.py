@@ -80,7 +80,7 @@ def test_to_gemini_rejects_bad_input():
 
 def test_gemini_call_counts_thinking_as_output(fake):
     client = fake(_response(prompt=1000, candidates=200, thoughts=300))
-    text, tin, tout, cost = llm._provider_call(
+    text, tin, tout, cost, _ = llm._provider_call(
         "gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}]
     )
     assert (text, tin, tout) == ("ok", 1000, 500)
@@ -96,6 +96,7 @@ def test_gemini_call_handles_missing_usage_fields(fake):
         0,
         0,
         0.0,
+        None,
     )
 
 
@@ -350,7 +351,7 @@ def test_missing_total_keeps_the_reported_counts():
 def test_fallback_is_used_for_the_logged_cost(fake):
     fake(SimpleNamespace(text="ok", usage_metadata=_usage(prompt_token_count=1_000_000,
                                                           total_token_count=2_000_000)))
-    _, tokens_in, tokens_out, cost = llm._provider_call("gemini-3.6-flash", [{"role": "user", "content": "hi"}])
+    _, tokens_in, tokens_out, cost, _ = llm._provider_call("gemini-3.6-flash", [{"role": "user", "content": "hi"}])
     assert (tokens_in, tokens_out) == (1_000_000, 1_000_000)
     assert cost == pytest.approx(0.75 + 3.75)
 
@@ -377,3 +378,28 @@ def test_answer_counted_but_thinking_missing_adds_the_allowance():
 def test_thinking_visible_in_the_total_needs_no_allowance():
     usage = _usage(prompt_token_count=100, candidates_token_count=20, thoughts_token_count=None, total_token_count=900)
     assert llm.usage_tokens(usage, "reply") == (100, 800)
+
+
+
+# Finish reason.
+
+
+def test_gemini_finish_reason_is_logged(fake, monkeypatch):
+    from enum import Enum
+
+    class FinishReason(Enum):
+        MAX_TOKENS = 2
+
+    response = _response()
+    response.candidates = [SimpleNamespace(finish_reason=FinishReason.MAX_TOKENS)]
+    fake(response)
+    logged = []
+    monkeypatch.setattr(llm, "log_record", lambda rec: logged.append(rec))
+    llm.call_model(task_id="S01", condition="none", agent="advisor", model="gemini-3.1-flash-lite",
+                   messages=[{"role": "user", "content": "hi"}])
+    assert logged[0].finish_reason == "max_tokens"
+
+
+def test_missing_finish_reason_is_none():
+    assert llm.gemini_finish_reason(SimpleNamespace()) is None
+    assert llm.gemini_finish_reason(SimpleNamespace(candidates=[SimpleNamespace(finish_reason="STOP")])) == "stop"

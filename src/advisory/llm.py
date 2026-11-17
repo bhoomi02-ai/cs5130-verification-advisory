@@ -33,6 +33,10 @@ class RunRecord:
     thinking_level: str | None = None  # None means the provider default
     run_id: str | None = None  # joins this call to the per-run result file
     error: str | None = None  # set when the call failed; tokens and cost are then 0
+    # Why the reply ended, as the provider reports it, e.g. "stop", or "max_tokens" /
+    # "length" when it was cut off at the output limit (so a truncated reply can
+    # be told apart from a malformed one). None when the provider gives no reason.
+    finish_reason: str | None = None
 
 
 # USD per 1M tokens (input, output), paid tier, standard (non-batch), text.
@@ -212,7 +216,7 @@ def _gemini_call(
     temperature: float | None = None,
     thinking_level: str | None = None,
     top_p: float | None = None,
-) -> tuple[str, int, int, float]:
+) -> tuple[str, int, int, float, str | None]:
     from google.genai import errors
 
     if model not in PRICING:  # fail before any tokens are spent, not after
@@ -239,7 +243,16 @@ def _gemini_call(
             time.sleep(2**attempt * 5)
     text = response.text or ""
     tokens_in, tokens_out = usage_tokens(response.usage_metadata, text)
-    return text, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
+    return text, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out), gemini_finish_reason(response)
+
+
+def gemini_finish_reason(response) -> str | None:
+    """The first candidate's finish reason in lower case ("stop", "max_tokens", ...), or None."""
+    candidates = getattr(response, "candidates", None) or []
+    reason = getattr(candidates[0], "finish_reason", None) if candidates else None
+    if reason is None:
+        return None
+    return str(getattr(reason, "name", reason)).lower()
 
 
 # Used only when Gemini reports no output tokens for a reply that has text (seen
@@ -378,7 +391,7 @@ def _tool_call_reply(error: "ProviderError", body: dict) -> dict | None:
     prompt = -(-sent_chars // 3)
     completion = -(-len(content) // 3) + GROQ_ESTIMATED_REASONING_TOKENS
     return {
-        "choices": [{"message": {"role": "assistant", "content": content}}],
+        "choices": [{"message": {"role": "assistant", "content": content}, "finish_reason": "tool_call_recovered"}],
         "usage": {"prompt_tokens": prompt, "completion_tokens": completion, "total_tokens": prompt + completion},
     }
 
@@ -389,7 +402,7 @@ def _groq_call(
     temperature: float | None = None,
     thinking_level: str | None = None,
     top_p: float | None = None,
-) -> tuple[str, int, int, float]:
+) -> tuple[str, int, int, float, str | None]:
     if model not in PRICING:  # fail before any tokens are spent, not after
         raise ValueError(f"No pricing for model {model!r}; add it to PRICING")
     body: dict = {"model": model, "messages": to_groq(messages), "max_completion_tokens": GROQ_MAX_COMPLETION_TOKENS}
@@ -439,7 +452,8 @@ def _groq_call(
     content = message.get("content") or ""
     reasoning = message.get("reasoning") or ""
     tokens_in, tokens_out = groq_usage_tokens(data.get("usage") or {}, content, reasoning)
-    return content, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
+    finish = (data.get("choices") or [{}])[0].get("finish_reason")
+    return content, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out), finish
 
 
 def _provider_call(
@@ -448,8 +462,8 @@ def _provider_call(
     temperature: float | None = None,
     thinking_level: str | None = None,
     top_p: float | None = None,
-) -> tuple[str, int, int, float]:
-    """Return (text, tokens_in, tokens_out, cost_usd), dispatching on `model`."""
+) -> tuple[str, int, int, float, str | None]:
+    """Return (text, tokens_in, tokens_out, cost_usd, finish_reason), dispatching on `model`."""
     if model.startswith(("gemini-", "gemma-")):
         return _gemini_call(model, messages, temperature, thinking_level, top_p)
     if model in GROQ_MODELS:
@@ -500,7 +514,7 @@ def call_model(
         run_id=run_id,
     )
     try:
-        text, tokens_in, tokens_out, cost = _provider_call(
+        text, tokens_in, tokens_out, cost, finish_reason = _provider_call(
             model, messages, temperature, thinking_level, top_p
         )
     except Exception as e:
@@ -524,6 +538,7 @@ def call_model(
             tokens_out=tokens_out,
             latency_s=time.perf_counter() - start,
             cost_usd=cost,
+            finish_reason=finish_reason,
             raw_output=text,
             **common,
         )
