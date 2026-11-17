@@ -328,6 +328,13 @@ python scripts/analyze.py                                 # tables and chart in 
 
 After a daily quota stops a run, `run_condition.py` skips the runs already saved when you run the same command again, and `run_pilot.py` continues a batch with `--resume <batch_id>`.
 
+**Study data.** Run outputs in `results/` are gitignored on `main` and are written on the paid-run machine. After each batch they are backed up to the separate, results-only **`study-results`** branch (no code; never merged into `main`). That branch has no `.gitignore`, so files are added normally there. Never use `git add -f` to put results on `main`. To get the data:
+
+```bash
+git fetch origin study-results
+git archive origin/study-results results | tar -x    # into your results/, which git ignores
+```
+
 > [!WARNING]
 > Keys go only in `.env`, which git ignores. `.env.example` is tracked by git, so never put a real key in it. Never commit `.env` or any API key. If a key is ever pushed, revoke it right away; deleting the commit is not enough.
 
