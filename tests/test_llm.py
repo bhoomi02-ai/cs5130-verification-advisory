@@ -318,3 +318,62 @@ def test_network_errors_give_up_after_the_retries(fake):
     with pytest.raises(ConnectionResetError):
         llm._provider_call("gemini-3.1-flash-lite", [{"role": "user", "content": "hi"}])
     assert len(client.calls) == llm._MAX_RETRIES
+
+
+# Usage metadata.
+
+
+def _usage(**counts):
+    return SimpleNamespace(**counts)
+
+
+def test_output_is_answer_plus_thinking():
+    assert llm.usage_tokens(_usage(prompt_token_count=100, candidates_token_count=20,
+                                   thoughts_token_count=30, total_token_count=150)) == (100, 50)
+
+
+def test_missing_candidates_count_falls_back_to_total_minus_input():
+    assert llm.usage_tokens(_usage(prompt_token_count=3291, candidates_token_count=None,
+                                   thoughts_token_count=None, total_token_count=3791)) == (3291, 500)
+
+
+def test_tool_prompt_tokens_count_as_input_not_output():
+    assert llm.usage_tokens(_usage(prompt_token_count=100, tool_use_prompt_token_count=40,
+                                   candidates_token_count=10, total_token_count=150)) == (140, 10)
+
+
+def test_missing_total_keeps_the_reported_counts():
+    assert llm.usage_tokens(_usage(prompt_token_count=100, candidates_token_count=20,
+                                   thoughts_token_count=30)) == (100, 50)
+
+
+def test_fallback_is_used_for_the_logged_cost(fake):
+    fake(SimpleNamespace(text="ok", usage_metadata=_usage(prompt_token_count=1_000_000,
+                                                          total_token_count=2_000_000)))
+    _, tokens_in, tokens_out, cost = llm._provider_call("gemini-3.6-flash", [{"role": "user", "content": "hi"}])
+    assert (tokens_in, tokens_out) == (1_000_000, 1_000_000)
+    assert cost == pytest.approx(0.75 + 3.75)
+
+
+def test_no_output_reported_for_a_reply_with_text_is_estimated_high():
+    # Seen live (dedicated verifier, first call): 186 characters of text, total equal to input.
+    usage = _usage(prompt_token_count=3459, candidates_token_count=None, thoughts_token_count=None,
+                   total_token_count=3459)
+    tokens_in, tokens_out = llm.usage_tokens(usage, "x" * 186)
+    assert tokens_in == 3459
+    assert tokens_out == 62 + llm.ESTIMATED_THINKING_TOKENS
+
+
+def test_empty_reply_with_no_output_stays_zero():
+    assert llm.usage_tokens(_usage(prompt_token_count=10, total_token_count=10), "") == (10, 0)
+
+
+def test_answer_counted_but_thinking_missing_adds_the_allowance():
+    # Dhanya's case on #36: candidates reported, no thoughts count, total = input + candidates.
+    usage = _usage(prompt_token_count=100, candidates_token_count=20, thoughts_token_count=None, total_token_count=120)
+    assert llm.usage_tokens(usage, "reply") == (100, 20 + llm.ESTIMATED_THINKING_TOKENS)
+
+
+def test_thinking_visible_in_the_total_needs_no_allowance():
+    usage = _usage(prompt_token_count=100, candidates_token_count=20, thoughts_token_count=None, total_token_count=900)
+    assert llm.usage_tokens(usage, "reply") == (100, 800)
