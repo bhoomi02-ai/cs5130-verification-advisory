@@ -72,3 +72,19 @@ def test_parse_verdict(reply, expected):
 def test_unreadable_verdicts_raise(reply):
     with pytest.raises(ValueError):
         parse_verdict(reply)
+
+
+def test_verdict_followed_by_commentary_reads_the_verdict():
+    reply = '```json\n{"verdict": "reject", "issues": ["x"], "reason": "y"}\n```\n\nHope this helps!'
+    assert parse_verdict(reply) == Verdict("reject", "y", ["x"])
+
+
+def test_trailing_text_is_kept_for_auditing():
+    v = parse_verdict('```json\n{"verdict": "accept", "issues": [], "reason": "ok"}\n```\n...wait, Fund B is wrong')
+    assert v.verdict == "accept" and v.trailing == "...wait, Fund B is wrong"
+    assert parse_verdict('{"verdict": "accept"}').trailing == ""
+    assert parse_verdict('```json\n{"verdict": "accept"}\n```').trailing == ""  # a closing fence is not trailing text
+
+
+def test_fence_label_is_case_insensitive():
+    assert parse_verdict('```JSON\n{"verdict": "reject", "issues": ["x"], "reason": "y"}\n```').verdict == "reject"

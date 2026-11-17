@@ -15,7 +15,6 @@ is logged like any other call.
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -28,9 +27,7 @@ from advisory.prompts import (
     dedicated_review_messages,
     weakened_review_messages,
 )
-from advisory.verdict import Verdict, parse_verdict
-
-_FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
+from advisory.verdict import Verdict, leading_json, parse_verdict, split_leading_json
 
 
 @dataclass
@@ -40,14 +37,18 @@ class DedicatedReview:
     calculations: list[dict] = field(default_factory=list)  # every calculator call and its result
     n_calls: int = 0  # model calls made by this review
     error: str | None = None  # why verdict is None
+    ignored: list[str] = field(default_factory=list)  # text after a calculator request, dropped from the history
 
 
 def calculator_request(text: str) -> list[str] | None:
-    """The expressions if `text` is a calculator request, else None."""
-    match = _FENCE.match(text or "")
+    """The expressions if `text` starts with a calculator request, else None.
+
+    Anything after the request is ignored: it was written before the model saw
+    any real results (some models, e.g. Gemma, go on to invent them).
+    """
     try:
-        data = json.loads(match.group(1) if match else text)
-    except (json.JSONDecodeError, TypeError):
+        data = leading_json(text)
+    except ValueError:
         return None
     if not isinstance(data, dict) or "calculate" not in data:
         return None
@@ -67,9 +68,16 @@ def dedicated_review(scenario: dict, answer: str, call: Callable[[list[dict]], s
     while True:
         reply = call(messages)
         review.n_calls += 1
-        messages.append({"role": "assistant", "content": reply})
-
         expressions = calculator_request(reply)
+        # Keep only the request itself in the history, never text written after
+        # it, so the verifier never sees results it made up as if they were real.
+        kept = reply if expressions is None else json.dumps({"calculate": expressions})
+        if expressions is not None:
+            trailing = split_leading_json(reply)[1]
+            if trailing:
+                review.ignored.append(trailing)
+        messages.append({"role": "assistant", "content": kept})
+
         if expressions is None:
             try:
                 review.verdict = parse_verdict(reply)
