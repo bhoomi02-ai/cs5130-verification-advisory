@@ -38,9 +38,10 @@
 
 > [!NOTE]
 > **Status: in progress (November 17).**
-> - **Merged:** scenarios S01–S10 and the first variant (T03-v001), the checker and seeded error set, the model wrapper (`llm.py`: logging, retries, $20 spending cap), the calculator, all advisor and verifier prompts for `self`, `peer` and `dedicated`, the dedicated verifier's calculator loop, the pipeline with the `none` condition, the model pilot, metrics and the results report.
-> - **In review:** `self` and `peer` in the pipeline (#33), output-token counting (#36), the pilot write-up (#37), verifier reply parsing (#38), the cross-family verifier on Groq (#39) and the weakened verifier (#40).
-> - **Next:** wire the dedicated, weakened and cross-family verifiers into the pipeline, the `none` baseline, more scenario variants, then the main runs.
+> - **Merged:** scenarios S01–S10 and the first variant (T03-v001); the checker and seeded error set; the model wrapper (`llm.py`: logging, retries, pricing, $20 spending cap, Groq provider, finish reasons); the calculator; every prompt and verifier (self, peer, dedicated with the calculator, weakened, cross-family); the pipeline with the `none` condition; the model pilot and its write-up (`docs/pilot.md`); metrics, the results report and the spending report.
+> - **Done:** the `none` baseline (gemini-3.6-flash, S01–S10 × 5): **84% (42/50)**, no format failures, $0.90.
+> - **In review:** `self` and `peer` in the pipeline (#33).
+> - **Next:** wire the dedicated, weakened and cross-family verifiers into the pipeline, more scenario variants, then the main runs.
 
 ## Research question
 
@@ -84,8 +85,8 @@ Every run ends with a final answer and a status: **accepted**, **revised**, **hu
 Self, peer and dedicated use the **same review instructions, verdict format and revision prompt** (`src/advisory/prompts.py`), so differences between conditions come from who reviews and the calculator, not from wording.
 
 **Ablations.** To find out *why* the dedicated verifier works, it runs twice more with one thing changed:
-- **Weakened verifier:** the dedicated verifier **without the calculator** (same role, instructions and verdict format, one call). In review, #40.
-- **Cross-family verifier:** the dedicated verifier played by OpenAI's open-weight **`gpt-oss-20b` on Groq**, a different company than the advisor. In review, #39.
+- **Weakened verifier:** the dedicated verifier **without the calculator** (same role, instructions and verdict format, one call).
+- **Cross-family verifier:** the dedicated verifier played by OpenAI's open-weight **`gpt-oss-20b` on Groq**, a different company than the advisor.
 
 ## How a run works
 
@@ -201,26 +202,28 @@ Verifier metrics use runs that have a verdict, and an abstain counts as a flag, 
 - **Repeats:** every scenario runs 5 times per condition, at temperature 0.7 so repeats can differ.
 - **Statistics:** the bootstrap resamples tasks, not runs, and conditions are compared in pairs on the same tasks.
 - **Settings:** temperature 0.7, top-p 0.9, the model's default thinking level. Results made with other settings or prompt versions are refused, so runs can't be mixed by accident.
-- **Budget:** a hard **$20** cap for the whole project, enforced in `llm.py`: a paid call that could take total logged spend past `ADVISORY_BUDGET_USD` (default 20) is refused before it is sent. From real logged calls, the main runs cost about $10 for 20 tasks, $14 for 30 and $19 for 40.
+- **Budget:** **$20** for the whole project. `llm.py` refuses a paid call that could take total logged spend past `ADVISORY_BUDGET_USD` (default 20) before it is sent. That spend is summed from the local, gitignored `results/runs.jsonl`, so **the cap is enforced per machine**. The rule: **all paid study runs go through one machine and key (Bhoomika's); everyone else uses their own free keys for testing.** The paid key also has prepaid Google credit with auto-reload off, a hard limit on Google's side. `python scripts/spend.py` shows spend so far.
+- **Projected cost:** about **$10 for 20 tasks, $14 for 30 and $19 for 40** (6 settings × 5 repeats). This is an estimate from calls logged on Nov 13–17: a first draft costs $0.018 (the 50 baseline runs and 30 pilot runs), a gemini-3.6-flash verifier call $0.0076 (8 live verifier checks), a gpt-oss-20b call $0.001 (6 live checks). It assumes a quarter of first verdicts are rejects that trigger a revision. To be updated once real self and peer runs exist.
 - **Something to catch:** a model that never makes mistakes leaves verification nothing to do, and one that breaks the output format fails before the math matters. The advisor model was chosen with a pilot so that it is right most but not all of the time, and answers with **known injected errors** (`data/injected/`) are added so every verifier faces real mistakes.
 
 ## Models
 
-Every model call goes through `advisory.llm.call_model`. Gemini and Gemma use the Gemini API (`GOOGLE_API_KEY`); gpt-oss-20b uses Groq (`GROQ_API_KEY`, in review, #39). Prices are per 1M tokens, and the output price includes thinking tokens.
+Every model call goes through `advisory.llm.call_model`. Gemini and Gemma use the Gemini API (`GOOGLE_API_KEY`); gpt-oss-20b uses Groq (`GROQ_API_KEY`). Prices are per 1M tokens, and the output price includes thinking tokens.
 
 | Model | Provider | Input / output | Role |
 |---|---|---|---|
 | **`gemini-3.6-flash`** | Gemini API | $0.75 / $3.75 (doubles on 2027-01-01) | **Advisor and same-family verifiers** (chosen by the pilot) |
-| `openai/gpt-oss-20b` | Groq | $0.075 / $0.30 | **Cross-family verifier** (#39) |
+| `openai/gpt-oss-20b` | Groq | $0.075 / $0.30 | **Cross-family verifier** |
 | `gemini-3.5-flash-lite` | Gemini API | $0.30 / $2.50 | Advisor candidate, 30% in the pilot |
 | `gemini-3.1-flash-lite` | Gemini API | $0.25 / $1.50 | Advisor candidate, 3% in the pilot |
 | `gemini-3.8-flash` | Gemini API | $0.75 / $3.75 | Advisor candidate, not used |
 | `gemma-4-31b-it`, `gemma-4-26b-a4b-it` | Gemini API | free tier only | Earlier cross-family candidates (Google-built) |
 
-- **Model pilot:** `gemini-3.6-flash` was right on **83% (25/30)** of pilot runs (S01–S10 × 3, `none`, prompt `advisor-v1`), with every answer valid JSON. Its errors were arithmetic slips on S04, S06 and S07. That's just above the 50–80% target; the injected-error set makes sure every verifier still faces errors. Details: `docs/pilot.md` (#37).
+- **Model pilot:** `gemini-3.6-flash` was right on **83% (25/30)** of pilot runs (S01–S10 × 3, `none`, prompt `advisor-v1`), with every answer valid JSON. Its errors were arithmetic slips on S04, S06 and S07. That's just above the 50–80% target; the injected-error set makes sure every verifier still faces errors. Details: [`docs/pilot.md`](docs/pilot.md).
 - **Why not the proposal's models:** Gemini 2.5 Flash and Flash-Lite now return *"no longer available to new users"*, so the candidates moved to the Gemini 3.x family.
-- **Why gpt-oss for cross-family:** Gemma is also built by Google and may share Gemini's blind spots; gpt-oss-20b comes from another company and was a candidate in the proposal. Groq's free tier allows about 200,000 tokens a day, so the cross-family runs take several days.
+- **Why gpt-oss for cross-family:** Gemma is also built by Google and may share Gemini's blind spots; gpt-oss-20b comes from another company and was a candidate in the proposal. Groq's limits on our account are 8,000 tokens a minute and 200,000 a day ([rate limits](https://console.groq.com/docs/rate-limits), checked Nov 17), about 15–25 verifier reviews a day, so the cross-family runs take several days.
 - **Cost is never undercounted:** `llm.py` refuses any model without a `PRICING` entry, and logs a deliberately high estimate when a provider reports no output tokens for a reply that has text (#36).
+- **Baseline:** `none` on S01–S10 × 5 was right on **84% (42/50)** (95% bootstrap interval over tasks 60–100%), with no format failures and no failed calls, for $0.90. All 8 errors are on S04 and S06, so the advisor gives the verifiers only two distinct real errors; the seeded error set supplies the rest.
 - **Free tier:** gemini-3.6-flash allows 20 requests a day per model there; the main runs need the paid tier.
 
 ## Architecture, tools and flow
@@ -268,11 +271,13 @@ src/advisory/
   inject.py       builds the seeded error set
   metrics.py      per-condition metrics: task success, verifier, fixed vs broken, cost
   report.py       summary tables, per-scenario tables and a chart from the results
+  spend.py        spending totals from the run log (used by scripts/spend.py)
   pilot.py        model pilot: picks the advisor model
   generator.py    scenario generator (planned)
   schemas.py      early Pydantic answer models (the live contract is NEUTRAL_OUTPUT_V1)
 scripts/
   run_pilot.py      model pilot (resumable after the daily quota)
+  spend.py          spending so far, by model, condition and day
   run_condition.py  run one condition over a set of tasks (resumable)
   analyze.py        build the report from results/results.jsonl
 tests/            pytest suite
@@ -311,8 +316,13 @@ Requires **Python 3.10 or newer**. Typical commands:
 
 ```bash
 python scripts/run_pilot.py --dry-run                     # show the pilot plan, no calls
+python scripts/spend.py                                   # spend so far against the cap
+
+# Makes PAID calls (about $0.90 for this command): run only on the paid-run machine.
 python scripts/run_condition.py --condition none --model gemini-3.6-flash \
     --tasks S01 S02 S03 S04 S05 S06 S07 S08 S09 S10 --repeats 5
+
+# After at least one condition run (it reads results/results.jsonl):
 python scripts/analyze.py                                 # tables and chart in results/report/
 ```
 
