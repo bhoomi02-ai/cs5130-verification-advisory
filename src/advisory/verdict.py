@@ -15,7 +15,28 @@ from dataclasses import dataclass, field
 
 from advisory.prompts import VERDICTS
 
-_OPENING = re.compile(r"^\s*(?:```(?:json)?\s*)?")
+_OPENING = re.compile(r"^\s*(?:```(?:json)?\s*)?", re.IGNORECASE)
+_CLOSING_FENCE = re.compile(r"^\s*```")
+
+
+def split_leading_json(text: str):
+    """(the JSON value at the start of `text`, the text after it), ignoring an optional code fence.
+
+    The returned trailing text has the closing fence removed and is stripped,
+    so it is "" when nothing follows the JSON. Raises ValueError if the text
+    does not start with JSON.
+    """
+    text = text or ""
+    rest = text[_OPENING.match(text).end():]
+    try:
+        value, end = json.JSONDecoder().raw_decode(rest)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"reply does not start with JSON: {e}") from e
+    trailing = rest[end:]
+    fence = _CLOSING_FENCE.match(trailing)
+    if fence:
+        trailing = trailing[fence.end():]
+    return value, trailing.strip()
 
 
 def leading_json(text: str):
@@ -26,13 +47,7 @@ def leading_json(text: str):
     model's actual reply; the rest is ignored. Raises ValueError if the text
     does not start with JSON.
     """
-    text = text or ""
-    rest = text[_OPENING.match(text).end():]
-    try:
-        value, _ = json.JSONDecoder().raw_decode(rest)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"reply does not start with JSON: {e}") from e
-    return value
+    return split_leading_json(text)[0]
 
 
 @dataclass
@@ -40,6 +55,9 @@ class Verdict:
     verdict: str  # one of VERDICTS
     reason: str = ""
     issues: list[str] = field(default_factory=list)
+    # Text the reply had after its JSON, which was ignored. Kept so replies whose
+    # commentary contradicts the verdict can be audited; not part of equality.
+    trailing: str = field(default="", compare=False)
 
 
 def parse_verdict(text: str) -> Verdict:
@@ -48,7 +66,7 @@ def parse_verdict(text: str) -> Verdict:
     The verdict is the JSON object the reply starts with; text after it is ignored.
     """
     try:
-        data = leading_json(text)
+        data, trailing = split_leading_json(text)
     except ValueError as e:
         raise ValueError(f"verdict is not valid JSON: {e}") from e
     if not isinstance(data, dict):
@@ -66,4 +84,4 @@ def parse_verdict(text: str) -> Verdict:
     issues = [str(issue).strip() for issue in issues if str(issue).strip()]
 
     reason = data.get("reason") or ""
-    return Verdict(verdict=verdict, reason=str(reason).strip(), issues=issues)
+    return Verdict(verdict=verdict, reason=str(reason).strip(), issues=issues, trailing=trailing)

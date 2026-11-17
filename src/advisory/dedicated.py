@@ -26,7 +26,7 @@ from advisory.prompts import (
     calculator_results_message,
     dedicated_review_messages,
 )
-from advisory.verdict import Verdict, leading_json, parse_verdict
+from advisory.verdict import Verdict, leading_json, parse_verdict, split_leading_json
 
 
 @dataclass
@@ -36,6 +36,7 @@ class DedicatedReview:
     calculations: list[dict] = field(default_factory=list)  # every calculator call and its result
     n_calls: int = 0  # model calls made by this review
     error: str | None = None  # why verdict is None
+    ignored: list[str] = field(default_factory=list)  # text after a calculator request, dropped from the history
 
 
 def calculator_request(text: str) -> list[str] | None:
@@ -70,6 +71,10 @@ def dedicated_review(scenario: dict, answer: str, call: Callable[[list[dict]], s
         # Keep only the request itself in the history, never text written after
         # it, so the verifier never sees results it made up as if they were real.
         kept = reply if expressions is None else json.dumps({"calculate": expressions})
+        if expressions is not None:
+            trailing = split_leading_json(reply)[1]
+            if trailing:
+                review.ignored.append(trailing)
         messages.append({"role": "assistant", "content": kept})
 
         if expressions is None:

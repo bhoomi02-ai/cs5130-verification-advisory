@@ -156,3 +156,8 @@ def test_made_up_results_never_reach_the_history():
 def test_a_reply_that_does_not_start_with_json_is_still_unreadable():
     review = dedicated_review(SCENARIO, ANSWER, scripted('Let me check. {"verdict": "accept"}'))
     assert review.verdict is None
+
+
+def test_text_dropped_after_a_request_is_kept_for_auditing():
+    review = dedicated_review(SCENARIO, ANSWER, scripted(GEMMA_REPLY, ACCEPT))
+    assert len(review.ignored) == 1 and review.ignored[0].startswith("**Calculator Results:**")
