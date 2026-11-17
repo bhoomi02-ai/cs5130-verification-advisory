@@ -2,14 +2,14 @@
 
 **Goal (from the proposal):** pick one small, inexpensive model for every role whose baseline accuracy on the `none` condition is near **50–80%**, so verification has real errors to fix but the model isn't failing on everything.
 
-**Result:** **`gemini-3.6-flash`**, at 83% (25/30). The thinking level is still to be settled (see [Decision](#decision)).
+**Result:** **`gemini-3.6-flash`**, at 83% (25/30; 95% Wilson interval 66%–93%), at the model's default thinking level (see [Decision](#decision)).
 
 ## Setup
 
 | | |
 |---|---|
 | Condition | `none` (one advisor call, first answer scored as is, no retry) |
-| Scenarios | S01–S10, 3 repeats each (T03-v001 was added after the pilot) |
+| Scenarios | S01–S10, 3 repeats each for gemini-3.6-flash; 2 each for gemini-3.5-flash-lite (the free-tier daily quota of 20 calls per model allowed 20 runs). T03-v001 was added after the pilot. |
 | Prompt | `advisor-v1` (`src/advisory/prompts.py`), the same prompt the pipeline uses |
 | Settings | temperature 0.7, top-p 0.9, thinking level = model default |
 | Grading | the hidden checker (`advisory.checker.check`); one outer code fence is stripped before grading |
@@ -41,15 +41,15 @@ gemini-3.1-flash-lite is from an earlier batch with the first pilot prompt (#20)
 
 ## Decision
 
-gemini-3.6-flash is the only candidate near the target. **83% is just above 80%**: with 10 scenarios the uncertainty is roughly ±10 points, so it's within noise of the range. Two caveats:
+gemini-3.6-flash is the only candidate near the target. **83% is just above 80%**, but the 95% Wilson interval for 25/30 is **66%–93%**, and the real uncertainty is wider still: the 30 runs are 3 repeats of only 10 scenarios, so they aren't independent. 83% is therefore within noise of the 50–80% range. (gemini-3.5-flash-lite: 30%, interval 15%–52%.) Two caveats:
 
 1. Its errors come from only **3 of 10 scenarios** (S04, S06, S07), so on its own the advisor gives the verifiers few distinct errors. The **seeded error set** (`data/injected/`, #19) covers this: every verifier also faces known injected errors.
 2. It costs about 6× more per call than 3.5 Flash-Lite, mostly in thinking tokens.
 
-**Options for the team:**
+**Decision: keep the default thinking level.** The `none` baseline is already running at it (Nov 17), so switching to `low` now would mean rerunning the baseline and every later setting. The options were:
 
-- **(a) Keep the default thinking level** (83%). This is what Tejas is using for the baseline.
-- **(b) Pilot `thinking_level="low"`** (30 calls, free tier). If it lands in 60–80%, it's inside the target and roughly halves the study's cost.
+- **(a) Keep the default thinking level** (83%). Chosen.
+- **(b) Pilot `thinking_level="low"`** (30 calls). It might land inside 60–80% and roughly halve the cost, but the projected study cost already fits the $20 cap at the default level.
 
 ## Verifier sanity check
 
