@@ -297,21 +297,58 @@ def _groq_post(body: dict, key: str) -> dict:
     request = urllib.request.Request(
         GROQ_URL,
         data=json.dumps(body).encode("utf-8"),
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        # A generic User-Agent: Groq's CDN rejects urllib's default one (403, "error code: 1010").
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json", "User-Agent": "python-client/1.0"},
         method="POST",
     )
     try:
         with urllib.request.urlopen(request, timeout=300) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        detail = e.read().decode("utf-8", "replace")[:500]
+        full = e.read().decode("utf-8", "replace")
+        detail = full[:500]
         remaining = e.headers.get("x-ratelimit-remaining-requests") if e.headers else None
         daily = e.code == 429 and (remaining == "0" or "per day" in detail.lower() or "(rpd)" in detail.lower() or "(tpd)" in detail.lower())
         error = ProviderError(e.code, detail, daily_quota=daily)
         error.retry_after = e.headers.get("retry-after") if e.headers else None
+        error.body = full
         raise error from e
     except urllib.error.URLError as e:  # DNS, refused, reset: a network error, retried like one
         raise ConnectionError(str(e.reason)) from e
+
+
+# Thinking allowance when Groq reports no usage (a refused tool call): deliberately high.
+GROQ_ESTIMATED_REASONING_TOKENS = 3000
+
+
+def _tool_call_reply(error: "ProviderError", body: dict) -> dict | None:
+    """Recover the model's reply when Groq refuses it as an undeclared tool call.
+
+    gpt-oss sometimes wraps a JSON reply (e.g. a calculator request) as a call
+    to a tool we never declared; Groq then answers 400 tool_use_failed and puts
+    the generation in failed_generation. Its "arguments" are the reply the
+    model meant to give, so they become the reply text. Groq reports no usage
+    for it, so tokens are estimated high: about a third of the characters
+    sent and received, plus a reasoning allowance.
+    """
+    if error.code != 400 or "tool_use_failed" not in getattr(error, "body", ""):
+        return None
+    try:
+        detail = json.loads(getattr(error, "body", ""))
+        generation = json.loads(detail["error"]["failed_generation"])
+    except (ValueError, KeyError, IndexError, TypeError):
+        return None
+    arguments = generation.get("arguments") if isinstance(generation, dict) else None
+    if not isinstance(arguments, dict):
+        return None
+    content = json.dumps(arguments)
+    sent_chars = sum(len(m["content"]) for m in body["messages"])
+    prompt = -(-sent_chars // 3)
+    completion = -(-len(content) // 3) + GROQ_ESTIMATED_REASONING_TOKENS
+    return {
+        "choices": [{"message": {"role": "assistant", "content": content}}],
+        "usage": {"prompt_tokens": prompt, "completion_tokens": completion, "total_tokens": prompt + completion},
+    }
 
 
 def _groq_call(
@@ -349,6 +386,10 @@ def _groq_call(
             data = _groq_post(body, key)
             break
         except ProviderError as e:
+            recovered = _tool_call_reply(e, body)
+            if recovered is not None:
+                data = recovered
+                break
             if e.code not in _RETRY_STATUS + (502,) or e.daily_quota or attempt == _MAX_RETRIES - 1:
                 raise
             wait = 2**attempt * 5

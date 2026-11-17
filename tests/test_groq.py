@@ -122,3 +122,27 @@ def test_groq_calls_count_against_the_budget(groq, monkeypatch, tmp_path):
     with pytest.raises(llm.BudgetExceeded):
         llm.call_model(task_id="S04", condition="cross", agent="verifier", model="openai/gpt-oss-20b", messages=MSGS)
     assert sent == []
+
+
+def _tool_use_failed(arguments):
+    import json
+
+    error = llm.ProviderError(400, "tool_use_failed")
+    error.body = json.dumps({"error": {"message": "Tool choice is none, but model called a tool",
+                                       "code": "tool_use_failed",
+                                       "failed_generation": json.dumps({"name": "assistant", "arguments": arguments})}})
+    return error
+
+
+def test_reply_wrapped_as_a_tool_call_is_recovered(groq):
+    # Seen live: gpt-oss wraps its calculator request as a call to an undeclared tool.
+    sent = groq(_tool_use_failed({"calculate": ["1.0682**5"]}))
+    text, tokens_in, tokens_out, cost = llm._provider_call("openai/gpt-oss-20b", MSGS)
+    assert text == '{"calculate": ["1.0682**5"]}' and len(sent) == 1  # no retry needed
+    assert tokens_out >= llm.GROQ_ESTIMATED_REASONING_TOKENS and tokens_in > 0 and cost > 0  # estimated high
+
+
+def test_other_bad_requests_are_not_recovered(groq):
+    groq(llm.ProviderError(400, "bad request"))
+    with pytest.raises(llm.ProviderError):
+        llm._provider_call("openai/gpt-oss-20b", MSGS)
