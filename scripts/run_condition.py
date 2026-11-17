@@ -10,7 +10,8 @@ results file with runs for the same model made with other settings is refused.
 
 A run whose API call fails (after call_model's retries) is saved with status
 "failed" and the script moves on; after 3 failed runs in a row it stops, since
-that points to an outage rather than the condition. Add --retry-failed to run
+that points to an outage rather than the condition. For self and peer each
+line also shows the first verdict and the run's status. Add --retry-failed to run
 the failed ones again, replacing their rows. The daily quota and errors in the
 code stop the script without saving a row for that run.
 """
@@ -71,8 +72,9 @@ def main(argv: list[str] | None = None) -> int:
                     return 1
                 continue
             failed_in_a_row = 0
+            checked = f"verdict {row['verdict'] or 'unreadable'} → {row['status']}, " if args.condition != "none" else ""
             print(
-                f"done  {task_id} r{run_number} {args.condition}: "
+                f"done  {task_id} r{run_number} {args.condition}: {checked}"
                 f"first draft {'right' if row['initial_correct'] else 'wrong'}, "
                 f"final {'right' if row['final_correct'] else 'wrong'}, "
                 f"{row['tokens_in'] + row['tokens_out']} tokens, ${row['cost_usd']:.4f}"
