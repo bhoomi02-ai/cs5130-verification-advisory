@@ -32,12 +32,15 @@
 ## Overview
 
 - **The question:** does a second look make an AI financial advisor more reliable, and is it worth what it costs?
-- **The experiment:** one advisor drafts an answer, then four verification strategies (none, self, peer, and a dedicated verifier with a calculator) check the same draft.
+- **The experiment:** one advisor (`gemini-3.6-flash`) drafts an answer, then four verification strategies (none, self, peer, and a dedicated verifier with a calculator) check the same draft, plus two ablations (no calculator; a verifier from another company).
 - **The grading:** synthetic client scenarios with known answers, graded by a deterministic scorer that no agent ever sees.
 - **The goal:** find out which kind of check makes the advisor most reliable, and what each one costs in tokens and time.
 
 > [!NOTE]
-> **Status: in progress.** Built so far: the scenario files, the model wrapper (`llm.py`), the dedicated verifier's calculator, the checker, the seeded error set and the metrics. In review: the model pilot, the pipeline with the `none` condition, per-model metrics and the results report. The scenario generator, the other three conditions and the verifier prompts are still to come, so parts of this README describe the planned design.
+> **Status: in progress (November 17).**
+> - **Merged:** scenarios S01–S10 and the first variant (T03-v001), the checker and seeded error set, the model wrapper (`llm.py`: logging, retries, $20 spending cap), the calculator, all advisor and verifier prompts for `self`, `peer` and `dedicated`, the dedicated verifier's calculator loop, the pipeline with the `none` condition, the model pilot, metrics and the results report.
+> - **In review:** `self` and `peer` in the pipeline (#33), output-token counting (#36), the pilot write-up (#37), verifier reply parsing (#38), the cross-family verifier on Groq (#39) and the weakened verifier (#40).
+> - **Next:** wire the dedicated, weakened and cross-family verifiers into the pipeline, the `none` baseline, more scenario variants, then the main runs.
 
 ## Research question
 
@@ -72,13 +75,17 @@ All four live in the `CONDITIONS` registry in `src/advisory/conditions.py`. One 
 
 | Verdict | What happens next |
 |---|---|
-| **Accept** | The answer becomes the final recommendation. |
-| **Reject** | The advisor revises **once**, and the revision is verified again. |
-| **Abstain, or rejected again after the revision** | The task goes to a **human review** queue. |
+| **Accept** | The draft becomes the final recommendation. |
+| **Reject** | The advisor revises **once**, and the same verifier checks the revision once. The revision is the final answer. |
+| **Abstain, an unreadable verdict, or anything but accept after the revision** | The task goes to a **human review** queue. |
 
-Every run ends with a final answer and a status: **accepted**, **revised**, **abstained** or **unchecked** (the `none` condition).
+Every run ends with a final answer and a status: **accepted**, **revised**, **human_review**, **unchecked** (the `none` condition) or **failed** (an API call failed). The `verdict` column always holds the **first** verdict, which is what catch rate and false alarms are measured against. An unreadable verifier reply is stored as a missing verdict, never guessed.
 
-**Ablations.** To find out *why* the dedicated verifier works, it runs twice more with one setting changed: a **weakened verifier** without the calculator, and a **cross-family verifier** from a different model family than the advisor.
+Self, peer and dedicated use the **same review instructions, verdict format and revision prompt** (`src/advisory/prompts.py`), so differences between conditions come from who reviews and the calculator, not from wording.
+
+**Ablations.** To find out *why* the dedicated verifier works, it runs twice more with one thing changed:
+- **Weakened verifier:** the dedicated verifier **without the calculator** (same role, instructions and verdict format, one call). In review, #40.
+- **Cross-family verifier:** the dedicated verifier played by OpenAI's open-weight **`gpt-oss-20b` on Groq**, a different company than the advisor. In review, #39.
 
 ## How a run works
 
@@ -88,15 +95,15 @@ Every run ends with a final answer and a status: **accepted**, **revised**, **ab
 
 <sub>**What the animation shows:** each gold dot is one scenario run. It leaves the scenario generator, passes through the advisor, takes one of the four verification paths (the highlighted lane), reaches the final answer and ends at the hidden checker. The dashed red line is the ground truth, which travels straight from the generator to the checker without touching any agent. The bars in the log strip light up as model calls are recorded.</sub>
 
-1. **Generate.** `generator.py` builds a synthetic scenario with a known correct answer and saves it to `data/scenarios/`.
-2. **Draft once.** The advisor returns a structured recommendation (defined in `schemas.py`). The draft is **saved once per task and repeat, then reused in every condition**.
+1. **Scenario.** Each task is a scenario file in `data/scenarios/` with a hidden answer key in `data/evaluation/`. The ten templates and the first variant are built by hand; a seeded generator is planned (`generator.py` is still a stub).
+2. **Draft once.** The advisor answers with the shared `advisor-v1` prompt, following the scenario's `NEUTRAL_OUTPUT_V1` contract. The draft is **saved once per task and repeat (`results/drafts/`), then reused in every condition**.
 3. **Verify.** The selected condition checks the draft (or doesn't) and produces the final answer: accepted, revised once, or sent to human review.
 4. **Grade.** `checker.py` replays the trades at the quoted prices and tests every constraint against the hidden answer key. It grades **both the first draft and the final answer**, which is how fixed answers are told apart from broken ones. Any valid solution passes, not just one fixed answer.
 5. **Log.** Every model call goes through `advisory.llm.call_model` and is appended to `results/runs.jsonl`, with tokens, cost and timing.
 
 ## Scenarios
 
-The study starts from **10 scenario templates (S01–S10): 4 medium, 4 hard and 2 infeasible**, and grows to 30–40 scenarios by generating variants from them. Each scenario gives the advisor a natural client request plus separate structured data: the client profile, investment policy, portfolio holdings, asset prices, cash flows and restrictions. Everything is synthetic, and no real client data is used.
+The study starts from **10 scenario templates (S01–S10): 4 medium, 4 hard and 2 infeasible**, and grows by adding variants of them (IDs like `T03-v001`, the first variant of S03). How many tasks the main runs use is set by the budget: about 30 tasks fit the $20 cap with room for reruns. Each scenario gives the advisor a natural client request plus separate structured data: the client profile, investment policy, portfolio holdings, asset prices, cash flows and restrictions. Everything is synthetic, and no real client data is used.
 
 | Answer type | What the advisor must return |
 |---|---|
@@ -166,7 +173,7 @@ S09 and S10 are infeasible on purpose: the right answer is the `INFEASIBLE` stat
 
 The scorer never fills in a reference value for a number the advisor failed to report. The underlying data model has 17 tables, covering clients and portfolios, policies, tasks and answer keys, and runs and results.
 
-**Per-run results** (input to `metrics.py`, one row per run): `task_id`, `condition`, `run_number`, `initial_correct`, `final_correct`, `verdict`, `tokens_in`, `tokens_out`, `cost_usd`, `latency_s`.
+**Per-run results** (`results/results.jsonl`, written by `pipeline.py`, input to `metrics.py`, one row per run): `task_id`, `condition`, `run_number`, `model`, settings and prompt versions, `initial_correct`, `final_correct`, format failures, `initial_status_correct` / `final_status_correct`, `verdict`, `status`, `error`, and the run's `tokens_in`, `tokens_out`, `cost_usd`, `latency_s` (including the shared draft). With #33, each graded run also saves its draft, revision, final answer, verifier replies and both checker results to `results/answers/<run_id>.json`.
 
 ## What we measure
 
@@ -193,25 +200,28 @@ Verifier metrics use runs that have a verdict, and an abstain counts as a flag, 
 
 - **Repeats:** every scenario runs 5 times per condition, at temperature 0.7 so repeats can differ.
 - **Statistics:** the bootstrap resamples tasks, not runs, and conditions are compared in pairs on the same tasks.
-- **Budget:** at most about 7M tokens across all six settings (four conditions plus two ablations).
-- **Something to catch:** a model that never makes mistakes leaves verification nothing to do, and one that breaks the output format fails before the math matters. The advisor model is chosen with a pilot run so that it is right about **50–80%** of the time, and answers with **known injected errors** are added so every verifier faces real mistakes.
+- **Settings:** temperature 0.7, top-p 0.9, the model's default thinking level. Results made with other settings or prompt versions are refused, so runs can't be mixed by accident.
+- **Budget:** a hard **$20** cap for the whole project, enforced in `llm.py`: a paid call that could take total logged spend past `ADVISORY_BUDGET_USD` (default 20) is refused before it is sent. From real logged calls, the main runs cost about $10 for 20 tasks, $14 for 30 and $19 for 40.
+- **Something to catch:** a model that never makes mistakes leaves verification nothing to do, and one that breaks the output format fails before the math matters. The advisor model was chosen with a pilot so that it is right most but not all of the time, and answers with **known injected errors** (`data/injected/`) are added so every verifier faces real mistakes.
 
 ## Models
 
-All model calls go through the Gemini API with one key (`GOOGLE_API_KEY`). Prices are per 1M tokens, paid tier, and the output price includes thinking tokens.
+Every model call goes through `advisory.llm.call_model`. Gemini and Gemma use the Gemini API (`GOOGLE_API_KEY`); gpt-oss-20b uses Groq (`GROQ_API_KEY`, in review, #39). Prices are per 1M tokens, and the output price includes thinking tokens.
 
-| Model | Input / output | Role |
-|---|---|---|
-| `gemini-3.1-flash-lite` | $0.25 / $1.50 | Advisor candidate |
-| `gemini-3.5-flash-lite` | $0.30 / $2.50 | Advisor candidate |
-| `gemini-3.6-flash` | $0.75 / $3.75 (doubles on 2027-01-01) | Stronger advisor candidate |
-| `gemini-3.8-flash` | $0.75 / $3.75 (doubles on 2027-01-01) | Stronger advisor candidate |
-| `gemma-4-26b-a4b-it` | free tier only | Cross-family verifier candidate |
+| Model | Provider | Input / output | Role |
+|---|---|---|---|
+| **`gemini-3.6-flash`** | Gemini API | $0.75 / $3.75 (doubles on 2027-01-01) | **Advisor and same-family verifiers** (chosen by the pilot) |
+| `openai/gpt-oss-20b` | Groq | $0.075 / $0.30 | **Cross-family verifier** (#39) |
+| `gemini-3.5-flash-lite` | Gemini API | $0.30 / $2.50 | Advisor candidate, 30% in the pilot |
+| `gemini-3.1-flash-lite` | Gemini API | $0.25 / $1.50 | Advisor candidate, 3% in the pilot |
+| `gemini-3.8-flash` | Gemini API | $0.75 / $3.75 | Advisor candidate, not used |
+| `gemma-4-31b-it`, `gemma-4-26b-a4b-it` | Gemini API | free tier only | Earlier cross-family candidates (Google-built) |
 
+- **Model pilot:** `gemini-3.6-flash` was right on **83% (25/30)** of pilot runs (S01–S10 × 3, `none`, prompt `advisor-v1`), with every answer valid JSON. Its errors were arithmetic slips on S04, S06 and S07. That's just above the 50–80% target; the injected-error set makes sure every verifier still faces errors. Details: `docs/pilot.md` (#37).
 - **Why not the proposal's models:** Gemini 2.5 Flash and Flash-Lite now return *"no longer available to new users"*, so the candidates moved to the Gemini 3.x family.
-- **Picking the advisor:** a pilot run (`none` condition, all ten scenarios, three repeats) picks the model whose baseline accuracy lands near 50–80%. The two Flash-Lite models scored far below that in a first pilot, so stronger models are being tested.
-- **Cross-family caveat:** Gemma is also built by Google, so it may share Gemini's blind spots. A verifier from another company would make the cross-family ablation stronger.
-- `llm.py` refuses any model without an entry in its `PRICING` table, so a run never logs a cost of $0 by accident.
+- **Why gpt-oss for cross-family:** Gemma is also built by Google and may share Gemini's blind spots; gpt-oss-20b comes from another company and was a candidate in the proposal. Groq's free tier allows about 200,000 tokens a day, so the cross-family runs take several days.
+- **Cost is never undercounted:** `llm.py` refuses any model without a `PRICING` entry, and logs a deliberately high estimate when a provider reports no output tokens for a reply that has text (#36).
+- **Free tier:** gemini-3.6-flash allows 20 requests a day per model there; the main runs need the paid tier.
 
 ## Architecture, tools and flow
 
@@ -224,7 +234,7 @@ All model calls go through the Gemini API with one key (`GOOGLE_API_KEY`). Price
 | Layer | Tools |
 |---|---|
 | **Develop** | Git branches, GitHub pull requests, `pytest` |
-| **Run** | Python 3.10+, Pydantic schemas, a sandboxed Python calculator for the dedicated verifier, LLM API through `advisory.llm.call_model`, keys in `.env` |
+| **Run** | Python 3.10+, a sandboxed Python calculator for the dedicated verifier, Gemini and Groq APIs through `advisory.llm.call_model`, keys in `.env` |
 | **Data** | JSON scenarios in `data/scenarios/`, JSONL run logs in `results/` |
 | **Evaluate** | Deterministic `checker.py`, `metrics.py` (with scikit-learn), analysis entry points in `scripts/` |
 
@@ -232,11 +242,11 @@ All model calls go through the Gemini API with one key (`GOOGLE_API_KEY`). Price
 
 | Component | Reads | Writes |
 |---|---|---|
-| Generator | Templates | Scenario files (public) and evaluation files (private) |
+| Scenario author (generator planned) | Templates | Scenario files (public) and evaluation files (private) |
 | Advisor | Scenario file + advisor prompt | First draft, then at most one revision |
-| Verifier | Scenario file + draft + verifier prompt (`dedicated` also has the calculator) | Verdict and findings |
+| Verifier | Scenario file + draft + verifier prompt (`dedicated` and cross-family also have the calculator; weakened has none) | Verdict, issues and a reason |
 | `llm.py` | Every prompt and response | `results/runs.jsonl` |
-| Scorer | Scenario file + answers + evaluation files | Per-run results |
+| Scorer | Scenario file + draft and final answers + evaluation files | Per-run results |
 | `metrics.py` | Per-run results | One row of metrics per condition |
 
 Two rules hold everywhere: no agent ever reads the evaluation files, and the scorer only writes results; it never changes an answer.
@@ -245,20 +255,33 @@ Two rules hold everywhere: no agent ever reads the evaluation files, and the sco
 
 ```text
 src/advisory/
-  llm.py          single wrapper for all model calls (Gemini API); logs to results/runs.jsonl
+  llm.py          single wrapper for every model call; logging, retries, pricing, $20 cap
+  prompts.py      every prompt: advisor, self/peer review, revision, dedicated verifier
+  verdict.py      parses a verifier's accept / reject / abstain reply
+  dedicated.py    the dedicated verifier's calculator loop
   calculator.py   sandboxed calculator tool for the dedicated verifier
-  schemas.py      Pydantic models for the advisor's structured answer
-  conditions.py   the four conditions and the CONDITIONS registry
+  drafts.py       first drafts: written once, reused by every condition
+  conditions.py   the conditions and the CONDITIONS registry
+  pipeline.py     runs one condition on one task, grades it, saves a results row
   checker.py      deterministic constraint checker (hidden from agents)
-  generator.py    synthetic client scenario generator
+  evaluation/     reference answers for the checker's tests (scorer only)
+  inject.py       builds the seeded error set
   metrics.py      per-condition metrics: task success, verifier, fixed vs broken, cost
+  report.py       summary tables, per-scenario tables and a chart from the results
+  pilot.py        model pilot: picks the advisor model
+  generator.py    scenario generator (planned)
+  schemas.py      early Pydantic answer models (the live contract is NEUTRAL_OUTPUT_V1)
+scripts/
+  run_pilot.py      model pilot (resumable after the daily quota)
+  run_condition.py  run one condition over a set of tasks (resumable)
+  analyze.py        build the report from results/results.jsonl
 tests/            pytest suite
-data/scenarios/   scenario files (S01.json … S10.json), given to agents
+data/scenarios/   scenario files (S01.json … S10.json, T03-v001.json), given to agents
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
-results/          run logs and metrics (runs.jsonl)
-docs/             proposal.pdf, topic_selection.pdf, notes
+data/injected/    answers with known injected errors, plus correct controls
+results/          runs.jsonl (every model call), results.jsonl (one row per run), drafts/, pilot/, report/
+docs/             proposal.pdf, topic_selection.pdf, pilot write-up
 assets/           README images and animations
-scripts/          entry points for generating, running and analysing
 pyproject.toml    package metadata and dependencies (pip install -e ".[dev]")
 .env.example      template for your local .env (API keys)
 .gitignore        keeps .env, caches and local files out of git
@@ -276,13 +299,24 @@ cp .env.example .env   # make your own copy, then edit .env (not .env.example)
 pytest
 ```
 
-Then open `.env` and add your Gemini key from [Google AI Studio](https://aistudio.google.com/apikey):
+Then open `.env` and add your keys: Gemini from [Google AI Studio](https://aistudio.google.com/apikey), and Groq from the [Groq console](https://console.groq.com/keys) if you run the cross-family verifier:
 
 ```bash
 GOOGLE_API_KEY=your-key-here
+GROQ_API_KEY=your-key-here      # only for the cross-family verifier
+ADVISORY_BUDGET_USD=20          # total spending cap; change only if the team agrees
 ```
 
-Requires **Python 3.10 or newer**. Entry points for generating scenarios, running conditions and analysing results live in `scripts/`.
+Requires **Python 3.10 or newer**. Typical commands:
+
+```bash
+python scripts/run_pilot.py --dry-run                     # show the pilot plan, no calls
+python scripts/run_condition.py --condition none --model gemini-3.6-flash \
+    --tasks S01 S02 S03 S04 S05 S06 S07 S08 S09 S10 --repeats 5
+python scripts/analyze.py                                 # tables and chart in results/report/
+```
+
+After a daily quota stops a run, `run_condition.py` skips the runs already saved when you run the same command again, and `run_pilot.py` continues a batch with `--resume <batch_id>`.
 
 > [!WARNING]
 > Keys go only in `.env`, which git ignores. `.env.example` is tracked by git, so never put a real key in it. Never commit `.env` or any API key. If a key is ever pushed, revoke it right away; deleting the commit is not enough.
@@ -320,7 +354,7 @@ All images live in `assets/` as self-contained SVG files. They animate on their 
 | Term | Meaning |
 |---|---|
 | **Advisor** | The AI agent that drafts the answer to a client request |
-| **Verifier** | The agent that checks a draft: the advisor itself (`self`), a second advisor (`peer`) or a separate checker (`dedicated`) |
+| **Verifier** | The agent that checks a draft: the advisor itself (`self`), a second advisor (`peer`) or a separate verifier with a calculator (`dedicated`) |
 | **Condition** | One way of verifying an answer; the study compares four |
 | **Ablation** | A variant of the dedicated verifier with one setting changed, to see which part matters |
 | **Scenario** | One synthetic client task with a known correct answer |
