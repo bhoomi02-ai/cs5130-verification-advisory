@@ -366,3 +366,14 @@ def test_no_output_reported_for_a_reply_with_text_is_estimated_high():
 
 def test_empty_reply_with_no_output_stays_zero():
     assert llm.usage_tokens(_usage(prompt_token_count=10, total_token_count=10), "") == (10, 0)
+
+
+def test_answer_counted_but_thinking_missing_adds_the_allowance():
+    # Dhanya's case on #36: candidates reported, no thoughts count, total = input + candidates.
+    usage = _usage(prompt_token_count=100, candidates_token_count=20, thoughts_token_count=None, total_token_count=120)
+    assert llm.usage_tokens(usage, "reply") == (100, 20 + llm.ESTIMATED_THINKING_TOKENS)
+
+
+def test_thinking_visible_in_the_total_needs_no_allowance():
+    usage = _usage(prompt_token_count=100, candidates_token_count=20, thoughts_token_count=None, total_token_count=900)
+    assert llm.usage_tokens(usage, "reply") == (100, 800)

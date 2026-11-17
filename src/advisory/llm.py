@@ -245,8 +245,9 @@ def usage_tokens(usage, text: str = "") -> tuple[int, int]:
 
     Output is the answer plus thinking tokens, since both are billed as output,
     and at least total_token_count minus input. If Gemini reports no output at
-    all for a non-empty reply, a high estimate is used instead (see
-    ESTIMATED_THINKING_TOKENS).
+    all for a non-empty reply, a high estimate is used instead; if it reports
+    the answer but no thinking count, and the total shows no thinking either,
+    the thinking allowance is added (see ESTIMATED_THINKING_TOKENS).
     """
     tokens_in = getattr(usage, "prompt_token_count", None) or 0
     tool_in = getattr(usage, "tool_use_prompt_token_count", None) or 0  # billed as input
@@ -257,6 +258,10 @@ def usage_tokens(usage, text: str = "") -> tuple[int, int]:
     tokens_out = max(reported_out, total - tokens_in - tool_in)
     if tokens_out == 0 and text:
         tokens_out = -(-len(text) // 3) + ESTIMATED_THINKING_TOKENS
+    elif text and getattr(usage, "thoughts_token_count", None) is None and total <= tokens_in + tool_in + reported_out:
+        # The answer was counted but thinking was not reported, and the total
+        # doesn't show any either: add the allowance rather than count no thinking.
+        tokens_out += ESTIMATED_THINKING_TOKENS
     return tokens_in + tool_in, tokens_out
 
 
