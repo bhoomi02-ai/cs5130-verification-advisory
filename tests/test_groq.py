@@ -5,9 +5,9 @@ import pytest
 from advisory import llm
 
 
-def _reply(content="ok", reasoning="", prompt=100, completion=50, total=150):
+def _reply(content="ok", reasoning="", prompt=100, completion=50, total=150, finish="stop"):
     return {
-        "choices": [{"message": {"role": "assistant", "content": content, "reasoning": reasoning}}],
+        "choices": [{"message": {"role": "assistant", "content": content, "reasoning": reasoning}, "finish_reason": finish}],
         "usage": {"prompt_tokens": prompt, "completion_tokens": completion, "total_tokens": total},
     }
 
@@ -49,7 +49,7 @@ def test_system_prompt_moves_into_the_first_user_turn():
 
 def test_groq_model_is_priced_and_dispatched(groq):
     sent = groq(_reply("verdict"))
-    text, tokens_in, tokens_out, cost = llm._provider_call("openai/gpt-oss-20b", MSGS, temperature=0.7, top_p=0.9)
+    text, tokens_in, tokens_out, cost, _ = llm._provider_call("openai/gpt-oss-20b", MSGS, temperature=0.7, top_p=0.9)
     assert text == "verdict" and (tokens_in, tokens_out) == (100, 50)
     assert cost == pytest.approx((100 * 0.075 + 50 * 0.30) / 1_000_000)
     body = sent[0]
@@ -137,7 +137,7 @@ def _tool_use_failed(arguments):
 def test_reply_wrapped_as_a_tool_call_is_recovered(groq):
     # Seen live: gpt-oss wraps its calculator request as a call to an undeclared tool.
     sent = groq(_tool_use_failed({"calculate": ["1.0682**5"]}))
-    text, tokens_in, tokens_out, cost = llm._provider_call("openai/gpt-oss-20b", MSGS)
+    text, tokens_in, tokens_out, cost, _ = llm._provider_call("openai/gpt-oss-20b", MSGS)
     assert text == '{"calculate": ["1.0682**5"]}' and len(sent) == 1  # no retry needed
     assert tokens_out >= llm.GROQ_ESTIMATED_REASONING_TOKENS and tokens_in > 0 and cost > 0  # estimated high
 
@@ -146,3 +146,17 @@ def test_other_bad_requests_are_not_recovered(groq):
     groq(llm.ProviderError(400, "bad request"))
     with pytest.raises(llm.ProviderError):
         llm._provider_call("openai/gpt-oss-20b", MSGS)
+
+
+
+def test_groq_finish_reason_marks_a_cut_off_reply(groq):
+    # Seen live: reasoning used the whole output budget and the reply was empty.
+    groq(_reply(content="", reasoning="x" * 100, prompt=2960, completion=8192, total=11152, finish="length"))
+    text, _, tokens_out, _, finish = llm._provider_call("openai/gpt-oss-20b", MSGS)
+    assert (text, finish) == ("", "length") and tokens_out == 8192
+
+
+def test_recovered_tool_call_says_so(groq):
+    groq(_tool_use_failed({"calculate": ["1+1"]}))
+    *_, finish = llm._provider_call("openai/gpt-oss-20b", MSGS)
+    assert finish == "tool_call_recovered"
