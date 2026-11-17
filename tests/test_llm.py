@@ -333,7 +333,6 @@ def test_output_is_answer_plus_thinking():
 
 
 def test_missing_candidates_count_falls_back_to_total_minus_input():
-    # Seen live: a short reply with text, candidates_token_count missing.
     assert llm.usage_tokens(_usage(prompt_token_count=3291, candidates_token_count=None,
                                    thoughts_token_count=None, total_token_count=3791)) == (3291, 500)
 
@@ -354,3 +353,16 @@ def test_fallback_is_used_for_the_logged_cost(fake):
     _, tokens_in, tokens_out, cost = llm._provider_call("gemini-3.6-flash", [{"role": "user", "content": "hi"}])
     assert (tokens_in, tokens_out) == (1_000_000, 1_000_000)
     assert cost == pytest.approx(0.75 + 3.75)
+
+
+def test_no_output_reported_for_a_reply_with_text_is_estimated_high():
+    # Seen live (dedicated verifier, first call): 186 characters of text, total equal to input.
+    usage = _usage(prompt_token_count=3459, candidates_token_count=None, thoughts_token_count=None,
+                   total_token_count=3459)
+    tokens_in, tokens_out = llm.usage_tokens(usage, "x" * 186)
+    assert tokens_in == 3459
+    assert tokens_out == 62 + llm.ESTIMATED_THINKING_TOKENS
+
+
+def test_empty_reply_with_no_output_stays_zero():
+    assert llm.usage_tokens(_usage(prompt_token_count=10, total_token_count=10), "") == (10, 0)

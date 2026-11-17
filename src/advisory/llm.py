@@ -226,18 +226,27 @@ def _gemini_call(
             if attempt == _MAX_RETRIES - 1:
                 raise
             time.sleep(2**attempt * 5)
-    tokens_in, tokens_out = usage_tokens(response.usage_metadata)
-    return response.text or "", tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
+    text = response.text or ""
+    tokens_in, tokens_out = usage_tokens(response.usage_metadata, text)
+    return text, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
 
 
-def usage_tokens(usage) -> tuple[int, int]:
-    """(tokens_in, tokens_out) from Gemini's usage metadata.
+# Used only when Gemini reports no output tokens for a reply that has text (seen
+# live on short first replies of the dedicated verifier: total_token_count equal
+# to the input, no candidates or thoughts count). The real count is unknown, so
+# the estimate is deliberately high: about 3 characters per token for the text
+# plus a thinking allowance above the most thinking seen on a verifier call
+# (2,884). Overcounting keeps the $20 cap safe; undercounting would not.
+ESTIMATED_THINKING_TOKENS = 3000
 
-    Output is the answer plus thinking tokens, since both are billed as output.
-    Some replies report no candidates count even though they have text, so the
-    output is never taken as less than total minus input: total_token_count
-    covers every token of the call, and anything in it that is not input is
-    billed as output. This way cost is never undercounted.
+
+def usage_tokens(usage, text: str = "") -> tuple[int, int]:
+    """(tokens_in, tokens_out) from Gemini's usage metadata, never undercounting output.
+
+    Output is the answer plus thinking tokens, since both are billed as output,
+    and at least total_token_count minus input. If Gemini reports no output at
+    all for a non-empty reply, a high estimate is used instead (see
+    ESTIMATED_THINKING_TOKENS).
     """
     tokens_in = getattr(usage, "prompt_token_count", None) or 0
     tool_in = getattr(usage, "tool_use_prompt_token_count", None) or 0  # billed as input
@@ -245,7 +254,10 @@ def usage_tokens(usage) -> tuple[int, int]:
         getattr(usage, "thoughts_token_count", None) or 0
     )
     total = getattr(usage, "total_token_count", None) or 0
-    return tokens_in + tool_in, max(reported_out, total - tokens_in - tool_in)
+    tokens_out = max(reported_out, total - tokens_in - tool_in)
+    if tokens_out == 0 and text:
+        tokens_out = -(-len(text) // 3) + ESTIMATED_THINKING_TOKENS
+    return tokens_in + tool_in, tokens_out
 
 
 def _provider_call(
