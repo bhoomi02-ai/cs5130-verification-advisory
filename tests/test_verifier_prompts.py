@@ -72,3 +72,8 @@ def test_parse_verdict(reply, expected):
 def test_unreadable_verdicts_raise(reply):
     with pytest.raises(ValueError):
         parse_verdict(reply)
+
+
+def test_verdict_followed_by_commentary_reads_the_verdict():
+    reply = '```json\n{"verdict": "reject", "issues": ["x"], "reason": "y"}\n```\n\nHope this helps!'
+    assert parse_verdict(reply) == Verdict("reject", "y", ["x"])

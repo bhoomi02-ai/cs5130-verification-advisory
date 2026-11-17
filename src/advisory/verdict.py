@@ -15,7 +15,24 @@ from dataclasses import dataclass, field
 
 from advisory.prompts import VERDICTS
 
-_FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
+_OPENING = re.compile(r"^\s*(?:```(?:json)?\s*)?")
+
+
+def leading_json(text: str):
+    """The JSON value at the start of `text` (after an optional code fence), ignoring what follows.
+
+    Some models keep writing after their JSON, for example commentary or, after
+    a calculator request, results they made up. Only the leading object is the
+    model's actual reply; the rest is ignored. Raises ValueError if the text
+    does not start with JSON.
+    """
+    text = text or ""
+    rest = text[_OPENING.match(text).end():]
+    try:
+        value, _ = json.JSONDecoder().raw_decode(rest)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"reply does not start with JSON: {e}") from e
+    return value
 
 
 @dataclass
@@ -26,11 +43,13 @@ class Verdict:
 
 
 def parse_verdict(text: str) -> Verdict:
-    """Read the verifier's JSON reply. Raises ValueError if it is not a valid verdict."""
-    match = _FENCE.match(text or "")
+    """Read the verifier's JSON reply. Raises ValueError if it is not a valid verdict.
+
+    The verdict is the JSON object the reply starts with; text after it is ignored.
+    """
     try:
-        data = json.loads(match.group(1) if match else text)
-    except (json.JSONDecodeError, TypeError) as e:
+        data = leading_json(text)
+    except ValueError as e:
         raise ValueError(f"verdict is not valid JSON: {e}") from e
     if not isinstance(data, dict):
         raise ValueError("verdict is not a JSON object")
