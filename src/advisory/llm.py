@@ -33,6 +33,10 @@ class RunRecord:
     thinking_level: str | None = None  # None means the provider default
     run_id: str | None = None  # joins this call to the per-run result file
     error: str | None = None  # set when the call failed; tokens and cost are then 0
+    # Why the reply ended, as the provider reports it, e.g. "stop", or "max_tokens" /
+    # "length" when it was cut off at the output limit (so a truncated reply can
+    # be told apart from a malformed one). None when the provider gives no reason.
+    finish_reason: str | None = None
 
 
 # USD per 1M tokens (input, output), paid tier, standard (non-batch), text.
@@ -49,7 +53,18 @@ PRICING: dict[str, tuple[float, float]] = {
     # Used for the cross-family verifier ablation.
     "gemma-4-26b-a4b-it": (0.0, 0.0),
     "gemma-4-31b-it": (0.0, 0.0),
+    # Groq, for the cross-family verifier (another company's model). Source:
+    # https://console.groq.com/docs/model/openai/gpt-oss-20b, checked 2026-11-17.
+    "openai/gpt-oss-20b": (0.075, 0.30),
 }
+
+# Models served by Groq's OpenAI-compatible API (exact Groq model IDs).
+GROQ_MODELS = frozenset({"openai/gpt-oss-20b"})
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+# Groq's default output limit (1,024) can cut off a reasoning model mid-thought.
+GROQ_MAX_COMPLETION_TOKENS = 8192
+# Groq's reasoning_effort values for gpt-oss.
+GROQ_REASONING_EFFORTS = ("low", "medium", "high")
 
 _MAX_RETRIES = 5
 _RETRY_STATUS = (429, 500, 503)
@@ -201,7 +216,7 @@ def _gemini_call(
     temperature: float | None = None,
     thinking_level: str | None = None,
     top_p: float | None = None,
-) -> tuple[str, int, int, float]:
+) -> tuple[str, int, int, float, str | None]:
     from google.genai import errors
 
     if model not in PRICING:  # fail before any tokens are spent, not after
@@ -226,11 +241,219 @@ def _gemini_call(
             if attempt == _MAX_RETRIES - 1:
                 raise
             time.sleep(2**attempt * 5)
-    usage = response.usage_metadata
-    tokens_in = usage.prompt_token_count or 0
-    # Thinking tokens are billed as output, so count them as output.
-    tokens_out = (usage.candidates_token_count or 0) + (usage.thoughts_token_count or 0)
-    return response.text or "", tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out)
+    text = response.text or ""
+    tokens_in, tokens_out = usage_tokens(response.usage_metadata, text)
+    return text, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out), gemini_finish_reason(response)
+
+
+def gemini_finish_reason(response) -> str | None:
+    """The first candidate's finish reason in lower case ("stop", "max_tokens", ...), or None."""
+    candidates = getattr(response, "candidates", None) or []
+    reason = getattr(candidates[0], "finish_reason", None) if candidates else None
+    if reason is None:
+        return None
+    return str(getattr(reason, "name", reason)).lower()
+
+
+# Used only when Gemini reports no output tokens for a reply that has text (seen
+# live on short first replies of the dedicated verifier: total_token_count equal
+# to the input, no candidates or thoughts count). The real count is unknown, so
+# the estimate is deliberately high: about 3 characters per token for the text
+# plus a thinking allowance above the most thinking seen on a verifier call
+# (2,884). Overcounting keeps the $20 cap safe; undercounting would not.
+ESTIMATED_THINKING_TOKENS = 3000
+
+
+def usage_tokens(usage, text: str = "") -> tuple[int, int]:
+    """(tokens_in, tokens_out) from Gemini's usage metadata, never undercounting output.
+
+    Output is the answer plus thinking tokens, since both are billed as output,
+    and at least total_token_count minus input. If Gemini reports no output at
+    all for a non-empty reply, a high estimate is used instead; if it reports
+    the answer but no thinking count, and the total shows no thinking either,
+    the thinking allowance is added (see ESTIMATED_THINKING_TOKENS).
+    """
+    tokens_in = getattr(usage, "prompt_token_count", None) or 0
+    tool_in = getattr(usage, "tool_use_prompt_token_count", None) or 0  # billed as input
+    reported_out = (getattr(usage, "candidates_token_count", None) or 0) + (
+        getattr(usage, "thoughts_token_count", None) or 0
+    )
+    total = getattr(usage, "total_token_count", None) or 0
+    tokens_out = max(reported_out, total - tokens_in - tool_in)
+    if tokens_out == 0 and text:
+        tokens_out = -(-len(text) // 3) + ESTIMATED_THINKING_TOKENS
+    elif text and getattr(usage, "thoughts_token_count", None) is None and total <= tokens_in + tool_in + reported_out:
+        # The answer was counted but thinking was not reported, and the total
+        # doesn't show any either: add the allowance rather than count no thinking.
+        tokens_out += ESTIMATED_THINKING_TOKENS
+    return tokens_in + tool_in, tokens_out
+
+
+class ProviderError(RuntimeError):
+    """A failed call to a provider without its own SDK error type (Groq). `code` is the HTTP status."""
+
+    def __init__(self, code: int | None, message: str, *, daily_quota: bool = False):
+        super().__init__(f"{code} {message}" if code else message)
+        self.code = code
+        self.daily_quota = daily_quota
+
+
+def to_groq(messages: list[dict]) -> list[dict]:
+    """OpenAI-style messages for Groq, with the system prompt moved into the first user turn.
+
+    Groq advises against system prompts for its reasoning models ("include all
+    instructions in the user message"), so the system text goes first in the
+    first user message, unchanged. Every other turn is passed as is.
+    """
+    system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
+    out: list[dict] = []
+    for m in messages:
+        if m["role"] == "system":
+            continue
+        if m["role"] not in ("user", "assistant"):
+            raise ValueError(f"Unknown message role {m['role']!r}")
+        out.append({"role": m["role"], "content": m["content"]})
+    if not any(m["role"] == "user" for m in out):
+        raise ValueError("messages must contain at least one user message")
+    if system:
+        first = next(i for i, m in enumerate(out) if m["role"] == "user")
+        out[first] = {"role": "user", "content": system + "\n\n" + out[first]["content"]}
+    return out
+
+
+def groq_usage_tokens(usage: dict, content: str, reasoning: str) -> tuple[int, int]:
+    """(tokens_in, tokens_out) from Groq's usage, never undercounting output.
+
+    Groq's docs don't say whether reasoning is included in completion_tokens,
+    so output is at least total minus input, and at least about a quarter of
+    the characters of the answer plus the reasoning.
+    """
+    tokens_in = int(usage.get("prompt_tokens") or 0)
+    reported = int(usage.get("completion_tokens") or 0)
+    from_total = int(usage.get("total_tokens") or 0) - tokens_in
+    from_text = -(-(len(content) + len(reasoning)) // 4)
+    return tokens_in, max(reported, from_total, from_text)
+
+
+def _groq_post(body: dict, key: str) -> dict:
+    import urllib.error
+    import urllib.request
+
+    request = urllib.request.Request(
+        GROQ_URL,
+        data=json.dumps(body).encode("utf-8"),
+        # A generic User-Agent: Groq's CDN rejects urllib's default one (403, "error code: 1010").
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json", "User-Agent": "python-client/1.0"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=300) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        full = e.read().decode("utf-8", "replace")
+        detail = full[:500]
+        remaining = e.headers.get("x-ratelimit-remaining-requests") if e.headers else None
+        daily = e.code == 429 and (remaining == "0" or "per day" in detail.lower() or "(rpd)" in detail.lower() or "(tpd)" in detail.lower())
+        error = ProviderError(e.code, detail, daily_quota=daily)
+        error.retry_after = e.headers.get("retry-after") if e.headers else None
+        error.body = full
+        raise error from e
+    except urllib.error.URLError as e:  # DNS, refused, reset: a network error, retried like one
+        raise ConnectionError(str(e.reason)) from e
+
+
+# Thinking allowance when Groq reports no usage (a refused tool call): deliberately high.
+GROQ_ESTIMATED_REASONING_TOKENS = 3000
+
+
+def _tool_call_reply(error: "ProviderError", body: dict) -> dict | None:
+    """Recover the model's reply when Groq refuses it as an undeclared tool call.
+
+    gpt-oss sometimes wraps a JSON reply (e.g. a calculator request) as a call
+    to a tool we never declared; Groq then answers 400 tool_use_failed and puts
+    the generation in failed_generation. Its "arguments" are the reply the
+    model meant to give, so they become the reply text. Groq reports no usage
+    for it, so tokens are estimated high: about a third of the characters
+    sent and received, plus a reasoning allowance.
+    """
+    if error.code != 400 or "tool_use_failed" not in getattr(error, "body", ""):
+        return None
+    try:
+        detail = json.loads(getattr(error, "body", ""))
+        generation = json.loads(detail["error"]["failed_generation"])
+    except (ValueError, KeyError, IndexError, TypeError):
+        return None
+    arguments = generation.get("arguments") if isinstance(generation, dict) else None
+    if not isinstance(arguments, dict):
+        return None
+    content = json.dumps(arguments)
+    sent_chars = sum(len(m["content"]) for m in body["messages"])
+    prompt = -(-sent_chars // 3)
+    completion = -(-len(content) // 3) + GROQ_ESTIMATED_REASONING_TOKENS
+    return {
+        "choices": [{"message": {"role": "assistant", "content": content}, "finish_reason": "tool_call_recovered"}],
+        "usage": {"prompt_tokens": prompt, "completion_tokens": completion, "total_tokens": prompt + completion},
+    }
+
+
+def _groq_call(
+    model: str,
+    messages: list[dict],
+    temperature: float | None = None,
+    thinking_level: str | None = None,
+    top_p: float | None = None,
+) -> tuple[str, int, int, float, str | None]:
+    if model not in PRICING:  # fail before any tokens are spent, not after
+        raise ValueError(f"No pricing for model {model!r}; add it to PRICING")
+    body: dict = {"model": model, "messages": to_groq(messages), "max_completion_tokens": GROQ_MAX_COMPLETION_TOKENS}
+    if temperature is not None:
+        if not 0 <= temperature <= 2:
+            raise ValueError(f"temperature must be between 0 and 2, got {temperature}")
+        body["temperature"] = temperature
+    if top_p is not None:
+        if not 0 < top_p <= 1:
+            raise ValueError(f"top_p must be in (0, 1], got {top_p}")
+        body["top_p"] = top_p
+    if thinking_level is not None:
+        if thinking_level not in GROQ_REASONING_EFFORTS:
+            raise ValueError(f"thinking_level for Groq must be one of {GROQ_REASONING_EFFORTS}, got {thinking_level!r}")
+        body["reasoning_effort"] = thinking_level
+
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+    key = os.environ.get("GROQ_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("GROQ_API_KEY is not set; add it to .env")
+
+    for attempt in range(_MAX_RETRIES):
+        try:
+            data = _groq_post(body, key)
+            break
+        except ProviderError as e:
+            recovered = _tool_call_reply(e, body)
+            if recovered is not None:
+                data = recovered
+                break
+            if e.code not in _RETRY_STATUS + (502,) or e.daily_quota or attempt == _MAX_RETRIES - 1:
+                raise
+            wait = 2**attempt * 5
+            if getattr(e, "retry_after", None):
+                try:
+                    wait = max(wait, float(e.retry_after))
+                except ValueError:
+                    pass
+            time.sleep(wait)
+        except _NETWORK_ERRORS:
+            if attempt == _MAX_RETRIES - 1:
+                raise
+            time.sleep(2**attempt * 5)
+    message = (data.get("choices") or [{}])[0].get("message") or {}
+    content = message.get("content") or ""
+    reasoning = message.get("reasoning") or ""
+    tokens_in, tokens_out = groq_usage_tokens(data.get("usage") or {}, content, reasoning)
+    finish = (data.get("choices") or [{}])[0].get("finish_reason")
+    return content, tokens_in, tokens_out, compute_cost(model, tokens_in, tokens_out), finish
 
 
 def _provider_call(
@@ -239,10 +462,12 @@ def _provider_call(
     temperature: float | None = None,
     thinking_level: str | None = None,
     top_p: float | None = None,
-) -> tuple[str, int, int, float]:
-    """Return (text, tokens_in, tokens_out, cost_usd), dispatching on `model`."""
+) -> tuple[str, int, int, float, str | None]:
+    """Return (text, tokens_in, tokens_out, cost_usd, finish_reason), dispatching on `model`."""
     if model.startswith(("gemini-", "gemma-")):
         return _gemini_call(model, messages, temperature, thinking_level, top_p)
+    if model in GROQ_MODELS:
+        return _groq_call(model, messages, temperature, thinking_level, top_p)
     raise ValueError(f"No provider configured for model {model!r}")
 
 
@@ -289,7 +514,7 @@ def call_model(
         run_id=run_id,
     )
     try:
-        text, tokens_in, tokens_out, cost = _provider_call(
+        text, tokens_in, tokens_out, cost, finish_reason = _provider_call(
             model, messages, temperature, thinking_level, top_p
         )
     except Exception as e:
@@ -313,6 +538,7 @@ def call_model(
             tokens_out=tokens_out,
             latency_s=time.perf_counter() - start,
             cost_usd=cost,
+            finish_reason=finish_reason,
             raw_output=text,
             **common,
         )

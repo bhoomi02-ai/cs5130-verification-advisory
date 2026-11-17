@@ -15,7 +15,6 @@ is logged like any other call.
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -26,10 +25,9 @@ from advisory.prompts import (
     MAX_EXPRESSIONS_PER_ROUND,
     calculator_results_message,
     dedicated_review_messages,
+    weakened_review_messages,
 )
-from advisory.verdict import Verdict, parse_verdict
-
-_FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
+from advisory.verdict import Verdict, leading_json, parse_verdict, split_leading_json
 
 
 @dataclass
@@ -39,14 +37,18 @@ class DedicatedReview:
     calculations: list[dict] = field(default_factory=list)  # every calculator call and its result
     n_calls: int = 0  # model calls made by this review
     error: str | None = None  # why verdict is None
+    ignored: list[str] = field(default_factory=list)  # text after a calculator request, dropped from the history
 
 
 def calculator_request(text: str) -> list[str] | None:
-    """The expressions if `text` is a calculator request, else None."""
-    match = _FENCE.match(text or "")
+    """The expressions if `text` starts with a calculator request, else None.
+
+    Anything after the request is ignored: it was written before the model saw
+    any real results (some models, e.g. Gemma, go on to invent them).
+    """
     try:
-        data = json.loads(match.group(1) if match else text)
-    except (json.JSONDecodeError, TypeError):
+        data = leading_json(text)
+    except ValueError:
         return None
     if not isinstance(data, dict) or "calculate" not in data:
         return None
@@ -66,9 +68,16 @@ def dedicated_review(scenario: dict, answer: str, call: Callable[[list[dict]], s
     while True:
         reply = call(messages)
         review.n_calls += 1
-        messages.append({"role": "assistant", "content": reply})
-
         expressions = calculator_request(reply)
+        # Keep only the request itself in the history, never text written after
+        # it, so the verifier never sees results it made up as if they were real.
+        kept = reply if expressions is None else json.dumps({"calculate": expressions})
+        if expressions is not None:
+            trailing = split_leading_json(reply)[1]
+            if trailing:
+                review.ignored.append(trailing)
+        messages.append({"role": "assistant", "content": kept})
+
         if expressions is None:
             try:
                 review.verdict = parse_verdict(reply)
@@ -90,3 +99,20 @@ def dedicated_review(scenario: dict, answer: str, call: Callable[[list[dict]], s
         if rounds >= MAX_CALCULATOR_ROUNDS:
             result_turn["content"] += "\n\n" + FINAL_VERDICT_REQUEST
         messages.append(result_turn)
+
+
+def weakened_review(scenario: dict, answer: str, call: Callable[[list[dict]], str]) -> DedicatedReview:
+    """The weakened verifier (ablation): one call, no calculator, same verdict rules.
+
+    Returns a DedicatedReview so the pipeline handles both verifiers the same
+    way; `calculations` stays empty. An unreadable reply gives verdict None.
+    """
+    messages = weakened_review_messages(scenario, answer)
+    reply = call(messages)
+    messages.append({"role": "assistant", "content": reply})
+    review = DedicatedReview(verdict=None, messages=messages, n_calls=1)
+    try:
+        review.verdict = parse_verdict(reply)
+    except ValueError as e:
+        review.error = f"unreadable reply: {e}"
+    return review
