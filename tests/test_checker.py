@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from advisory.checker import check
+from advisory.checker import check, strip_outer_fence
 from advisory.evaluation.reference import reference_response
 
 _ROOT = Path(__file__).resolve().parents[1]
@@ -652,6 +652,15 @@ def test_fenced_answer_with_trailing_text_is_unchanged():
     # Extra text outside the fence must not be stripped; still a format failure.
     assert before["format_failure"] is True
     assert before["correct"] is False
+
+
+def test_text_before_fence_is_not_stripped():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    reply = "Here is my answer:\n" + _fenced(body, "json")
+    result = check("S01", reply)
+    assert result["format_failure"] is True
+    assert result["correct"] is False
+    assert strip_outer_fence(reply) == reply
 
 
 def test_wrong_answer_inside_fence_is_still_wrong():
