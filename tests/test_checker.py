@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from advisory.checker import check
+from advisory.checker import check, strip_outer_fence
 from advisory.evaluation.reference import reference_response
 
 _ROOT = Path(__file__).resolve().parents[1]
@@ -608,3 +608,78 @@ def test_s09_missing_symbol_observation_is_not_a_value_mismatch():
     failed = [row for row in result["checks"] if not row["passed"]]
     assert failed
     assert {row["details"]["reason"] for row in failed} == {"missing_observation"}
+
+
+def _fenced(body: str, label: str = "json") -> str:
+    opener = f"```{label}" if label else "```"
+    return f"{opener}\n{body}\n```"
+
+
+def test_correct_answer_in_json_fence_is_correct():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    result = check("S01", _fenced(body, "json"))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+
+
+def test_correct_answer_in_plain_fence_is_correct():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    result = check("S01", _fenced(body, ""))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+
+
+def test_correct_answer_in_uppercase_json_fence_is_correct():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    result = check("S01", _fenced(body, "JSON"))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+
+
+def test_unfenced_correct_answer_is_unchanged():
+    response = _contract(_ground_truth("S01"))
+    plain = check("S01", response)
+    as_text = check("S01", json.dumps(response))
+    assert plain == as_text
+    assert plain["correct"] is True
+    assert plain["format_failure"] is False
+
+
+def test_fenced_answer_with_trailing_text_is_unchanged():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    reply = _fenced(body, "json") + "\nHope this helps!"
+    before = check("S01", reply)  # same string shape the old checker saw
+    # Extra text outside the fence must not be stripped; still a format failure.
+    assert before["format_failure"] is True
+    assert before["correct"] is False
+
+
+def test_text_before_fence_is_not_stripped():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    reply = "Here is my answer:\n" + _fenced(body, "json")
+    result = check("S01", reply)
+    assert result["format_failure"] is True
+    assert result["correct"] is False
+    assert strip_outer_fence(reply) == reply
+
+
+def test_wrong_answer_inside_fence_is_still_wrong():
+    response = _contract(_ground_truth("S01"), status="INFEASIBLE")
+    result = check("S01", _fenced(json.dumps(response), "json"))
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "STATUS")["passed"] is False
+
+
+def test_two_fenced_blocks_are_a_format_failure():
+    body = json.dumps(_contract(_ground_truth("S01")))
+    reply = _fenced(body, "json") + "\n" + _fenced(body, "json")
+    result = check("S01", reply)
+    assert result["format_failure"] is True
+    assert result["correct"] is False
+
+
+def test_empty_fence_is_a_format_failure():
+    result = check("S01", "```json\n```")
+    assert result["format_failure"] is True
+    assert result["correct"] is False

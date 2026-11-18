@@ -13,7 +13,6 @@ run log (results/runs.jsonl), so results can be joined to tokens and cost.
 from __future__ import annotations
 
 import json
-import re
 from collections import Counter
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -23,6 +22,7 @@ from typing import Callable
 from google.genai import errors as genai_errors
 from jsonschema import Draft202012Validator
 
+from advisory.checker import strip_outer_fence
 from advisory.llm import _is_daily_quota, call_model
 from advisory.prompts import PROMPT_VERSION, advisor_messages  # same prompt as every condition
 
@@ -83,13 +83,9 @@ def load_scenarios(directory: Path = SCENARIO_DIR, ids: list[str] | None = None)
     return scenarios
 
 
-_FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
-
-
 def parse_answer(text: str) -> dict:
     """Parse the model's JSON, tolerating a markdown code fence around it."""
-    m = _FENCE.match(text)
-    data = json.loads(m.group(1) if m else text)
+    data = json.loads(strip_outer_fence(text))
     if not isinstance(data, dict):
         raise ValueError("response is not a JSON object")
     return data

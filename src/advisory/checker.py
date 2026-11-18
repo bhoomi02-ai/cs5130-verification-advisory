@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from pathlib import Path
 
 MONEY_OBSERVATION_TOLERANCE = 0.01
@@ -21,6 +22,28 @@ _EVALUATION = _ROOT / "data" / "evaluation"
 
 _OBSERVATION_FIELDS = ("subject", "measure", "stage", "rounding")
 
+# Strip when the whole string starts with ``` / ```json and ends with ```
+# (label case-insensitive). Text outside those markers → no strip. Stricter
+# than verdict.leading_json. Multiple fenced blocks can match and strip to
+# non-JSON, which check() still grades as a format failure.
+_OUTER_FENCE = re.compile(
+    r"^\s*```(?:json)?\s*(.*?)\s*```\s*$",
+    re.DOTALL | re.IGNORECASE,
+)
+
+
+def strip_outer_fence(text: str) -> str:
+    """Return `text` with one outer markdown code fence removed, if present.
+
+    Strips when the whole string (ignoring leading/trailing whitespace) starts
+    with an opening ``` or ```json (label case-insensitive) and ends with a
+    closing ```. Any text before the opening fence or after the closing fence
+    leaves `text` unchanged. A reply with more than one fenced block is not
+    valid JSON after stripping, so it is still graded as a format failure.
+    """
+    match = _OUTER_FENCE.match(text)
+    return match.group(1) if match else text
+
 
 def check(scenario_id: str, response: dict | str) -> dict:
     """Grade one response. A schema failure is incorrect and stops the grade."""
@@ -30,6 +53,8 @@ def check(scenario_id: str, response: dict | str) -> dict:
     schema_spec = _spec(checks, "SCHEMA")
     schema_id = schema_spec["check_id"] if schema_spec else f"{scenario_id}_schema"
 
+    if isinstance(response, str):
+        response = strip_outer_fence(response)
     parsed, parse_error = _parse_response(response)
     if parse_error:
         return _format_failure(schema_id, [parse_error])
