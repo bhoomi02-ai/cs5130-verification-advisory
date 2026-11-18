@@ -610,6 +610,82 @@ def test_s09_missing_symbol_observation_is_not_a_value_mismatch():
     assert {row["details"]["reason"] for row in failed} == {"missing_observation"}
 
 
+@pytest.mark.skipif("T09-v001" not in _GROUND_TRUTH, reason="T09-v001 evaluation data not on this branch")
+def test_t09_v001_reference_answer_is_correct():
+    result = check("T09-v001", _result_response("T09-v001"))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+    metrics = _ground_truth("T09-v001")["metrics"]
+    assert metrics["locked_stock_value"] == 41000
+    assert metrics["minimum_stock_pct"] == pytest.approx(0.41)
+    assert metrics["maximum_target_stock_pct"] == pytest.approx(0.405)
+    assert metrics["stock_value_excess_above_tolerance"] == 500
+
+
+@pytest.mark.skipif("T09-v001" not in _GROUND_TRUTH, reason="T09-v001 evaluation data not on this branch")
+def test_t09_v001_feasible_status_is_wrong_status():
+    response = _result_response("T09-v001")
+    response["status"] = "FEASIBLE"
+    result = check("T09-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "STATUS")["details"]["reason"] == "wrong_status"
+
+
+@pytest.mark.skipif("T09-v001" not in _GROUND_TRUTH, reason="T09-v001 evaluation data not on this branch")
+def test_t09_v001_non_empty_trades_fail():
+    response = _result_response("T09-v001")
+    response["trades"] = [{"symbol": "BND", "quantity_delta": -10}]
+    result = check("T09-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "EMPTY_TRADES")["details"]["reason"] == "rule_violation"
+
+
+@pytest.mark.skipif("T09-v001" not in _GROUND_TRUTH, reason="T09-v001 evaluation data not on this branch")
+def test_t09_v001_missing_holding_observation_is_not_a_value_mismatch():
+    response = _result_response("T09-v001")
+    response["metrics"]["observations"] = [
+        observation
+        for observation in response["metrics"]["observations"]
+        if observation["subject"] != "AAPL"
+    ]
+    result = check("T09-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    failed = [row for row in result["checks"] if not row["passed"]]
+    assert failed
+    assert {row["details"]["reason"] for row in failed} == {"missing_observation"}
+
+
+@pytest.mark.skipif("T09-v001" not in _GROUND_TRUTH, reason="T09-v001 evaluation data not on this branch")
+def test_t09_v001_excess_without_tolerance_is_wrong(monkeypatch):
+    # Correct excess uses the ±0.5pp band: 41000 - 100000 * 0.405 = 500.
+    # Forgetting the tolerance (41000 - 40000 = 1000) must not pass.
+    import advisory.checker as checker
+
+    real = checker._reported_metric
+
+    def forget_tolerance(key, scenario, response, index, facts):
+        if key == "stock_value_excess_above_tolerance":
+            return 1000.0
+        return real(key, scenario, response, index, facts)
+
+    monkeypatch.setattr(checker, "_reported_metric", forget_tolerance)
+    result = check("T09-v001", _result_response("T09-v001"))
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    independent = _of_type(result, "INDEPENDENT_RESULTS")
+    assert independent["passed"] is False
+    assert independent["details"]["reason"] == "value_mismatch"
+    assert any(
+        item["metric"] == "stock_value_excess_above_tolerance"
+        and item["observed"] == 1000
+        and item["expected"] == pytest.approx(500)
+        for item in independent["details"]["items"]
+    )
+
+
 def _fenced(body: str, label: str = "json") -> str:
     opener = f"```{label}" if label else "```"
     return f"{opener}\n{body}\n```"

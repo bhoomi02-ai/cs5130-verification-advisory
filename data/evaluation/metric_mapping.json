@@ -410,6 +410,38 @@
           "formula": "len(response.violations)"
         }
       }
+    },
+    "T09-v001": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "locked_stock_value",
+        "minimum_stock_pct",
+        "maximum_target_stock_pct",
+        "stock_value_excess_above_tolerance"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "locked_stock_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of STOCK holdings prohibited from sale)"
+        },
+        "minimum_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "locked_stock_value / reported initial_total"
+        },
+        "maximum_target_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input STOCK target + input allocation tolerance"
+        },
+        "stock_value_excess_above_tolerance": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported locked_stock_value - reported initial_total * maximum_target_stock_pct"
+        }
+      }
     }
   }
 }

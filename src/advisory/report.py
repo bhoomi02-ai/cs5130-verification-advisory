@@ -41,7 +41,7 @@ SUMMARY_COLUMNS = (
     "n_missing_verdict",
 )
 
-INFEASIBLE_TASKS = ("S09", "S10")
+INFEASIBLE_TASKS = ("S09", "S10", "T09-v001")
 
 
 def load_results(path: Path = RESULTS_PATH) -> tuple[list[dict], list[dict]]:

@@ -371,5 +371,20 @@
       }
     ],
     "explanation": "Exactly four violations: STOCK overweight (55% > 40%), BOND underweight (35% < 45%), MSFT individual concentration (20% > 15%), and prohibited CRYPTO (5% > 0%). AAPL is exactly at its 15% limit and is not a violation. No remediation trades."
+  },
+  "T09-v001": {
+    "scenario_id": "T09-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "locked_stock_value": 41000,
+      "minimum_stock_pct": 0.41,
+      "maximum_target_stock_pct": 0.405,
+      "stock_value_excess_above_tolerance": 500
+    },
+    "violations": [],
+    "explanation": "STOCK cannot fall below $41,000 / $100,000 = 41%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 40.5% ($40,500), leaving $500 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
   }
 }
