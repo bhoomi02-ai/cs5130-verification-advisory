@@ -15,7 +15,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd
 
-from advisory.metrics import REQUIRED_COLUMNS, summarize, validate_runs
+from advisory.metrics import REQUIRED_COLUMNS, compare_conditions, summarize, validate_runs
 
 ROOT = Path(__file__).resolve().parents[2]
 RESULTS_PATH = ROOT / "results" / "results.jsonl"
@@ -124,9 +124,31 @@ def build_report(runs: list[dict], seed: int = 0) -> dict:
         if column not in outcomes.columns:
             outcomes[column] = None
     outcomes = outcomes[list(OUTCOME_COLUMNS)]
+    try:
+        comparisons = compare_conditions(runs, baseline="none", seed=seed)
+    except ValueError:
+        comparisons = pd.DataFrame(
+            columns=[
+                "condition_a",
+                "condition_b",
+                "model",
+                "n_tasks",
+                "n_pairs",
+                "n_dropped",
+                "success_a",
+                "success_b",
+                "delta",
+                "delta_ci_low",
+                "delta_ci_high",
+                "a_only_correct",
+                "b_only_correct",
+                "mcnemar_p",
+            ]
+        )
     return {
         "summary": summary,
         "outcomes": outcomes,
+        "comparisons": comparisons,
         "by_scenario": _by_scenario(runs),
         "infeasible": _infeasible_status(runs),
     }
@@ -152,6 +174,15 @@ def write_report(
     outcomes.to_csv(paths["outcomes_csv"], index=False)
     paths["outcomes_md"] = out_dir / "outcomes.md"
     paths["outcomes_md"].write_text(_markdown_table(outcomes, "Outcomes by condition") + "\n", encoding="utf-8")
+
+    comparisons = report["comparisons"]
+    paths["comparisons_csv"] = out_dir / "comparisons.csv"
+    comparisons.to_csv(paths["comparisons_csv"], index=False)
+    paths["comparisons_md"] = out_dir / "comparisons.md"
+    paths["comparisons_md"].write_text(
+        _markdown_table(comparisons, "Paired comparisons vs none") + "\n",
+        encoding="utf-8",
+    )
 
     by_scenario = report["by_scenario"]
     paths["by_scenario_csv"] = out_dir / "by_scenario.csv"
