@@ -751,6 +751,28 @@
         }
       }
     },
+    "T03-v005": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "allocations",
+        "violation_count"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "allocations": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "aggregate reported INITIAL holding values by class and reported CASH / reported PORTFOLIO"
+        },
+        "violation_count": {
+          "source": "REPORTED_VIOLATION_LIST",
+          "formula": "len(response.violations)"
+        }
+      }
+    },
     "T03-v002": {
       "mode": "PORTFOLIO_EVIDENCE",
       "required_private_metrics": [
