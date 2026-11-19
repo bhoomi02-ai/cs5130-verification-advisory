@@ -43,6 +43,26 @@ SUMMARY_COLUMNS = (
 
 INFEASIBLE_TASKS = ("S09", "S10", "T09-v001", "T09-v002", "T09-v003", "T10-v001", "T10-v002", "T10-v003")
 
+# Outcome columns live in a separate table so summary.csv stays narrow.
+OUTCOME_COLUMNS = (
+    "condition",
+    "model",
+    "task_success",
+    "task_success_excl_human_review",
+    "human_review_rate",
+    "task_success_excl_human_review_ci_low",
+    "task_success_excl_human_review_ci_high",
+    "kept_correct",
+    "fixed",
+    "broken",
+    "still_wrong",
+    "missed",
+    "caught_fixed",
+    "caught_not_fixed",
+    "caught_escalated",
+    "catch_fix_rate",
+)
+
 
 def load_results(path: Path = RESULTS_PATH) -> tuple[list[dict], list[dict]]:
     """Load a JSONL results file.
@@ -90,16 +110,23 @@ def load_results(path: Path = RESULTS_PATH) -> tuple[list[dict], list[dict]]:
 
 
 def build_report(runs: list[dict], seed: int = 0) -> dict:
-    """Build the summary, by-scenario and infeasible tables from accepted runs."""
+    """Build the summary, outcomes, by-scenario and infeasible tables from accepted runs."""
     if not runs:
         raise ValueError("no accepted runs to summarise")
-    summary = summarize(runs, seed=seed).reset_index()
+    metrics = summarize(runs, seed=seed).reset_index()
+    summary = metrics.copy()
     for column in SUMMARY_COLUMNS:
         if column not in summary.columns:
             summary[column] = None
     summary = summary[list(SUMMARY_COLUMNS)]
+    outcomes = metrics.copy()
+    for column in OUTCOME_COLUMNS:
+        if column not in outcomes.columns:
+            outcomes[column] = None
+    outcomes = outcomes[list(OUTCOME_COLUMNS)]
     return {
         "summary": summary,
+        "outcomes": outcomes,
         "by_scenario": _by_scenario(runs),
         "infeasible": _infeasible_status(runs),
     }
@@ -119,6 +146,18 @@ def write_report(
     summary.to_csv(paths["summary_csv"], index=False)
     paths["summary_md"] = out_dir / "summary.md"
     paths["summary_md"].write_text(_markdown_table(summary, "Summary by condition") + "\n", encoding="utf-8")
+
+    outcomes = report["outcomes"]
+    paths["outcomes_csv"] = out_dir / "outcomes.csv"
+    outcomes.to_csv(paths["outcomes_csv"], index=False)
+    paths["outcomes_md"] = out_dir / "outcomes.md"
+    paths["outcomes_md"].write_text(
+        _markdown_table(outcomes, "Outcomes by condition")
+        + "\n"
+        + "task_success_excl_human_review excludes runs the verifier escalated; "
+        "read it together with human_review_rate.\n",
+        encoding="utf-8",
+    )
 
     by_scenario = report["by_scenario"]
     paths["by_scenario_csv"] = out_dir / "by_scenario.csv"
