@@ -42,6 +42,10 @@ METRIC_COLUMNS = (
     "task_success",
     "task_success_ci_low",
     "task_success_ci_high",
+    "task_success_excl_human_review",
+    "task_success_excl_human_review_ci_low",
+    "task_success_excl_human_review_ci_high",
+    "human_review_rate",
     "tp",
     "fp",
     "fn",
@@ -52,8 +56,15 @@ METRIC_COLUMNS = (
     "mcc",
     "abstention_rate",
     "n_missing_verdict",
+    "missed",
+    "caught_fixed",
+    "caught_not_fixed",
+    "caught_escalated",
+    "catch_fix_rate",
     "fixed",
     "broken",
+    "kept_correct",
+    "still_wrong",
     "fix_rate",
     "break_rate",
     "net_gain",
@@ -72,6 +83,10 @@ _NULLABLE_COLUMNS = (
     "task_success",
     "task_success_ci_low",
     "task_success_ci_high",
+    "task_success_excl_human_review",
+    "task_success_excl_human_review_ci_low",
+    "task_success_excl_human_review_ci_high",
+    "human_review_rate",
     "tp",
     "fp",
     "fn",
@@ -82,8 +97,15 @@ _NULLABLE_COLUMNS = (
     "mcc",
     "abstention_rate",
     "n_missing_verdict",
+    "missed",
+    "caught_fixed",
+    "caught_not_fixed",
+    "caught_escalated",
+    "catch_fix_rate",
     "fixed",
     "broken",
+    "kept_correct",
+    "still_wrong",
     "fix_rate",
     "break_rate",
     "net_gain",
@@ -102,6 +124,9 @@ __all__ = [
     "validate_runs",
     "task_success",
     "verifier_metrics",
+    "outcome_counts",
+    "human_review_metrics",
+    "catch_outcome_metrics",
     "fixed_broken",
     "cost_metrics",
     "extra_cost_per_extra_correct",
@@ -217,6 +242,162 @@ def verifier_metrics(verdict, initial_correct, condition=None) -> dict[str, floa
     }
 
 
+def outcome_counts(initial_correct, final_correct) -> dict[str, int]:
+    """Four-quadrant counts of initial vs final correctness.
+
+    Parameters
+    ----------
+    initial_correct, final_correct : array-like of bool
+        Per-run correctness before and after verification.
+
+    Returns
+    -------
+    dict
+        ``kept_correct`` (True→True), ``fixed`` (False→True),
+        ``broken`` (True→False), ``still_wrong`` (False→False). The four
+        counts sum to the number of runs.
+    """
+    initial = _as_bool(_as_series(initial_correct), "initial_correct")
+    final = _as_bool(_as_series(final_correct), "final_correct")
+    if len(initial) != len(final):
+        raise ValueError("initial_correct and final_correct must have the same length")
+    if initial.empty:
+        raise ValueError("outcome counts need at least one run")
+
+    initial_np = initial.to_numpy(dtype=bool)
+    final_np = final.to_numpy(dtype=bool)
+    return {
+        "kept_correct": int((initial_np & final_np).sum()),
+        "fixed": int((~initial_np & final_np).sum()),
+        "broken": int((initial_np & ~final_np).sum()),
+        "still_wrong": int((~initial_np & ~final_np).sum()),
+    }
+
+
+def human_review_metrics(
+    final_correct,
+    task_id,
+    status=None,
+    seed: int = 0,
+) -> dict[str, float | None]:
+    """Task success with human-review runs excluded, plus the review rate.
+
+    Parameters
+    ----------
+    final_correct : array-like of bool
+        Per-run final correctness on the scored runs (``failed`` already out).
+    task_id : array-like
+        Task ids aligned with ``final_correct``, used for the bootstrap CI.
+    status : array-like or None, optional
+        Per-run status. When omitted (no ``status`` column),
+        ``human_review_rate`` is ``None`` and every run counts toward the
+        excluded-success metrics.
+    seed : int, optional
+        Bootstrap seed, same contract as ``bootstrap_task_success_ci``.
+
+    Returns
+    -------
+    dict
+        ``task_success_excl_human_review`` and its CI bounds (``None`` when
+        every scored run is ``human_review``), plus ``human_review_rate``
+        (``None`` when ``status`` is omitted).
+    """
+    finals = _as_bool(_as_series(final_correct), "final_correct")
+    ids = _as_series(task_id).reset_index(drop=True)
+    if len(ids) != len(finals):
+        raise ValueError("task_id and final_correct must have the same length")
+    if finals.empty:
+        raise ValueError("human-review metrics need at least one run")
+
+    if status is None:
+        rate: float | None = None
+        kept_final = finals
+        kept_ids = ids
+    else:
+        statuses = _checked_statuses(_as_series(status))
+        if len(statuses) != len(finals):
+            raise ValueError("status and final_correct must have the same length")
+        is_review = statuses.to_numpy() == "human_review"
+        rate = float(np.mean(is_review))
+        keep = ~is_review
+        kept_final = finals.loc[keep].reset_index(drop=True)
+        kept_ids = ids.loc[keep].reset_index(drop=True)
+
+    if kept_final.empty:
+        return {
+            "task_success_excl_human_review": None,
+            "task_success_excl_human_review_ci_low": None,
+            "task_success_excl_human_review_ci_high": None,
+            "human_review_rate": rate,
+        }
+    low, high = bootstrap_task_success_ci(kept_ids, kept_final, seed=seed)
+    return {
+        "task_success_excl_human_review": task_success(kept_final),
+        "task_success_excl_human_review_ci_low": low,
+        "task_success_excl_human_review_ci_high": high,
+        "human_review_rate": rate,
+    }
+
+
+def catch_outcome_metrics(
+    verdict,
+    initial_correct,
+    final_correct,
+    condition=None,
+) -> dict[str, float | int | None]:
+    """Fate of initially wrong drafts under the first verifier verdict.
+
+    Parameters
+    ----------
+    verdict : array-like
+        First-pass verdicts (``accept`` / ``reject`` / ``abstain`` / missing).
+    initial_correct, final_correct : array-like of bool
+        Per-run correctness before and after verification.
+    condition : str, optional
+        When ``\"none\"``, every field is ``None`` (no verifier).
+
+    Returns
+    -------
+    dict
+        Among initially wrong runs with a non-missing verdict:
+        ``missed`` (accept), ``caught_fixed`` (reject and finally correct),
+        ``caught_not_fixed`` (reject and finally wrong), ``caught_escalated``
+        (abstain). ``catch_fix_rate`` is ``caught_fixed /
+        (caught_fixed + caught_not_fixed)``, or ``None`` when nothing was
+        rejected. Condition ``none`` leaves every field ``None``.
+    """
+    labels = _checked_verdicts(_as_series(verdict))
+    initial = _as_bool(_as_series(initial_correct), "initial_correct")
+    final = _as_bool(_as_series(final_correct), "final_correct")
+    if not (len(labels) == len(initial) == len(final)):
+        raise ValueError("verdict, initial_correct and final_correct must have the same length")
+    if labels.empty:
+        raise ValueError("catch outcomes need at least one run")
+    if _python_scalar(condition) == "none":
+        return _blank_catch_outcomes()
+
+    missing = np.array([value is None for value in labels.tolist()], dtype=bool)
+    scored = ~missing
+    if not scored.any():
+        return _blank_catch_outcomes()
+
+    label_np = labels.to_numpy()[scored]
+    initial_np = initial.to_numpy(dtype=bool)[scored]
+    final_np = final.to_numpy(dtype=bool)[scored]
+    wrong = ~initial_np
+    missed = int(((label_np == "accept") & wrong).sum())
+    caught_fixed = int(((label_np == "reject") & wrong & final_np).sum())
+    caught_not_fixed = int(((label_np == "reject") & wrong & ~final_np).sum())
+    caught_escalated = int(((label_np == "abstain") & wrong).sum())
+    return {
+        "missed": missed,
+        "caught_fixed": caught_fixed,
+        "caught_not_fixed": caught_not_fixed,
+        "caught_escalated": caught_escalated,
+        "catch_fix_rate": _rate(caught_fixed, caught_fixed + caught_not_fixed),
+    }
+
+
 def fixed_broken(initial_correct, final_correct) -> dict[str, float | int | None]:
     """Counts and rates for drafts that verification fixes or breaks.
 
@@ -227,23 +408,16 @@ def fixed_broken(initial_correct, final_correct) -> dict[str, float | int | None
     is ``None`` too. ``success_delta`` is ``(fixed - broken) / n_runs``,
     which is final success minus initial success.
     """
+    counts = outcome_counts(initial_correct, final_correct)
+    fixed = counts["fixed"]
+    broken = counts["broken"]
     initial = _as_bool(_as_series(initial_correct), "initial_correct")
-    final = _as_bool(_as_series(final_correct), "final_correct")
-    if len(initial) != len(final):
-        raise ValueError("initial_correct and final_correct must have the same length")
-    if initial.empty:
-        raise ValueError("fixed vs broken needs at least one run")
-
-    initial_np = initial.to_numpy(dtype=bool)
-    final_np = final.to_numpy(dtype=bool)
-    fixed = int((~initial_np & final_np).sum())
-    broken = int((initial_np & ~final_np).sum())
-    initially_wrong = int((~initial_np).sum())
-    initially_correct = int(initial_np.sum())
+    initially_wrong = int((~initial.to_numpy(dtype=bool)).sum())
+    initially_correct = int(initial.to_numpy(dtype=bool).sum())
     fix_rate = _rate(fixed, initially_wrong)
     break_rate = _rate(broken, initially_correct)
     net_gain = None if fix_rate is None or break_rate is None else fix_rate - break_rate
-    n_runs = len(initial_np)
+    n_runs = len(initial)
     return {
         "fixed": fixed,
         "broken": broken,
@@ -378,14 +552,28 @@ def summarize(runs: list[dict] | pd.DataFrame, seed: int = 0) -> pd.DataFrame:
             scored["latency_s"],
         )
         costs["total_cost_usd"] = total_cost
+        status = scored["status"] if "status" in scored.columns else None
         row = {
             "condition": condition_name,
             "task_success": success,
             "task_success_ci_low": low,
             "task_success_ci_high": high,
+            **human_review_metrics(
+                scored["final_correct"],
+                scored["task_id"],
+                status=status,
+                seed=seed,
+            ),
             **verifier_metrics(
                 scored["verdict"], scored["initial_correct"], condition_name
             ),
+            **catch_outcome_metrics(
+                scored["verdict"],
+                scored["initial_correct"],
+                scored["final_correct"],
+                condition_name,
+            ),
+            **outcome_counts(scored["initial_correct"], scored["final_correct"]),
             **fixed_broken(scored["initial_correct"], scored["final_correct"]),
             **costs,
             "extra_cost_per_extra_correct": extra,
@@ -395,6 +583,16 @@ def summarize(runs: list[dict] | pd.DataFrame, seed: int = 0) -> pd.DataFrame:
             row["model"] = model_name
         rows.append(row)
     return _metrics_frame(rows, has_model=has_model)
+
+
+def _blank_catch_outcomes() -> dict[str, float | int | None]:
+    return {
+        "missed": None,
+        "caught_fixed": None,
+        "caught_not_fixed": None,
+        "caught_escalated": None,
+        "catch_fix_rate": None,
+    }
 
 
 def _blank_verifier(n_missing: int | None) -> dict[str, float | int | None]:

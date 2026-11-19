@@ -6,8 +6,11 @@ import pytest
 
 from advisory.metrics import (
     bootstrap_task_success_ci,
+    catch_outcome_metrics,
     extra_cost_per_extra_correct,
     fixed_broken,
+    human_review_metrics,
+    outcome_counts,
     summarize,
     task_success,
     verifier_metrics,
@@ -757,3 +760,331 @@ def test_single_model_rows_without_model_column_are_unchanged():
     assert summary.loc["dedicated", "extra_cost_per_extra_correct"] == 12
     assert summary.loc["none", "n_failed"] == 0
     assert summary.loc["dedicated", "n_failed"] == 0
+
+
+def test_human_review_excluded_vs_included_success():
+    # Three scored runs. Two accepted and correct; one human_review and wrong.
+    # task_success includes all three → 2/3.
+    # Excluding human_review leaves the two correct runs → 1.
+    rows = [
+        _run(
+            condition="dedicated",
+            task_id="t1",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="accept",
+            status="accepted",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="t2",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="accept",
+            status="accepted",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="t3",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict="abstain",
+            status="human_review",
+        ),
+    ]
+    summary = summarize(rows)
+    assert summary.loc["dedicated", "task_success"] == pytest.approx(2 / 3)
+    assert summary.loc["dedicated", "task_success_excl_human_review"] == 1.0
+    direct = human_review_metrics(
+        [True, True, False],
+        ["t1", "t2", "t3"],
+        status=["accepted", "accepted", "human_review"],
+        seed=0,
+    )
+    assert direct["task_success_excl_human_review"] == 1.0
+    assert (
+        summary.loc["dedicated", "task_success_excl_human_review_ci_low"],
+        summary.loc["dedicated", "task_success_excl_human_review_ci_high"],
+    ) == (
+        direct["task_success_excl_human_review_ci_low"],
+        direct["task_success_excl_human_review_ci_high"],
+    )
+
+
+def test_human_review_rate_and_absent_status_column():
+    rows = [
+        _run(
+            condition="peer",
+            task_id="t1",
+            run_number=1,
+            verdict="accept",
+            status="accepted",
+            final_correct=True,
+            initial_correct=True,
+        ),
+        _run(
+            condition="peer",
+            task_id="t2",
+            run_number=1,
+            verdict="abstain",
+            status="human_review",
+            final_correct=False,
+            initial_correct=False,
+        ),
+        _run(
+            condition="peer",
+            task_id="t3",
+            run_number=1,
+            verdict="reject",
+            status="human_review",
+            final_correct=False,
+            initial_correct=False,
+        ),
+        _run(
+            condition="peer",
+            task_id="t4",
+            run_number=1,
+            verdict="accept",
+            status="accepted",
+            final_correct=True,
+            initial_correct=True,
+        ),
+    ]
+    summary = summarize(rows)
+    assert summary.loc["peer", "human_review_rate"] == 0.5
+
+    # Without a status column the rate is None; excluded success uses every run.
+    no_status = [
+        _run(condition="self", task_id="a", run_number=1, final_correct=True, verdict="accept"),
+        _run(condition="self", task_id="b", run_number=1, final_correct=False, verdict="accept"),
+    ]
+    bare = summarize(no_status)
+    assert bare.loc["self", "human_review_rate"] is None
+    assert bare.loc["self", "task_success_excl_human_review"] == 0.5
+    assert human_review_metrics([True, False], ["a", "b"], status=None)["human_review_rate"] is None
+
+
+def test_four_quadrants_sum_to_scored_runs():
+    # One run of each quadrant, plus a failed run that must not count.
+    rows = [
+        _run(
+            condition="dedicated",
+            task_id="kept",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="accept",
+            status="accepted",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="fixed",
+            run_number=1,
+            initial_correct=False,
+            final_correct=True,
+            verdict="reject",
+            status="revised",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="broken",
+            run_number=1,
+            initial_correct=True,
+            final_correct=False,
+            verdict="reject",
+            status="revised",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="still",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict="accept",
+            status="accepted",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="fail",
+            run_number=1,
+            initial_correct=False,
+            final_correct=True,
+            verdict=None,
+            status="failed",
+        ),
+    ]
+    summary = summarize(rows)
+    row = summary.loc["dedicated"]
+    assert row["kept_correct"] == 1
+    assert row["fixed"] == 1
+    assert row["broken"] == 1
+    assert row["still_wrong"] == 1
+    assert row["kept_correct"] + row["fixed"] + row["broken"] + row["still_wrong"] == 4
+    assert row["n_failed"] == 1
+    counts = outcome_counts(
+        [True, False, True, False],
+        [True, True, False, False],
+    )
+    assert counts == {"kept_correct": 1, "fixed": 1, "broken": 1, "still_wrong": 1}
+
+
+def test_catch_outcomes_one_of_each_and_catch_fix_rate():
+    # Four initially wrong drafts with a verdict, one of each fate:
+    #   accept → missed
+    #   reject + final correct → caught_fixed
+    #   reject + final wrong → caught_not_fixed
+    #   abstain → caught_escalated
+    # catch_fix_rate = 1 / (1 + 1) = 0.5
+    # An initially correct reject must not enter these counts.
+    rows = [
+        _run(
+            condition="dedicated",
+            task_id="miss",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict="accept",
+            status="accepted",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="fix",
+            run_number=1,
+            initial_correct=False,
+            final_correct=True,
+            verdict="reject",
+            status="revised",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="notfix",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict="reject",
+            status="human_review",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="esc",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict="abstain",
+            status="human_review",
+        ),
+        _run(
+            condition="dedicated",
+            task_id="ok",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict="reject",
+            status="revised",
+        ),
+    ]
+    summary = summarize(rows)
+    row = summary.loc["dedicated"]
+    assert row["missed"] == 1
+    assert row["caught_fixed"] == 1
+    assert row["caught_not_fixed"] == 1
+    assert row["caught_escalated"] == 1
+    assert row["catch_fix_rate"] == 0.5
+
+    # Nothing rejected → catch_fix_rate is None.
+    no_reject = catch_outcome_metrics(
+        ["accept", "abstain"],
+        [False, False],
+        [False, False],
+        condition="peer",
+    )
+    assert no_reject["missed"] == 1
+    assert no_reject["caught_escalated"] == 1
+    assert no_reject["caught_fixed"] == 0
+    assert no_reject["caught_not_fixed"] == 0
+    assert no_reject["catch_fix_rate"] is None
+
+
+def test_none_condition_leaves_catch_outcomes_none():
+    rows = [
+        _run(
+            condition="none",
+            task_id="n1",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict=None,
+            status="unchecked",
+        ),
+        _run(
+            condition="none",
+            task_id="n2",
+            run_number=1,
+            initial_correct=True,
+            final_correct=True,
+            verdict=None,
+            status="unchecked",
+        ),
+    ]
+    summary = summarize(rows)
+    for column in ("missed", "caught_fixed", "caught_not_fixed", "caught_escalated", "catch_fix_rate"):
+        assert summary.loc["none", column] is None
+    # Quadrants and human-review rate still apply.
+    assert summary.loc["none", "kept_correct"] == 1
+    assert summary.loc["none", "still_wrong"] == 1
+    assert summary.loc["none", "human_review_rate"] == 0.0
+
+
+def test_failed_and_missing_verdict_excluded_from_catch_outcomes():
+    # Scored with verdict: wrong+reject+fixed. Failed run and missing-verdict
+    # run must not change the catch counts (same exclusion as verifier_metrics).
+    rows = [
+        _run(
+            condition="peer",
+            task_id="t1",
+            run_number=1,
+            initial_correct=False,
+            final_correct=True,
+            verdict="reject",
+            status="revised",
+        ),
+        _run(
+            condition="peer",
+            task_id="t2",
+            run_number=1,
+            initial_correct=False,
+            final_correct=False,
+            verdict=None,
+            status="human_review",
+        ),
+        _run(
+            condition="peer",
+            task_id="t3",
+            run_number=1,
+            initial_correct=False,
+            final_correct=True,
+            verdict="reject",
+            status="failed",
+            cost_usd=5,
+        ),
+    ]
+    summary = summarize(rows)
+    assert summary.loc["peer", "n_failed"] == 1
+    assert summary.loc["peer", "n_missing_verdict"] == 1
+    assert summary.loc["peer", "caught_fixed"] == 1
+    assert summary.loc["peer", "caught_not_fixed"] == 0
+    assert summary.loc["peer", "missed"] == 0
+    assert summary.loc["peer", "caught_escalated"] == 0
+    assert summary.loc["peer", "catch_fix_rate"] == 1.0
+    # Quadrants use scored runs only (failed dropped): fixed + still_wrong.
+    assert summary.loc["peer", "fixed"] == 1
+    assert summary.loc["peer", "still_wrong"] == 1
+    assert (
+        summary.loc["peer", "kept_correct"]
+        + summary.loc["peer", "fixed"]
+        + summary.loc["peer", "broken"]
+        + summary.loc["peer", "still_wrong"]
+    ) == 2
