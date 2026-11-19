@@ -1,0 +1,108 @@
+{
+  "run_id": "none-gemini-3.6-flash-S06-r3",
+  "task_id": "S06",
+  "condition": "none",
+  "run_number": 3,
+  "draft": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.7353590244},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.2646409756},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.76313175127027},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"The projected portfolio balance at month 240, accounting for monthly interest of 0.5%, scheduled contributions, and the month-180 withdrawal, is $1,000,045.74. The shortfall relative to the $1,200,000 target is $199,954.26. To bridge this shortfall with equal end-of-month payments over 240 months, an exact additional contribution of $432.7631 per month is required, which rounds upward to $432.77 per month.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.7353590244},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.2646409756},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.76313175127027},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"The projected portfolio balance at month 240, accounting for monthly interest of 0.5%, scheduled contributions, and the month-180 withdrawal, is $1,000,045.74. The shortfall relative to the $1,200,000 target is $199,954.26. To bridge this shortfall with equal end-of-month payments over 240 months, an exact additional contribution of $432.7631 per month is required, which rounds upward to $432.77 per month.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S06_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S06_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.7353590244,
+          "target_shortfall": 199954.2646409756,
+          "additional_monthly_contribution": 432.7631317512703,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S06_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S06_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.735359339,
+          "target_shortfall": 199954.26464066096,
+          "additional_monthly_contribution": 432.7631314340293,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S06_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S06_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.7353590244,
+          "target_shortfall": 199954.2646409756,
+          "additional_monthly_contribution": 432.7631317512703,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S06_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S06_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.735359339,
+          "target_shortfall": 199954.26464066096,
+          "additional_monthly_contribution": 432.7631314340293,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

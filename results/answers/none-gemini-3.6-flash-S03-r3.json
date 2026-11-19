@@ -1,0 +1,210 @@
+{
+  "run_id": "none-gemini-3.6-flash-S03-r3",
+  "task_id": "S03",
+  "condition": "none",
+  "run_number": 3,
+  "draft": "{\"scenario_id\":\"S03\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"BTC\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000}],\"selection\":null},\"violations\":[{\"kind\":\"CLASS_MAX\",\"scope\":\"STOCK\",\"observed\":0.6,\"limit\":0.4},{\"kind\":\"CLASS_MIN\",\"scope\":\"BOND\",\"observed\":0.3,\"limit\":0.45},{\"kind\":\"PROHIBITED_CLASS\",\"scope\":\"CRYPTO\",\"observed\":0.05,\"limit\":0},{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.2,\"limit\":0.15},{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"MSFT\",\"observed\":0.2,\"limit\":0.15}],\"explanation\":\"The analysis of the current $100,000 portfolio reveals five investment policy violations: 1) STOCK asset class allocation is 60% ($60,000), which exceeds the 40% maximum limit. 2) BOND asset class allocation is 30% ($30,000), which is below the 45% minimum limit. 3) CRYPTO is a prohibited asset class but currently has a 5% allocation ($5,000). 4) AAPL represents 20% of the portfolio ($20,000), exceeding the 15% maximum limit for individual stock positions. 5) MSFT also represents 20% of the portfolio ($20,000), exceeding the 15% maximum limit for individual stock positions.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"S03\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"BTC\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000}],\"selection\":null},\"violations\":[{\"kind\":\"CLASS_MAX\",\"scope\":\"STOCK\",\"observed\":0.6,\"limit\":0.4},{\"kind\":\"CLASS_MIN\",\"scope\":\"BOND\",\"observed\":0.3,\"limit\":0.45},{\"kind\":\"PROHIBITED_CLASS\",\"scope\":\"CRYPTO\",\"observed\":0.05,\"limit\":0},{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.2,\"limit\":0.15},{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"MSFT\",\"observed\":0.2,\"limit\":0.15}],\"explanation\":\"The analysis of the current $100,000 portfolio reveals five investment policy violations: 1) STOCK asset class allocation is 60% ($60,000), which exceeds the 40% maximum limit. 2) BOND asset class allocation is 30% ($30,000), which is below the 45% minimum limit. 3) CRYPTO is a prohibited asset class but currently has a 5% allocation ($5,000). 4) AAPL represents 20% of the portfolio ($20,000), exceeding the 15% maximum limit for individual stock positions. 5) MSFT also represents 20% of the portfolio ($20,000), exceeding the 15% maximum limit for individual stock positions.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S03_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S03_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.6,
+            "BOND": 0.3,
+            "CRYPTO": 0.05,
+            "CASH": 0.05
+          },
+          "violation_count": 5
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S03_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "VIOLATIONS_FOUND",
+        "details": {}
+      },
+      {
+        "check_id": "S03_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.6,
+            "BOND": 0.3,
+            "CRYPTO": 0.05,
+            "CASH": 0.05
+          },
+          "violation_count": 5
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S03_violations",
+        "check_type": "EXACT_SCOPED_VIOLATIONS",
+        "passed": true,
+        "observed": [
+          {
+            "kind": "CLASS_MAX",
+            "scope": "STOCK",
+            "observed": 0.6,
+            "limit": 0.4
+          },
+          {
+            "kind": "CLASS_MIN",
+            "scope": "BOND",
+            "observed": 0.3,
+            "limit": 0.45
+          },
+          {
+            "kind": "PROHIBITED_CLASS",
+            "scope": "CRYPTO",
+            "observed": 0.05,
+            "limit": 0.0
+          },
+          {
+            "kind": "INDIVIDUAL_MAX",
+            "scope": "AAPL",
+            "observed": 0.2,
+            "limit": 0.15
+          },
+          {
+            "kind": "INDIVIDUAL_MAX",
+            "scope": "MSFT",
+            "observed": 0.2,
+            "limit": 0.15
+          }
+        ],
+        "details": {}
+      },
+      {
+        "check_id": "S03_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S03_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S03_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.6,
+            "BOND": 0.3,
+            "CRYPTO": 0.05,
+            "CASH": 0.05
+          },
+          "violation_count": 5
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S03_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "VIOLATIONS_FOUND",
+        "details": {}
+      },
+      {
+        "check_id": "S03_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.6,
+            "BOND": 0.3,
+            "CRYPTO": 0.05,
+            "CASH": 0.05
+          },
+          "violation_count": 5
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S03_violations",
+        "check_type": "EXACT_SCOPED_VIOLATIONS",
+        "passed": true,
+        "observed": [
+          {
+            "kind": "CLASS_MAX",
+            "scope": "STOCK",
+            "observed": 0.6,
+            "limit": 0.4
+          },
+          {
+            "kind": "CLASS_MIN",
+            "scope": "BOND",
+            "observed": 0.3,
+            "limit": 0.45
+          },
+          {
+            "kind": "PROHIBITED_CLASS",
+            "scope": "CRYPTO",
+            "observed": 0.05,
+            "limit": 0.0
+          },
+          {
+            "kind": "INDIVIDUAL_MAX",
+            "scope": "AAPL",
+            "observed": 0.2,
+            "limit": 0.15
+          },
+          {
+            "kind": "INDIVIDUAL_MAX",
+            "scope": "MSFT",
+            "observed": 0.2,
+            "limit": 0.15
+          }
+        ],
+        "details": {}
+      },
+      {
+        "check_id": "S03_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

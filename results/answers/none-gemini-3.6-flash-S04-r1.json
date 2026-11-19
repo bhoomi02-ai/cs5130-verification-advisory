@@ -1,0 +1,108 @@
+{
+  "run_id": "none-gemini-3.6-flash-S04-r1",
+  "task_id": "S04",
+  "condition": "none",
+  "run_number": 1,
+  "draft": "{\"scenario_id\":\"S04\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":137688.62492701357},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":145469.34245607765},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":7780.71752906408}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A deducts a 1% entry fee ($1,000), leaving $99,000 to compound at an annual factor of (1 + 0.09) * (1 - 0.02) = 1.0682. Over 5 years, Fund A reaches $137,688.62. Fund B has no entry fee, investing $100,000 at an annual compounding factor of (1 + 0.08) * (1 - 0.002) = 1.07784, reaching $145,469.34 after 5 years. Fund B is the better-performing fund by $7,780.72.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"S04\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":137688.62492701357},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":145469.34245607765},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":7780.71752906408}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A deducts a 1% entry fee ($1,000), leaving $99,000 to compound at an annual factor of (1 + 0.09) * (1 - 0.02) = 1.0682. Over 5 years, Fund A reaches $137,688.62. Fund B has no entry fee, investing $100,000 at an annual compounding factor of (1 + 0.08) * (1 - 0.002) = 1.07784, reaching $145,469.34 after 5 years. Fund B is the better-performing fund by $7,780.72.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S04_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S04_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 137688.62492701356,
+          "fund_b_final": 145469.34245607766,
+          "absolute_difference": 7780.71752906408,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S04_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S04_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 137688.6249375888,
+          "fund_b_final": 145469.3451726326,
+          "absolute_difference": 7780.7202350438165,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S04_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S04_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 137688.62492701356,
+          "fund_b_final": 145469.34245607766,
+          "absolute_difference": 7780.71752906408,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S04_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S04_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 137688.6249375888,
+          "fund_b_final": 145469.3451726326,
+          "absolute_difference": 7780.7202350438165,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}
