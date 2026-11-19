@@ -410,6 +410,228 @@
           "formula": "len(response.violations)"
         }
       }
+    },
+    "T09-v001": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "locked_stock_value",
+        "minimum_stock_pct",
+        "maximum_target_stock_pct",
+        "stock_value_excess_above_tolerance"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "locked_stock_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of STOCK holdings prohibited from sale)"
+        },
+        "minimum_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "locked_stock_value / reported initial_total"
+        },
+        "maximum_target_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input STOCK target + input allocation tolerance"
+        },
+        "stock_value_excess_above_tolerance": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported locked_stock_value - reported initial_total * maximum_target_stock_pct"
+        }
+      }
+    },
+    "T09-v002": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "locked_stock_value",
+        "minimum_stock_pct",
+        "maximum_target_stock_pct",
+        "stock_value_excess_above_tolerance"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "locked_stock_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of STOCK holdings prohibited from sale)"
+        },
+        "minimum_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "locked_stock_value / reported initial_total"
+        },
+        "maximum_target_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input STOCK target + input allocation tolerance"
+        },
+        "stock_value_excess_above_tolerance": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported locked_stock_value - reported initial_total * maximum_target_stock_pct"
+        }
+      }
+    },
+    "T09-v003": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "locked_stock_value",
+        "minimum_stock_pct",
+        "maximum_target_stock_pct",
+        "stock_value_excess_above_tolerance"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "locked_stock_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of STOCK holdings prohibited from sale)"
+        },
+        "minimum_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "locked_stock_value / reported initial_total"
+        },
+        "maximum_target_stock_pct": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input STOCK target + input allocation tolerance"
+        },
+        "stock_value_excess_above_tolerance": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported locked_stock_value - reported initial_total * maximum_target_stock_pct"
+        }
+      }
+    },
+    "T10-v001": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "restricted_value",
+        "sellable_value",
+        "available_liquidity",
+        "required_liquidity",
+        "liquidity_shortfall",
+        "max_withdrawal_preserving_reserve"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "restricted_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of sale-restricted holdings)"
+        },
+        "sellable_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of other holdings)"
+        },
+        "available_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported CASH + reported sellable values"
+        },
+        "required_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input withdrawal + input minimum cash reserve"
+        },
+        "liquidity_shortfall": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available/required facts yield required_liquidity - available_liquidity"
+        },
+        "max_withdrawal_preserving_reserve": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available_liquidity - input minimum reserve"
+        }
+      }
+    },
+    "T10-v002": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "restricted_value",
+        "sellable_value",
+        "available_liquidity",
+        "required_liquidity",
+        "liquidity_shortfall",
+        "max_withdrawal_preserving_reserve"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "restricted_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of sale-restricted holdings)"
+        },
+        "sellable_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of other holdings)"
+        },
+        "available_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported CASH + reported sellable values"
+        },
+        "required_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input withdrawal + input minimum cash reserve"
+        },
+        "liquidity_shortfall": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available/required facts yield required_liquidity - available_liquidity"
+        },
+        "max_withdrawal_preserving_reserve": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available_liquidity - input minimum reserve"
+        }
+      }
+    },
+    "T10-v003": {
+      "mode": "PORTFOLIO_EVIDENCE",
+      "required_private_metrics": [
+        "initial_total",
+        "restricted_value",
+        "sellable_value",
+        "available_liquidity",
+        "required_liquidity",
+        "liquidity_shortfall",
+        "max_withdrawal_preserving_reserve"
+      ],
+      "metric_routes": {
+        "initial_total": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported INITIAL PORTFOLIO VALUE"
+        },
+        "restricted_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of sale-restricted holdings)"
+        },
+        "sellable_value": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "sum(reported INITIAL values of other holdings)"
+        },
+        "available_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported CASH + reported sellable values"
+        },
+        "required_liquidity": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "input withdrawal + input minimum cash reserve"
+        },
+        "liquidity_shortfall": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available/required facts yield required_liquidity - available_liquidity"
+        },
+        "max_withdrawal_preserving_reserve": {
+          "source": "REPORTED_INITIAL_EVIDENCE",
+          "formula": "reported available_liquidity - input minimum reserve"
+        }
+      }
     }
   }
 }

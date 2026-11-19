@@ -456,5 +456,257 @@
         "expected": []
       }
     }
+  ],
+  "T09-v001": [
+    {
+      "check_id": "T09-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T09-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "locked_stock_value",
+          "minimum_stock_pct",
+          "maximum_target_stock_pct",
+          "stock_value_excess_above_tolerance"
+        ]
+      }
+    },
+    {
+      "check_id": "T09-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T09-v001_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T09-v001_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T09-v002": [
+    {
+      "check_id": "T09-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T09-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "locked_stock_value",
+          "minimum_stock_pct",
+          "maximum_target_stock_pct",
+          "stock_value_excess_above_tolerance"
+        ]
+      }
+    },
+    {
+      "check_id": "T09-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T09-v002_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T09-v002_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T09-v003": [
+    {
+      "check_id": "T09-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T09-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "locked_stock_value",
+          "minimum_stock_pct",
+          "maximum_target_stock_pct",
+          "stock_value_excess_above_tolerance"
+        ]
+      }
+    },
+    {
+      "check_id": "T09-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T09-v003_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T09-v003_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T10-v001": [
+    {
+      "check_id": "T10-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T10-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "restricted_value",
+          "sellable_value",
+          "available_liquidity",
+          "required_liquidity",
+          "liquidity_shortfall",
+          "max_withdrawal_preserving_reserve"
+        ]
+      }
+    },
+    {
+      "check_id": "T10-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T10-v001_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T10-v001_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T10-v002": [
+    {
+      "check_id": "T10-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T10-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "restricted_value",
+          "sellable_value",
+          "available_liquidity",
+          "required_liquidity",
+          "liquidity_shortfall",
+          "max_withdrawal_preserving_reserve"
+        ]
+      }
+    },
+    {
+      "check_id": "T10-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T10-v002_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T10-v002_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T10-v003": [
+    {
+      "check_id": "T10-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T10-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "restricted_value",
+          "sellable_value",
+          "available_liquidity",
+          "required_liquidity",
+          "liquidity_shortfall",
+          "max_withdrawal_preserving_reserve"
+        ]
+      }
+    },
+    {
+      "check_id": "T10-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T10-v003_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T10-v003_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
   ]
 }
