@@ -433,5 +433,22 @@
     },
     "violations": [],
     "explanation": "AAPL ($20,000) and MSFT ($30,000) cannot be sold. VOO+BND provide only $40,000 plus $10,000 cash, versus $51,000 required including the $5,000 reserve for a $46,000 withdrawal: $1,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
+  },
+  "T10-v002": {
+    "scenario_id": "T10-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "restricted_value": 40000,
+      "sellable_value": 50000,
+      "available_liquidity": 60000,
+      "required_liquidity": 65000,
+      "liquidity_shortfall": 5000,
+      "max_withdrawal_preserving_reserve": 55000
+    },
+    "violations": [],
+    "explanation": "VOO ($20,000) and BND ($20,000) cannot be sold. AAPL+MSFT provide $50,000 plus $10,000 cash, versus $65,000 required including the $5,000 reserve for a $60,000 withdrawal: $5,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
   }
 }
