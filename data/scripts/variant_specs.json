@@ -1,0 +1,50 @@
+{
+  "S01": [
+    {"id": "T01-v001", "difficulty": "MEDIUM", "story": "standard portfolio rebalancing", "quantities": {"AAPL": 100, "TSLA": 50, "MSFT": 50, "VOO": 30, "BND": 250}, "cash": 10000, "targets": {"STOCK": 0.6, "BOND": 0.3, "CASH": 0.1}, "individual_cap": 0.25, "no_sell": ["AAPL"]},
+    {"id": "T01-v002", "difficulty": "MEDIUM_HARD", "story": "reducing investment risk", "quantities": {"AAPL": 90, "TSLA": 55, "MSFT": 45, "VOO": 32, "BND": 260}, "cash": 10700, "targets": {"STOCK": 0.55, "BOND": 0.35, "CASH": 0.1}, "individual_cap": 0.22, "no_sell": ["MSFT"]},
+    {"id": "T01-v003", "difficulty": "HARD", "story": "increasing liquidity and bond exposure", "quantities": {"AAPL": 80, "TSLA": 60, "MSFT": 55, "VOO": 24, "BND": 300}, "cash": 8000, "targets": {"STOCK": 0.5, "BOND": 0.35, "CASH": 0.15}, "individual_cap": 0.2, "no_sell": ["AAPL", "BND"]},
+    {"id": "T01-v004", "difficulty": "VERY_HARD", "story": "preserving long-term investment positions", "quantities": {"AAPL": 75, "TSLA": 45, "MSFT": 40, "VOO": 45, "BND": 250}, "cash": 13000, "targets": {"STOCK": 0.55, "BOND": 0.3, "CASH": 0.15}, "individual_cap": 0.18, "no_sell": ["AAPL", "VOO"]}
+  ],
+  "S02": [
+    {"id": "T02-v001", "difficulty": "MEDIUM", "story": "I need money for a planned personal expense while maintaining my cash reserve.", "quantities": {"AAPL": 50, "MSFT": 40, "VOO": 60, "BND": 300}, "cash": 18000, "withdrawal": 25000, "min_cash": 12000, "no_sell": []},
+    {"id": "T02-v002", "difficulty": "MEDIUM_HARD", "story": "I need to fund a large property payment, but I want to preserve my diversified stock ETF position.", "quantities": {"AAPL": 60, "MSFT": 45, "VOO": 48, "BND": 350}, "cash": 9000, "withdrawal": 35000, "min_cash": 10000, "no_sell": ["VOO"]},
+    {"id": "T02-v003", "difficulty": "HARD", "story": "I have a financial obligation coming due. I want to preserve my AAPL investment and my existing bond position.", "quantities": {"AAPL": 50, "MSFT": 55, "VOO": 60, "BND": 250}, "cash": 10000, "withdrawal": 30000, "min_cash": 12000, "no_sell": ["AAPL", "BND"]},
+    {"id": "T02-v004", "difficulty": "VERY_HARD", "story": "I need a large cash withdrawal without selling any of my equity investments. My available bond holdings must provide the necessary liquidity.", "quantities": {"AAPL": 50, "MSFT": 40, "VOO": 60, "BND": 300}, "cash": 6000, "withdrawal": 25000, "min_cash": 5000, "no_sell": ["AAPL", "MSFT", "VOO"]}
+  ],
+  "S03": [
+    {"id": "T03-v001", "type": "MULTIPLE_VIOLATIONS", "quantities": {"AAPL": 100, "MSFT": 50, "VOO": 40, "BND": 375, "BTC": 0.1}, "cash": 5000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 5},
+    {"id": "T03-v002", "type": "NO_VIOLATIONS", "quantities": {"AAPL": 50, "MSFT": 25, "VOO": 30, "BND": 625}, "cash": 15000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 0},
+    {"id": "T03-v003", "type": "CLASS_AND_PROHIBITED_VIOLATIONS", "quantities": {"AAPL": 20, "MSFT": 20, "VOO": 10, "BND": 500, "BTC": 0.1}, "cash": 38000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 4},
+    {"id": "T03-v004", "type": "NEAR_BOUNDARY_VIOLATION", "quantities": {"AAPL": 76, "MSFT": 35, "VOO": 40, "BND": 500}, "cash": 10800, "stock_range": [0.2, 0.5], "bond_range": [0.35, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 1}
+  ],
+  "S04": [
+    {"id": "T04-v001", "story_type": "Personal investment", "background": "An individual investor wants to compare two funds for growing personal savings.", "years": 5, "a_return": 0.09, "a_annual_fee": 0.02, "a_entry_fee": 0.01, "b_return": 0.08, "b_annual_fee": 0.002, "b_entry_fee": 0.0},
+    {"id": "T04-v002", "story_type": "College education fund", "background": "A parent is investing money to help pay for a child's university education.", "years": 15, "a_return": 0.085, "a_annual_fee": 0.005, "a_entry_fee": 0.03, "b_return": 0.075, "b_annual_fee": 0.012, "b_entry_fee": 0.0},
+    {"id": "T04-v003", "story_type": "Business reserve investment", "background": "A business owner is comparing two investment options for surplus company reserves.", "years": 10, "a_return": 0.095, "a_annual_fee": 0.025, "a_entry_fee": 0.0, "b_return": 0.085, "b_annual_fee": 0.005, "b_entry_fee": 0.01},
+    {"id": "T04-v004", "story_type": "Long-term financial goal", "background": "A client is building an investment fund for a planned major purchase.", "years": 8, "a_return": 0.08, "a_annual_fee": 0.004, "a_entry_fee": 0.025, "b_return": 0.08, "b_annual_fee": 0.012, "b_entry_fee": 0.0}
+  ],
+  "S05": [
+    {"id": "T05-v001", "difficulty": "MEDIUM", "story": "standard portfolio rebalancing", "quantities": {"AAPL": 100, "MSFT": 75, "NVDA": 50, "VOO": 40, "BND": 250}, "cash": 0, "targets": {"STOCK": 0.6, "BOND": 0.3, "CASH": 0.1}, "individual_cap": 0.25, "sector_cap": 0.4, "no_sell": ["AAPL"]},
+    {"id": "T05-v002", "difficulty": "MEDIUM_HARD", "story": "reducing portfolio risk while preserving MSFT", "quantities": {"AAPL": 90, "MSFT": 65, "NVDA": 60, "VOO": 42, "BND": 250}, "cash": 3000, "targets": {"STOCK": 0.55, "BOND": 0.35, "CASH": 0.1}, "individual_cap": 0.27, "sector_cap": 0.38, "no_sell": ["MSFT"]},
+    {"id": "T05-v003", "difficulty": "HARD", "story": "reducing technology concentration and increasing cash reserves", "quantities": {"AAPL": 100, "MSFT": 50, "NVDA": 65, "VOO": 50, "BND": 225}, "cash": 4000, "targets": {"STOCK": 0.5, "BOND": 0.35, "CASH": 0.15}, "individual_cap": 0.21, "sector_cap": 0.33, "no_sell": ["AAPL", "BND"]},
+    {"id": "T05-v004", "difficulty": "VERY_HARD", "story": "preserving long-term holdings while limiting direct technology exposure", "quantities": {"AAPL": 75, "MSFT": 50, "NVDA": 75, "VOO": 70, "BND": 150}, "cash": 3000, "targets": {"STOCK": 0.55, "BOND": 0.3, "CASH": 0.15}, "individual_cap": 0.18, "sector_cap": 0.27, "no_sell": ["AAPL", "VOO"]}
+  ],
+  "S06": [
+    {"id": "T06-v001", "story_type": "Retirement planning", "background": "A client is saving toward a retirement target.", "initial_balance": 150000, "monthly_rate": 0.005, "total_months": 240, "target_balance": 1200000, "contributions": [[1, 120, 1000], [121, 120, 1500]], "withdrawals": [[180, 30000]]},
+    {"id": "T06-v002", "story_type": "Home purchase savings", "background": "A client is building a long-term fund toward a future home purchase.", "initial_balance": 120000, "monthly_rate": 0.0035, "total_months": 240, "target_balance": 1400000, "contributions": [[1, 120, 1200], [121, 120, 1800]], "withdrawals": [[180, 40000]]},
+    {"id": "T06-v003", "story_type": "Children's education savings", "background": "A family is investing toward a future education funding target.", "initial_balance": 250000, "monthly_rate": 0.0055, "total_months": 180, "target_balance": 1200000, "contributions": [[1, 90, 1500], [91, 90, 2000]], "withdrawals": [[60, 50000]]},
+    {"id": "T06-v004", "story_type": "Business expansion capital", "background": "A small business owner is building capital for a future expansion.", "initial_balance": 80000, "monthly_rate": 0.004, "total_months": 120, "target_balance": 750000, "contributions": [[1, 60, 2500], [61, 60, 3500]], "withdrawals": [[90, 20000]]}
+  ],
+  "S07": [
+    {"id": "T07-v001", "difficulty": "MEDIUM", "story": "standard portfolio rebalancing", "quantities": {"AAPL": 100, "MSFT": 50, "VOO": 80, "BND": 200}, "cash": 2000, "deposit": 12000, "targets": {"STOCK": 0.6, "BOND": 0.3, "CASH": 0.1}, "individual_cap": 0.3, "no_sell": ["AAPL"]},
+    {"id": "T07-v002", "difficulty": "MEDIUM_HARD", "story": "reducing portfolio risk", "quantities": {"AAPL": 105, "MSFT": 65, "VOO": 65, "BND": 220}, "cash": 3000, "deposit": 18000, "targets": {"STOCK": 0.55, "BOND": 0.35, "CASH": 0.1}, "individual_cap": 0.27, "no_sell": ["MSFT"]},
+    {"id": "T07-v003", "difficulty": "HARD", "story": "increasing emergency cash reserves", "quantities": {"AAPL": 110, "MSFT": 75, "VOO": 70, "BND": 180}, "cash": 1000, "deposit": 8000, "targets": {"STOCK": 0.5, "BOND": 0.35, "CASH": 0.15}, "individual_cap": 0.23, "no_sell": ["AAPL", "BND"]},
+    {"id": "T07-v004", "difficulty": "VERY_HARD", "story": "preserving long-term investments", "quantities": {"AAPL": 80, "MSFT": 85, "VOO": 85, "BND": 160}, "cash": 1000, "deposit": 15000, "targets": {"STOCK": 0.55, "BOND": 0.3, "CASH": 0.15}, "individual_cap": 0.2, "no_sell": ["AAPL", "VOO"]}
+  ],
+  "S08": [
+    {"id": "T08-v001", "difficulty": "MEDIUM", "story": "a planned personal withdrawal", "quantities": {"AAPL": 100, "MSFT": 50, "VOO": 60, "BND": 250}, "cash": 10000, "withdrawal": 20000, "min_cash": 10000, "targets": {"STOCK": 0.5, "BOND": 0.375, "CASH": 0.125}, "no_sell": ["AAPL"]},
+    {"id": "T08-v002", "difficulty": "MEDIUM_HARD", "story": "funding a property payment while increasing my bond allocation", "quantities": {"AAPL": 90, "MSFT": 60, "VOO": 55, "BND": 280}, "cash": 9000, "withdrawal": 28000, "min_cash": 10000, "targets": {"STOCK": 0.45, "BOND": 0.4, "CASH": 0.15}, "no_sell": ["MSFT"]},
+    {"id": "T08-v003", "difficulty": "HARD", "story": "meeting a financial obligation while preserving selected investments", "quantities": {"AAPL": 80, "MSFT": 55, "VOO": 70, "BND": 300}, "cash": 6000, "withdrawal": 18000, "min_cash": 12000, "targets": {"STOCK": 0.52, "BOND": 0.33, "CASH": 0.15}, "no_sell": ["AAPL", "BND"]},
+    {"id": "T08-v004", "difficulty": "VERY_HARD", "story": "making a large withdrawal without selling my protected equity holdings", "quantities": {"AAPL": 65, "MSFT": 55, "VOO": 60, "BND": 230}, "cash": 8000, "withdrawal": 30000, "min_cash": 8000, "targets": {"STOCK": 0.7, "BOND": 0.15, "CASH": 0.15}, "no_sell": ["AAPL", "VOO"]}
+  ]
+}
