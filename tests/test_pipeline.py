@@ -72,8 +72,8 @@ def test_none_keeps_the_draft_as_final(fake_model, tmp_path):
     assert (result.verdict, result.status, result.condition) == (None, "unchecked", "none")
 
 
-def test_registry_has_the_four_conditions():
-    assert set(CONDITIONS) == {"none", "self", "peer", "dedicated"}
+def test_registry_has_the_six_conditions():
+    assert set(CONDITIONS) == {"none", "self", "peer", "dedicated", "weakened", "cross_family"}
 
 
 def test_usage_adds_up_draft_and_run_calls(tmp_path):

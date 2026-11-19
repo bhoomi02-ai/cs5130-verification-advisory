@@ -10,10 +10,13 @@ results file with runs for the same model made with other settings is refused.
 
 A run whose API call fails (after call_model's retries) is saved with status
 "failed" and the script moves on; after 3 failed runs in a row it stops, since
-that points to an outage rather than the condition. For self and peer each
-line also shows the first verdict and the run's status. Add --retry-failed to run
-the failed ones again, replacing their rows. The daily quota and errors in the
-code stop the script without saving a row for that run.
+that points to an outage rather than the condition. For the checked
+conditions (self, peer, dedicated, weakened, cross_family) each line also shows
+the first verdict, the run's status and the verifier's model calls. Add
+--retry-failed to run the failed ones again, replacing their rows. A daily limit
+(Gemini or Groq) and errors in the code stop the script without saving a row for
+that run. cross_family needs GROQ_API_KEY in .env; its verifier is
+openai/gpt-oss-20b, while --model stays the advisor's model.
 """
 
 from __future__ import annotations
@@ -72,7 +75,11 @@ def main(argv: list[str] | None = None) -> int:
                     return 1
                 continue
             failed_in_a_row = 0
-            checked = f"verdict {row['verdict'] or 'unreadable'} → {row['status']}, " if args.condition != "none" else ""
+            checked = (
+                f"verdict {row['verdict'] or 'unreadable'} → {row['status']}, {row['verifier_calls']} verifier calls, "
+                if args.condition != "none"
+                else ""
+            )
             print(
                 f"done  {task_id} r{run_number} {args.condition}: {checked}"
                 f"first draft {'right' if row['initial_correct'] else 'wrong'}, "
