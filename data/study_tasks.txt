@@ -1,0 +1,59 @@
+# The 32 tasks of the main study (32 tasks x 3 repeats, agreed 2026-11-19).
+# One task ID per line; lines starting with # are ignored.
+# Use: python scripts/run_condition.py --condition none --model gemini-3.6-flash --repeats 3 --tasks-file data/study_tasks.txt
+#
+# Left out on purpose: T04-v001, T06-v001 and T03-v005 have the same numbers
+# and answers as S04, S06 and S03 (only the story differs), and the other
+# generated variants were cut to fit the budget.
+
+# Base templates
+S01
+S02
+S03
+S04
+S05
+S06
+S07
+S08
+S09
+S10
+
+# S01 rebalance: HARD, VERY_HARD
+T01-v003
+T01-v004
+
+# S02 withdrawal: HARD, VERY_HARD
+T02-v003
+T02-v004
+
+# S03 violations: AAPL exactly at its limit; no violations
+T03-v001
+T03-v002
+
+# S04 fund fees: entry fee on Fund B; equal returns, entry vs annual fee
+T04-v003
+T04-v004
+
+# S05 rebalance with sector cap: HARD, VERY_HARD
+T05-v003
+T05-v004
+
+# S06 retirement: early withdrawal; 10-year horizon
+T06-v003
+T06-v004
+
+# S07 deposit and rebalance: HARD, VERY_HARD
+T07-v003
+T07-v004
+
+# S08 withdrawal and rebalance: HARD, VERY_HARD
+T08-v003
+T08-v004
+
+# S09 / S10 infeasible (hand-built)
+T09-v001
+T09-v002
+T09-v003
+T10-v001
+T10-v002
+T10-v003
