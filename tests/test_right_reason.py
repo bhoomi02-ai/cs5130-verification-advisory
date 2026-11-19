@@ -130,8 +130,13 @@ def test_load_labels_parses_real_csv():
 def test_extract_numbers_handles_currency_commas_percent_and_sign():
     assert extract_numbers("$137,688.62") == [137688.62]
     assert extract_numbers("137,689") == [137689.0]
+    assert extract_numbers("137 688.62") == [137688.62]
+    assert extract_numbers("$145,470.34") == [145470.34]
     assert extract_numbers("35%") == [35.0, 0.35]
     assert extract_numbers("-1") == [-1.0]
+    # Spaces only join proper thousands groups, not adjacent small figures.
+    assert extract_numbers("3 100") == [3.0, 100.0]
+    assert extract_numbers("2026 11 23") == [2026.0, 11.0, 23.0]
 
 
 def test_number_matching_tolerance_and_formats():
@@ -340,6 +345,54 @@ def test_metric_denominators_and_none_when_zero():
     assert empty_flag["seeded_catch_rate"] == 0.0
 
 
+def test_abstain_is_flagged_but_excluded_from_right_reason_rate():
+    labels = load_labels(LABELS)
+    label = _label("S04_arithmetic_ignore_entry_fee")
+    # Issues with the right number must not override abstain.
+    classified = classify_review(
+        _review(verdict="abstain", issues=["Fund A ends at 139079.42"]),
+        label,
+    )
+    assert classified["decision"] == "abstained"
+    assert classified["matched"] == []
+
+    records = [
+        _record(
+            "S04_arithmetic_ignore_entry_fee",
+            _review(issues=["Fund A ends at 139079.42"]),
+            condition="dedicated",
+            verifier_model="m1",
+            status="reviewed",
+        ),
+        _record(
+            "S06_arithmetic_payment_over_months",
+            _review(verdict="abstain", issues=["payment looks wrong"]),
+            condition="dedicated",
+            verifier_model="m1",
+            run_number=2,
+            status="reviewed",
+        ),
+        _record(
+            "S08_arithmetic_skip_withdrawal",
+            _review(verdict="accept"),
+            condition="dedicated",
+            verifier_model="m1",
+            run_number=3,
+            status="reviewed",
+        ),
+    ]
+    row = right_reason_metrics(records, labels).iloc[0]
+    # Three readable verdicts; two flagged (reject + abstain) → catch 2/3.
+    assert row["seeded_catch_rate"] == pytest.approx(2 / 3)
+    assert row["abstained"] == 1
+    assert row["right_reason"] == 1
+    assert row["wrong_reason"] == 0
+    assert row["consequence_only"] == 0
+    # right_reason_rate ignores abstentions: 1 / (1+0+0) = 1.
+    assert row["right_reason_rate"] == 1.0
+    assert row["right_reason_catch_rate"] == pytest.approx(1 / 3)
+
+
 def test_failed_records_excluded_from_rates_and_counted():
     labels = load_labels(LABELS)
     records = [
@@ -440,6 +493,7 @@ def test_all_failed_group_returns_n_failed_and_none_rates():
     assert row["right_reason_rate"] is None
     assert row["right_reason_catch_rate"] is None
     assert row["right_reason"] == 0
+    assert row["abstained"] == 0
 
 
 def test_report_writes_seeded_outputs_only_when_files_exist(tmp_path):
