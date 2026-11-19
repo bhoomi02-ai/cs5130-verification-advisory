@@ -330,8 +330,7 @@
     "explanation": "AAPL ($20,000) and MSFT ($30,000) cannot be sold. VOO+BND provide only $40,000 plus $10,000 cash, versus $85,000 required including reserve: $35,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
   },
   "T01-v001": {
-    "scenario_id": "S01",
-    "variant_id": "T01-v001",
+    "scenario_id": "T01-v001",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -377,8 +376,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T01-v002": {
-    "scenario_id": "S01",
-    "variant_id": "T01-v002",
+    "scenario_id": "T01-v002",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -424,8 +422,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T01-v003": {
-    "scenario_id": "S01",
-    "variant_id": "T01-v003",
+    "scenario_id": "T01-v003",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -467,8 +464,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T01-v004": {
-    "scenario_id": "S01",
-    "variant_id": "T01-v004",
+    "scenario_id": "T01-v004",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -514,8 +510,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T02-v001": {
-    "scenario_id": "S02",
-    "variant_id": "T02-v001",
+    "scenario_id": "T02-v001",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -556,8 +551,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T02-v002": {
-    "scenario_id": "S02",
-    "variant_id": "T02-v002",
+    "scenario_id": "T02-v002",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -598,8 +592,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T02-v003": {
-    "scenario_id": "S02",
-    "variant_id": "T02-v003",
+    "scenario_id": "T02-v003",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -640,8 +633,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T02-v004": {
-    "scenario_id": "S02",
-    "variant_id": "T02-v004",
+    "scenario_id": "T02-v004",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -678,8 +670,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T03-v001": {
-    "scenario_id": "S03",
-    "variant_id": "T03-v001",
+    "scenario_id": "T03-v001",
     "answer_type": "VIOLATION_LIST",
     "status": "VIOLATIONS_FOUND",
     "trades": [],
@@ -728,8 +719,7 @@
     "explanation": "Exactly 5 violations: STOCK overweight (60% vs limit 40%); BOND underweight (30% vs limit 45%); CRYPTO prohibited (5% vs limit 0%); AAPL individual concentration (20% vs limit 15%); MSFT individual concentration (20% vs limit 15%). No remediation trades."
   },
   "T03-v002": {
-    "scenario_id": "S03",
-    "variant_id": "T03-v002",
+    "scenario_id": "T03-v002",
     "answer_type": "VIOLATION_LIST",
     "status": "FEASIBLE",
     "trades": [],
@@ -746,8 +736,7 @@
     "explanation": "No policy violations: every asset class and individual stock is within its limit. Report an empty violation list and no trades."
   },
   "T03-v003": {
-    "scenario_id": "S03",
-    "variant_id": "T03-v003",
+    "scenario_id": "T03-v003",
     "answer_type": "VIOLATION_LIST",
     "status": "VIOLATIONS_FOUND",
     "trades": [],
@@ -790,8 +779,7 @@
     "explanation": "Exactly 4 violations: STOCK underweight (17% vs limit 20%); BOND underweight (40% vs limit 45%); CASH overweight (38% vs limit 25%); CRYPTO prohibited (5% vs limit 0%). No remediation trades."
   },
   "T03-v004": {
-    "scenario_id": "S03",
-    "variant_id": "T03-v004",
+    "scenario_id": "T03-v004",
     "answer_type": "VIOLATION_LIST",
     "status": "VIOLATIONS_FOUND",
     "trades": [],
@@ -815,8 +803,7 @@
     "explanation": "Exactly 1 violation: AAPL individual concentration (15.20% vs limit 15%). No remediation trades."
   },
   "T04-v001": {
-    "scenario_id": "S04",
-    "variant_id": "T04-v001",
+    "scenario_id": "T04-v001",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -831,8 +818,7 @@
     "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 99000*((1+0.09)*(1-0.02))^5; B = 100000*((1+0.08)*(1-0.002))^5."
   },
   "T04-v002": {
-    "scenario_id": "S04",
-    "variant_id": "T04-v002",
+    "scenario_id": "T04-v002",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -847,8 +833,7 @@
     "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 97000*((1+0.085)*(1-0.005))^15; B = 100000*((1+0.075)*(1-0.012))^15."
   },
   "T04-v003": {
-    "scenario_id": "S04",
-    "variant_id": "T04-v003",
+    "scenario_id": "T04-v003",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -863,8 +848,7 @@
     "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 100000*((1+0.095)*(1-0.025))^10; B = 99000*((1+0.085)*(1-0.005))^10."
   },
   "T04-v004": {
-    "scenario_id": "S04",
-    "variant_id": "T04-v004",
+    "scenario_id": "T04-v004",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -879,8 +863,7 @@
     "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 97500*((1+0.08)*(1-0.004))^8; B = 100000*((1+0.08)*(1-0.012))^8."
   },
   "T05-v001": {
-    "scenario_id": "S05",
-    "variant_id": "T05-v001",
+    "scenario_id": "T05-v001",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -927,8 +910,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T05-v002": {
-    "scenario_id": "S05",
-    "variant_id": "T05-v002",
+    "scenario_id": "T05-v002",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -979,8 +961,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T05-v003": {
-    "scenario_id": "S05",
-    "variant_id": "T05-v003",
+    "scenario_id": "T05-v003",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1031,8 +1012,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T05-v004": {
-    "scenario_id": "S05",
-    "variant_id": "T05-v004",
+    "scenario_id": "T05-v004",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1079,8 +1059,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T06-v001": {
-    "scenario_id": "S06",
-    "variant_id": "T06-v001",
+    "scenario_id": "T06-v001",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -1095,8 +1074,7 @@
     "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-240. Target shortfall means target minus projected balance."
   },
   "T06-v002": {
-    "scenario_id": "S06",
-    "variant_id": "T06-v002",
+    "scenario_id": "T06-v002",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -1111,8 +1089,7 @@
     "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-240. Target shortfall means target minus projected balance."
   },
   "T06-v003": {
-    "scenario_id": "S06",
-    "variant_id": "T06-v003",
+    "scenario_id": "T06-v003",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -1127,8 +1104,7 @@
     "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-180. Target shortfall means target minus projected balance."
   },
   "T06-v004": {
-    "scenario_id": "S06",
-    "variant_id": "T06-v004",
+    "scenario_id": "T06-v004",
     "answer_type": "NUMERIC_RESULT",
     "status": "FEASIBLE",
     "trades": [],
@@ -1143,8 +1119,7 @@
     "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-120. Target shortfall means target minus projected balance."
   },
   "T07-v001": {
-    "scenario_id": "S07",
-    "variant_id": "T07-v001",
+    "scenario_id": "T07-v001",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1189,8 +1164,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T07-v002": {
-    "scenario_id": "S07",
-    "variant_id": "T07-v002",
+    "scenario_id": "T07-v002",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1235,8 +1209,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T07-v003": {
-    "scenario_id": "S07",
-    "variant_id": "T07-v003",
+    "scenario_id": "T07-v003",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1281,8 +1254,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T07-v004": {
-    "scenario_id": "S07",
-    "variant_id": "T07-v004",
+    "scenario_id": "T07-v004",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1323,8 +1295,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T08-v001": {
-    "scenario_id": "S08",
-    "variant_id": "T08-v001",
+    "scenario_id": "T08-v001",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1368,8 +1339,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T08-v002": {
-    "scenario_id": "S08",
-    "variant_id": "T08-v002",
+    "scenario_id": "T08-v002",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1413,8 +1383,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T08-v003": {
-    "scenario_id": "S08",
-    "variant_id": "T08-v003",
+    "scenario_id": "T08-v003",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1458,8 +1427,7 @@
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T08-v004": {
-    "scenario_id": "S08",
-    "variant_id": "T08-v004",
+    "scenario_id": "T08-v004",
     "answer_type": "TRADE_PLAN",
     "status": "FEASIBLE",
     "trades": [
@@ -1497,5 +1465,101 @@
     },
     "violations": [],
     "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T09-v001": {
+    "scenario_id": "T09-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "locked_stock_value": 41000,
+      "minimum_stock_pct": 0.41,
+      "maximum_target_stock_pct": 0.405,
+      "stock_value_excess_above_tolerance": 500
+    },
+    "violations": [],
+    "explanation": "STOCK cannot fall below $41,000 / $100,000 = 41%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 40.5% ($40,500), leaving $500 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
+  },
+  "T09-v002": {
+    "scenario_id": "T09-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 200000,
+      "locked_stock_value": 120000,
+      "minimum_stock_pct": 0.6,
+      "maximum_target_stock_pct": 0.305,
+      "stock_value_excess_above_tolerance": 59000
+    },
+    "violations": [],
+    "explanation": "STOCK cannot fall below $120,000 / $200,000 = 60%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 30.5% ($61,000), leaving $59,000 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
+  },
+  "T09-v003": {
+    "scenario_id": "T09-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "locked_stock_value": 43000,
+      "minimum_stock_pct": 0.43,
+      "maximum_target_stock_pct": 0.42,
+      "stock_value_excess_above_tolerance": 1000
+    },
+    "violations": [],
+    "explanation": "STOCK cannot fall below $43,000 / $100,000 = 43%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 42% ($42,000) with ±2 percentage points tolerance, leaving $1,000 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
+  },
+  "T10-v001": {
+    "scenario_id": "T10-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "restricted_value": 50000,
+      "sellable_value": 40000,
+      "available_liquidity": 50000,
+      "required_liquidity": 51000,
+      "liquidity_shortfall": 1000,
+      "max_withdrawal_preserving_reserve": 45000
+    },
+    "violations": [],
+    "explanation": "AAPL ($20,000) and MSFT ($30,000) cannot be sold. VOO+BND provide only $40,000 plus $10,000 cash, versus $51,000 required including the $5,000 reserve for a $46,000 withdrawal: $1,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
+  },
+  "T10-v002": {
+    "scenario_id": "T10-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "restricted_value": 40000,
+      "sellable_value": 50000,
+      "available_liquidity": 60000,
+      "required_liquidity": 65000,
+      "liquidity_shortfall": 5000,
+      "max_withdrawal_preserving_reserve": 55000
+    },
+    "violations": [],
+    "explanation": "VOO ($20,000) and BND ($20,000) cannot be sold. AAPL+MSFT provide $50,000 plus $10,000 cash, versus $65,000 required including the $5,000 reserve for a $60,000 withdrawal: $5,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
+  },
+  "T10-v003": {
+    "scenario_id": "T10-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "restricted_value": 30000,
+      "sellable_value": 60000,
+      "available_liquidity": 70000,
+      "required_liquidity": 80000,
+      "liquidity_shortfall": 10000,
+      "max_withdrawal_preserving_reserve": 50000
+    },
+    "violations": [],
+    "explanation": "AAPL ($10,000) and MSFT ($20,000) cannot be sold. VOO+BND provide $60,000 plus $10,000 cash, versus $80,000 required including the $20,000 reserve for a $60,000 withdrawal: $10,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
   }
 }
