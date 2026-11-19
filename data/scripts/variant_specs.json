@@ -12,10 +12,10 @@
     {"id": "T02-v004", "difficulty": "VERY_HARD", "story": "I need a large cash withdrawal without selling any of my equity investments. My available bond holdings must provide the necessary liquidity.", "quantities": {"AAPL": 50, "MSFT": 40, "VOO": 60, "BND": 300}, "cash": 6000, "withdrawal": 25000, "min_cash": 5000, "no_sell": ["AAPL", "MSFT", "VOO"]}
   ],
   "S03": [
-    {"id": "T03-v001", "type": "MULTIPLE_VIOLATIONS", "quantities": {"AAPL": 100, "MSFT": 50, "VOO": 40, "BND": 375, "BTC": 0.1}, "cash": 5000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 5},
     {"id": "T03-v002", "type": "NO_VIOLATIONS", "quantities": {"AAPL": 50, "MSFT": 25, "VOO": 30, "BND": 625}, "cash": 15000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 0},
     {"id": "T03-v003", "type": "CLASS_AND_PROHIBITED_VIOLATIONS", "quantities": {"AAPL": 20, "MSFT": 20, "VOO": 10, "BND": 500, "BTC": 0.1}, "cash": 38000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 4},
-    {"id": "T03-v004", "type": "NEAR_BOUNDARY_VIOLATION", "quantities": {"AAPL": 76, "MSFT": 35, "VOO": 40, "BND": 500}, "cash": 10800, "stock_range": [0.2, 0.5], "bond_range": [0.35, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 1}
+    {"id": "T03-v004", "type": "NEAR_BOUNDARY_VIOLATION", "quantities": {"AAPL": 76, "MSFT": 35, "VOO": 40, "BND": 500}, "cash": 10800, "stock_range": [0.2, 0.5], "bond_range": [0.35, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 1},
+    {"id": "T03-v005", "type": "MULTIPLE_VIOLATIONS", "quantities": {"AAPL": 100, "MSFT": 50, "VOO": 40, "BND": 375, "BTC": 0.1}, "cash": 5000, "stock_range": [0.2, 0.4], "bond_range": [0.45, 0.65], "cash_range": [0.05, 0.25], "individual_cap": 0.15, "expected_count": 5}
   ],
   "S04": [
     {"id": "T04-v001", "story_type": "Personal investment", "background": "An individual investor wants to compare two funds for growing personal savings.", "years": 5, "a_return": 0.09, "a_annual_fee": 0.02, "a_entry_fee": 0.01, "b_return": 0.08, "b_annual_fee": 0.002, "b_entry_fee": 0.0},
