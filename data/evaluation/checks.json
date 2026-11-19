@@ -538,5 +538,46 @@
         "expected": []
       }
     }
+  ],
+  "T09-v003": [
+    {
+      "check_id": "T09-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T09-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "locked_stock_value",
+          "minimum_stock_pct",
+          "maximum_target_stock_pct",
+          "stock_value_excess_above_tolerance"
+        ]
+      }
+    },
+    {
+      "check_id": "T09-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "INFEASIBLE"
+      }
+    },
+    {
+      "check_id": "T09-v003_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 5e-4
+      }
+    },
+    {
+      "check_id": "T09-v003_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
   ]
 }

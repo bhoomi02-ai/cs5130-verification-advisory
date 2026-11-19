@@ -401,5 +401,20 @@
     },
     "violations": [],
     "explanation": "STOCK cannot fall below $120,000 / $200,000 = 60%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 30.5% ($61,000), leaving $59,000 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
+  },
+  "T09-v003": {
+    "scenario_id": "T09-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "locked_stock_value": 43000,
+      "minimum_stock_pct": 0.43,
+      "maximum_target_stock_pct": 0.42,
+      "stock_value_excess_above_tolerance": 1000
+    },
+    "violations": [],
+    "explanation": "STOCK cannot fall below $43,000 / $100,000 = 43%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 42% ($42,000) with ±2 percentage points tolerance, leaving $1,000 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
   }
 }
