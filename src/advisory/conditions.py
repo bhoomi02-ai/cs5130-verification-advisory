@@ -134,7 +134,7 @@ def _one_call_review(review_messages: Callable) -> Callable:
         try:
             parsed = parse_verdict(text)
         except ValueError as e:
-            return {"stage": stage, "verdict": None, "issues": [], "reason": "", "error": str(e), "raw": text, "calls": 1}
+            return {"stage": stage, "verdict": None, "issues": [], "reason": "", "error": str(e), "raw": text, "trailing": "", "calls": 1}
         return {
             "stage": stage,
             "verdict": parsed.verdict,
