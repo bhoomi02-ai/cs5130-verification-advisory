@@ -1,0 +1,18 @@
+answer_id,field,wrong_value,correct_value,also_wrong,match_terms
+S01_policy_violation_sell_aapl,trades: AAPL quantity_delta,-1 (sells 1 AAPL),0 (AAPL may not be sold),,AAPL;sell;no-sell
+S01_unit_stock_allocation_percent,metrics: STOCK ALLOCATION FINAL,60,0.6,,stock allocation;60;0.6;percent;fraction
+S02_policy_violation_short_reserve,trades: VOO quantity_delta,-20 (cash after trades 3000),-38 (cash must stay at least 12000),,"VOO;cash;reserve;12000;12,000"
+S03_violation_list_cash_at_limit,violations: CLASS_MIN CASH,"listed (cash 0.05, minimum 0.05)",not a violation (at the minimum),,cash;5%;0.05;minimum
+S03_violation_list_missed_crypto,violations: PROHIBITED_CLASS CRYPTO,missing,"listed (crypto 0.05, limit 0)",,crypto;prohibited
+S03_wrong_status_feasible,status,FEASIBLE,VIOLATIONS_FOUND,,status;feasible;violations_found
+S04_arithmetic_ignore_entry_fee,metrics: Fund A VALUE FINAL,139079.42,137688.62,OPTIONS DIFFERENCE 6389.93 (correct 7780.72),"Fund A;entry fee;137688;137,688;139079;139,079"
+S05_grounding_voo_in_technology,metrics: TECHNOLOGY ALLOCATION FINAL,0.6,0.35,,technology;VOO;0.6;0.35
+S05_policy_violation_technology_36,trades: direct technology allocation after trades,0.36,at most 0.35,,technology;35%;36%;0.35;0.36;MSFT;NVDA
+S05_unit_technology_allocation_percent,metrics: TECHNOLOGY ALLOCATION FINAL,35,0.35,,technology allocation;35;0.35;percent;fraction
+S06_arithmetic_payment_over_months,metrics: PORTFOLIO PAYMENT FINAL,833.15,432.77,,payment;contribution;annuity;833;432
+S06_grounding_omit_withdrawal,metrics: PORTFOLIO VALUE FINAL,1040511.24,1000045.74,PORTFOLIO PAYMENT 345.19 (correct 432.77); PORTFOLIO DIFFERENCE 159488.76 (correct 199954.26),"withdrawal;month 180;1040511;1,040,511;1000045"
+S07_grounding_historical_value,metrics: PORTFOLIO VALUE FINAL,92000,112000,,"portfolio value;new prices;current prices;92000;92,000;112000;112,000"
+S08_arithmetic_skip_withdrawal,metrics: CASH VALUE FINAL,30000,10000,,"cash;withdrawal;30000;30,000;10000;10,000"
+S08_unit_stock_allocation_percent,metrics: STOCK ALLOCATION FINAL,50,0.5,,stock allocation;50;0.5;percent;fraction
+S09_wrong_status_feasible,status,FEASIBLE,INFEASIBLE,,status;infeasible;feasible
+S10_wrong_status_feasible,status,FEASIBLE,INFEASIBLE,,status;infeasible;feasible
