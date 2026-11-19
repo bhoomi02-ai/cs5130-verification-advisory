@@ -1111,6 +1111,7 @@ def test_paired_identical_conditions_have_zero_delta():
     assert result["note"] == ""
     assert result["n_pairs"] == 3
     assert result["n_dropped"] == 0
+    assert result["n_draft_mismatch"] == 0
 
 
 def test_paired_fixes_give_expected_delta_and_discordant_counts():
@@ -1141,6 +1142,57 @@ def test_paired_fixes_give_expected_delta_and_discordant_counts():
     assert list(frame["condition_b"]) == ["dedicated"]
     assert float(frame.iloc[0]["delta"]) == 0.75
     assert frame.iloc[0]["note"] == ""
+    assert int(frame.iloc[0]["n_draft_mismatch"]) == 0
+
+
+def test_paired_draft_mismatch_is_dropped_and_noted():
+    # Shared draft must agree on initial_correct. Mismatched pair is dropped
+    # from stats; the matching pair still scores.
+    rows = [
+        _run(
+            condition="none",
+            task_id="shared",
+            run_number=1,
+            final_correct=False,
+            initial_correct=False,
+            verdict=None,
+        ),
+        _run(
+            condition="dedicated",
+            task_id="shared",
+            run_number=1,
+            final_correct=True,
+            initial_correct=False,
+            verdict="reject",
+        ),
+        _run(
+            condition="none",
+            task_id="mismatch",
+            run_number=1,
+            final_correct=False,
+            initial_correct=False,
+            verdict=None,
+        ),
+        _run(
+            condition="dedicated",
+            task_id="mismatch",
+            run_number=1,
+            final_correct=True,
+            initial_correct=True,
+            verdict="reject",
+        ),
+    ]
+    result = paired_comparison(rows, "none", "dedicated", seed=0)
+    assert result["n_pairs"] == 1
+    assert result["n_draft_mismatch"] == 1
+    assert result["n_dropped"] == 0
+    assert result["delta"] == 1.0
+    assert result["b_only_correct"] == 1
+    assert "1 pairs dropped: initial_correct differs (draft not shared)" in result["note"]
+
+    frame = compare_conditions(rows, baseline="none", seed=0)
+    assert int(frame.iloc[0]["n_draft_mismatch"]) == 1
+    assert "initial_correct differs (draft not shared)" in frame.iloc[0]["note"]
 
 
 def test_paired_failed_pairs_are_dropped_and_counted():
