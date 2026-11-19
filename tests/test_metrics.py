@@ -1,5 +1,7 @@
 """Hand-checked cases for advisory.metrics."""
 
+import json
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -1103,15 +1105,18 @@ def test_paired_identical_conditions_have_zero_delta():
     assert result["delta_ci_low"] <= 0.0 <= result["delta_ci_high"]
     assert result["a_only_correct"] == 0
     assert result["b_only_correct"] == 0
-    assert result["mcnemar_p"] == 1.0
+    assert result["task_a_better"] == 0
+    assert result["task_b_better"] == 0
+    assert result["sign_test_p"] == 1.0
+    assert result["note"] == ""
     assert result["n_pairs"] == 3
     assert result["n_dropped"] == 0
 
 
 def test_paired_fixes_give_expected_delta_and_discordant_counts():
     # none is wrong on three tasks; dedicated fixes all three. One shared keep-correct.
-    # success_none = 1/4, success_dedicated = 4/4, delta = 0.75
-    # a_only_correct = 0, b_only_correct = 3
+    # Task-weighted success_none = 1/4, success_dedicated = 4/4, delta = 0.75.
+    # Run-level a_only_correct = 0, b_only_correct = 3; tasks favouring B = 3.
     rows = [
         _run(condition="none", task_id="ok", run_number=1, final_correct=True, initial_correct=True, verdict=None),
         _run(condition="none", task_id="w1", run_number=1, final_correct=False, initial_correct=False, verdict=None),
@@ -1128,11 +1133,14 @@ def test_paired_fixes_give_expected_delta_and_discordant_counts():
     assert result["delta"] == 0.75
     assert result["a_only_correct"] == 0
     assert result["b_only_correct"] == 3
+    assert result["task_a_better"] == 0
+    assert result["task_b_better"] == 3
     assert result["n_pairs"] == 4
 
     frame = compare_conditions(rows, baseline="none", seed=0)
     assert list(frame["condition_b"]) == ["dedicated"]
     assert float(frame.iloc[0]["delta"]) == 0.75
+    assert frame.iloc[0]["note"] == ""
 
 
 def test_paired_failed_pairs_are_dropped_and_counted():
@@ -1170,8 +1178,8 @@ def test_paired_unmatched_task_run_is_not_paired():
 
 
 def test_paired_bootstrap_resamples_tasks_not_runs():
-    # Two tasks, unequal repeats. Sorted task means for delta: task a = 0-0=0,
-    # task b = 1-0=1. Shuffling row order must not change the CI at seed 0.
+    # Two tasks, unequal repeats. Per-task deltas: a = 0, b = 1 → mean delta 0.5.
+    # Shuffling row order must not change the CI at seed 0.
     rows = [
         _run(condition="none", task_id="a", run_number=1, final_correct=False, verdict=None),
         _run(condition="none", task_id="a", run_number=2, final_correct=False, verdict=None),
@@ -1182,6 +1190,9 @@ def test_paired_bootstrap_resamples_tasks_not_runs():
     ]
     first = paired_comparison(rows, "none", "dedicated", seed=0)
     shuffled = paired_comparison(list(reversed(rows)), "none", "dedicated", seed=0)
+    assert first["delta"] == 0.5
+    assert first["success_a"] == 0.0
+    assert first["success_b"] == 0.5
     assert (first["delta_ci_low"], first["delta_ci_high"]) == (
         shuffled["delta_ci_low"],
         shuffled["delta_ci_high"],
@@ -1226,9 +1237,141 @@ def test_paired_missing_condition_or_pairs_raises():
         paired_comparison(rows, "none", "dedicated", seed=0)
 
 
-def test_paired_mcnemar_p_matches_hand_calculation():
-    # Six discordant pairs, all b-only: Binomial(6, 0.5) two-sided P(X=0 or 6)
-    # = 2 / 64 = 0.03125.
+def test_paired_sign_test_uses_tasks_not_runs():
+    # Eight tasks, three repeats each. Dedicated fixes every repeat of two tasks.
+    # Run-level discordant pairs = 6 (old McNemar p = 0.03125), but only two
+    # tasks favour B → sign_test_p = 0.5.
+    rows = []
+    for task_index in range(8):
+        task_id = f"t{task_index}"
+        fixed = task_index < 2
+        for run_number in range(1, 4):
+            rows.append(
+                _run(
+                    condition="none",
+                    task_id=task_id,
+                    run_number=run_number,
+                    final_correct=False,
+                    initial_correct=False,
+                    verdict=None,
+                )
+            )
+            rows.append(
+                _run(
+                    condition="dedicated",
+                    task_id=task_id,
+                    run_number=run_number,
+                    final_correct=fixed,
+                    initial_correct=False,
+                    verdict="reject" if fixed else "accept",
+                )
+            )
+    result = paired_comparison(rows, "none", "dedicated", seed=0)
+    assert result["a_only_correct"] == 0
+    assert result["b_only_correct"] == 6
+    assert result["task_a_better"] == 0
+    assert result["task_b_better"] == 2
+    assert result["sign_test_p"] == 0.5
+    assert result["delta"] == pytest.approx(2 / 8)
+
+
+def test_compare_conditions_keeps_other_pairs_when_one_side_all_failed():
+    rows = [
+        _run(condition="none", task_id="t1", run_number=1, final_correct=False, verdict=None, status="unchecked"),
+        _run(condition="dedicated", task_id="t1", run_number=1, final_correct=True, verdict="reject", status="revised"),
+        _run(condition="none", task_id="t2", run_number=1, final_correct=False, verdict=None, status="unchecked"),
+        _run(condition="peer", task_id="t2", run_number=1, final_correct=False, verdict=None, status="failed"),
+    ]
+    frame = compare_conditions(rows, baseline="none", seed=0)
+    assert set(frame["condition_b"]) == {"dedicated", "peer"}
+    dedicated = frame.loc[frame["condition_b"] == "dedicated"].iloc[0]
+    peer = frame.loc[frame["condition_b"] == "peer"].iloc[0]
+    assert dedicated["n_pairs"] == 1
+    assert dedicated["note"] == ""
+    assert peer["n_pairs"] == 0
+    assert peer["n_dropped"] == 1
+    assert pd.isna(peer["delta"])
+    assert pd.isna(peer["sign_test_p"])
+    assert "no matched non-failed pairs" in peer["note"]
+
+
+def test_paired_delta_is_mean_per_task_difference_with_dropped_pairs():
+    # Two tasks with one usable pair each after drops: deltas 1 and 0 → mean 0.5.
+    rows = [
+        _run(condition="none", task_id="a", run_number=1, final_correct=False, verdict=None, status="unchecked"),
+        _run(condition="none", task_id="a", run_number=2, final_correct=False, verdict=None, status="unchecked"),
+        _run(condition="none", task_id="b", run_number=1, final_correct=True, verdict=None, status="unchecked"),
+        _run(condition="dedicated", task_id="a", run_number=1, final_correct=True, verdict="reject", status="revised"),
+        _run(condition="dedicated", task_id="a", run_number=2, final_correct=False, verdict=None, status="failed"),
+        _run(condition="dedicated", task_id="b", run_number=1, final_correct=True, verdict="accept", status="accepted"),
+    ]
+    result = paired_comparison(rows, "none", "dedicated", seed=0)
+    assert result["n_dropped"] == 1
+    assert result["n_pairs"] == 2
+    assert result["n_tasks"] == 2
+    assert result["delta"] == 0.5
+    assert result["success_a"] == 0.5
+    assert result["success_b"] == 1.0
+
+
+def test_report_writes_noted_comparison_rows(tmp_path):
+    from advisory.report import analyze
+
+    path = tmp_path / "results.jsonl"
+    rows = [
+        _run(
+            condition="none",
+            model="m",
+            task_id="t1",
+            run_number=1,
+            final_correct=False,
+            verdict=None,
+            status="unchecked",
+            cost_usd=1,
+        ),
+        _run(
+            condition="dedicated",
+            model="m",
+            task_id="t1",
+            run_number=1,
+            final_correct=True,
+            verdict="reject",
+            status="revised",
+            cost_usd=2,
+        ),
+        _run(
+            condition="none",
+            model="m",
+            task_id="t2",
+            run_number=1,
+            final_correct=False,
+            verdict=None,
+            status="unchecked",
+            cost_usd=1,
+        ),
+        _run(
+            condition="peer",
+            model="m",
+            task_id="t2",
+            run_number=1,
+            final_correct=False,
+            verdict=None,
+            status="failed",
+            cost_usd=0,
+        ),
+    ]
+    path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
+    outcome = analyze(results_path=path, out_dir=tmp_path / "report", seed=0)
+    comparisons = pd.read_csv(tmp_path / "report" / "comparisons.csv")
+    assert set(comparisons["condition_b"]) == {"dedicated", "peer"}
+    peer = comparisons.loc[comparisons["condition_b"] == "peer"].iloc[0]
+    assert peer["n_pairs"] == 0
+    assert "no matched non-failed pairs" in str(peer["note"])
+    assert outcome["report"]["comparisons"]["note"].fillna("").ne("").any()
+
+
+def test_sign_test_p_matches_hand_calculation_on_tasks():
+    # Six tasks, all favouring B: Binomial(6, 0.5) two-sided P(X=0 or 6) = 0.03125.
     rows = []
     for index in range(6):
         rows.append(
@@ -1252,18 +1395,20 @@ def test_paired_mcnemar_p_matches_hand_calculation():
             )
         )
     result = paired_comparison(rows, "none", "dedicated", seed=0)
+    assert result["task_a_better"] == 0
+    assert result["task_b_better"] == 6
     assert result["a_only_correct"] == 0
     assert result["b_only_correct"] == 6
-    assert result["mcnemar_p"] == 0.03125
+    assert result["sign_test_p"] == 0.03125
 
 
-def test_exact_mcnemar_fallback_without_scipy(monkeypatch):
-    # Force the scipy.stats import inside _exact_mcnemar_p to fail so the
-    # pure-Python binomial path runs: 0 vs 6 → 2/64 = 0.03125; 0 vs 0 → 1.0.
+def test_exact_binomial_fallback_without_scipy(monkeypatch):
+    # Force the scipy.stats import inside _exact_binomial_two_sided to fail so
+    # the pure-Python path runs: 0 vs 6 → 2/64 = 0.03125; 0 vs 0 → 1.0.
     import sys
 
     import advisory.metrics as metrics
 
     monkeypatch.setitem(sys.modules, "scipy.stats", None)
-    assert metrics._exact_mcnemar_p(0, 6) == 0.03125
-    assert metrics._exact_mcnemar_p(0, 0) == 1.0
+    assert metrics._exact_binomial_two_sided(0, 6) == 0.03125
+    assert metrics._exact_binomial_two_sided(0, 0) == 1.0

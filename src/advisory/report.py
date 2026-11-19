@@ -7,6 +7,7 @@ or unusable rows are kept with a reason; they are never dropped silently.
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -124,27 +125,7 @@ def build_report(runs: list[dict], seed: int = 0) -> dict:
         if column not in outcomes.columns:
             outcomes[column] = None
     outcomes = outcomes[list(OUTCOME_COLUMNS)]
-    try:
-        comparisons = compare_conditions(runs, baseline="none", seed=seed)
-    except ValueError:
-        comparisons = pd.DataFrame(
-            columns=[
-                "condition_a",
-                "condition_b",
-                "model",
-                "n_tasks",
-                "n_pairs",
-                "n_dropped",
-                "success_a",
-                "success_b",
-                "delta",
-                "delta_ci_low",
-                "delta_ci_high",
-                "a_only_correct",
-                "b_only_correct",
-                "mcnemar_p",
-            ]
-        )
+    comparisons = compare_conditions(runs, baseline="none", seed=seed)
     return {
         "summary": summary,
         "outcomes": outcomes,
@@ -183,6 +164,17 @@ def write_report(
         _markdown_table(comparisons, "Paired comparisons vs none") + "\n",
         encoding="utf-8",
     )
+    if "note" in comparisons.columns:
+        for _, row in comparisons.iterrows():
+            note = row.get("note")
+            if note is None or (isinstance(note, float) and pd.isna(note)) or note == "":
+                continue
+            label = f"{row['condition_a']} vs {row['condition_b']}"
+            if row.get("model") not in (None, "") and not (
+                isinstance(row.get("model"), float) and pd.isna(row.get("model"))
+            ):
+                label = f"{label} ({row['model']})"
+            print(f"warning: comparison {label}: {note}", file=sys.stderr)
 
     by_scenario = report["by_scenario"]
     paths["by_scenario_csv"] = out_dir / "by_scenario.csv"
