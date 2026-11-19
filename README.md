@@ -330,6 +330,8 @@ python scripts/run_condition.py --condition none --model gemini-3.6-flash \
 python scripts/analyze.py                                 # tables and chart in results/report/
 ```
 
+**Main study tasks.** The 32 tasks of the main study are listed in `data/study_tasks.txt`; pass `--tasks-file data/study_tasks.txt` (with `--repeats 3`) so every condition runs the exact same set.
+
 After a daily quota stops a run, `run_condition.py` skips the runs already saved when you run the same command again, and `run_pilot.py` continues a batch with `--resume <batch_id>`.
 
 **Study data.** Run outputs in `results/` are gitignored on `main` and are written on the paid-run machine. After each batch they are backed up to the separate, results-only **`study-results`** branch (no code; never merged into `main`). That branch has no `.gitignore`, so files are added normally there. Never use `git add -f` to put results on `main`. To get the data:
