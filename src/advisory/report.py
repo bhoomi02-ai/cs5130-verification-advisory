@@ -139,6 +139,9 @@ def write_report(
     report: dict,
     rejected: list[dict],
     out_dir: Path = REPORT_DIR,
+    *,
+    seeded_dir: Path | None = None,
+    labels_path: Path | None = None,
 ) -> dict[str, Path]:
     """Write CSV/Markdown tables, a rejected-rows file and the success chart."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -200,6 +203,14 @@ def write_report(
 
     paths["rejected_md"] = out_dir / "rejected.md"
     paths["rejected_md"].write_text(_rejected_markdown(rejected), encoding="utf-8")
+
+    paths.update(
+        _write_seeded_outputs(
+            out_dir,
+            seeded_dir=seeded_dir,
+            labels_path=labels_path,
+        )
+    )
     return paths
 
 
@@ -207,12 +218,57 @@ def analyze(
     results_path: Path = RESULTS_PATH,
     out_dir: Path = REPORT_DIR,
     seed: int = 0,
+    *,
+    seeded_dir: Path | None = None,
+    labels_path: Path | None = None,
 ) -> dict:
     """Load results, summarise accepted rows and write the report files."""
     accepted, rejected = load_results(results_path)
     report = build_report(accepted, seed=seed)
-    paths = write_report(report, rejected, out_dir=out_dir)
+    paths = write_report(
+        report,
+        rejected,
+        out_dir=out_dir,
+        seeded_dir=seeded_dir,
+        labels_path=labels_path,
+    )
     return {"accepted": accepted, "rejected": rejected, "report": report, "paths": paths}
+
+
+def _write_seeded_outputs(
+    out_dir: Path,
+    *,
+    seeded_dir: Path | None = None,
+    labels_path: Path | None = None,
+) -> dict[str, Path]:
+    """Write seeded right-reason tables when ``results/seeded`` has JSON files."""
+    from advisory.right_reason import (
+        LABELS_PATH,
+        SEEDED_DIR,
+        audit_table,
+        load_labels,
+        load_seeded_records,
+        right_reason_metrics,
+    )
+
+    directory = SEEDED_DIR if seeded_dir is None else Path(seeded_dir)
+    if not directory.exists() or not any(directory.glob("*.json")):
+        return {}
+    labels = load_labels(LABELS_PATH if labels_path is None else labels_path)
+    records = load_seeded_records(directory)
+    metrics = right_reason_metrics(records, labels)
+    audit = audit_table(records, labels)
+    paths: dict[str, Path] = {}
+    paths["seeded_csv"] = out_dir / "seeded.csv"
+    metrics.to_csv(paths["seeded_csv"], index=False)
+    paths["seeded_md"] = out_dir / "seeded.md"
+    paths["seeded_md"].write_text(
+        _markdown_table(metrics, "Seeded right-reason metrics") + "\n",
+        encoding="utf-8",
+    )
+    paths["right_reason_audit_csv"] = out_dir / "right_reason_audit.csv"
+    audit.to_csv(paths["right_reason_audit_csv"], index=False)
+    return paths
 
 
 def _row_problem(row: dict) -> str | None:
