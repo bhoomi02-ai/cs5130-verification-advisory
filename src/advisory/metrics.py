@@ -614,29 +614,32 @@ def paired_comparison(
     dict
         ``condition_a``, ``condition_b``, optional ``model``, ``n_tasks``,
         ``n_pairs``, ``n_dropped`` (matched pairs dropped because either side
-        was ``failed``), task-weighted ``success_a`` / ``success_b`` /
-        ``delta``, ``delta_ci_low``, ``delta_ci_high``, run-level
-        ``a_only_correct`` / ``b_only_correct`` (descriptive),
-        ``task_a_better``, ``task_b_better``, ``sign_test_p``, and
-        ``note`` (empty on success).
+        was ``failed``), ``n_draft_mismatch`` (matched non-failed pairs
+        dropped because ``initial_correct`` differed), task-weighted
+        ``success_a`` / ``success_b`` / ``delta``, ``delta_ci_low``,
+        ``delta_ci_high``, run-level ``a_only_correct`` / ``b_only_correct``
+        (descriptive), ``task_a_better``, ``task_b_better``, ``sign_test_p``,
+        and ``note`` (empty when nothing was dropped for draft mismatch).
 
     Notes
     -----
-    Rows are paired on ``(task_id, run_number)`` within one model.
-    ``success_a``, ``success_b`` and ``delta`` average per-task means, so
-    repeats of a task are not treated as independent. The main uncertainty
-    measure is the paired bootstrap CI over tasks (1,000 resamples with
-    ``numpy.random.default_rng(seed)``). ``sign_test_p`` is a secondary
-    exact two-sided sign test on how many tasks favour B vs A (ties
-    dropped); it is ``1.0`` when every task is tied.
+    Pairing assumes a shared draft: rows are matched on
+    ``(task_id, run_number)`` within one model, and both sides must agree on
+    ``initial_correct``. Pairs that disagree are dropped from every statistic
+    and counted in ``n_draft_mismatch``; when that count is positive, ``note``
+    records how many were dropped. ``success_a``, ``success_b`` and ``delta``
+    average per-task means, so repeats of a task are not treated as
+    independent. The main uncertainty measure is the paired bootstrap CI over
+    tasks (1,000 resamples with ``numpy.random.default_rng(seed)``).
+    ``sign_test_p`` is a secondary exact two-sided sign test on how many
+    tasks favour B vs A (ties dropped); it is ``1.0`` when every task is tied.
 
     Raises
     ------
     ValueError
         If a ``model`` column is present but ``model`` is omitted, either
-        condition is missing, or no matched non-failed pairs remain.
-        When every matched pair was dropped as failed, the error has an
-        ``n_dropped`` attribute.
+        condition is missing, or no matched usable pairs remain. Errors from
+        empty usable pairs carry ``n_dropped`` and ``n_draft_mismatch``.
     """
     frame = validate_runs(runs)
     if "model" in frame.columns:
@@ -655,14 +658,22 @@ def paired_comparison(
         raise ValueError(f"condition {condition_b!r} is missing")
 
     keys = ["task_id", "run_number"]
-    columns = keys + ["final_correct"]
+    columns = keys + ["final_correct", "initial_correct"]
     if "status" in frame.columns:
         columns = columns + ["status"]
     left = frame.loc[frame["condition"] == condition_a, columns].rename(
-        columns={"final_correct": "final_a", "status": "status_a"}
+        columns={
+            "final_correct": "final_a",
+            "initial_correct": "initial_a",
+            "status": "status_a",
+        }
     )
     right = frame.loc[frame["condition"] == condition_b, columns].rename(
-        columns={"final_correct": "final_b", "status": "status_b"}
+        columns={
+            "final_correct": "final_b",
+            "initial_correct": "initial_b",
+            "status": "status_b",
+        }
     )
     merged = left.merge(right, on=keys, how="inner")
     if merged.empty:
@@ -670,6 +681,7 @@ def paired_comparison(
             f"no matched pairs between {condition_a!r} and {condition_b!r}"
         )
         error.n_dropped = 0
+        error.n_draft_mismatch = 0
         raise error
 
     if "status_a" in merged.columns:
@@ -679,9 +691,18 @@ def paired_comparison(
     else:
         n_dropped = 0
         paired = merged.reset_index(drop=True)
+
+    mismatch = paired["initial_a"] != paired["initial_b"]
+    n_draft_mismatch = int(mismatch.sum())
+    paired = paired.loc[~mismatch].reset_index(drop=True)
     if paired.empty:
-        error = ValueError("no matched non-failed pairs")
+        if n_draft_mismatch > 0:
+            message = _draft_mismatch_note(n_draft_mismatch)
+        else:
+            message = "no matched non-failed pairs"
+        error = ValueError(message)
         error.n_dropped = n_dropped
+        error.n_draft_mismatch = n_draft_mismatch
         raise error
 
     final_a = paired["final_a"].to_numpy(dtype=bool)
@@ -696,12 +717,14 @@ def paired_comparison(
     task_a_better = int((task_delta < 0).sum())
     task_b_better = int((task_delta > 0).sum())
     low, high = _paired_delta_ci_from_means(task_delta.to_numpy(dtype=float), seed=seed)
+    note = _draft_mismatch_note(n_draft_mismatch) if n_draft_mismatch > 0 else ""
     result = {
         "condition_a": condition_a,
         "condition_b": condition_b,
         "n_tasks": int(len(means)),
         "n_pairs": int(len(paired)),
         "n_dropped": n_dropped,
+        "n_draft_mismatch": n_draft_mismatch,
         "success_a": success_a,
         "success_b": success_b,
         "delta": delta,
@@ -712,7 +735,7 @@ def paired_comparison(
         "task_a_better": task_a_better,
         "task_b_better": task_b_better,
         "sign_test_p": _exact_binomial_two_sided(task_a_better, task_b_better),
-        "note": "",
+        "note": note,
     }
     if model is not None:
         result["model"] = model
@@ -792,6 +815,7 @@ def compare_conditions(
                     condition_b,
                     model=model_name,
                     n_dropped=int(getattr(exc, "n_dropped", 0)),
+                    n_draft_mismatch=int(getattr(exc, "n_draft_mismatch", 0)),
                     note=str(exc),
                 )
             rows.append(row)
@@ -807,6 +831,7 @@ def _comparison_columns(has_model: bool = False) -> list[str]:
         "n_tasks",
         "n_pairs",
         "n_dropped",
+        "n_draft_mismatch",
         "success_a",
         "success_b",
         "delta",
@@ -824,6 +849,13 @@ def _comparison_columns(has_model: bool = False) -> list[str]:
     return columns
 
 
+def _draft_mismatch_note(n_draft_mismatch: int) -> str:
+    return (
+        f"{n_draft_mismatch} pairs dropped: "
+        "initial_correct differs (draft not shared)"
+    )
+
+
 def _unscored_pair_row(
     condition_a: str,
     condition_b: str,
@@ -831,6 +863,7 @@ def _unscored_pair_row(
     model: str | None,
     n_dropped: int,
     note: str,
+    n_draft_mismatch: int = 0,
 ) -> dict:
     row = {
         "condition_a": condition_a,
@@ -838,6 +871,7 @@ def _unscored_pair_row(
         "n_tasks": 0,
         "n_pairs": 0,
         "n_dropped": n_dropped,
+        "n_draft_mismatch": n_draft_mismatch,
         "success_a": None,
         "success_b": None,
         "delta": None,
