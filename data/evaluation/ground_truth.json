@@ -210,7 +210,7 @@
       "additional_monthly_contribution_cents": 432.77
     },
     "violations": [],
-    "explanation": "Monthly growth precedes end-of-month flows; the month-180 withdrawal and contribution follow growth. Extra end-of-month payment applies for months 1\u2013240. Target shortfall means target minus projected balance."
+    "explanation": "Monthly growth precedes end-of-month flows; the month-180 withdrawal and contribution follow growth. Extra end-of-month payment applies for months 1–240. Target shortfall means target minus projected balance."
   },
   "S07": {
     "scenario_id": "S07",
@@ -329,6 +329,346 @@
     "violations": [],
     "explanation": "AAPL ($20,000) and MSFT ($30,000) cannot be sold. VOO+BND provide only $40,000 plus $10,000 cash, versus $85,000 required including reserve: $35,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
   },
+  "T01-v001": {
+    "scenario_id": "T01-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "TSLA",
+        "quantity_delta": -2
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -18
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 119
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 10000,
+      "final_cash": 10080,
+      "allocations": {
+        "CASH": 0.1008,
+        "STOCK": 0.604,
+        "BOND": 0.2952
+      },
+      "final_values": {
+        "AAPL": 20000,
+        "TSLA": 14400,
+        "MSFT": 20000,
+        "VOO": 6000,
+        "BND": 29520
+      },
+      "final_quantities": {
+        "AAPL": 100,
+        "TSLA": 48,
+        "MSFT": 50,
+        "VOO": 12,
+        "BND": 369
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T01-v002": {
+    "scenario_id": "T01-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -3
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -25
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 172
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 10700,
+      "final_cash": 10040,
+      "allocations": {
+        "CASH": 0.1004,
+        "STOCK": 0.554,
+        "BOND": 0.3456
+      },
+      "final_values": {
+        "AAPL": 17400,
+        "TSLA": 16500,
+        "MSFT": 18000,
+        "VOO": 3500,
+        "BND": 34560
+      },
+      "final_quantities": {
+        "AAPL": 87,
+        "TSLA": 55,
+        "MSFT": 45,
+        "VOO": 7,
+        "BND": 432
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T01-v003": {
+    "scenario_id": "T01-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -44
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 132
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 8000,
+      "final_cash": 15040,
+      "allocations": {
+        "CASH": 0.1504,
+        "STOCK": 0.504,
+        "BOND": 0.3456
+      },
+      "final_values": {
+        "AAPL": 16000,
+        "TSLA": 18000,
+        "MSFT": 4400,
+        "VOO": 12000,
+        "BND": 34560
+      },
+      "final_quantities": {
+        "AAPL": 80,
+        "TSLA": 60,
+        "MSFT": 11,
+        "VOO": 24,
+        "BND": 432
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T01-v004": {
+    "scenario_id": "T01-v004",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "TSLA",
+        "quantity_delta": -36
+      },
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -2
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 119
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 13000,
+      "final_cash": 15080,
+      "allocations": {
+        "CASH": 0.1508,
+        "STOCK": 0.554,
+        "BOND": 0.2952
+      },
+      "final_values": {
+        "AAPL": 15000,
+        "TSLA": 2700,
+        "MSFT": 15200,
+        "VOO": 22500,
+        "BND": 29520
+      },
+      "final_quantities": {
+        "AAPL": 75,
+        "TSLA": 9,
+        "MSFT": 38,
+        "VOO": 45,
+        "BND": 369
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T02-v001": {
+    "scenario_id": "T02-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -49
+      },
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -23
+      }
+    ],
+    "metrics": {
+      "initial_total": 98000,
+      "final_total": 73000,
+      "cash_before_withdrawal": 37000,
+      "final_cash": 12000,
+      "allocations": {
+        "CASH": 0.1643835616438356,
+        "STOCK": 0.5068493150684932,
+        "BOND": 0.3287671232876712
+      },
+      "final_values": {
+        "AAPL": 200,
+        "MSFT": 6800,
+        "VOO": 30000,
+        "BND": 24000
+      },
+      "final_quantities": {
+        "AAPL": 1,
+        "MSFT": 17,
+        "VOO": 60,
+        "BND": 300
+      },
+      "additional_liquidity_needed": 19000
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T02-v002": {
+    "scenario_id": "T02-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -20
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": -350
+      }
+    ],
+    "metrics": {
+      "initial_total": 91000,
+      "final_total": 56000,
+      "cash_before_withdrawal": 45000,
+      "final_cash": 10000,
+      "allocations": {
+        "CASH": 0.17857142857142858,
+        "STOCK": 0.8214285714285714,
+        "BOND": 0.0
+      },
+      "final_values": {
+        "AAPL": 12000,
+        "MSFT": 10000,
+        "VOO": 24000,
+        "BND": 0
+      },
+      "final_quantities": {
+        "AAPL": 60,
+        "MSFT": 25,
+        "VOO": 48,
+        "BND": 0
+      },
+      "additional_liquidity_needed": 36000
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T02-v003": {
+    "scenario_id": "T02-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -5
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -60
+      }
+    ],
+    "metrics": {
+      "initial_total": 92000,
+      "final_total": 62000,
+      "cash_before_withdrawal": 42000,
+      "final_cash": 12000,
+      "allocations": {
+        "CASH": 0.1935483870967742,
+        "STOCK": 0.4838709677419355,
+        "BOND": 0.3225806451612903
+      },
+      "final_values": {
+        "AAPL": 10000,
+        "MSFT": 20000,
+        "VOO": 0,
+        "BND": 20000
+      },
+      "final_quantities": {
+        "AAPL": 50,
+        "MSFT": 50,
+        "VOO": 0,
+        "BND": 250
+      },
+      "additional_liquidity_needed": 32000
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T02-v004": {
+    "scenario_id": "T02-v004",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "BND",
+        "quantity_delta": -300
+      }
+    ],
+    "metrics": {
+      "initial_total": 86000,
+      "final_total": 61000,
+      "cash_before_withdrawal": 30000,
+      "final_cash": 5000,
+      "allocations": {
+        "CASH": 0.08196721311475409,
+        "STOCK": 0.9180327868852459,
+        "BOND": 0.0
+      },
+      "final_values": {
+        "AAPL": 10000,
+        "MSFT": 16000,
+        "VOO": 30000,
+        "BND": 0
+      },
+      "final_quantities": {
+        "AAPL": 50,
+        "MSFT": 40,
+        "VOO": 60,
+        "BND": 0
+      },
+      "additional_liquidity_needed": 24000
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
   "T03-v001": {
     "scenario_id": "T03-v001",
     "answer_type": "VIOLATION_LIST",
@@ -337,40 +677,794 @@
     "metrics": {
       "initial_total": 100000,
       "allocations": {
-        "STOCK": 0.55,
-        "BOND": 0.35,
+        "STOCK": 0.6,
+        "BOND": 0.3,
         "CRYPTO": 0.05,
         "CASH": 0.05
       },
-      "violation_count": 4
+      "violation_count": 5
     },
     "violations": [
       {
         "kind": "CLASS_MAX",
         "scope": "STOCK",
-        "observed": 0.55,
+        "observed": 0.6,
         "limit": 0.4
       },
       {
         "kind": "CLASS_MIN",
         "scope": "BOND",
-        "observed": 0.35,
+        "observed": 0.3,
         "limit": 0.45
+      },
+      {
+        "kind": "PROHIBITED_CLASS",
+        "scope": "CRYPTO",
+        "observed": 0.05,
+        "limit": 0.0
+      },
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "AAPL",
+        "observed": 0.2,
+        "limit": 0.15
       },
       {
         "kind": "INDIVIDUAL_MAX",
         "scope": "MSFT",
         "observed": 0.2,
         "limit": 0.15
+      }
+    ],
+    "explanation": "Exactly 5 violations: STOCK overweight (60% vs limit 40%); BOND underweight (30% vs limit 45%); CRYPTO prohibited (5% vs limit 0%); AAPL individual concentration (20% vs limit 15%); MSFT individual concentration (20% vs limit 15%). No remediation trades."
+  },
+  "T03-v002": {
+    "scenario_id": "T03-v002",
+    "answer_type": "VIOLATION_LIST",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "allocations": {
+        "STOCK": 0.35,
+        "BOND": 0.5,
+        "CASH": 0.15
+      },
+      "violation_count": 0
+    },
+    "violations": [],
+    "explanation": "No policy violations: every asset class and individual stock is within its limit. Report an empty violation list and no trades."
+  },
+  "T03-v003": {
+    "scenario_id": "T03-v003",
+    "answer_type": "VIOLATION_LIST",
+    "status": "VIOLATIONS_FOUND",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "allocations": {
+        "STOCK": 0.17,
+        "BOND": 0.4,
+        "CRYPTO": 0.05,
+        "CASH": 0.38
+      },
+      "violation_count": 4
+    },
+    "violations": [
+      {
+        "kind": "CLASS_MIN",
+        "scope": "STOCK",
+        "observed": 0.17,
+        "limit": 0.2
+      },
+      {
+        "kind": "CLASS_MIN",
+        "scope": "BOND",
+        "observed": 0.4,
+        "limit": 0.45
+      },
+      {
+        "kind": "CLASS_MAX",
+        "scope": "CASH",
+        "observed": 0.38,
+        "limit": 0.25
       },
       {
         "kind": "PROHIBITED_CLASS",
         "scope": "CRYPTO",
         "observed": 0.05,
-        "limit": 0
+        "limit": 0.0
       }
     ],
-    "explanation": "Exactly four violations: STOCK overweight (55% > 40%), BOND underweight (35% < 45%), MSFT individual concentration (20% > 15%), and prohibited CRYPTO (5% > 0%). AAPL is exactly at its 15% limit and is not a violation. No remediation trades."
+    "explanation": "Exactly 4 violations: STOCK underweight (17% vs limit 20%); BOND underweight (40% vs limit 45%); CASH overweight (38% vs limit 25%); CRYPTO prohibited (5% vs limit 0%). No remediation trades."
+  },
+  "T03-v004": {
+    "scenario_id": "T03-v004",
+    "answer_type": "VIOLATION_LIST",
+    "status": "VIOLATIONS_FOUND",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "allocations": {
+        "STOCK": 0.492,
+        "BOND": 0.4,
+        "CASH": 0.108
+      },
+      "violation_count": 1
+    },
+    "violations": [
+      {
+        "kind": "INDIVIDUAL_MAX",
+        "scope": "AAPL",
+        "observed": 0.152,
+        "limit": 0.15
+      }
+    ],
+    "explanation": "Exactly 1 violation: AAPL individual concentration (15.20% vs limit 15%). No remediation trades."
+  },
+  "T04-v001": {
+    "scenario_id": "T04-v001",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "fund_a_final": 137688.6249375888,
+      "fund_b_final": 145469.3451726326,
+      "absolute_difference": 7780.7202350438165,
+      "better_fund": "Fund B"
+    },
+    "violations": [],
+    "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 99000*((1+0.09)*(1-0.02))^5; B = 100000*((1+0.08)*(1-0.002))^5."
+  },
+  "T04-v002": {
+    "scenario_id": "T04-v002",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "fund_a_final": 305889.1116464885,
+      "fund_b_final": 246877.28496536065,
+      "absolute_difference": 59011.82668112783,
+      "better_fund": "Fund A"
+    },
+    "violations": [],
+    "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 97000*((1+0.085)*(1-0.005))^15; B = 100000*((1+0.075)*(1-0.012))^15."
+  },
+  "T04-v003": {
+    "scenario_id": "T04-v003",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "fund_a_final": 192392.15035523064,
+      "fund_b_final": 212893.9813858809,
+      "absolute_difference": 20501.831030650268,
+      "better_fund": "Fund B"
+    },
+    "violations": [],
+    "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 100000*((1+0.095)*(1-0.025))^10; B = 99000*((1+0.085)*(1-0.005))^10."
+  },
+  "T04-v004": {
+    "scenario_id": "T04-v004",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "fund_a_final": 174770.9983125537,
+      "fund_b_final": 168052.74109125722,
+      "absolute_difference": 6718.257221296488,
+      "better_fund": "Fund A"
+    },
+    "violations": [],
+    "explanation": "Entry fee deducted first. Annual gross return and annual fee applied multiplicatively: A = 97500*((1+0.08)*(1-0.004))^8; B = 100000*((1+0.08)*(1-0.012))^8."
+  },
+  "T05-v001": {
+    "scenario_id": "T05-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -25
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -50
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 119
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 0,
+      "final_cash": 10480,
+      "allocations": {
+        "CASH": 0.1048,
+        "STOCK": 0.6,
+        "BOND": 0.2952
+      },
+      "final_values": {
+        "AAPL": 20000,
+        "MSFT": 20000,
+        "NVDA": 0,
+        "VOO": 20000,
+        "BND": 29520
+      },
+      "final_quantities": {
+        "AAPL": 100,
+        "MSFT": 50,
+        "NVDA": 0,
+        "VOO": 40,
+        "BND": 369
+      },
+      "direct_technology_pct": 0.4
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T05-v002": {
+    "scenario_id": "T05-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -33
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -60
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -6
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 182
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 3000,
+      "final_cash": 10040,
+      "allocations": {
+        "CASH": 0.1004,
+        "STOCK": 0.554,
+        "BOND": 0.3456
+      },
+      "final_values": {
+        "AAPL": 11400,
+        "MSFT": 26000,
+        "NVDA": 0,
+        "VOO": 18000,
+        "BND": 34560
+      },
+      "final_quantities": {
+        "AAPL": 57,
+        "MSFT": 65,
+        "NVDA": 0,
+        "VOO": 36,
+        "BND": 432
+      },
+      "direct_technology_pct": 0.374
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T05-v003": {
+    "scenario_id": "T05-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -50
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -3
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -14
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 207
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 4000,
+      "final_cash": 15040,
+      "allocations": {
+        "CASH": 0.1504,
+        "STOCK": 0.504,
+        "BOND": 0.3456
+      },
+      "final_values": {
+        "AAPL": 20000,
+        "MSFT": 0,
+        "NVDA": 12400,
+        "VOO": 18000,
+        "BND": 34560
+      },
+      "final_quantities": {
+        "AAPL": 100,
+        "MSFT": 0,
+        "NVDA": 62,
+        "VOO": 36,
+        "BND": 432
+      },
+      "direct_technology_pct": 0.324
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T05-v004": {
+    "scenario_id": "T05-v004",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -50
+      },
+      {
+        "symbol": "NVDA",
+        "quantity_delta": -48
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 219
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 100000,
+      "cash_before_trades": 3000,
+      "final_cash": 15080,
+      "allocations": {
+        "CASH": 0.1508,
+        "STOCK": 0.554,
+        "BOND": 0.2952
+      },
+      "final_values": {
+        "AAPL": 15000,
+        "MSFT": 0,
+        "NVDA": 5400,
+        "VOO": 35000,
+        "BND": 29520
+      },
+      "final_quantities": {
+        "AAPL": 75,
+        "MSFT": 0,
+        "NVDA": 27,
+        "VOO": 70,
+        "BND": 369
+      },
+      "direct_technology_pct": 0.204
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T06-v001": {
+    "scenario_id": "T06-v001",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 150000,
+      "final_balance": 1000045.735359339,
+      "target_shortfall": 199954.26464066096,
+      "additional_monthly_contribution": 432.763131434376,
+      "additional_monthly_contribution_cents": 432.77
+    },
+    "violations": [],
+    "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-240. Target shortfall means target minus projected balance."
+  },
+  "T06-v002": {
+    "scenario_id": "T06-v002",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 120000,
+      "final_balance": 767677.4622513195,
+      "target_shortfall": 632322.5377486805,
+      "additional_monthly_contribution": 1685.5868390819057,
+      "additional_monthly_contribution_cents": 1685.59
+    },
+    "violations": [],
+    "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-240. Target shortfall means target minus projected balance."
+  },
+  "T06-v003": {
+    "scenario_id": "T06-v003",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 250000,
+      "final_balance": 1091703.7224440877,
+      "target_shortfall": 108296.27755591227,
+      "additional_monthly_contribution": 353.7109571171452,
+      "additional_monthly_contribution_cents": 353.72
+    },
+    "violations": [],
+    "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-180. Target shortfall means target minus projected balance."
+  },
+  "T06-v004": {
+    "scenario_id": "T06-v004",
+    "answer_type": "NUMERIC_RESULT",
+    "status": "FEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 80000,
+      "final_balance": 558357.7640051689,
+      "target_shortfall": 191642.23599483108,
+      "additional_monthly_contribution": 1247.411262794196,
+      "additional_monthly_contribution_cents": 1247.42
+    },
+    "violations": [],
+    "explanation": "Monthly growth precedes end-of-month flows; scheduled withdrawals and contributions follow growth. Extra end-of-month payment applies for months 1-120. Target shortfall means target minus projected balance."
+  },
+  "T07-v001": {
+    "scenario_id": "T07-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -32
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -3
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 214
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 112000,
+      "cash_before_trades": 14000,
+      "final_cash": 11180,
+      "allocations": {
+        "CASH": 0.09982142857142857,
+        "STOCK": 0.6044642857142857,
+        "BOND": 0.2957142857142857
+      },
+      "final_values": {
+        "AAPL": 22000,
+        "MSFT": 7200,
+        "VOO": 38500,
+        "BND": 33120
+      },
+      "final_quantities": {
+        "AAPL": 100,
+        "MSFT": 18,
+        "VOO": 77,
+        "BND": 414
+      },
+      "historical_total": 92000
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T07-v002": {
+    "scenario_id": "T07-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -61
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -3
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 299
+      }
+    ],
+    "metrics": {
+      "initial_total": 102200,
+      "final_total": 120200,
+      "cash_before_trades": 21000,
+      "final_cash": 12000,
+      "allocations": {
+        "CASH": 0.09983361064891846,
+        "STOCK": 0.5547420965058236,
+        "BOND": 0.3454242928452579
+      },
+      "final_values": {
+        "AAPL": 9680,
+        "MSFT": 26000,
+        "VOO": 31000,
+        "BND": 41520
+      },
+      "final_quantities": {
+        "AAPL": 44,
+        "MSFT": 65,
+        "VOO": 62,
+        "BND": 519
+      },
+      "historical_total": 94550
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T07-v003": {
+    "scenario_id": "T07-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -11
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -56
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 306
+      }
+    ],
+    "metrics": {
+      "initial_total": 104600,
+      "final_total": 112600,
+      "cash_before_trades": 9000,
+      "final_cash": 16920,
+      "allocations": {
+        "CASH": 0.1502664298401421,
+        "STOCK": 0.5044404973357016,
+        "BOND": 0.34529307282415633
+      },
+      "final_values": {
+        "AAPL": 24200,
+        "MSFT": 25600,
+        "VOO": 7000,
+        "BND": 38880
+      },
+      "final_quantities": {
+        "AAPL": 110,
+        "MSFT": 64,
+        "VOO": 14,
+        "BND": 486
+      },
+      "historical_total": 96100
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T07-v004": {
+    "scenario_id": "T07-v004",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -65
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 294
+      }
+    ],
+    "metrics": {
+      "initial_total": 107900,
+      "final_total": 122900,
+      "cash_before_trades": 16000,
+      "final_cash": 18480,
+      "allocations": {
+        "CASH": 0.15036615134255493,
+        "STOCK": 0.5541090317331163,
+        "BOND": 0.29552481692432875
+      },
+      "final_values": {
+        "AAPL": 17600,
+        "MSFT": 8000,
+        "VOO": 42500,
+        "BND": 36320
+      },
+      "final_quantities": {
+        "AAPL": 80,
+        "MSFT": 20,
+        "VOO": 85,
+        "BND": 454
+      },
+      "historical_total": 99550
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T08-v001": {
+    "scenario_id": "T08-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -3
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -57
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 121
+      }
+    ],
+    "metrics": {
+      "initial_total": 100000,
+      "final_total": 80000,
+      "cash_before_withdrawal": 30020,
+      "final_cash": 10020,
+      "allocations": {
+        "CASH": 0.12525,
+        "STOCK": 0.50375,
+        "BOND": 0.371
+      },
+      "final_values": {
+        "AAPL": 20000,
+        "MSFT": 18800,
+        "VOO": 1500,
+        "BND": 29680
+      },
+      "final_quantities": {
+        "AAPL": 100,
+        "MSFT": 47,
+        "VOO": 3,
+        "BND": 371
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T08-v002": {
+    "scenario_id": "T08-v002",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "AAPL",
+        "quantity_delta": -47
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -54
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 81
+      }
+    ],
+    "metrics": {
+      "initial_total": 100900,
+      "final_total": 72900,
+      "cash_before_withdrawal": 38920,
+      "final_cash": 10920,
+      "allocations": {
+        "CASH": 0.14979423868312758,
+        "STOCK": 0.4540466392318244,
+        "BOND": 0.396159122085048
+      },
+      "final_values": {
+        "AAPL": 8600,
+        "MSFT": 24000,
+        "VOO": 500,
+        "BND": 28880
+      },
+      "final_quantities": {
+        "AAPL": 43,
+        "MSFT": 60,
+        "VOO": 1,
+        "BND": 361
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T08-v003": {
+    "scenario_id": "T08-v003",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -51
+      },
+      {
+        "symbol": "VOO",
+        "quantity_delta": -16
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": 46
+      }
+    ],
+    "metrics": {
+      "initial_total": 103000,
+      "final_total": 85000,
+      "cash_before_withdrawal": 30720,
+      "final_cash": 12720,
+      "allocations": {
+        "CASH": 0.1496470588235294,
+        "STOCK": 0.5247058823529411,
+        "BOND": 0.3256470588235294
+      },
+      "final_values": {
+        "AAPL": 16000,
+        "MSFT": 1600,
+        "VOO": 27000,
+        "BND": 27680
+      },
+      "final_quantities": {
+        "AAPL": 80,
+        "MSFT": 4,
+        "VOO": 54,
+        "BND": 346
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
+  },
+  "T08-v004": {
+    "scenario_id": "T08-v004",
+    "answer_type": "TRADE_PLAN",
+    "status": "FEASIBLE",
+    "trades": [
+      {
+        "symbol": "MSFT",
+        "quantity_delta": -55
+      },
+      {
+        "symbol": "BND",
+        "quantity_delta": -112
+      }
+    ],
+    "metrics": {
+      "initial_total": 91400,
+      "final_total": 61400,
+      "cash_before_withdrawal": 38960,
+      "final_cash": 8960,
+      "allocations": {
+        "CASH": 0.14592833876221498,
+        "STOCK": 0.7003257328990228,
+        "BOND": 0.15374592833876222
+      },
+      "final_values": {
+        "AAPL": 13000,
+        "MSFT": 0,
+        "VOO": 30000,
+        "BND": 9440
+      },
+      "final_quantities": {
+        "AAPL": 65,
+        "MSFT": 0,
+        "VOO": 60,
+        "BND": 118
+      }
+    },
+    "violations": [],
+    "explanation": "Reference example; any plan satisfying all requirements is acceptable."
   },
   "T09-v001": {
     "scenario_id": "T09-v001",
