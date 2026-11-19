@@ -176,6 +176,8 @@ The scorer never fills in a reference value for a number the advisor failed to r
 
 **Per-run results** (`results/results.jsonl`, written by `pipeline.py`, input to `metrics.py`, one row per run): `task_id`, `condition`, `run_number`, `model`, settings and prompt versions, `initial_correct`, `final_correct`, format failures, `initial_status_correct` / `final_status_correct`, `verdict`, `status`, `error`, and the run's `tokens_in`, `tokens_out`, `cost_usd`, `latency_s` (including the shared draft). With #33, each graded run also saves its draft, revision, final answer, verifier replies and both checker results to `results/answers/<run_id>.json`.
 
+**Seeded reviews** (`results/seeded/<run_id>.json`, written by `seeded.py`, one file per review): each checked condition's verifier reviews every answer in `data/injected/` once per run number, with no revision. Each record has `answer_id` (joins to `data/evaluation/seeded_error_labels.csv`), `scenario_id`, `error_type`, `seeded_error` (false for the 14 correct controls), `condition`, `run_number`, the settings, `verdict`, `status` and a one-entry `reviews` list with the same fields as `results/answers/`. Run IDs look like `seeded-dedicated-gemini-3.6-flash-S01_policy_violation_sell_aapl-r1`, so seeded calls never mix with the main runs in the run log.
+
 ## What we measure
 
 Metrics come from `src/advisory/metrics.py`, which turns one row per run into one row of metrics per condition with `summarize(runs, seed=0)`.
@@ -269,6 +271,7 @@ src/advisory/
   checker.py      deterministic constraint checker (hidden from agents)
   evaluation/     reference answers for the checker's tests (scorer only)
   inject.py       builds the seeded error set
+  seeded.py       verifier reviews of the seeded error set
   metrics.py      per-condition metrics: task success, verifier, fixed vs broken, cost
   report.py       summary tables, per-scenario tables and a chart from the results
   spend.py        spending totals from the run log (used by scripts/spend.py)
@@ -279,12 +282,13 @@ scripts/
   run_pilot.py      model pilot (resumable after the daily quota)
   spend.py          spending so far, by model, condition and day
   run_condition.py  run one condition over a set of tasks (resumable)
+  run_seeded.py     one condition's verifier reviews the seeded answers (resumable)
   analyze.py        build the report from results/results.jsonl
 tests/            pytest suite
 data/scenarios/   scenario files (S01.json … S10.json, T03-v001.json), given to agents
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
 data/injected/    answers with known injected errors, plus correct controls
-results/          runs.jsonl (every model call), results.jsonl (one row per run), drafts/, pilot/, report/
+results/          runs.jsonl (every model call), results.jsonl (one row per run), drafts/, answers/, seeded/, pilot/, report/
 docs/             proposal.pdf, topic_selection.pdf, pilot write-up
 assets/           README images and animations
 pyproject.toml    package metadata and dependencies (pip install -e ".[dev]")
