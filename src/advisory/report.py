@@ -1,4 +1,4 @@
-"""Turn pipeline result rows into report tables and one chart.
+"""Turn pipeline result rows into report tables and charts.
 
 Reads ``results/results.jsonl`` as written by ``pipeline.run_one``. Malformed
 or unusable rows are kept with a reason; they are never dropped silently.
@@ -14,9 +14,45 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np
 import pandas as pd
+from matplotlib.lines import Line2D  # noqa: E402
+from matplotlib.patches import Patch  # noqa: E402
+from matplotlib.ticker import MaxNLocator  # noqa: E402
 
 from advisory.metrics import REQUIRED_COLUMNS, compare_conditions, summarize, validate_runs
+
+# Fixed display order and colour-blind-safe palette (Okabe–Ito) for condition marks.
+CONDITION_ORDER = ("none", "self", "peer", "dedicated", "weakened", "cross_family")
+CONDITION_COLORS = {
+    "none": "#0072B2",
+    "self": "#E69F00",
+    "peer": "#009E73",
+    "dedicated": "#CC79A7",
+    "weakened": "#D55E00",
+    "cross_family": "#56B4E9",
+}
+# Outcome / catch / right-reason stacks use a separate palette (not condition colours).
+OUTCOME_STACK = (
+    ("Kept correct", "#7F7F7F"),
+    ("Fixed", "#009E73"),
+    ("Broken", "#D55E00"),
+    ("Still wrong", "#CCCCCC"),
+)
+CATCH_STACK = (
+    ("Missed", "#CCCCCC"),
+    ("Caught and fixed", "#009E73"),
+    ("Caught but not fixed", "#E69F00"),
+    ("Escalated", "#56B4E9"),
+)
+RIGHT_REASON_STACK = (
+    ("Right reason", "#009E73"),
+    ("Consequence only", "#E69F00"),
+    ("Wrong reason", "#D55E00"),
+    ("Abstained", "#56B4E9"),
+)
+_FIGURE_DPI = 150
+_PNG_METADATA = {"Software": "advisory.report", "Creation Time": "1970-01-01T00:00:00"}
 
 ROOT = Path(__file__).resolve().parents[2]
 RESULTS_PATH = ROOT / "results" / "results.jsonl"
@@ -204,11 +240,17 @@ def write_report(
     paths["rejected_md"] = out_dir / "rejected.md"
     paths["rejected_md"].write_text(_rejected_markdown(rejected), encoding="utf-8")
 
+    seeded_paths = _write_seeded_outputs(
+        out_dir,
+        seeded_dir=seeded_dir,
+        labels_path=labels_path,
+    )
+    paths.update(seeded_paths)
     paths.update(
-        _write_seeded_outputs(
+        _write_result_figures(
+            report,
             out_dir,
-            seeded_dir=seeded_dir,
-            labels_path=labels_path,
+            seeded_csv=seeded_paths.get("seeded_csv"),
         )
     )
     return paths
@@ -427,10 +469,21 @@ def _rejected_markdown(rejected: list[dict]) -> str:
 
 
 def _write_success_chart(summary: pd.DataFrame, path: Path) -> None:
+    models = []
+    if "model" in summary.columns:
+        for value in summary["model"].tolist():
+            if value in (None, "") or (isinstance(value, float) and pd.isna(value)):
+                continue
+            models.append(str(value))
+    several_models = len(set(models)) > 1
     labels = []
     for _, row in summary.iterrows():
-        if row.get("model") not in (None, "") and not (isinstance(row.get("model"), float) and pd.isna(row.get("model"))):
-            labels.append(f"{row['condition']}\n{row['model']}")
+        model = row.get("model")
+        has_model = model not in (None, "") and not (
+            isinstance(model, float) and pd.isna(model)
+        )
+        if several_models and has_model:
+            labels.append(f"{row['condition']}\n{model}")
         else:
             labels.append(str(row["condition"]))
     # All-failed groups leave rates as None; coerce so the chart still writes.
@@ -448,4 +501,603 @@ def _write_success_chart(summary: pd.DataFrame, path: Path) -> None:
     axis.set_title("Task success by condition")
     fig.tight_layout()
     fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+
+def _write_result_figures(
+    report: dict,
+    out_dir: Path,
+    *,
+    seeded_csv: Path | None = None,
+) -> dict[str, Path]:
+    """Write the paired, outcome, verifier, cost and optional right-reason figures."""
+    paths: dict[str, Path] = {}
+    writers = (
+        ("comparisons.png", write_comparisons_figure, report["comparisons"]),
+        ("outcomes.png", write_outcomes_figure, report["outcomes"]),
+        ("catch_outcomes.png", write_catch_outcomes_figure, report["outcomes"]),
+        ("verifier_rates.png", write_verifier_rates_figure, report["summary"]),
+        ("cost_vs_success.png", write_cost_vs_success_figure, report["summary"]),
+    )
+    for name, writer, frame in writers:
+        path = out_dir / name
+        if writer(frame, path):
+            paths[name] = path
+    if seeded_csv is not None and Path(seeded_csv).exists():
+        seeded = pd.read_csv(seeded_csv)
+        path = out_dir / "right_reason.png"
+        if write_right_reason_figure(seeded, path):
+            paths["right_reason.png"] = path
+    return paths
+
+
+def write_comparisons_figure(comparisons: pd.DataFrame, path: Path) -> bool:
+    """Forest plot of paired deltas versus none.
+
+    Parameters
+    ----------
+    comparisons : DataFrame
+        Output of ``compare_conditions`` (one row per pair).
+    path : Path
+        Destination PNG path.
+
+    Returns
+    -------
+    bool
+        True when a figure was written; False when skipped.
+    """
+    if comparisons is None or comparisons.empty:
+        print(f"note: skipping {path.name}: no comparison rows", file=sys.stderr)
+        return False
+    frame = comparisons.copy()
+    if "condition_b" not in frame.columns:
+        print(f"note: skipping {path.name}: missing condition_b", file=sys.stderr)
+        return False
+    # One display row per condition_b in fixed order (mean over models if many).
+    rows = []
+    for condition in CONDITION_ORDER:
+        if condition == "none":
+            continue
+        subset = frame.loc[frame["condition_b"] == condition]
+        if subset.empty:
+            continue
+        keep = []
+        notes = []
+        for _, item in subset.iterrows():
+            note = ""
+            if "note" in subset.columns:
+                raw_note = item.get("note")
+                if raw_note is not None and not (
+                    isinstance(raw_note, float) and pd.isna(raw_note)
+                ):
+                    note = str(raw_note)
+            notes.append(note)
+            delta_value = pd.to_numeric(item.get("delta"), errors="coerce")
+            keep.append(note == "" and pd.notna(delta_value))
+        usable = subset.iloc[[index for index, flag in enumerate(keep) if flag]]
+        if usable.empty:
+            note = next((value for value in notes if value), "no usable pairs")
+            rows.append(
+                {
+                    "condition": condition,
+                    "delta": None,
+                    "low": None,
+                    "high": None,
+                    "sign_test_p": None,
+                    "note": note,
+                }
+            )
+            continue
+        delta = float(pd.to_numeric(usable["delta"], errors="coerce").mean())
+        low = float(pd.to_numeric(usable["delta_ci_low"], errors="coerce").mean())
+        high = float(pd.to_numeric(usable["delta_ci_high"], errors="coerce").mean())
+        p_value = pd.to_numeric(usable["sign_test_p"], errors="coerce").mean()
+        rows.append(
+            {
+                "condition": condition,
+                "delta": delta,
+                "low": low,
+                "high": high,
+                "sign_test_p": None if pd.isna(p_value) else float(p_value),
+                "note": "",
+            }
+        )
+    if not rows:
+        print(f"note: skipping {path.name}: no conditions to plot", file=sys.stderr)
+        return False
+
+    fig, axis = plt.subplots(figsize=(8.5, 0.6 * len(rows) + 1.5))
+    y_positions = list(range(len(rows)))
+    plotted_highs = []
+    for index, row in enumerate(rows):
+        color = CONDITION_COLORS[row["condition"]]
+        y = y_positions[index]
+        if row["note"]:
+            axis.text(
+                0.0,
+                y,
+                f"{row['condition']}: {row['note']}",
+                va="center",
+                ha="left",
+                color=color,
+                fontsize=9,
+            )
+            continue
+        axis.errorbar(
+            row["delta"],
+            y,
+            xerr=[[row["delta"] - row["low"]], [row["high"] - row["delta"]]],
+            fmt="o",
+            color=color,
+            ecolor=color,
+            capsize=4,
+            markersize=7,
+        )
+        plotted_highs.append(row["high"])
+        p_text = (
+            "p = —"
+            if row["sign_test_p"] is None
+            else f"p = {row['sign_test_p']:.2f}"
+        )
+        axis.text(
+            row["high"],
+            y,
+            f"  {p_text}",
+            va="center",
+            ha="left",
+            fontsize=9,
+            color="#333333",
+        )
+    axis.axvline(0.0, color="#333333", linewidth=1.0, linestyle="--")
+    axis.set_yticks(y_positions)
+    axis.set_yticklabels([row["condition"] for row in rows])
+    axis.set_xlabel("Delta task success (condition − none)")
+    axis.set_title("Paired comparisons versus none")
+    axis.invert_yaxis()
+    if plotted_highs:
+        low_bound = min(
+            (row["low"] for row in rows if row["low"] is not None),
+            default=-0.05,
+        )
+        high_bound = max(plotted_highs)
+        span = max(high_bound - low_bound, 0.1)
+        axis.set_xlim(low_bound - 0.05 * span, high_bound + 0.28 * span)
+    # bbox_inches="tight" handles margins; tight_layout warns when p= labels
+    # need extra right space.
+    _savefig(fig, path)
+    return True
+
+
+def write_outcomes_figure(outcomes: pd.DataFrame, path: Path) -> bool:
+    """100% stacked bars of kept / fixed / broken / still-wrong shares.
+
+    Parameters
+    ----------
+    outcomes : DataFrame
+        Per-condition outcome counts from ``summarize``.
+    path : Path
+        Destination PNG path.
+
+    Returns
+    -------
+    bool
+        True when a figure was written; False when skipped.
+    """
+    frame = _condition_frame(outcomes)
+    if frame is None:
+        print(f"note: skipping {path.name}: no outcome rows", file=sys.stderr)
+        return False
+    columns = ("kept_correct", "fixed", "broken", "still_wrong")
+    if any(column not in frame.columns for column in columns):
+        print(f"note: skipping {path.name}: missing outcome columns", file=sys.stderr)
+        return False
+    conditions = [name for name in CONDITION_ORDER if name in set(frame["condition"])]
+    if not conditions:
+        print(f"note: skipping {path.name}: no known conditions", file=sys.stderr)
+        return False
+
+    shares = []
+    for condition in conditions:
+        row = frame.loc[frame["condition"] == condition].iloc[0]
+        counts = [
+            float(pd.to_numeric(row[column], errors="coerce") or 0.0)
+            for column in columns
+        ]
+        total = sum(counts)
+        if total <= 0:
+            shares.append([0.0, 0.0, 0.0, 0.0])
+        else:
+            shares.append([value / total for value in counts])
+    shares = np.asarray(shares, dtype=float)
+
+    fig, axis = plt.subplots(figsize=(8, 4.8))
+    _draw_stacked_bars(axis, conditions, shares, OUTCOME_STACK)
+    axis.set_ylim(0, 1.05)
+    axis.set_ylabel("Share of scored runs")
+    axis.set_title("Outcome mix by condition")
+    _legend_below(axis, OUTCOME_STACK, ncol=4)
+    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.22)
+    _savefig(fig, path)
+    return True
+
+
+def write_catch_outcomes_figure(outcomes: pd.DataFrame, path: Path) -> bool:
+    """Stacked counts of fates for initially wrong drafts under verified conditions.
+
+    Parameters
+    ----------
+    outcomes : DataFrame
+        Per-condition catch-outcome counts from ``summarize``.
+    path : Path
+        Destination PNG path.
+
+    Returns
+    -------
+    bool
+        True when a figure was written; False when skipped.
+    """
+    frame = _condition_frame(outcomes)
+    if frame is None:
+        print(f"note: skipping {path.name}: no outcome rows", file=sys.stderr)
+        return False
+    columns = ("missed", "caught_fixed", "caught_not_fixed", "caught_escalated")
+    if any(column not in frame.columns for column in columns):
+        print(f"note: skipping {path.name}: missing catch-outcome columns", file=sys.stderr)
+        return False
+    conditions = [
+        name
+        for name in CONDITION_ORDER
+        if name != "none" and name in set(frame["condition"])
+    ]
+    plotted = []
+    matrix = []
+    for condition in conditions:
+        row = frame.loc[frame["condition"] == condition].iloc[0]
+        counts = [
+            pd.to_numeric(row[column], errors="coerce")
+            for column in columns
+        ]
+        if all(pd.isna(value) for value in counts):
+            continue
+        plotted.append(condition)
+        matrix.append([0.0 if pd.isna(value) else float(value) for value in counts])
+    if not plotted:
+        print(f"note: skipping {path.name}: no verifier catch outcomes", file=sys.stderr)
+        return False
+    matrix = np.asarray(matrix, dtype=float)
+
+    fig, axis = plt.subplots(figsize=(8, 4.8))
+    _draw_stacked_bars(axis, plotted, matrix, CATCH_STACK)
+    axis.set_ylabel("Count of initially wrong drafts")
+    axis.set_title("Catch outcomes by verified condition")
+    axis.yaxis.set_major_locator(MaxNLocator(integer=True))
+    _legend_below(axis, CATCH_STACK, ncol=4)
+    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.22)
+    _savefig(fig, path)
+    return True
+
+
+def write_verifier_rates_figure(summary: pd.DataFrame, path: Path) -> bool:
+    """Grouped bars of catch rate and false-alarm rate for verified conditions.
+
+    Parameters
+    ----------
+    summary : DataFrame
+        Per-condition summary metrics from ``summarize``.
+    path : Path
+        Destination PNG path.
+
+    Returns
+    -------
+    bool
+        True when a figure was written; False when skipped.
+    """
+    frame = _condition_frame(summary)
+    if frame is None:
+        print(f"note: skipping {path.name}: no summary rows", file=sys.stderr)
+        return False
+    for column in ("catch_rate", "false_alarm_rate"):
+        if column not in frame.columns:
+            print(f"note: skipping {path.name}: missing {column}", file=sys.stderr)
+            return False
+    conditions = []
+    catch_rates: list[float | None] = []
+    false_alarms: list[float | None] = []
+    for condition in CONDITION_ORDER:
+        if condition == "none" or condition not in set(frame["condition"]):
+            continue
+        row = frame.loc[frame["condition"] == condition].iloc[0]
+        catch = pd.to_numeric(row["catch_rate"], errors="coerce")
+        false_alarm = pd.to_numeric(row["false_alarm_rate"], errors="coerce")
+        if pd.isna(catch) and pd.isna(false_alarm):
+            continue
+        conditions.append(condition)
+        catch_rates.append(None if pd.isna(catch) else float(catch))
+        false_alarms.append(None if pd.isna(false_alarm) else float(false_alarm))
+    if not conditions:
+        print(f"note: skipping {path.name}: no verifier rates", file=sys.stderr)
+        return False
+
+    x = np.arange(len(conditions))
+    width = 0.35
+    fig, axis = plt.subplots(figsize=(8, 4.8))
+    bar_colors = [CONDITION_COLORS[name] for name in conditions]
+    catch_heights = [0.0 if value is None else value for value in catch_rates]
+    false_heights = [0.0 if value is None else value for value in false_alarms]
+    axis.bar(
+        x - width / 2,
+        catch_heights,
+        width,
+        color=bar_colors,
+        edgecolor="#333333",
+        linewidth=0.6,
+    )
+    axis.bar(
+        x + width / 2,
+        false_heights,
+        width,
+        color=bar_colors,
+        alpha=0.45,
+        edgecolor="#333333",
+        linewidth=0.6,
+        hatch="//",
+    )
+    for index, value in enumerate(catch_rates):
+        height = 0.0 if value is None else value
+        text = "n/a" if value is None else f"{value:.2f}"
+        axis.text(
+            x[index] - width / 2,
+            height + 0.02,
+            text,
+            ha="center",
+            va="bottom",
+            fontsize=8,
+            color="#333333",
+        )
+    for index, value in enumerate(false_alarms):
+        height = 0.0 if value is None else value
+        text = "n/a" if value is None else f"{value:.2f}"
+        axis.text(
+            x[index] + width / 2,
+            height + 0.02,
+            text,
+            ha="center",
+            va="bottom",
+            fontsize=8,
+            color="#333333",
+        )
+    axis.set_xticks(x)
+    axis.set_xticklabels(conditions)
+    axis.set_ylim(0, 1.18)
+    axis.set_ylabel("Rate")
+    axis.set_title("Verifier catch and false-alarm rates")
+    handles = [
+        Patch(facecolor="#888888", edgecolor="#333333", label="Catch rate"),
+        Patch(
+            facecolor="#888888",
+            edgecolor="#333333",
+            hatch="//",
+            label="False-alarm rate",
+        ),
+    ]
+    axis.legend(
+        handles=handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.18),
+        ncol=2,
+        frameon=False,
+        fontsize=8,
+    )
+    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.22)
+    _savefig(fig, path)
+    return True
+
+
+def write_cost_vs_success_figure(summary: pd.DataFrame, path: Path) -> bool:
+    """Scatter of mean cost per run versus task success with CI error bars.
+
+    Parameters
+    ----------
+    summary : DataFrame
+        Per-condition summary metrics from ``summarize``.
+    path : Path
+        Destination PNG path.
+
+    Returns
+    -------
+    bool
+        True when a figure was written; False when skipped.
+    """
+    frame = _condition_frame(summary)
+    if frame is None:
+        print(f"note: skipping {path.name}: no summary rows", file=sys.stderr)
+        return False
+    needed = ("mean_cost_usd", "task_success", "task_success_ci_low", "task_success_ci_high")
+    if any(column not in frame.columns for column in needed):
+        print(f"note: skipping {path.name}: missing cost or success columns", file=sys.stderr)
+        return False
+    points = []
+    for condition in CONDITION_ORDER:
+        if condition not in set(frame["condition"]):
+            continue
+        row = frame.loc[frame["condition"] == condition].iloc[0]
+        cost = pd.to_numeric(row["mean_cost_usd"], errors="coerce")
+        success = pd.to_numeric(row["task_success"], errors="coerce")
+        low = pd.to_numeric(row["task_success_ci_low"], errors="coerce")
+        high = pd.to_numeric(row["task_success_ci_high"], errors="coerce")
+        if pd.isna(cost) or pd.isna(success):
+            continue
+        points.append(
+            {
+                "condition": condition,
+                "cost": float(cost),
+                "success": float(success),
+                "low": float(success if pd.isna(low) else low),
+                "high": float(success if pd.isna(high) else high),
+            }
+        )
+    if not points:
+        print(f"note: skipping {path.name}: no cost/success points", file=sys.stderr)
+        return False
+
+    fig, axis = plt.subplots(figsize=(8.5, 4.5))
+    handles = []
+    for point in points:
+        color = CONDITION_COLORS[point["condition"]]
+        axis.errorbar(
+            point["cost"],
+            point["success"],
+            yerr=[
+                [point["success"] - point["low"]],
+                [point["high"] - point["success"]],
+            ],
+            fmt="o",
+            color=color,
+            ecolor=color,
+            capsize=4,
+            markersize=8,
+        )
+        handles.append(
+            Line2D(
+                [0],
+                [0],
+                marker="o",
+                color=color,
+                linestyle="None",
+                markersize=8,
+                label=point["condition"],
+            )
+        )
+    axis.set_xlabel("Mean cost per run (USD)")
+    axis.set_ylabel("Task success")
+    axis.set_ylim(0, 1.05)
+    axis.set_title("Cost versus task success")
+    axis.legend(
+        handles=handles,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        frameon=False,
+        fontsize=8,
+    )
+    fig.tight_layout()
+    fig.subplots_adjust(right=0.78)
+    _savefig(fig, path)
+    return True
+
+
+def write_right_reason_figure(seeded: pd.DataFrame, path: Path) -> bool:
+    """Stacked counts of right-reason decisions among flagged seeded errors.
+
+    Parameters
+    ----------
+    seeded : DataFrame
+        Output of ``right_reason_metrics`` (one row per condition).
+    path : Path
+        Destination PNG path.
+
+    Returns
+    -------
+    bool
+        True when a figure was written; False when skipped.
+    """
+    if seeded is None or seeded.empty:
+        print(f"note: skipping {path.name}: no seeded metrics", file=sys.stderr)
+        return False
+    columns = ("right_reason", "consequence_only", "wrong_reason", "abstained")
+    if any(column not in seeded.columns for column in columns):
+        print(f"note: skipping {path.name}: missing right-reason columns", file=sys.stderr)
+        return False
+    frame = seeded.copy()
+    if "condition" not in frame.columns:
+        print(f"note: skipping {path.name}: missing condition column", file=sys.stderr)
+        return False
+    # Aggregate over verifier models if more than one row per condition.
+    numeric = frame.groupby("condition", sort=False)[list(columns)].sum(min_count=1)
+    conditions = [name for name in CONDITION_ORDER if name in numeric.index and name != "none"]
+    if not conditions:
+        print(f"note: skipping {path.name}: no verified seeded conditions", file=sys.stderr)
+        return False
+    matrix = []
+    plotted = []
+    for condition in conditions:
+        counts = [
+            float(numeric.loc[condition, column])
+            if pd.notna(numeric.loc[condition, column])
+            else 0.0
+            for column in columns
+        ]
+        if sum(counts) <= 0:
+            continue
+        plotted.append(condition)
+        matrix.append(counts)
+    if not plotted:
+        print(f"note: skipping {path.name}: no flagged seeded errors", file=sys.stderr)
+        return False
+    matrix = np.asarray(matrix, dtype=float)
+
+    fig, axis = plt.subplots(figsize=(8, 4.8))
+    _draw_stacked_bars(axis, plotted, matrix, RIGHT_REASON_STACK)
+    axis.set_ylabel("Count of flagged seeded errors")
+    axis.set_title("Right-reason decisions on seeded errors")
+    axis.yaxis.set_major_locator(MaxNLocator(integer=True))
+    _legend_below(axis, RIGHT_REASON_STACK, ncol=4)
+    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.22)
+    _savefig(fig, path)
+    return True
+
+
+def _condition_frame(frame: pd.DataFrame | None) -> pd.DataFrame | None:
+    """Collapse optional model rows to one row per condition (means of numerics)."""
+    if frame is None or frame.empty or "condition" not in frame.columns:
+        return None
+    working = frame.copy()
+    if "model" in working.columns and working["model"].notna().any():
+        value_cols = [column for column in working.columns if column not in ("condition", "model")]
+        for column in value_cols:
+            if not pd.api.types.is_numeric_dtype(working[column]):
+                working[column] = pd.to_numeric(working[column], errors="coerce")
+        if not value_cols:
+            return working.drop_duplicates(subset=["condition"])
+        return (
+            working.groupby("condition", sort=False)[value_cols]
+            .mean()
+            .reset_index()
+        )
+    return working
+
+
+def _draw_stacked_bars(axis, conditions, matrix, stack) -> None:
+    """Draw stacked bars with an explicit outcome palette; black x tick labels."""
+    bottom = np.zeros(len(conditions))
+    x = np.arange(len(conditions))
+    for index, (_label, color) in enumerate(stack):
+        heights = matrix[:, index]
+        axis.bar(x, heights, bottom=bottom, color=color, width=0.7, linewidth=0)
+        bottom = bottom + heights
+    axis.set_xticks(x)
+    axis.set_xticklabels(conditions)
+    for tick in axis.get_xticklabels():
+        tick.set_color("#000000")
+
+
+def _legend_below(axis, stack, *, ncol: int) -> None:
+    """Place Patch legend handles below the axes so every category has a swatch."""
+    handles = [Patch(facecolor=color, edgecolor=color, label=label) for label, color in stack]
+    axis.legend(
+        handles=handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.18),
+        ncol=ncol,
+        frameon=False,
+        fontsize=8,
+    )
+
+
+def _savefig(fig, path: Path) -> None:
+    """Save a figure at 150 dpi with fixed PNG metadata, then close it."""
+    fig.savefig(path, dpi=_FIGURE_DPI, metadata=_PNG_METADATA, bbox_inches="tight")
     plt.close(fig)

@@ -330,6 +330,28 @@ python scripts/run_condition.py --condition none --model gemini-3.6-flash \
 python scripts/analyze.py                                 # tables and chart in results/report/
 ```
 
+## Report outputs
+
+`python scripts/analyze.py` writes tables and figures under `results/report/` from `results/results.jsonl` (optional seeded review JSON under `results/seeded/`):
+
+| Output | What it shows |
+|---|---|
+| `summary.csv` / `summary.md` | Per-condition rates (task success, catch, false alarm, cost, …) with CIs |
+| `by_scenario.csv` | Per-task success counts by condition |
+| `infeasible_status.csv` | Strict vs status-only correctness on the infeasible tasks (S09, S10 and their variants) |
+| `rejected_rows.csv` / `rejected.md` | JSONL rows dropped at load time and why |
+| `outcomes.csv` / `outcomes.md` | Kept / fixed / broken / still-wrong and catch-outcome counts |
+| `comparisons.csv` / `comparisons.md` | Paired deltas vs `none` with sign-test *p* and notes |
+| `seeded.csv` / `seeded.md` | Right-reason metrics on seeded errors (only when seeded JSON is present) |
+| `right_reason_audit.csv` | Per-answer right-reason audit rows (only when seeded JSON is present) |
+| `task_success.png` | Task success by condition (CI error bars) |
+| `comparisons.png` | Forest plot of paired deltas vs `none` |
+| `outcomes.png` | 100% stacked outcome mix by condition |
+| `catch_outcomes.png` | Stacked catch fates for initially wrong drafts |
+| `verifier_rates.png` | Catch rate and false-alarm rate by verified condition |
+| `cost_vs_success.png` | Mean cost per run vs task success |
+| `right_reason.png` | Stacked right-reason decisions on flagged seeded errors (when seeded present) |
+
 **Main study tasks.** The 32 tasks of the main study are listed in `data/study_tasks.txt`; pass `--tasks-file data/study_tasks.txt` (with `--repeats 3`) so every condition runs the exact same set.
 
 After a daily quota stops a run, `run_condition.py` skips the runs already saved when you run the same command again, and `run_pilot.py` continues a batch with `--resume <batch_id>`.
