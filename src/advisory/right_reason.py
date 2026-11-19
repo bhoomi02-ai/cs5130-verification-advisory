@@ -191,6 +191,8 @@ def right_reason_metrics(records: list[dict], labels: list[dict]) -> pd.DataFram
     -------
     DataFrame
         One row per ``(condition, verifier_model)`` with counts and rates.
+        Records with ``status == \"failed\"`` are left out of every rate and
+        counted in ``n_failed`` (same pattern as ``metrics.summarize``).
         Rates are ``None`` when their denominator is zero.
 
     Raises
@@ -211,6 +213,7 @@ def right_reason_metrics(records: list[dict], labels: list[dict]) -> pd.DataFram
         n_errors = 0
         n_controls = 0
         n_missing = 0
+        n_failed = 0
         flagged_errors = 0
         errors_with_verdict = 0
         flagged_controls = 0
@@ -220,6 +223,9 @@ def right_reason_metrics(records: list[dict], labels: list[dict]) -> pd.DataFram
         n_wrong = 0
 
         for record in group:
+            if record.get("status") == "failed":
+                n_failed += 1
+                continue
             kind = _record_kind(record, label_by_id)
             review = _first_review(record)
             verdict = review.get("verdict")
@@ -256,6 +262,7 @@ def right_reason_metrics(records: list[dict], labels: list[dict]) -> pd.DataFram
                 "verifier_model": verifier_model,
                 "n_errors": n_errors,
                 "n_controls": n_controls,
+                "n_failed": n_failed,
                 "n_missing_verdict": n_missing,
                 "seeded_catch_rate": _rate(flagged_errors, errors_with_verdict),
                 "seeded_false_alarm_rate": _rate(flagged_controls, controls_with_verdict),
@@ -316,22 +323,25 @@ def audit_table(records: list[dict], labels: list[dict]) -> pd.DataFrame:
             issues_text = issues
         else:
             issues_text = " | ".join(str(item) for item in issues)
-        kind = _record_kind(record, label_by_id)
-        if kind == "control":
-            verdict = review.get("verdict")
-            if verdict is None:
-                decision, matched_in, matched = "missing_verdict", None, []
-            elif verdict == "accept":
-                decision, matched_in, matched = "not_flagged", None, []
-            elif verdict in ("reject", "abstain"):
-                decision, matched_in, matched = "false_alarm", None, []
-            else:
-                decision, matched_in, matched = "missing_verdict", None, []
+        if record.get("status") == "failed":
+            decision, matched_in, matched = "failed", None, []
         else:
-            classified = classify_review(review, label_by_id[record["answer_id"]])
-            decision = classified["decision"]
-            matched_in = classified["matched_in"]
-            matched = classified["matched"]
+            kind = _record_kind(record, label_by_id)
+            if kind == "control":
+                verdict = review.get("verdict")
+                if verdict is None:
+                    decision, matched_in, matched = "missing_verdict", None, []
+                elif verdict == "accept":
+                    decision, matched_in, matched = "not_flagged", None, []
+                elif verdict in ("reject", "abstain"):
+                    decision, matched_in, matched = "false_alarm", None, []
+                else:
+                    decision, matched_in, matched = "missing_verdict", None, []
+            else:
+                classified = classify_review(review, label_by_id[record["answer_id"]])
+                decision = classified["decision"]
+                matched_in = classified["matched_in"]
+                matched = classified["matched"]
         rows.append(
             {
                 "answer_id": record.get("answer_id"),

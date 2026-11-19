@@ -10,6 +10,7 @@ import pytest
 
 from advisory.report import analyze
 from advisory.right_reason import (
+    audit_table,
     classify_review,
     extract_numbers,
     load_labels,
@@ -314,6 +315,7 @@ def test_metric_denominators_and_none_when_zero():
     row = right_reason_metrics(records, labels).iloc[0]
     assert row["n_errors"] == 3
     assert row["n_controls"] == 2
+    assert row["n_failed"] == 0
     assert row["n_missing_verdict"] == 1
     # Errors with verdict: right_reason + accept = 2; flagged = 1 → catch 0.5
     assert row["seeded_catch_rate"] == 0.5
@@ -336,6 +338,108 @@ def test_metric_denominators_and_none_when_zero():
     ).iloc[0]
     assert empty_flag["right_reason_rate"] is None
     assert empty_flag["seeded_catch_rate"] == 0.0
+
+
+def test_failed_records_excluded_from_rates_and_counted():
+    labels = load_labels(LABELS)
+    records = [
+        _record(
+            "S04_arithmetic_ignore_entry_fee",
+            _review(issues=["Fund A ends at 139079.42"]),
+            condition="dedicated",
+            verifier_model="m1",
+            status="reviewed",
+        ),
+        _record(
+            "S06_arithmetic_payment_over_months",
+            _review(verdict=None),
+            condition="dedicated",
+            verifier_model="m1",
+            run_number=2,
+            status="failed",
+        ),
+        _record(
+            "S01_none_reference",
+            _review(verdict="reject", issues=["x"]),
+            condition="dedicated",
+            verifier_model="m1",
+            is_control=True,
+            run_number=3,
+            status="failed",
+        ),
+    ]
+    row = right_reason_metrics(records, labels).iloc[0]
+    assert row["n_failed"] == 2
+    assert row["n_errors"] == 1
+    assert row["n_controls"] == 0
+    assert row["n_missing_verdict"] == 0
+    assert row["seeded_catch_rate"] == 1.0
+    assert row["right_reason"] == 1
+    assert row["right_reason_rate"] == 1.0
+    assert row["seeded_false_alarm_rate"] is None
+
+    audit = audit_table(records, labels)
+    assert list(audit["decision"]) == ["right_reason", "failed", "failed"]
+
+
+def test_reviewed_missing_verdict_still_counts():
+    labels = load_labels(LABELS)
+    records = [
+        _record(
+            "S04_arithmetic_ignore_entry_fee",
+            _review(verdict=None),
+            condition="peer",
+            verifier_model="m1",
+            status="reviewed",
+        ),
+        _record(
+            "S06_arithmetic_payment_over_months",
+            _review(verdict=None),
+            condition="peer",
+            verifier_model="m1",
+            run_number=2,
+            status="failed",
+        ),
+    ]
+    row = right_reason_metrics(records, labels).iloc[0]
+    assert row["n_failed"] == 1
+    assert row["n_errors"] == 1
+    assert row["n_missing_verdict"] == 1
+    assert row["seeded_catch_rate"] is None
+    assert row["right_reason_catch_rate"] is None
+    assert audit_table(records, labels).iloc[0]["decision"] == "missing_verdict"
+
+
+def test_all_failed_group_returns_n_failed_and_none_rates():
+    labels = load_labels(LABELS)
+    records = [
+        _record(
+            "S04_arithmetic_ignore_entry_fee",
+            _review(verdict=None),
+            condition="weakened",
+            verifier_model="m1",
+            status="failed",
+        ),
+        _record(
+            "S01_none_reference",
+            _review(verdict=None),
+            condition="weakened",
+            verifier_model="m1",
+            is_control=True,
+            run_number=2,
+            status="failed",
+        ),
+    ]
+    row = right_reason_metrics(records, labels).iloc[0]
+    assert row["n_failed"] == 2
+    assert row["n_errors"] == 0
+    assert row["n_controls"] == 0
+    assert row["n_missing_verdict"] == 0
+    assert row["seeded_catch_rate"] is None
+    assert row["seeded_false_alarm_rate"] is None
+    assert row["right_reason_rate"] is None
+    assert row["right_reason_catch_rate"] is None
+    assert row["right_reason"] == 0
 
 
 def test_report_writes_seeded_outputs_only_when_files_exist(tmp_path):
