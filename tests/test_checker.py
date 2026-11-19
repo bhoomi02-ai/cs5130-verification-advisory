@@ -867,6 +867,85 @@ def test_t09_v003_excess_with_s09_tolerance_is_wrong(monkeypatch):
     )
 
 
+@pytest.mark.skipif("T10-v001" not in _GROUND_TRUTH, reason="T10-v001 evaluation data not on this branch")
+def test_t10_v001_reference_answer_is_correct():
+    result = check("T10-v001", _result_response("T10-v001"))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+    metrics = _ground_truth("T10-v001")["metrics"]
+    assert metrics["initial_total"] == 100000
+    assert metrics["restricted_value"] == 50000
+    assert metrics["sellable_value"] == 40000
+    assert metrics["available_liquidity"] == 50000
+    assert metrics["required_liquidity"] == 51000
+    assert metrics["liquidity_shortfall"] == 1000
+    assert metrics["max_withdrawal_preserving_reserve"] == 45000
+
+
+@pytest.mark.skipif("T10-v001" not in _GROUND_TRUTH, reason="T10-v001 evaluation data not on this branch")
+def test_t10_v001_feasible_status_is_wrong_status():
+    # Ignoring the $5,000 reserve would make $46,000 look affordable (max is $45,000).
+    response = _result_response("T10-v001")
+    response["status"] = "FEASIBLE"
+    result = check("T10-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "STATUS")["details"]["reason"] == "wrong_status"
+
+
+@pytest.mark.skipif("T10-v001" not in _GROUND_TRUTH, reason="T10-v001 evaluation data not on this branch")
+def test_t10_v001_non_empty_trades_fail():
+    response = _result_response("T10-v001")
+    response["trades"] = [{"symbol": "VOO", "quantity_delta": -10}]
+    result = check("T10-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    assert _of_type(result, "EMPTY_TRADES")["details"]["reason"] == "rule_violation"
+
+
+@pytest.mark.skipif("T10-v001" not in _GROUND_TRUTH, reason="T10-v001 evaluation data not on this branch")
+def test_t10_v001_missing_holding_observation_is_not_a_value_mismatch():
+    response = _result_response("T10-v001")
+    response["metrics"]["observations"] = [
+        observation
+        for observation in response["metrics"]["observations"]
+        if observation["subject"] != "AAPL"
+    ]
+    result = check("T10-v001", response)
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    failed = [row for row in result["checks"] if not row["passed"]]
+    assert failed
+    assert {row["details"]["reason"] for row in failed} == {"missing_observation"}
+
+
+@pytest.mark.skipif("T10-v001" not in _GROUND_TRUTH, reason="T10-v001 evaluation data not on this branch")
+def test_t10_v001_s10_shortfall_is_wrong(monkeypatch):
+    # Correct shortfall for the $46,000 withdrawal is $1,000. S10's $35,000 must not pass.
+    import advisory.checker as checker
+
+    real = checker._reported_metric
+
+    def copy_s10_shortfall(key, scenario, response, index, facts):
+        if key == "liquidity_shortfall":
+            return 35000.0
+        return real(key, scenario, response, index, facts)
+
+    monkeypatch.setattr(checker, "_reported_metric", copy_s10_shortfall)
+    result = check("T10-v001", _result_response("T10-v001"))
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    independent = _of_type(result, "INDEPENDENT_RESULTS")
+    assert independent["passed"] is False
+    assert independent["details"]["reason"] == "value_mismatch"
+    assert any(
+        item["metric"] == "liquidity_shortfall"
+        and item["observed"] == 35000
+        and item["expected"] == pytest.approx(1000)
+        for item in independent["details"]["items"]
+    )
+
+
 def _fenced(body: str, label: str = "json") -> str:
     opener = f"```{label}" if label else "```"
     return f"{opener}\n{body}\n```"

@@ -416,5 +416,22 @@
     },
     "violations": [],
     "explanation": "STOCK cannot fall below $43,000 / $100,000 = 43%; no stock sales, deposits, borrowing or shorting are allowed. The target upper bound is 42% ($42,000) with ±2 percentage points tolerance, leaving $1,000 excess above tolerance. Unknown share quantities/prices are unnecessary for this value-based proof."
+  },
+  "T10-v001": {
+    "scenario_id": "T10-v001",
+    "answer_type": "TRADE_PLAN",
+    "status": "INFEASIBLE",
+    "trades": [],
+    "metrics": {
+      "initial_total": 100000,
+      "restricted_value": 50000,
+      "sellable_value": 40000,
+      "available_liquidity": 50000,
+      "required_liquidity": 51000,
+      "liquidity_shortfall": 1000,
+      "max_withdrawal_preserving_reserve": 45000
+    },
+    "violations": [],
+    "explanation": "AAPL ($20,000) and MSFT ($30,000) cannot be sold. VOO+BND provide only $40,000 plus $10,000 cash, versus $51,000 required including the $5,000 reserve for a $46,000 withdrawal: $1,000 shortfall. No borrowing, deposits or short sales can bridge it; no feasible trade plan."
   }
 }
