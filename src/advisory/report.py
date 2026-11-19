@@ -50,9 +50,9 @@ OUTCOME_COLUMNS = (
     "model",
     "task_success",
     "task_success_excl_human_review",
+    "human_review_rate",
     "task_success_excl_human_review_ci_low",
     "task_success_excl_human_review_ci_high",
-    "human_review_rate",
     "kept_correct",
     "fixed",
     "broken",
@@ -154,7 +154,13 @@ def write_report(
     paths["outcomes_csv"] = out_dir / "outcomes.csv"
     outcomes.to_csv(paths["outcomes_csv"], index=False)
     paths["outcomes_md"] = out_dir / "outcomes.md"
-    paths["outcomes_md"].write_text(_markdown_table(outcomes, "Outcomes by condition") + "\n", encoding="utf-8")
+    paths["outcomes_md"].write_text(
+        _markdown_table(outcomes, "Outcomes by condition")
+        + "\n"
+        + "task_success_excl_human_review excludes runs the verifier escalated; "
+        "read it together with human_review_rate.\n",
+        encoding="utf-8",
+    )
 
     comparisons = report["comparisons"]
     paths["comparisons_csv"] = out_dir / "comparisons.csv"
