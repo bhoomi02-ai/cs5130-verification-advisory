@@ -26,7 +26,7 @@ import sys
 
 from advisory.conditions import CONDITIONS
 from advisory.drafts import Settings
-from advisory.pipeline import RESULTS_PATH, all_task_ids, done_keys, drop_failed, failed_keys, run_one
+from advisory.pipeline import RESULTS_PATH, all_task_ids, done_keys, drop_failed, failed_keys, read_task_file, run_one
 
 MAX_FAILED_IN_A_ROW = 3
 
@@ -36,6 +36,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--condition", required=True, choices=sorted(CONDITIONS))
     parser.add_argument("--model", required=True, help="exact model name, e.g. gemini-3.1-flash-lite")
     parser.add_argument("--tasks", nargs="+", help="scenario IDs (default: every file in data/scenarios)")
+    parser.add_argument("--tasks-file", help="file with one task ID per line (# starts a comment), e.g. data/study_tasks.txt")
     parser.add_argument("--repeats", type=int, default=1, help="runs per scenario (the study uses 5)")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--top-p", type=float, default=0.9)
@@ -44,7 +45,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     settings = Settings(args.model, args.temperature, args.top_p, args.thinking_level)
-    tasks = args.tasks or all_task_ids()
+    if args.tasks and args.tasks_file:
+        parser.error("use --tasks or --tasks-file, not both")
+    tasks = args.tasks or (read_task_file(args.tasks_file) if args.tasks_file else all_task_ids())
     try:
         done = done_keys(RESULTS_PATH, settings=settings)
     except ValueError as e:

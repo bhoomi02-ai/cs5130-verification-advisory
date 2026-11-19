@@ -31,7 +31,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 5e-4,
+        "reported_allocation_tolerance": 0.0005,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -73,7 +73,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 5e-4,
+        "reported_allocation_tolerance": 0.0005,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": null,
@@ -110,7 +110,7 @@
       "check_id": "S03_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -120,7 +120,7 @@
         "unique_rule_scope": true,
         "reject_extra_violations": true,
         "crypto_count": 1,
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -161,7 +161,7 @@
       "check_id": "S04_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     }
   ],
@@ -198,7 +198,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 5e-4,
+        "reported_allocation_tolerance": 0.0005,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -237,7 +237,7 @@
       "check_id": "S06_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     }
   ],
@@ -274,7 +274,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 5e-4,
+        "reported_allocation_tolerance": 0.0005,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -315,7 +315,7 @@
       "params_json": {
         "compare_reference_trades": false,
         "money_tolerance": 0.01,
-        "reported_allocation_tolerance": 5e-4,
+        "reported_allocation_tolerance": 0.0005,
         "constraint_roundoff": 1e-10,
         "whole_share_tolerance": 1e-09,
         "target_allocation_tolerance": 0.005,
@@ -354,7 +354,7 @@
       "check_id": "S09_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -397,7 +397,7 @@
       "check_id": "S10_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -405,6 +405,338 @@
       "check_type": "EMPTY_TRADES",
       "params_json": {
         "expected": []
+      }
+    }
+  ],
+  "T01-v001": [
+    {
+      "check_id": "T01-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T01-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T01-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T01-v001_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T01-v002": [
+    {
+      "check_id": "T01-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T01-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T01-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T01-v002_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T01-v003": [
+    {
+      "check_id": "T01-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T01-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T01-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T01-v003_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T01-v004": [
+    {
+      "check_id": "T01-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T01-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T01-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T01-v004_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T02-v001": [
+    {
+      "check_id": "T02-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T02-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations",
+          "additional_liquidity_needed"
+        ]
+      }
+    },
+    {
+      "check_id": "T02-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T02-v001_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": null,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T02-v002": [
+    {
+      "check_id": "T02-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T02-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations",
+          "additional_liquidity_needed"
+        ]
+      }
+    },
+    {
+      "check_id": "T02-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T02-v002_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": null,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T02-v003": [
+    {
+      "check_id": "T02-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T02-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations",
+          "additional_liquidity_needed"
+        ]
+      }
+    },
+    {
+      "check_id": "T02-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T02-v003_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": null,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T02-v004": [
+    {
+      "check_id": "T02-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T02-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations",
+          "additional_liquidity_needed"
+        ]
+      }
+    },
+    {
+      "check_id": "T02-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T02-v004_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": null,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
       }
     }
   ],
@@ -457,6 +789,974 @@
       }
     }
   ],
+  "T03-v005": [
+    {
+      "check_id": "T03-v005_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T03-v005_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "allocations",
+          "violation_count"
+        ]
+      }
+    },
+    {
+      "check_id": "T03-v005_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "VIOLATIONS_FOUND"
+      }
+    },
+    {
+      "check_id": "T03-v005_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v005_violations",
+      "check_type": "EXACT_SCOPED_VIOLATIONS",
+      "params_json": {
+        "unique_rule_scope": true,
+        "reject_extra_violations": true,
+        "crypto_count": 1,
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v005_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T03-v002": [
+    {
+      "check_id": "T03-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T03-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "allocations",
+          "violation_count"
+        ]
+      }
+    },
+    {
+      "check_id": "T03-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T03-v002_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v002_violations",
+      "check_type": "EXACT_SCOPED_VIOLATIONS",
+      "params_json": {
+        "unique_rule_scope": true,
+        "reject_extra_violations": true,
+        "crypto_count": 0,
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v002_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T03-v003": [
+    {
+      "check_id": "T03-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T03-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "allocations",
+          "violation_count"
+        ]
+      }
+    },
+    {
+      "check_id": "T03-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "VIOLATIONS_FOUND"
+      }
+    },
+    {
+      "check_id": "T03-v003_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v003_violations",
+      "check_type": "EXACT_SCOPED_VIOLATIONS",
+      "params_json": {
+        "unique_rule_scope": true,
+        "reject_extra_violations": true,
+        "crypto_count": 1,
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v003_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T03-v004": [
+    {
+      "check_id": "T03-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T03-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "allocations",
+          "violation_count"
+        ]
+      }
+    },
+    {
+      "check_id": "T03-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "VIOLATIONS_FOUND"
+      }
+    },
+    {
+      "check_id": "T03-v004_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v004_violations",
+      "check_type": "EXACT_SCOPED_VIOLATIONS",
+      "params_json": {
+        "unique_rule_scope": true,
+        "reject_extra_violations": true,
+        "crypto_count": 0,
+        "fraction_tolerance": 0.0005
+      }
+    },
+    {
+      "check_id": "T03-v004_no_trades",
+      "check_type": "EMPTY_TRADES",
+      "params_json": {
+        "expected": []
+      }
+    }
+  ],
+  "T04-v001": [
+    {
+      "check_id": "T04-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T04-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "fund_a_final",
+          "fund_b_final",
+          "absolute_difference",
+          "better_fund"
+        ]
+      }
+    },
+    {
+      "check_id": "T04-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T04-v001_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T04-v002": [
+    {
+      "check_id": "T04-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T04-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "fund_a_final",
+          "fund_b_final",
+          "absolute_difference",
+          "better_fund"
+        ]
+      }
+    },
+    {
+      "check_id": "T04-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T04-v002_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T04-v003": [
+    {
+      "check_id": "T04-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T04-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "fund_a_final",
+          "fund_b_final",
+          "absolute_difference",
+          "better_fund"
+        ]
+      }
+    },
+    {
+      "check_id": "T04-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T04-v003_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T04-v004": [
+    {
+      "check_id": "T04-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T04-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "fund_a_final",
+          "fund_b_final",
+          "absolute_difference",
+          "better_fund"
+        ]
+      }
+    },
+    {
+      "check_id": "T04-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T04-v004_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T05-v001": [
+    {
+      "check_id": "T05-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T05-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "direct_technology_pct"
+        ]
+      }
+    },
+    {
+      "check_id": "T05-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T05-v001_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T05-v002": [
+    {
+      "check_id": "T05-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T05-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "direct_technology_pct"
+        ]
+      }
+    },
+    {
+      "check_id": "T05-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T05-v002_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T05-v003": [
+    {
+      "check_id": "T05-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T05-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "direct_technology_pct"
+        ]
+      }
+    },
+    {
+      "check_id": "T05-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T05-v003_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T05-v004": [
+    {
+      "check_id": "T05-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T05-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "direct_technology_pct"
+        ]
+      }
+    },
+    {
+      "check_id": "T05-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T05-v004_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T06-v001": [
+    {
+      "check_id": "T06-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T06-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_balance",
+          "target_shortfall",
+          "additional_monthly_contribution",
+          "additional_monthly_contribution_cents"
+        ]
+      }
+    },
+    {
+      "check_id": "T06-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T06-v001_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T06-v002": [
+    {
+      "check_id": "T06-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T06-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_balance",
+          "target_shortfall",
+          "additional_monthly_contribution",
+          "additional_monthly_contribution_cents"
+        ]
+      }
+    },
+    {
+      "check_id": "T06-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T06-v002_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T06-v003": [
+    {
+      "check_id": "T06-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T06-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_balance",
+          "target_shortfall",
+          "additional_monthly_contribution",
+          "additional_monthly_contribution_cents"
+        ]
+      }
+    },
+    {
+      "check_id": "T06-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T06-v003_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T06-v004": [
+    {
+      "check_id": "T06-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T06-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_balance",
+          "target_shortfall",
+          "additional_monthly_contribution",
+          "additional_monthly_contribution_cents"
+        ]
+      }
+    },
+    {
+      "check_id": "T06-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T06-v004_independent",
+      "check_type": "INDEPENDENT_RESULTS",
+      "params_json": {
+        "fraction_tolerance": 0.0005
+      }
+    }
+  ],
+  "T07-v001": [
+    {
+      "check_id": "T07-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T07-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "historical_total"
+        ]
+      }
+    },
+    {
+      "check_id": "T07-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T07-v001_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T07-v002": [
+    {
+      "check_id": "T07-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T07-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "historical_total"
+        ]
+      }
+    },
+    {
+      "check_id": "T07-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T07-v002_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T07-v003": [
+    {
+      "check_id": "T07-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T07-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "historical_total"
+        ]
+      }
+    },
+    {
+      "check_id": "T07-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T07-v003_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T07-v004": [
+    {
+      "check_id": "T07-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T07-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_trades",
+          "final_cash",
+          "allocations",
+          "historical_total"
+        ]
+      }
+    },
+    {
+      "check_id": "T07-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T07-v004_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T08-v001": [
+    {
+      "check_id": "T08-v001_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T08-v001_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T08-v001_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T08-v001_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T08-v002": [
+    {
+      "check_id": "T08-v002_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T08-v002_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T08-v002_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T08-v002_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T08-v003": [
+    {
+      "check_id": "T08-v003_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T08-v003_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T08-v003_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T08-v003_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
+  "T08-v004": [
+    {
+      "check_id": "T08-v004_schema",
+      "check_type": "SCHEMA",
+      "params_json": {}
+    },
+    {
+      "check_id": "T08-v004_required",
+      "check_type": "REQUIRED_METRICS",
+      "params_json": {
+        "keys": [
+          "initial_total",
+          "final_total",
+          "cash_before_withdrawal",
+          "final_cash",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "check_id": "T08-v004_status",
+      "check_type": "STATUS",
+      "params_json": {
+        "expected": "FEASIBLE"
+      }
+    },
+    {
+      "check_id": "T08-v004_replay",
+      "check_type": "REPLAY_TRADES",
+      "params_json": {
+        "compare_reference_trades": false,
+        "money_tolerance": 0.01,
+        "reported_allocation_tolerance": 0.0005,
+        "constraint_roundoff": 1e-10,
+        "whole_share_tolerance": 1e-09,
+        "target_allocation_tolerance": 0.005,
+        "enforce_minimum_sales": false,
+        "assumption_status": "APPROVED"
+      }
+    }
+  ],
   "T09-v001": [
     {
       "check_id": "T09-v001_schema",
@@ -487,7 +1787,7 @@
       "check_id": "T09-v001_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -528,7 +1828,7 @@
       "check_id": "T09-v002_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -569,7 +1869,7 @@
       "check_id": "T09-v003_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -612,7 +1912,7 @@
       "check_id": "T10-v001_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -655,7 +1955,7 @@
       "check_id": "T10-v002_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
@@ -698,7 +1998,7 @@
       "check_id": "T10-v003_independent",
       "check_type": "INDEPENDENT_RESULTS",
       "params_json": {
-        "fraction_tolerance": 5e-4
+        "fraction_tolerance": 0.0005
       }
     },
     {
