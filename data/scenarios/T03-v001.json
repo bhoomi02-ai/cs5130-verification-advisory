@@ -13,9 +13,9 @@
         "symbol": "AAPL",
         "asset_class": "STOCK",
         "asset_type": "INDIVIDUAL_STOCK",
-        "quantity": 75,
+        "quantity": 100,
         "current_price": 200,
-        "market_value": 15000
+        "market_value": 20000.0
       },
       {
         "symbol": "MSFT",
@@ -23,7 +23,7 @@
         "asset_type": "INDIVIDUAL_STOCK",
         "quantity": 50,
         "current_price": 400,
-        "market_value": 20000
+        "market_value": 20000.0
       },
       {
         "symbol": "VOO",
@@ -31,15 +31,15 @@
         "asset_type": "ETF",
         "quantity": 40,
         "current_price": 500,
-        "market_value": 20000
+        "market_value": 20000.0
       },
       {
         "symbol": "BND",
         "asset_class": "BOND",
         "asset_type": "ETF",
-        "quantity": 350,
-        "current_price": 100,
-        "market_value": 35000
+        "quantity": 375,
+        "current_price": 80,
+        "market_value": 30000.0
       },
       {
         "symbol": "BTC",
@@ -50,8 +50,8 @@
         "market_value": 5000.0
       }
     ],
-    "cash_balance": 5000,
-    "total_value": 100000
+    "cash_balance": 5000.0,
+    "total_value": 100000.0
   },
   "investment_policy": {
     "target_allocations": {},
@@ -96,7 +96,7 @@
     ]
   },
   "cash_flows": [],
-  "client_request": "Identify all current violations of the client's investment policy. Report each violation with the relevant asset or asset class and the applicable policy limit.",
+  "client_request": "Review my current portfolio and identify every investment policy violation. Stocks must be between 20% and 40%; bonds between 45% and 65%; cash between 5% and 25%. Cryptocurrency exposure is prohibited. No individual stock may exceed 15% of the total portfolio. Report the violated rule, affected asset or class, observed percentage, and limit. If there are no violations, report none.",
   "assumptions": [],
   "output_requirements": {
     "contract_id": "NEUTRAL_OUTPUT_V1",
