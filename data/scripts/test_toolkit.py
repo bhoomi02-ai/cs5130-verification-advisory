@@ -1,8 +1,3 @@
-"""Regression tests for scenario_toolkit.py.  Run:  python -m unittest test_toolkit -v
-
-Needs S01.json ... S08.json next to the toolkit. Tests that compare against the
-evaluator-only ground_truth.json are skipped when that file is not present.
-"""
 import contextlib
 import copy
 import io
@@ -135,15 +130,31 @@ class Dataset(unittest.TestCase):
             for spec in rows:
                 self.assertEqual(tk.build_scenario(sid, spec), tk.read_json(self.folder / f"{spec['id']}.json"))
 
-    def test_ids_are_kept_apart(self):
+    def test_scenario_id_is_the_variant_name_and_there_is_no_variant_id(self):
         for path in self.folder.glob("T??-v???.json"):
             scenario = tk.read_json(path)
-            self.assertEqual(scenario["variant_id"], path.stem)
-            self.assertEqual(scenario["scenario_id"], "S" + path.stem[1:3])
+            self.assertEqual(scenario["scenario_id"], path.stem)
+            self.assertNotIn("variant_id", scenario)
+            self.assertEqual(scenario["output_requirements"]["response_schema"]["properties"]["scenario_id"]["enum"], [path.stem])
+            truth = tk.read_json(self.folder / f"{path.stem}_ground_truth.json")
+            self.assertEqual(truth["scenario_id"], path.stem)
+            self.assertNotIn("variant_id", truth)
+
+    def test_old_two_field_identity_is_flagged_by_the_audit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for path in self.folder.glob("*.json"):
+                tk.write_json(Path(tmp) / path.name, tk.read_json(path))
+            scenario = tk.read_json(Path(tmp) / "T02-v001.json")
+            scenario["scenario_id"], scenario["variant_id"] = "S02", "T02-v001"      # the legacy form
+            tk.write_json(Path(tmp) / "T02-v001.json", scenario, overwrite=True)
+            ok, output = self.audit(Path(tmp))
+            self.assertFalse(ok)
+            self.assertIn("scenario_id must be 'T02-v001' and there must be no variant_id", output)
 
     def test_audit_catches_corruption(self):
         corruptions = {
             "T01-v001.json": lambda j: j["portfolio"].__setitem__("total_value", 1),
+            "T02-v003.json": lambda j: j.__setitem__("scenario_id", "S02"),
             "T01-v002_ground_truth.json": lambda j: j["trades"].append({"symbol": "MSFT", "quantity_delta": -5}),
             "T03-v001_ground_truth.json": lambda j: j["violations"].pop(),
             "T04-v001_ground_truth.json": lambda j: j.__setitem__("winner", "Fund A"),
@@ -205,6 +216,26 @@ class Consolidation(unittest.TestCase):
         for name, data in keys.items():
             self.assertEqual(set(data), expected, name)
         self.assertTrue(quiet(tk.check_consistency, out, self.variants))
+
+    def test_entries_use_the_variant_name_as_scenario_id(self):
+        out = Path(self.tmp.name) / "identity"
+        self.consolidate(out)
+        for key, entry in tk.read_json(out / tk.GROUND_TRUTH_NAME).items():
+            self.assertEqual(entry["scenario_id"], key)
+            self.assertNotIn("variant_id", entry)
+
+    def test_legacy_input_files_give_identical_output(self):
+        legacy = Path(self.tmp.name) / "legacy_inputs"
+        for path in self.variants.glob("*.json"):
+            data = tk.read_json(path)
+            if "variant_id" not in data and data.get("scenario_id", "").startswith("T"):
+                data["variant_id"], data["scenario_id"] = data["scenario_id"], tk.base_scenario_id(data["scenario_id"])
+            tk.write_json(legacy / path.name, data)
+        new_out, old_out = Path(self.tmp.name) / "from_new", Path(self.tmp.name) / "from_legacy"
+        self.assertTrue(quiet(tk.consolidate, self.variants, new_out))
+        self.assertTrue(quiet(tk.consolidate, legacy, old_out))
+        for name in (tk.GROUND_TRUTH_NAME, tk.CHECKS_NAME, tk.MAPPING_NAME):
+            self.assertEqual(tk.read_json(new_out / name), tk.read_json(old_out / name), name)
 
     def test_values_taken_from_each_variant(self):
         out = Path(self.tmp.name) / "values"
@@ -273,6 +304,18 @@ class Consolidation(unittest.TestCase):
             self.assertFalse(tk.check_consistency(out))
         self.assertIn("T05-v002: no checks entry", printed.getvalue())
         self.assertIn("T03-v002: STATUS expects", printed.getvalue())
+
+    def test_consistency_rejects_a_variant_id_field_or_wrong_scenario_id(self):
+        out = Path(self.tmp.name) / "ident_broken"
+        self.consolidate(out)
+        data = tk.read_json(out / tk.GROUND_TRUTH_NAME)
+        data["T01-v001"]["variant_id"] = "T01-v001"
+        data["T04-v002"]["scenario_id"] = "S04"
+        tk.write_json(out / tk.GROUND_TRUTH_NAME, data, overwrite=True)
+        with contextlib.redirect_stdout(io.StringIO()) as printed:
+            self.assertFalse(tk.check_consistency(out))
+        self.assertIn("T01-v001: scenario_id must equal the key", printed.getvalue())
+        self.assertIn("T04-v002: scenario_id must equal the key", printed.getvalue())
 
 
 if __name__ == "__main__":

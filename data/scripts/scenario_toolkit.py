@@ -1,16 +1,3 @@
-"""Dataset toolkit for the multi-agent financial advisory evaluation (CS5130).
-
-One module replaces the old 12.6k-line scenario generator:
-
-  * safe file I/O that can never touch the approved 32 variants
-  * financial replay / solver / ground-truth functions (single source of truth)
-  * variant builders driven by the data table in variant_specs.json
-  * the three consolidated evaluation files (ground_truth, checks, metric_mapping)
-  * one audit and one response-contract test for every scenario
-
-Usage:  python scenario_toolkit.py {audit,contract-test,compare,generate,consolidate,check-consistency,
-                                    manifest-create,manifest-check}
-"""
 import argparse
 import copy
 import hashlib
@@ -45,6 +32,7 @@ EXPECTED_ANSWER_TYPE = {
     "S05": "TRADE_PLAN", "S06": "NUMERIC_RESULT", "S07": "TRADE_PLAN", "S08": "TRADE_PLAN",
 }
 CONTRACT_ID = "NEUTRAL_OUTPUT_V1"
+_VARIANT_ID_RE = re.compile(r"T(\d{2})-v\d{3}")
 
 EPS = 1e-9          # constraint round-off
 CASH_TOL = 0.01     # money tolerance for cash checks
@@ -116,6 +104,17 @@ def manifest_check():
     ok = not (modified or missing)
     print(f"MANIFEST CHECK: {'PASS' if ok else 'FAIL'} ({len(recorded)} recorded files)")
     return ok
+
+
+def base_scenario_id(scenario_id):
+    """The hand-made scenario a variant comes from: T03-v002 -> S03 (an S-id maps to itself)."""
+    match = _VARIANT_ID_RE.fullmatch(scenario_id)
+    return "S" + match.group(1) if match else scenario_id
+
+
+def identity(record):
+    """Id of a scenario / ground-truth record. Reads the old two-field form (scenario_id=S01 + variant_id) too."""
+    return record.get("variant_id") or record["scenario_id"]
 
 
 def load_base(scenario_id):
@@ -611,10 +610,17 @@ def _set_portfolio(scenario, spec, keep_only_listed=False):
     portfolio["total_value"] = round(sum(h["market_value"] for h in portfolio["holdings"]) + portfolio["cash_balance"], 2)
 
 
+def _stamp(scenario, variant_id):
+    """scenario_id is the variant's own name; there is no variant_id field."""
+    scenario["scenario_id"] = variant_id
+    scenario.pop("variant_id", None)
+    scenario["output_requirements"]["response_schema"]["properties"]["scenario_id"]["enum"] = [variant_id]
+
+
 def build_portfolio_variant(sid, spec):
     """S01, S02, S03, S05, S07, S08."""
     scenario = load_base(sid)
-    scenario["scenario_id"], scenario["variant_id"] = sid, spec["id"]
+    _stamp(scenario, spec["id"])
     policy = scenario["investment_policy"]
     _set_portfolio(scenario, spec, keep_only_listed=(sid == "S03"))
 
@@ -644,7 +650,7 @@ def build_portfolio_variant(sid, spec):
 
 def build_fund_variant(spec):
     scenario = load_base("S04")
-    scenario["scenario_id"], scenario["variant_id"] = "S04", spec["id"]
+    _stamp(scenario, spec["id"])
     for fund, side in zip(scenario["investment_options"], "ab"):
         fund.update({"gross_annual_return": spec[f"{side}_return"], "annual_fee": spec[f"{side}_annual_fee"],
                      "entry_fee": spec[f"{side}_entry_fee"], "years": spec["years"]})
@@ -657,7 +663,7 @@ def build_fund_variant(spec):
 
 def build_retirement_variant(spec):
     scenario = load_base("S06")
-    scenario["scenario_id"], scenario["variant_id"] = "S06", spec["id"]
+    _stamp(scenario, spec["id"])
     months, rate = spec["total_months"], spec["monthly_rate"]
     scenario["portfolio"]["total_value"] = spec["initial_balance"]
     scenario["cash_flows"] = (
@@ -694,7 +700,7 @@ def build_variant(sid, spec):
     """Scenario JSON, per-variant ground truth and report for one spec row."""
     scenario = build_scenario(sid, spec)
     vid = spec["id"]
-    head = {"scenario_id": sid, "variant_id": vid}
+    head = {"scenario_id": vid}
     report = {**head, "verified": True, **{k: spec[k] for k in ("difficulty", "story", "story_type") if k in spec}}
     if sid == "S03":
         violations = policy_violations(scenario)
@@ -763,7 +769,7 @@ def compare(folder=DATA_DIR):
 # --------------------------------------------------------------------------
 # Audit
 # --------------------------------------------------------------------------
-REQUIRED_FIELDS = {"scenario_id", "variant_id", "schema_version", "answer_type", "portfolio", "investment_policy",
+REQUIRED_FIELDS = {"scenario_id", "schema_version", "answer_type", "portfolio", "investment_policy",
                    "cash_flows", "client_request", "assumptions", "output_requirements"}
 
 
@@ -801,16 +807,21 @@ def audit_variant(variant_id, folder, seen):
     missing = REQUIRED_FIELDS - set(scenario)
     if missing:
         return [f"Missing fields: {sorted(missing)}"], warnings
-    if scenario["scenario_id"] != sid:
-        errors.append(f"scenario_id {scenario['scenario_id']} != {sid}")
-    if scenario["variant_id"] != variant_id:
-        errors.append(f"variant_id {scenario['variant_id']} != {variant_id}")
+    expected_id = f"scenario_id must be '{variant_id}' and there must be no variant_id"
+    if scenario["scenario_id"] != variant_id or "variant_id" in scenario:
+        errors.append(f"scenario file: {expected_id} (found scenario_id={scenario['scenario_id']!r}, variant_id={scenario.get('variant_id')!r})")
+    if truth.get("scenario_id") != variant_id or "variant_id" in truth:
+        errors.append(f"ground-truth file: {expected_id} (found scenario_id={truth.get('scenario_id')!r}, variant_id={truth.get('variant_id')!r})")
     if scenario["answer_type"] != EXPECTED_ANSWER_TYPE[sid]:
         errors.append(f"answer_type {scenario['answer_type']} != {EXPECTED_ANSWER_TYPE[sid]}")
     contract = scenario["output_requirements"]
     if contract.get("contract_id") != CONTRACT_ID:
         errors.append("Wrong contract_id")
-    seen["contracts"].add(_canonical(contract))
+    enum_field = contract["response_schema"]["properties"]["scenario_id"]
+    if enum_field.get("enum") != [variant_id]:
+        errors.append(f"response_schema scenario_id enum {enum_field.get('enum')} != ['{variant_id}']")
+    seen["contracts"].add(_canonical({**contract, "response_schema": {**contract["response_schema"], "properties": {
+        **contract["response_schema"]["properties"], "scenario_id": {**enum_field, "enum": None}}}}))  # shared part only
     seen["schema_versions"].add(scenario["schema_version"])
     _check_response_schema(contract["response_schema"], errors, seen)
 
@@ -825,7 +836,7 @@ def audit_variant(variant_id, folder, seen):
         if abs(total - portfolio["total_value"]) > TOTAL_TOL:
             errors.append(f"total_value {portfolio['total_value']} != computed {total:.2f}")
 
-    signature = _canonical({k: v for k, v in scenario.items() if k not in ("variant_id", "output_requirements")})
+    signature = _canonical({k: v for k, v in scenario.items() if k not in ("scenario_id", "variant_id", "output_requirements")})
     if signature in seen["signatures"]:
         errors.append(f"Duplicate of {seen['signatures'][signature]}")
     seen["signatures"][signature] = variant_id
@@ -988,7 +999,7 @@ def _trade_metrics(scenario, truth):
     replay = verify_trade_plan(scenario, truth["trades"])
     if not replay["valid"]:
         raise ValueError(f"reference plan is invalid: {replay['errors']}")
-    sid = scenario["scenario_id"]
+    sid = base_scenario_id(identity(scenario))
     rules = rules_of(scenario["investment_policy"])
     held = {h["symbol"]: h for h in replay["final_holdings"]}
     cash0 = float(scenario["portfolio"]["cash_balance"])
@@ -1074,12 +1085,13 @@ def _retirement_metrics(scenario, truth):
 
 def ground_truth_entry(scenario, truth):
     """Consolidated ground-truth entry for one variant (metrics derived from its scenario)."""
-    sid, vid = scenario["scenario_id"], scenario["variant_id"]
-    if (truth.get("scenario_id"), truth.get("variant_id")) != (sid, vid):
-        raise ValueError("ground-truth file ids do not match the scenario")
+    vid = identity(scenario)
+    sid = base_scenario_id(vid)
+    if identity(truth) != vid:
+        raise ValueError(f"ground-truth file id {identity(truth)!r} does not match the scenario {vid!r}")
     build = {"S03": _violation_metrics, "S04": _fund_metrics, "S06": _retirement_metrics}.get(sid, _trade_metrics)
     metrics, violations, text = build(scenario, truth)
-    return {"scenario_id": sid, "variant_id": vid, "answer_type": scenario["answer_type"], "status": truth["status"],
+    return {"scenario_id": vid, "answer_type": scenario["answer_type"], "status": truth["status"],
             "trades": truth["trades"], "metrics": metrics, "violations": violations, "explanation": text}
 
 
@@ -1089,11 +1101,11 @@ def checks_for(variant_id, template, scenario, entry):
     STATUS follows the ground truth, crypto_count counts CRYPTO violations in the ground truth, and the
     replay's target_allocation_tolerance is the scenario's allocation_tolerance (null without targets).
     """
-    sid = scenario["scenario_id"]
+    base = base_scenario_id(variant_id)
     checks = copy.deepcopy(template)
     policy = scenario["investment_policy"]
     for check in checks:
-        check["check_id"] = variant_id + check["check_id"][len(sid):]
+        check["check_id"] = variant_id + check["check_id"][len(base):]
         params = check["params_json"]
         if check["check_type"] == "STATUS":
             params["expected"] = entry["status"]
@@ -1168,7 +1180,9 @@ def consolidate(folder=DATA_DIR, out_dir=CONSOLIDATED_DIR, checks_template=None,
         try:
             scenario = read_json(folder / f"{vid}.json")
             truth = read_json(folder / f"{vid}_ground_truth.json")
-            sid = scenario["scenario_id"]
+            if identity(scenario) != vid:
+                raise ValueError(f"scenario file id {identity(scenario)!r} does not match its file name")
+            sid = base_scenario_id(vid)
             if sid not in base_checks or sid not in base_routes:
                 raise KeyError(f"no checks/mapping template for {sid}")
             gt[vid] = ground_truth_entry(scenario, truth)
@@ -1226,6 +1240,9 @@ def check_consistency(out_dir=CONSOLIDATED_DIR, folder=None):
 
     for key, entry in gt.items():
         errors += [f"{key}: ground truth lacks '{f}'" for f in ENTRY_FIELDS if f not in entry]
+        if entry.get("scenario_id") != key or "variant_id" in entry:
+            errors.append(f"{key}: scenario_id must equal the key and there must be no variant_id "
+                          f"(found scenario_id={entry.get('scenario_id')!r}, variant_id={entry.get('variant_id')!r})")
         if key not in checks:
             errors.append(f"{key}: no checks entry")
         if key not in routes:
