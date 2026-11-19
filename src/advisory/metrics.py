@@ -132,6 +132,8 @@ __all__ = [
     "extra_cost_per_extra_correct",
     "bootstrap_task_success_ci",
     "summarize",
+    "paired_comparison",
+    "compare_conditions",
 ]
 
 
@@ -583,6 +585,360 @@ def summarize(runs: list[dict] | pd.DataFrame, seed: int = 0) -> pd.DataFrame:
             row["model"] = model_name
         rows.append(row)
     return _metrics_frame(rows, has_model=has_model)
+
+
+def paired_comparison(
+    runs: list[dict] | pd.DataFrame,
+    condition_a: str,
+    condition_b: str,
+    seed: int = 0,
+    model: str | None = None,
+) -> dict:
+    """Paired comparison of two conditions on shared drafts.
+
+    Parameters
+    ----------
+    runs : list of dict or DataFrame
+        Per-run scorer rows. Validated with ``validate_runs``.
+    condition_a, condition_b : str
+        Condition names to compare. ``delta`` is the mean over tasks of
+        (per-task mean final_correct for B minus that for A).
+    seed : int, optional
+        Bootstrap seed for the paired task-level CI.
+    model : str, optional
+        Required when ``runs`` has a ``model`` column; comparison is within
+        that model only.
+
+    Returns
+    -------
+    dict
+        ``condition_a``, ``condition_b``, optional ``model``, ``n_tasks``,
+        ``n_pairs``, ``n_dropped`` (matched pairs dropped because either side
+        was ``failed``), ``n_draft_mismatch`` (matched non-failed pairs
+        dropped because ``initial_correct`` differed), task-weighted
+        ``success_a`` / ``success_b`` / ``delta``, ``delta_ci_low``,
+        ``delta_ci_high``, run-level ``a_only_correct`` / ``b_only_correct``
+        (descriptive), ``task_a_better``, ``task_b_better``, ``sign_test_p``,
+        and ``note`` (empty when nothing was dropped for draft mismatch).
+
+    Notes
+    -----
+    Pairing assumes a shared draft: rows are matched on
+    ``(task_id, run_number)`` within one model, and both sides must agree on
+    ``initial_correct``. Pairs that disagree are dropped from every statistic
+    and counted in ``n_draft_mismatch``; when that count is positive, ``note``
+    records how many were dropped. ``success_a``, ``success_b`` and ``delta``
+    average per-task means, so repeats of a task are not treated as
+    independent. The main uncertainty measure is the paired bootstrap CI over
+    tasks (1,000 resamples with ``numpy.random.default_rng(seed)``).
+    ``sign_test_p`` is a secondary exact two-sided sign test on how many
+    tasks favour B vs A (ties dropped); it is ``1.0`` when every task is tied.
+
+    Raises
+    ------
+    ValueError
+        If a ``model`` column is present but ``model`` is omitted, either
+        condition is missing, or no matched usable pairs remain. Errors from
+        empty usable pairs carry ``n_dropped`` and ``n_draft_mismatch``.
+    """
+    frame = validate_runs(runs)
+    if "model" in frame.columns:
+        if model is None:
+            raise ValueError("model is required when runs include a model column")
+        frame = frame.loc[frame["model"] == model]
+        if frame.empty:
+            raise ValueError(f"model {model!r} is missing")
+    elif model is not None:
+        raise ValueError("model was given but runs have no model column")
+
+    present = set(frame["condition"].tolist())
+    if condition_a not in present:
+        raise ValueError(f"condition {condition_a!r} is missing")
+    if condition_b not in present:
+        raise ValueError(f"condition {condition_b!r} is missing")
+
+    keys = ["task_id", "run_number"]
+    columns = keys + ["final_correct", "initial_correct"]
+    if "status" in frame.columns:
+        columns = columns + ["status"]
+    left = frame.loc[frame["condition"] == condition_a, columns].rename(
+        columns={
+            "final_correct": "final_a",
+            "initial_correct": "initial_a",
+            "status": "status_a",
+        }
+    )
+    right = frame.loc[frame["condition"] == condition_b, columns].rename(
+        columns={
+            "final_correct": "final_b",
+            "initial_correct": "initial_b",
+            "status": "status_b",
+        }
+    )
+    merged = left.merge(right, on=keys, how="inner")
+    if merged.empty:
+        error = ValueError(
+            f"no matched pairs between {condition_a!r} and {condition_b!r}"
+        )
+        error.n_dropped = 0
+        error.n_draft_mismatch = 0
+        raise error
+
+    if "status_a" in merged.columns:
+        failed = (merged["status_a"] == "failed") | (merged["status_b"] == "failed")
+        n_dropped = int(failed.sum())
+        paired = merged.loc[~failed].reset_index(drop=True)
+    else:
+        n_dropped = 0
+        paired = merged.reset_index(drop=True)
+
+    mismatch = paired["initial_a"] != paired["initial_b"]
+    n_draft_mismatch = int(mismatch.sum())
+    paired = paired.loc[~mismatch].reset_index(drop=True)
+    if paired.empty:
+        if n_draft_mismatch > 0:
+            message = _draft_mismatch_note(n_draft_mismatch)
+        else:
+            message = "no matched non-failed pairs"
+        error = ValueError(message)
+        error.n_dropped = n_dropped
+        error.n_draft_mismatch = n_draft_mismatch
+        raise error
+
+    final_a = paired["final_a"].to_numpy(dtype=bool)
+    final_b = paired["final_b"].to_numpy(dtype=bool)
+    means = _paired_task_means(paired["task_id"], final_a, final_b)
+    task_delta = means["final_b"] - means["final_a"]
+    success_a = float(means["final_a"].mean())
+    success_b = float(means["final_b"].mean())
+    delta = float(task_delta.mean())
+    a_only = int((final_a & ~final_b).sum())
+    b_only = int((final_b & ~final_a).sum())
+    task_a_better = int((task_delta < 0).sum())
+    task_b_better = int((task_delta > 0).sum())
+    low, high = _paired_delta_ci_from_means(task_delta.to_numpy(dtype=float), seed=seed)
+    note = _draft_mismatch_note(n_draft_mismatch) if n_draft_mismatch > 0 else ""
+    result = {
+        "condition_a": condition_a,
+        "condition_b": condition_b,
+        "n_tasks": int(len(means)),
+        "n_pairs": int(len(paired)),
+        "n_dropped": n_dropped,
+        "n_draft_mismatch": n_draft_mismatch,
+        "success_a": success_a,
+        "success_b": success_b,
+        "delta": delta,
+        "delta_ci_low": low,
+        "delta_ci_high": high,
+        "a_only_correct": a_only,
+        "b_only_correct": b_only,
+        "task_a_better": task_a_better,
+        "task_b_better": task_b_better,
+        "sign_test_p": _exact_binomial_two_sided(task_a_better, task_b_better),
+        "note": note,
+    }
+    if model is not None:
+        result["model"] = model
+    return result
+
+
+def compare_conditions(
+    runs: list[dict] | pd.DataFrame,
+    baseline: str = "none",
+    seed: int = 0,
+    all_pairs: bool = False,
+) -> pd.DataFrame:
+    """Compare conditions on paired drafts, one row per comparison.
+
+    Parameters
+    ----------
+    runs : list of dict or DataFrame
+        Per-run scorer rows.
+    baseline : str, optional
+        When ``all_pairs`` is false, every other condition is compared to this
+        baseline (``delta`` = other − baseline).
+    seed : int, optional
+        Bootstrap seed forwarded to ``paired_comparison``.
+    all_pairs : bool, optional
+        If true, emit every unordered pair of distinct conditions instead of
+        only comparisons against ``baseline``.
+
+    Returns
+    -------
+    DataFrame
+        One row per pair. A pair that cannot be scored (for example every
+        matched run failed) still appears with ``n_pairs = 0``, rates set to
+        ``None``, and a ``note`` explaining why; other pairs are unaffected.
+        When a ``model`` column is present, comparisons are within each model
+        and the frame includes ``model``.
+    """
+    frame = validate_runs(runs)
+    has_model = "model" in frame.columns
+    models = (
+        sorted({_python_scalar(value) for value in frame["model"].tolist()})
+        if has_model
+        else [None]
+    )
+    rows: list[dict] = []
+    for model_name in models:
+        subset = frame if model_name is None else frame.loc[frame["model"] == model_name]
+        conditions = sorted(
+            {_python_scalar(value) for value in subset["condition"].tolist()}
+        )
+        if all_pairs:
+            pairs = [
+                (condition_a, condition_b)
+                for index, condition_a in enumerate(conditions)
+                for condition_b in conditions[index + 1 :]
+            ]
+        else:
+            # No baseline in this model slice → no comparison rows (report still
+            # writes an empty comparisons table rather than failing outright).
+            if baseline not in conditions:
+                pairs = []
+            else:
+                pairs = [
+                    (baseline, other) for other in conditions if other != baseline
+                ]
+        for condition_a, condition_b in pairs:
+            try:
+                row = paired_comparison(
+                    runs,
+                    condition_a,
+                    condition_b,
+                    seed=seed,
+                    model=model_name,
+                )
+            except ValueError as exc:
+                row = _unscored_pair_row(
+                    condition_a,
+                    condition_b,
+                    model=model_name,
+                    n_dropped=int(getattr(exc, "n_dropped", 0)),
+                    n_draft_mismatch=int(getattr(exc, "n_draft_mismatch", 0)),
+                    note=str(exc),
+                )
+            rows.append(row)
+    if not rows:
+        return pd.DataFrame(columns=_comparison_columns(has_model=has_model))
+    return pd.DataFrame(rows)
+
+
+def _comparison_columns(has_model: bool = False) -> list[str]:
+    columns = [
+        "condition_a",
+        "condition_b",
+        "n_tasks",
+        "n_pairs",
+        "n_dropped",
+        "n_draft_mismatch",
+        "success_a",
+        "success_b",
+        "delta",
+        "delta_ci_low",
+        "delta_ci_high",
+        "a_only_correct",
+        "b_only_correct",
+        "task_a_better",
+        "task_b_better",
+        "sign_test_p",
+        "note",
+    ]
+    if has_model:
+        return ["model", *columns]
+    return columns
+
+
+def _draft_mismatch_note(n_draft_mismatch: int) -> str:
+    return (
+        f"{n_draft_mismatch} pairs dropped: "
+        "initial_correct differs (draft not shared)"
+    )
+
+
+def _unscored_pair_row(
+    condition_a: str,
+    condition_b: str,
+    *,
+    model: str | None,
+    n_dropped: int,
+    note: str,
+    n_draft_mismatch: int = 0,
+) -> dict:
+    row = {
+        "condition_a": condition_a,
+        "condition_b": condition_b,
+        "n_tasks": 0,
+        "n_pairs": 0,
+        "n_dropped": n_dropped,
+        "n_draft_mismatch": n_draft_mismatch,
+        "success_a": None,
+        "success_b": None,
+        "delta": None,
+        "delta_ci_low": None,
+        "delta_ci_high": None,
+        "a_only_correct": None,
+        "b_only_correct": None,
+        "task_a_better": None,
+        "task_b_better": None,
+        "sign_test_p": None,
+        "note": note,
+    }
+    if model is not None:
+        row["model"] = model
+    return row
+
+
+def _paired_task_means(task_id, final_a, final_b) -> pd.DataFrame:
+    ids = _as_series(task_id).reset_index(drop=True)
+    return (
+        pd.DataFrame(
+            {
+                "task_id": ids,
+                "final_a": np.asarray(final_a, dtype=float),
+                "final_b": np.asarray(final_b, dtype=float),
+            }
+        )
+        .groupby("task_id", sort=True)[["final_a", "final_b"]]
+        .mean()
+    )
+
+
+def _paired_delta_ci_from_means(task_delta: np.ndarray, seed: int = 0) -> tuple[float, float]:
+    """95% CI for the mean per-task difference by resampling tasks."""
+    rng = np.random.default_rng(seed)
+    drawn = rng.integers(0, len(task_delta), size=(_N_RESAMPLES, len(task_delta)))
+    stats = np.mean(task_delta[drawn], axis=1)
+    low, high = np.percentile(stats, [2.5, 97.5])
+    return float(low), float(high)
+
+
+def _exact_binomial_two_sided(count_a: int, count_b: int) -> float:
+    """Exact two-sided binomial test with ``p = 0.5`` on two counts.
+
+    Used for the paired sign test (tasks favouring A vs B). Returns ``1.0``
+    when both counts are zero.
+    """
+    n = count_a + count_b
+    if n == 0:
+        return 1.0
+    k = min(count_a, count_b)
+    try:
+        from scipy.stats import binomtest
+
+        return float(binomtest(k, n=n, p=0.5).pvalue)
+    except ImportError:
+        # Two-sided exact binomial under p=0.5: sum probabilities at most as
+        # large as the observed tail probability.
+        from math import comb
+
+        observed = float(comb(n, k)) / (2**n)
+        total = 0.0
+        for i in range(n + 1):
+            pi = float(comb(n, i)) / (2**n)
+            if pi <= observed + 1e-15:
+                total += pi
+        return float(min(1.0, total))
 
 
 def _blank_catch_outcomes() -> dict[str, float | int | None]:
