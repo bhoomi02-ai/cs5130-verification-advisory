@@ -55,6 +55,21 @@ def all_task_ids(root: Path = SCENARIO_DIR) -> list[str]:
     return sorted(p.stem for p in root.glob("*.json"))
 
 
+STUDY_TASKS_PATH = ROOT / "data" / "study_tasks.txt"
+
+
+def read_task_file(path: Path | str = STUDY_TASKS_PATH) -> list[str]:
+    """Task IDs from a file, one per line. Blank lines and text after # are ignored."""
+    tasks = []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        task = line.split("#", 1)[0].strip()
+        if task:
+            tasks.append(task)
+    if len(tasks) != len(set(tasks)):
+        raise ValueError(f"{path} lists a task more than once")
+    return tasks
+
+
 def _log_records(run_ids: set[str], log_path: Path | None) -> list[dict]:
     """Logged calls whose run_id is in run_ids, in the order they were written."""
     log_path = log_path or llm.RUN_LOG
