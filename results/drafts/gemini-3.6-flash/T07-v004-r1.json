@@ -1,0 +1,11 @@
+{
+  "task_id": "T07-v004",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T07-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-66},{\"symbol\":\"BND\",\"quantity_delta\":301}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":107900.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":122900.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":122900.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":18320.0}],\"selection\":null},\"violations\":[],\"explanation\":\"After depositing $15,000, the total portfolio value is $122,900. To achieve the target allocation of 55% Stocks, 30% Bonds, and 15% Cash within the 0.5% tolerance while respecting no-sell constraints on AAPL and VOO and whole-share rules: sell 66 shares of MSFT at $400/share (generating $26,400) and buy 301 shares of BND at $80/share (costing $24,080). This results in a final portfolio of $67,700 in Stocks (55.09%), $36,880 in Bonds (30.01%), and $18,320 in Cash (14.91%). MSFT is reduced to 6.18% of the portfolio, satisfying the 20% max individual stock constraint.\"}",
+  "run_id": "draft-gemini-3.6-flash-T07-v004-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

@@ -1,0 +1,168 @@
+{
+  "run_id": "none-gemini-3.6-flash-T06-v004-r3",
+  "task_id": "T06-v004",
+  "condition": "none",
+  "run_number": 3,
+  "draft": "{\"scenario_id\":\"T06-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":558563.9839132106},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":191436.0160867894},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1245.5464366660166},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":1245.55}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with an initial portfolio of $80,000 at a monthly interest rate of 0.4% (4.8% nominal annual compounded monthly), the portfolio grows over 120 months alongside monthly contributions of $2,500 for months 1-60, $3,500 for months 61-120, and a one-time withdrawal of $20,000 at month 90. The projected month-120 balance is $558,563.98. Compared to the target of $750,000, there is a shortfall of $191,436.02. To cover this gap over 120 months, an additional end-of-month contribution of $1,245.55 (exact: $1,245.5464) per month is required.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T06-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":558563.9839132106},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":191436.0160867894},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1245.5464366660166},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":1245.55}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with an initial portfolio of $80,000 at a monthly interest rate of 0.4% (4.8% nominal annual compounded monthly), the portfolio grows over 120 months alongside monthly contributions of $2,500 for months 1-60, $3,500 for months 61-120, and a one-time withdrawal of $20,000 at month 90. The projected month-120 balance is $558,563.98. Compared to the target of $750,000, there is a shortfall of $191,436.02. To cover this gap over 120 months, an additional end-of-month contribution of $1,245.55 (exact: $1,245.5464) per month is required.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": false,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T06-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T06-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 80000.0,
+          "final_balance": 558563.9839132106,
+          "target_shortfall": 191436.0160867894,
+          "additional_monthly_contribution": 1245.5464366660167,
+          "additional_monthly_contribution_cents": 1245.55
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T06-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T06-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": false,
+        "observed": {
+          "initial_total": 80000.0,
+          "final_balance": 558357.7640051689,
+          "target_shortfall": 191642.23599483108,
+          "additional_monthly_contribution": 1247.411262794979,
+          "additional_monthly_contribution_cents": 1247.42
+        },
+        "details": {
+          "reason": "value_mismatch",
+          "missing_observation": [],
+          "not_computed": [],
+          "items": [
+            {
+              "reason": "value_mismatch",
+              "metric": "final_balance",
+              "observed": 558563.9839132106,
+              "expected": 558357.7640051689
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "target_shortfall",
+              "observed": 191436.0160867894,
+              "expected": 191642.23599483108
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "additional_monthly_contribution",
+              "observed": 1245.5464366660167,
+              "expected": 1247.411262794979
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "additional_monthly_contribution_cents",
+              "observed": 1245.55,
+              "expected": 1247.42
+            }
+          ]
+        }
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": false,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T06-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T06-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 80000.0,
+          "final_balance": 558563.9839132106,
+          "target_shortfall": 191436.0160867894,
+          "additional_monthly_contribution": 1245.5464366660167,
+          "additional_monthly_contribution_cents": 1245.55
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T06-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T06-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": false,
+        "observed": {
+          "initial_total": 80000.0,
+          "final_balance": 558357.7640051689,
+          "target_shortfall": 191642.23599483108,
+          "additional_monthly_contribution": 1247.411262794979,
+          "additional_monthly_contribution_cents": 1247.42
+        },
+        "details": {
+          "reason": "value_mismatch",
+          "missing_observation": [],
+          "not_computed": [],
+          "items": [
+            {
+              "reason": "value_mismatch",
+              "metric": "final_balance",
+              "observed": 558563.9839132106,
+              "expected": 558357.7640051689
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "target_shortfall",
+              "observed": 191436.0160867894,
+              "expected": 191642.23599483108
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "additional_monthly_contribution",
+              "observed": 1245.5464366660167,
+              "expected": 1247.411262794979
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "additional_monthly_contribution_cents",
+              "observed": 1245.55,
+              "expected": 1247.42
+            }
+          ]
+        }
+      }
+    ],
+    "restriction_results": []
+  }
+}

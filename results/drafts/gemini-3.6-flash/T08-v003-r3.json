@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v003",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-37},{\"symbol\":\"VOO\",\"quantity_delta\":-28},{\"symbol\":\"BND\",\"quantity_delta\":51}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":103000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":85000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12720.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.52},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3303529411764706},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1496470588235294}],\"selection\":null},\"violations\":[],\"explanation\":\"The initial portfolio value is $103,000. After the $18,000 withdrawal, the net portfolio target value is $85,000. To achieve the target allocations of 52.0% stocks ($44,200), 33.0% bonds ($28,050), and 15.0% cash ($12,750), we execute whole-share trades of un-restricted existing assets. Selling 37 shares of MSFT (+$14,800) and 28 shares of VOO (+$14,000) reduces stock value to exactly $44,200 (52.000%). Buying 51 shares of BND (-$4,080) brings bond value to $28,080 (33.035%). AAPL (80 shares, $16,000) and initial BND are preserved without selling. Final post-withdrawal cash is $12,720 (14.965%), which satisfies the minimum cash requirement of $12,000 and falls well within the 0.5% allocation tolerance.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v003-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

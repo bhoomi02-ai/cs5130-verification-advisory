@@ -1,0 +1,11 @@
+{
+  "task_id": "T09-v001",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T09-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":13000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":13000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":49000}],\"selection\":null},\"violations\":[],\"explanation\":\"Rebalancing the portfolio to the target allocation is infeasible. The STOCK class currently totals $41,000 (41.0% of the $100,000 portfolio), which exceeds the upper target tolerance bound of 40.5% (40.0% \u00b1 0.5%). Because selling STOCK-class assets is prohibited by the NO_SELL_CLASS restriction and external cash deposits are not allowed, the STOCK allocation cannot be reduced to fit within the required range.\"}",
+  "run_id": "draft-gemini-3.6-flash-T09-v001-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

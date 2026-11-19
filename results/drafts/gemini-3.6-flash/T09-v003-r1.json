@@ -1,0 +1,11 @@
+{
+  "task_id": "T09-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T09-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":47000}],\"selection\":null},\"violations\":[],\"explanation\":\"Rebalancing to the target allocations is infeasible under the given constraints. The current portfolio holds $43,000 in STOCK assets (AAPL: $15,000, MSFT: $14,000, VOO: $14,000), which represents 43.0% of the $100,000 total portfolio. The target STOCK allocation is 40% \u00b1 2%, establishing an upper limit of 42.0% ($42,000). Because the investment policy prohibits selling any STOCK-class assets and prohibits external deposits, the STOCK allocation cannot be reduced to or below 42.0%.\"}",
+  "run_id": "draft-gemini-3.6-flash-T09-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

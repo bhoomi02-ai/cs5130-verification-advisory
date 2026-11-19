@@ -1,0 +1,11 @@
+{
+  "task_id": "T04-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T04-v003\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":192392.1589139263},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":212893.98792109536},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20501.82900716906}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"Fund A begins compounding with $100,000 at an annual growth factor of (1 + 0.095) * (1 - 0.025) = 1.067625, resulting in a 10-year value of $192,392.16. Fund B incurs a 1% entry fee ($1,000), starting at $99,000 with an annual growth factor of (1 + 0.085) * (1 - 0.005) = 1.079575, resulting in a 10-year value of $212,893.99. Fund B outperforms Fund A by an absolute difference of $20,501.83.\"}",
+  "run_id": "draft-gemini-3.6-flash-T04-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

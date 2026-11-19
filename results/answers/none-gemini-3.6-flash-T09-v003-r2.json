@@ -1,0 +1,122 @@
+{
+  "run_id": "none-gemini-3.6-flash-T09-v003-r2",
+  "task_id": "T09-v003",
+  "condition": "none",
+  "run_number": 2,
+  "draft": "{\"scenario_id\":\"T09-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":47000}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio cannot be rebalanced to the target STOCK allocation of 40% \u00b1 2% (38% to 42%). Current stock holdings (AAPL, MSFT, VOO) total $43,000, or 43% of the $100,000 total portfolio value. Bringing the STOCK allocation into the allowed range of \u2264 42% would require selling stock assets or adding external funds, both of which are strictly prohibited by portfolio policy restrictions (NO_SELL_CLASS for STOCK and NO_EXTERNAL_DEPOSITS). Therefore, the requested rebalancing plan is infeasible.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T09-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":47000}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio cannot be rebalanced to the target STOCK allocation of 40% \u00b1 2% (38% to 42%). Current stock holdings (AAPL, MSFT, VOO) total $43,000, or 43% of the $100,000 total portfolio value. Bringing the STOCK allocation into the allowed range of \u2264 42% would require selling stock assets or adding external funds, both of which are strictly prohibited by portfolio policy restrictions (NO_SELL_CLASS for STOCK and NO_EXTERNAL_DEPOSITS). Therefore, the requested rebalancing plan is infeasible.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T09-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 43000.0,
+          "minimum_stock_pct": 0.43,
+          "maximum_target_stock_pct": 0.42000000000000004,
+          "stock_value_excess_above_tolerance": 999.9999999999927
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 43000.0,
+          "minimum_stock_pct": 0.43,
+          "maximum_target_stock_pct": 0.42000000000000004,
+          "stock_value_excess_above_tolerance": 999.9999999999927
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T09-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 43000.0,
+          "minimum_stock_pct": 0.43,
+          "maximum_target_stock_pct": 0.42000000000000004,
+          "stock_value_excess_above_tolerance": 999.9999999999927
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 43000.0,
+          "minimum_stock_pct": 0.43,
+          "maximum_target_stock_pct": 0.42000000000000004,
+          "stock_value_excess_above_tolerance": 999.9999999999927
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v003_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

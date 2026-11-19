@@ -1,0 +1,11 @@
+{
+  "task_id": "T07-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T07-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"BND\",\"quantity_delta\":313},{\"symbol\":\"MSFT\",\"quantity_delta\":-11},{\"symbol\":\"VOO\",\"quantity_delta\":-57}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":104600.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112600.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112600.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":9000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":16860.0}],\"selection\":null},\"violations\":[],\"explanation\":\"The $8,000 deposit brings total portfolio value to $112,600 and cash to $9,000. To achieve the target allocations (50% stock, 35% bond, 15% cash) within tolerance while adhering to whole-share constraints and restrictions (no selling AAPL or BND, and max 23% in any individual stock): sell 11 shares of MSFT (reducing MSFT weight to 22.74%, below the 23% cap) and 57 shares of VOO, generating $32,900 in proceeds. Buying 313 shares of BND for $25,040 leaves $16,860 in cash (14.97% allocation), bringing bonds to 35.03% and stocks to 50.00%, all within the 0.5% allocation tolerance.\"}",
+  "run_id": "draft-gemini-3.6-flash-T07-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

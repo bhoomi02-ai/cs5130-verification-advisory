@@ -1,0 +1,11 @@
+{
+  "task_id": "T09-v001",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T09-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":13000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":13000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":49000}],\"selection\":null},\"violations\":[],\"explanation\":\"The current STOCK allocation is 41.0% ($41,000 out of $100,000 total value). The target STOCK allocation is 40.0% \u00b1 0.5%, which sets an upper limit of 40.5% ($40,500). To bring the STOCK allocation within tolerance, at least $500 of STOCK assets would need to be sold, or additional cash would need to be deposited. However, the investment policy imposes a NO_SELL_CLASS restriction on STOCK assets as well as a NO_EXTERNAL_DEPOSITS restriction. Without the ability to sell STOCK holdings or add external capital, the STOCK allocation cannot be reduced to 40.5% or below, making the rebalancing request infeasible.\"}",
+  "run_id": "draft-gemini-3.6-flash-T09-v001-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

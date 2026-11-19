@@ -1,0 +1,122 @@
+{
+  "run_id": "none-gemini-3.6-flash-T09-v002-r2",
+  "task_id": "T09-v002",
+  "condition": "none",
+  "run_number": 2,
+  "draft": "{\"scenario_id\":\"T09-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":200000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":50000}],\"selection\":null},\"violations\":[],\"explanation\":\"The current portfolio holds $120,000 in STOCK assets (AAPL, MSFT, VOO), representing 60% of the $200,000 total portfolio value. Rebalancing to a target STOCK allocation of 30% \u00b1 0.5% (max $61,000) without external deposits requires reducing STOCK holdings by at least $59,000. However, the NO_SELL_CLASS restriction prohibits selling any STOCK assets, making the requested rebalancing plan infeasible.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T09-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":200000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":50000}],\"selection\":null},\"violations\":[],\"explanation\":\"The current portfolio holds $120,000 in STOCK assets (AAPL, MSFT, VOO), representing 60% of the $200,000 total portfolio value. Rebalancing to a target STOCK allocation of 30% \u00b1 0.5% (max $61,000) without external deposits requires reducing STOCK holdings by at least $59,000. However, the NO_SELL_CLASS restriction prohibits selling any STOCK assets, making the requested rebalancing plan infeasible.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T09-v002_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 200000.0,
+          "locked_stock_value": 120000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.305,
+          "stock_value_excess_above_tolerance": 59000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 200000.0,
+          "locked_stock_value": 120000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.305,
+          "stock_value_excess_above_tolerance": 59000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T09-v002_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 200000.0,
+          "locked_stock_value": 120000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.305,
+          "stock_value_excess_above_tolerance": 59000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 200000.0,
+          "locked_stock_value": 120000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.305,
+          "stock_value_excess_above_tolerance": 59000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T09-v002_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v004",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"NVDA\",\"quantity_delta\":-50},{\"symbol\":\"BND\",\"quantity_delta\":225}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.55},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.15},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000.0}],\"selection\":null},\"violations\":[],\"explanation\":\"To achieve the target allocation of 55% stocks, 30% bonds, and 15% cash while respecting all constraints: Sell 50 shares of MSFT ($20,000) and 50 shares of NVDA ($10,000), generating $30,000 in cash. Use $18,000 to purchase 225 shares of BND (increasing bond holdings from $12,000 to $30,000, or 30%), and add the remaining $12,000 to cash (increasing cash balance from $3,000 to $15,000, or 15%). Retain all holdings in AAPL ($15,000) and VOO ($35,000) as mandated by the NO_SELL restriction. Total stock holdings become $55,000 (55%). Direct technology exposure (AAPL + NVDA) is $20,000 (20%), well below the 27% maximum limit, and no individual stock exceeds 18%.\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v004-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-40},{\"symbol\":\"NVDA\",\"quantity_delta\":-60},{\"symbol\":\"BND\",\"quantity_delta\":213}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.5},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3504},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1496}],\"selection\":null},\"violations\":[],\"explanation\":\"The proposed trade plan sells 40 shares of MSFT (-$16,000) and 60 shares of NVDA (-$12,000), generating $28,000 in cash. Purchasing 213 shares of BND (+$17,040) increases bond holdings to $35,040 (35.04% of portfolio), while net cash rises to $14,960 (14.96% of portfolio). Stock allocation is reduced to $50,000 (50.00% of portfolio). All target asset allocations fall within the 0.5% tolerance band. The plan respects all restrictions: AAPL and BND are not sold, AAPL remains at 20.00% (below the 21% individual stock max), direct technology sector exposure (AAPL, MSFT, NVDA) drops to 25.00% (well below the 33% limit), and trades consist entirely of whole shares of existing holdings without external deposits or borrowing.\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

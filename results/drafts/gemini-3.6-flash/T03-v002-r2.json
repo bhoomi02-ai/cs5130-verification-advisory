@@ -1,0 +1,11 @@
+{
+  "task_id": "T03-v002",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T03-v002\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000.0},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":50000.0}],\"selection\":null},\"violations\":[],\"explanation\":\"A review of the portfolio valued at $100,000 indicates full compliance with all investment policy restrictions. Asset class allocations are: Stock at 35.0% (limit 20%-40%), Bond at 50.0% (limit 45%-65%), Cash at 15.0% (limit 5%-25%), and Crypto at 0.0% (prohibited). Individual stock concentrations are AAPL at 10.0% and MSFT at 10.0%, both under the 15.0% maximum threshold.\"}",
+  "run_id": "draft-gemini-3.6-flash-T03-v002-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

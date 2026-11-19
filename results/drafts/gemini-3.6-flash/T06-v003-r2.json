@@ -1,0 +1,11 @@
+{
+  "task_id": "T06-v003",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T06-v003\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1091695.51},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":108304.49},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":353.75}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with an initial portfolio of $250,000 compounding at a monthly rate of 0.55% (6.6% nominal annual), with scheduled end-of-month contributions of $1,500 for months 1\u201390 and $2,000 for months 91\u2013180, plus a $50,000 withdrawal at month 60, the projected balance at month 180 is $1,091,695.51. Relative to the education target of $1,200,000, there is a shortfall of $108,304.49. To eliminate this shortfall over 180 months, an additional end-of-month contribution of $353.7412 per month is required, which rounds upward to $353.75 per month.\"}",
+  "run_id": "draft-gemini-3.6-flash-T06-v003-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

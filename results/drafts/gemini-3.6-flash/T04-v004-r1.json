@@ -1,0 +1,11 @@
+{
+  "task_id": "T04-v004",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T04-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":174770.99816455113},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":168052.74100688023},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6718.2571576709}],\"selection\":\"Fund A\"},\"violations\":[],\"explanation\":\"Fund A starts with $97,500 after the 2.5% entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.004) = 1.07568, reaching approximately $174,771.00 after 8 years. Fund B starts with $100,000 and grows at an annual factor of (1 + 0.08) * (1 - 0.012) = 1.06704, reaching approximately $168,052.74 after 8 years. Fund A is the better-performing option with an absolute advantage of $6,718.26.\"}",
+  "run_id": "draft-gemini-3.6-flash-T04-v004-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

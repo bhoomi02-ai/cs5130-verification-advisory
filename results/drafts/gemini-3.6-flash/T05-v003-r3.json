@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v003",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-40},{\"symbol\":\"NVDA\",\"quantity_delta\":-25},{\"symbol\":\"VOO\",\"quantity_delta\":-14},{\"symbol\":\"BND\",\"quantity_delta\":213}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.78},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.18},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.04},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.5},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3504},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1496}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio was rebalanced to achieve target asset allocations within tolerance (50% stocks, 35.04% bonds, and 14.96% cash) while satisfying all constraints. Selling 40 shares of MSFT, 25 shares of NVDA, and 14 shares of VOO generated $28,000 in proceeds. Purchasing 213 shares of BND used $17,040, leaving cash at $14,960. Direct technology exposure (AAPL, MSFT, NVDA) was reduced to 32%, below the 33% maximum limit, and no individual stock exceeds 21% of total portfolio value. AAPL and BND were not sold, and all trades use whole shares with existing portfolio assets.\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v003-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

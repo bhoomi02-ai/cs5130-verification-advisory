@@ -1,0 +1,11 @@
+{
+  "task_id": "T06-v004",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T06-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":558357.75991965},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":191642.24008035},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1247.4112702},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":1247.42}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with an initial portfolio of $80,000 at a monthly return rate of 0.4% (4.8% nominal annual return compounded monthly), the account grows over 120 months alongside monthly contributions of $2,500 for months 1\u201360 and $3,500 for months 61\u2013120, minus a $20,000 withdrawal at month 90. The projected month-120 balance is $558,357.76. Compared to the expansion capital target of $750,000, there is a target shortfall of $191,642.24. To fully cover this shortfall over 120 months, an additional end-of-month contribution of $1,247.41127 per month is required, which rounds upward to $1,247.42 per month.\"}",
+  "run_id": "draft-gemini-3.6-flash-T06-v004-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

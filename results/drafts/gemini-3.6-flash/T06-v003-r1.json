@@ -1,0 +1,11 @@
+{
+  "task_id": "T06-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T06-v003\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1091700.78},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":108299.22},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":353.721771},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":353.73}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with $250,000 compounding at 0.55% monthly for 180 months yields $670,984.62. Subtracting the $50,000 withdrawal at month 60 compounded for 120 months (-$96,564.61) and adding the monthly contributions ($1,500/mo for months 1-90 compounding to $285,181.49, plus $2,000/mo for months 91-180 compounding to $232,099.28) results in a projected month-180 balance of $1,091,700.78. Against the $1,200,000 education target, the shortfall is $108,299.22. Dividing this shortfall by the 180-month annuity immediate factor (306.170633) requires an exact extra monthly contribution of $353.721771, which rounds upward to $353.73 per month.\"}",
+  "run_id": "draft-gemini-3.6-flash-T06-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

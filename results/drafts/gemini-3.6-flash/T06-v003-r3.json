@@ -1,0 +1,11 @@
+{
+  "task_id": "T06-v003",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"T06-v003\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 1091704.3\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 108295.7\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 353.71\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"Starting with $250,000 at a monthly rate of 0.55% (6.6% annual nominal compound monthly), the portfolio grows over 180 months while incorporating scheduled cash flows ($1,500/month for months 1-90, a $50,000 withdrawal at month 60, and $2,000/month for months 91-180). The projected month-180 balance is $1,091,704.30. Against the education funding target of $1,200,000, there is a shortfall of $108,295.70. To cover this shortfall over 180 months, an additional fixed end-of-month contribution of $353.7089 per month is required, which rounds upward to $353.71 per month.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-T06-v003-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

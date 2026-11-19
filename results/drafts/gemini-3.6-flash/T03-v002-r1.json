@@ -1,0 +1,11 @@
+{
+  "task_id": "T03-v002",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"T03-v002\",\n  \"answer_type\": \"VIOLATION_LIST\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 15000.0\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000.0\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000.0\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 15000.0\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 50000.0\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"A complete audit of the current portfolio was performed. Total portfolio value is $100,000. Asset class allocations are: Stock at 35% (within 20%-40% limit), Bond at 50% (within 45%-65% limit), Cash at 15% (within 5%-25% limit), and Cryptocurrency at 0% (prohibited). Individual stock holdings (AAPL at 10% and MSFT at 10%) are both within the maximum individual stock concentration limit of 15%. No investment policy violations were identified.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-T03-v002-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

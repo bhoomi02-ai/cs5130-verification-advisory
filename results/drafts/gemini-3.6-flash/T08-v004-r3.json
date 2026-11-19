@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v004",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-55},{\"symbol\":\"BND\",\"quantity_delta\":-115}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":91400.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":61400.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.7003257328925081},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.14983713355374593},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.14983713355374593}],\"selection\":null},\"violations\":[],\"explanation\":\"The initial portfolio value is $91,400. Selling all 55 shares of MSFT ($22,000) and 115 shares of BND ($9,200) generates $31,200 in cash, increasing total cash to $39,200. After executing the $30,000 withdrawal, the remaining portfolio value is $61,400 with $9,200 in cash. The resulting allocations are 70.03% Stocks ($43,000 from non-sell assets AAPL and VOO), 14.98% Bonds ($9,200 in BND), and 14.98% Cash ($9,200), all within the 0.5% tolerance of target allocations (70% stock, 15% bond, 15% cash). Cash exceeds the minimum required $8,000, and protected holdings (AAPL and VOO) remain untouched.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v004-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

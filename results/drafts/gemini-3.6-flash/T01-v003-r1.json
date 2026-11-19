@@ -1,0 +1,11 @@
+{
+  "task_id": "T01-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T01-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-10},{\"symbol\":\"TSLA\",\"quantity_delta\":-30},{\"symbol\":\"VOO\",\"quantity_delta\":-10},{\"symbol\":\"BND\",\"quantity_delta\":138}],\"metrics\":{\"observations\":[],\"selection\":null},\"violations\":[],\"explanation\":\"To achieve the target allocations of 50% stocks, 35% bonds, and 15% cash while complying with all constraints (no selling AAPL or BND, maximum 20% individual stock concentration, and whole-share trades only):\\n\\n1. Sell 10 shares of MSFT at $400 ($4,000), reducing MSFT holding to 45 shares ($18,000 or 18% of portfolio value, bringing it under the 20% concentration limit).\\n2. Sell 30 shares of TSLA at $300 ($9,000), reducing TSLA holding to 30 shares ($9,000 or 9%).\\n3. Sell 10 shares of VOO at $500 ($5,000), reducing VOO holding to 14 shares ($7,000 or 7%).\\n   - Total proceeds from stock sales: $18,000. Total remaining stock value: $50,000 (50.0% of portfolio).\\n4. Buy 138 shares of BND at $80 ($11,040), bringing total BND holdings to 438 shares ($35,040 or 35.04% of portfolio, within tolerance).\\n5. Remaining cash balance becomes $14,960 (14.96% of portfolio, within tolerance).\\n\\nAll restrictions are satisfied.\"}",
+  "run_id": "draft-gemini-3.6-flash-T01-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

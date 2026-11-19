@@ -1,0 +1,11 @@
+{
+  "task_id": "T02-v004",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T02-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"BND\",\"quantity_delta\":-300}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":86000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":24000.0},{\"subject\":\"BND\",\"measure\":\"QUANTITY\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"SHARES\",\"value\":300.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_WITHDRAWAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":61000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":0.0},{\"subject\":\"BND\",\"measure\":\"QUANTITY\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"SHARES\",\"value\":0.0}],\"selection\":null},\"violations\":[],\"explanation\":\"Selling 300 shares of BND at $80 per share yields $24,000 in cash. Adding this to the existing cash balance of $6,000 provides $30,000 in total cash prior to the withdrawal. After withdrawing $25,000, $5,000 remains in cash, meeting the minimum cash requirement without selling any prohibited equity holdings (AAPL, MSFT, VOO).\"}",
+  "run_id": "draft-gemini-3.6-flash-T02-v004-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

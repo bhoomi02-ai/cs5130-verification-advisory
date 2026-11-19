@@ -1,0 +1,11 @@
+{
+  "task_id": "T09-v002",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T09-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":200000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":50000}],\"selection\":null},\"violations\":[],\"explanation\":\"The current portfolio holds $120,000 in STOCK assets (AAPL, MSFT, VOO), representing 60% of the $200,000 total portfolio value. Rebalancing to a target STOCK allocation of 30% \u00b1 0.5% (max $61,000) without external deposits requires reducing STOCK holdings by at least $59,000. However, the NO_SELL_CLASS restriction prohibits selling any STOCK assets, making the requested rebalancing plan infeasible.\"}",
+  "run_id": "draft-gemini-3.6-flash-T09-v002-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

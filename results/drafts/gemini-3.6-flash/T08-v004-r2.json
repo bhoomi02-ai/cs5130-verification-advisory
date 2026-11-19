@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v004",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-55},{\"symbol\":\"BND\",\"quantity_delta\":-115}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":91400.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":8000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":61400.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":9200.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.7003257328990228},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1498371335504886},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1498371335504886}],\"selection\":null},\"violations\":[],\"explanation\":\"To fulfill the $30,000 withdrawal without selling protected holdings AAPL and VOO, we sell 55 shares of MSFT ($22,000) and 115 shares of BND ($9,200), generating $31,200 in cash. Adding existing cash ($8,000) yields $39,200 before withdrawal. After withdrawing $30,000, the portfolio value is $61,400, consisting of $43,000 in stocks (70.03%), $9,200 in bonds (14.98%), and $9,200 in cash (14.98%). All target allocations are within the 0.5% tolerance band, cash exceeds the $8,000 minimum restriction, and only whole shares of non-protected assets are traded.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v004-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

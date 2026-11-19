@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-2},{\"symbol\":\"VOO\",\"quantity_delta\":-56},{\"symbol\":\"BND\",\"quantity_delta\":51}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":103000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":85000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12720.0}],\"selection\":null},\"violations\":[],\"explanation\":\"The trade plan is feasible and complies with all restrictions. Selling 2 shares of MSFT ($800) and 56 shares of VOO ($28,000) generates $28,800 in cash. Purchasing 51 shares of BND ($4,080) leaves $24,720 net trade cash. Combined with initial cash of $6,000, cash before withdrawal is $30,720. After executing the $18,000 withdrawal, the remaining cash is $12,720, meeting the $12,000 minimum cash constraint. Total portfolio value post-withdrawal is $85,000. Allocations are 52.00% stocks ($44,200), 33.04% bonds ($28,080), and 14.96% cash ($12,720), all within the 0.5% tolerance of the 52/33/15 target. No prohibited sales of AAPL or BND occur, and only whole shares of existing assets are traded.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "T04-v003",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "```json\n{\n  \"scenario_id\": \"T04-v003\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"Fund A\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 192392.60985355564\n      },\n      {\n        \"subject\": \"Fund B\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 212893.98781425007\n      },\n      {\n        \"subject\": \"OPTIONS\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20501.37796069443\n      }\n    ],\n    \"selection\": \"Fund B\"\n  },\n  \"violations\": [],\n  \"explanation\": \"Fund A has no entry fee, leaving an initial investment of $100,000. Its net annual growth factor is (1 + 0.095) * (1 - 0.025) = 1.067625. Over 10 years, Fund A grows to $100,000 * (1.067625)^10 \u2248 $192,392.61. Fund B charges a 1% entry fee, resulting in a net initial investment of $99,000. Its net annual growth factor is (1 + 0.085) * (1 - 0.005) = 1.079575. Over 10 years, Fund B grows to $99,000 * (1.079575)^10 \u2248 $212,893.99. Fund B outperforms Fund A by an absolute difference of approximately $20,501.38.\"\n}\n```",
+  "run_id": "draft-gemini-3.6-flash-T04-v003-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

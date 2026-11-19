@@ -1,0 +1,374 @@
+{
+  "run_id": "none-gemini-3.6-flash-T05-v004-r2",
+  "task_id": "T05-v004",
+  "condition": "none",
+  "run_number": 2,
+  "draft": "{\"scenario_id\":\"T05-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"NVDA\",\"quantity_delta\":-50},{\"symbol\":\"BND\",\"quantity_delta\":225}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.85},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.12},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.03},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.55},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.15}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio was rebalanced to the target allocation of 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000) using whole-share trades of existing assets. Selling 50 shares of MSFT (-$20,000) and 50 shares of NVDA (-$10,000) generates $30,000 in cash while respecting the NO_SELL restriction on AAPL and VOO. Purchasing 225 shares of BND (+$18,000) brings bond holdings to $30,000, leaving $15,000 in cash. Post-trade direct technology exposure (AAPL $15,000 + NVDA $5,000 = $20,000 or 20.0%) complies with the 27% maximum sector limit, and all individual stocks remain at or below the 18% concentration ceiling.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T05-v004\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"NVDA\",\"quantity_delta\":-50},{\"symbol\":\"BND\",\"quantity_delta\":225}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.85},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.12},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.03},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.55},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.15}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio was rebalanced to the target allocation of 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000) using whole-share trades of existing assets. Selling 50 shares of MSFT (-$20,000) and 50 shares of NVDA (-$10,000) generates $30,000 in cash while respecting the NO_SELL restriction on AAPL and VOO. Purchasing 225 shares of BND (+$18,000) brings bond holdings to $30,000, leaving $15,000 in cash. Post-trade direct technology exposure (AAPL $15,000 + NVDA $5,000 = $20,000 or 20.0%) complies with the 27% maximum sector limit, and all individual stocks remain at or below the 18% concentration ceiling.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T05-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T05-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "final_total": 100000.0,
+          "cash_before_trades": 3000.0,
+          "final_cash": 15000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          },
+          "direct_technology_pct": 0.2
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T05-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T05-v004_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "cash_before_trades": 3000.0,
+          "cash_before_withdrawal": null,
+          "final_cash": 15000.0,
+          "final_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          },
+          "final_quantities": {
+            "AAPL": 75.0,
+            "MSFT": 0.0,
+            "NVDA": 25.0,
+            "VOO": 70.0,
+            "BND": 375.0
+          },
+          "final_values": {
+            "AAPL": 15000.0,
+            "MSFT": 0.0,
+            "NVDA": 5000.0,
+            "VOO": 35000.0,
+            "BND": 30000.0
+          },
+          "direct_technology_pct": 0.2,
+          "historical_total": null,
+          "additional_liquidity_needed": null
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "EXISTING_ASSETS_ONLY",
+        "scope": "PORTFOLIO",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": -50.0,
+        "limit": -50
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "NVDA",
+        "passed": true,
+        "observed": -50.0,
+        "limit": -50
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "BND",
+        "passed": true,
+        "observed": 225.0,
+        "limit": 225
+      },
+      {
+        "rule": "NO_EXTERNAL_DEPOSITS",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_BORROWING",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 15000.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "VOO",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "NVDA",
+        "passed": true,
+        "observed": 0.05,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_DIRECT_SECTOR",
+        "scope": "TECHNOLOGY",
+        "passed": true,
+        "observed": 0.2,
+        "limit": 0.27
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "STOCK",
+        "passed": true,
+        "observed": 0.55,
+        "limit": 0.55
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "BOND",
+        "passed": true,
+        "observed": 0.3,
+        "limit": 0.3
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.15
+      }
+    ]
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T05-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T05-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "final_total": 100000.0,
+          "cash_before_trades": 3000.0,
+          "final_cash": 15000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          },
+          "direct_technology_pct": 0.2
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T05-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T05-v004_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "cash_before_trades": 3000.0,
+          "cash_before_withdrawal": null,
+          "final_cash": 15000.0,
+          "final_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          },
+          "final_quantities": {
+            "AAPL": 75.0,
+            "MSFT": 0.0,
+            "NVDA": 25.0,
+            "VOO": 70.0,
+            "BND": 375.0
+          },
+          "final_values": {
+            "AAPL": 15000.0,
+            "MSFT": 0.0,
+            "NVDA": 5000.0,
+            "VOO": 35000.0,
+            "BND": 30000.0
+          },
+          "direct_technology_pct": 0.2,
+          "historical_total": null,
+          "additional_liquidity_needed": null
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "EXISTING_ASSETS_ONLY",
+        "scope": "PORTFOLIO",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": -50.0,
+        "limit": -50
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "NVDA",
+        "passed": true,
+        "observed": -50.0,
+        "limit": -50
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "BND",
+        "passed": true,
+        "observed": 225.0,
+        "limit": 225
+      },
+      {
+        "rule": "NO_EXTERNAL_DEPOSITS",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_BORROWING",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 15000.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "VOO",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "NVDA",
+        "passed": true,
+        "observed": 0.05,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_DIRECT_SECTOR",
+        "scope": "TECHNOLOGY",
+        "passed": true,
+        "observed": 0.2,
+        "limit": 0.27
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "STOCK",
+        "passed": true,
+        "observed": 0.55,
+        "limit": 0.55
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "BOND",
+        "passed": true,
+        "observed": 0.3,
+        "limit": 0.3
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.15
+      }
+    ]
+  }
+}

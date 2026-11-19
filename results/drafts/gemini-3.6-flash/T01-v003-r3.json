@@ -1,0 +1,11 @@
+{
+  "task_id": "T01-v003",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"T01-v003\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -15\n    },\n    {\n      \"symbol\": \"TSLA\",\n      \"quantity_delta\": -40\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 137\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"The trade plan rebalances the portfolio to meet target allocations while respecting all constraints. Selling 15 shares of MSFT ($6,000) reduces its concentration from 22% to 16%, resolving the individual stock limit violation. Selling 40 shares of TSLA ($12,000) reduces total stock exposure to exactly $50,000 (50.0%). Purchasing 137 shares of BND ($10,960) increases bond value to $34,960 (34.96%), leaving cash at $15,040 (15.04%). All final asset class allocations fall within the 0.5% tolerance of target allocations, and AAPL/BND sell restrictions and whole-share rules are respected.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-T01-v003-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

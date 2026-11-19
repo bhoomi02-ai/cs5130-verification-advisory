@@ -1,0 +1,11 @@
+{
+  "task_id": "T10-v003",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T10-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"INFEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":30000}],\"selection\":null},\"violations\":[],\"explanation\":\"The client request is infeasible. Executing a $60,000 withdrawal while retaining at least $20,000 in cash afterward requires raising total pre-withdrawal cash to $80,000. Starting from an initial cash balance of $10,000, an additional $70,000 must be generated through sales. However, AAPL ($10,000) and MSFT ($20,000) are restricted from sale (NO_SELL restriction). Liquidating all unrestricted assets\u2014VOO ($30,000) and BND ($30,000)\u2014yields only $60,000, bringing maximum available cash to $70,000. This results in a $10,000 shortfall relative to the required $80,000.\"}",
+  "run_id": "draft-gemini-3.6-flash-T10-v003-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

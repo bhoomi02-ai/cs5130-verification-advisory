@@ -1,0 +1,11 @@
+{
+  "task_id": "T02-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T02-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-30},{\"symbol\":\"VOO\",\"quantity_delta\":-40}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":92000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_WITHDRAWAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":42000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":62000.0}],\"selection\":null},\"violations\":[],\"explanation\":\"To fulfill the $30,000 withdrawal request while maintaining the mandatory $12,000 cash buffer, a total of $42,000 in cash is required prior to withdrawal. Starting with $10,000 in initial cash, $32,000 must be raised through asset sales. AAPL and BND are subject to a no-sell restriction. Selling 30 shares of MSFT ($12,000) and 40 shares of VOO ($20,000) generates exactly $32,000 in proceeds. After executing the trades and completing the $30,000 withdrawal, the remaining cash balance is $12,000, satisfying all client preferences and policy requirements.\"}",
+  "run_id": "draft-gemini-3.6-flash-T02-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}
