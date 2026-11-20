@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated_at": "2026-11-20T22:03:53+00:00",
+ "generated_at": "2026-11-20T22:53:04+00:00",
  "study": {
   "question": "Which verification strategy makes multi-agent financial advisory systems more reliable?",
   "advisor_model": "gemini-3.6-flash",
@@ -73,7 +73,7 @@
   {
    "id": "cross_family",
    "label": "Cross-family · gpt-oss-20b verifier",
-   "runs_done": 54,
+   "runs_done": 55,
    "runs_expected": 96,
    "runs_failed": 1,
    "complete": false,
@@ -96,6 +96,7 @@
  "rejected_rows": 0,
  "files": [
   "heatmap.json",
+  "pairs.json",
   "runs.json",
   "sanity_s04.json",
   "seeded.json",
@@ -103,5 +104,5 @@
   "summary.json",
   "runs/<run_id>.json"
  ],
- "run_details": 533
+ "run_details": 534
 }

@@ -1,10 +1,10 @@
 {
  "source": "results/runs.jsonl (every model call, as scripts/spend.py)",
- "total_usd": 11.814306025,
+ "total_usd": 11.8147387,
  "budget_usd": 20.0,
- "left_usd": 8.185693975,
- "calls": 1125,
- "failed_calls": 34,
+ "left_usd": 8.1852613,
+ "calls": 1127,
+ "failed_calls": 35,
  "by_condition": [
   {
    "name": "dedicated",
@@ -38,8 +38,8 @@
   },
   {
    "name": "cross_family",
-   "cost_usd": 0.43770990000000015,
-   "calls": 137
+   "cost_usd": 0.43814257500000015,
+   "calls": 139
   },
   {
    "name": "dedicated-check",
@@ -75,8 +75,8 @@
   },
   {
    "name": "openai/gpt-oss-20b",
-   "cost_usd": 0.07522897499999999,
-   "calls": 123
+   "cost_usd": 0.07566164999999998,
+   "calls": 125
   },
   {
    "name": "gemini-3.1-flash-lite",
@@ -122,8 +122,8 @@
   },
   {
    "name": "2026-11-20",
-   "cost_usd": 8.867179500000006,
-   "calls": 896
+   "cost_usd": 8.867612175000007,
+   "calls": 898
   }
  ],
  "note": "Each run's own cost also includes its share of the shared first draft, so summing run costs across settings counts drafts more than once; this total counts every call once."

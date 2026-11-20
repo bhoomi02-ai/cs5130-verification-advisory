@@ -11213,6 +11213,27 @@
    "tokens_out": 5248,
    "error": null,
    "scoring_note": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T01-v004-r2",
+   "task_id": "T01-v004",
+   "scenario": "S01",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-20T16:43:27.072413+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.015944925,
+   "tokens_in": 6237,
+   "tokens_out": 4165,
+   "error": null,
+   "scoring_note": null
   }
  ]
 }

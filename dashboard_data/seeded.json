@@ -1634,5 +1634,262 @@
    "status": "reviewed"
   }
  ],
+ "by_error_type": [
+  {
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "answers": [
+    "S04_arithmetic_ignore_entry_fee",
+    "S06_arithmetic_payment_over_months",
+    "S08_arithmetic_skip_withdrawal"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "peer": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "dedicated": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "weakened": {
+     "n": 3,
+     "rejected": 2,
+     "right_reason": 2
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 3
+  },
+  {
+   "error_type": "grounding",
+   "seeded_error": true,
+   "answers": [
+    "S05_grounding_voo_in_technology",
+    "S06_grounding_omit_withdrawal",
+    "S07_grounding_historical_value"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "peer": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "dedicated": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "weakened": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 3
+  },
+  {
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "answers": [
+    "S01_policy_violation_sell_aapl",
+    "S02_policy_violation_short_reserve",
+    "S05_policy_violation_technology_36"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "peer": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "dedicated": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "weakened": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 3
+  },
+  {
+   "error_type": "unit",
+   "seeded_error": true,
+   "answers": [
+    "S01_unit_stock_allocation_percent",
+    "S05_unit_technology_allocation_percent",
+    "S08_unit_stock_allocation_percent"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "peer": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "dedicated": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "weakened": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 3
+  },
+  {
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "answers": [
+    "S03_violation_list_cash_at_limit",
+    "S03_violation_list_missed_crypto"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 2,
+     "rejected": 2,
+     "right_reason": 2
+    },
+    "peer": {
+     "n": 2,
+     "rejected": 2,
+     "right_reason": 2
+    },
+    "dedicated": {
+     "n": 2,
+     "rejected": 2,
+     "right_reason": 2
+    },
+    "weakened": {
+     "n": 2,
+     "rejected": 2,
+     "right_reason": 2
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 2
+  },
+  {
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "answers": [
+    "S03_wrong_status_feasible",
+    "S09_wrong_status_feasible",
+    "S10_wrong_status_feasible"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "peer": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 2
+    },
+    "dedicated": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 2
+    },
+    "weakened": {
+     "n": 3,
+     "rejected": 3,
+     "right_reason": 3
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 3
+  },
+  {
+   "error_type": "none",
+   "seeded_error": false,
+   "answers": [
+    "S01_none_alternative",
+    "S01_none_reference",
+    "S02_none_alternative",
+    "S02_none_reference",
+    "S03_none_reference",
+    "S04_none_reference",
+    "S05_none_alternative",
+    "S05_none_reference",
+    "S06_none_reference",
+    "S07_none_alternative",
+    "S07_none_reference",
+    "S08_none_reference",
+    "S09_none_reference",
+    "S10_none_reference"
+   ],
+   "per_condition": {
+    "self": {
+     "n": 14,
+     "rejected": 3,
+     "right_reason": null
+    },
+    "peer": {
+     "n": 14,
+     "rejected": 1,
+     "right_reason": null
+    },
+    "dedicated": {
+     "n": 14,
+     "rejected": 1,
+     "right_reason": null
+    },
+    "weakened": {
+     "n": 14,
+     "rejected": 1,
+     "right_reason": null
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "n_answers": 14
+  }
+ ],
  "wording": "Sanity checks, not results: 17 seeded answers with one known error and 14 correct controls, each reviewed once per verifier."
 }
