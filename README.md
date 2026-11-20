@@ -295,7 +295,7 @@ data/scenarios/   scenario files (S01.json … S10.json, T03-v001.json), given t
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
 data/injected/    answers with known injected errors, plus correct controls
 results/          runs.jsonl (every model call), results.jsonl (one row per run), drafts/, answers/, seeded/, pilot/, report/
-docs/             proposal.pdf, topic_selection.pdf, pilot write-up, study_design.svg/.png (report diagram)
+docs/             proposal.pdf, topic_selection.pdf, CS5130_progress_report.pdf, pilot write-up, study_design.svg/.png (report diagram)
 assets/           README images and animations
 pyproject.toml    package metadata and dependencies (pip install -e ".[dev]")
 .env.example      template for your local .env (API keys)
