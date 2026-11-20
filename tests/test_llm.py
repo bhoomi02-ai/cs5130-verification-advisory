@@ -403,3 +403,12 @@ def test_gemini_finish_reason_is_logged(fake, monkeypatch):
 def test_missing_finish_reason_is_none():
     assert llm.gemini_finish_reason(SimpleNamespace()) is None
     assert llm.gemini_finish_reason(SimpleNamespace(candidates=[SimpleNamespace(finish_reason="STOP")])) == "stop"
+
+
+def test_gemini_client_has_a_request_timeout(monkeypatch):
+    """A stalled Gemini connection must time out (and be retried), not hang the run."""
+    monkeypatch.setenv("GOOGLE_API_KEY", "test-key")
+    monkeypatch.setattr(llm, "_gemini_client", None)
+    client = llm._get_gemini_client()
+    assert client._api_client._http_options.timeout == llm.GEMINI_TIMEOUT_S * 1000
+    monkeypatch.setattr(llm, "_gemini_client", None)
