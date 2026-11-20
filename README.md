@@ -96,6 +96,12 @@ Self, peer and dedicated use the **same review instructions, verdict format and 
 
 <sub>**What the animation shows:** each gold dot is one scenario run. It leaves the scenario generator, passes through the advisor, takes one of the four verification paths (the highlighted lane), reaches the final answer and ends at the hidden checker. The dashed red line is the ground truth, which travels straight from the generator to the checker without touching any agent. The bars in the log strip light up as model calls are recorded.</sub>
 
+<p align="center">
+  <img src="docs/study_design.svg" alt="Study design: the advisor writes one first draft per task and repeat, shared by every condition. Under each of the six conditions a verifier reviews it: accept keeps the draft, abstain or an unreadable reply sends it to human review, and reject makes the advisor revise once before the same verifier checks the revision. A hidden checker on the scorer side grades the first draft and the final answer. Separately, each verifier reviews 31 seeded answers once, and right_reason.py checks whether it named the actual error." width="100%">
+</p>
+
+<sub>**Static version for the report:** the same flow with all six conditions, the review outcomes and the seeded error set. `docs/study_design.png` is a 2400×1520 render for slides and the PDF.</sub>
+
 1. **Scenario.** Each task is a scenario file in `data/scenarios/` with a hidden answer key in `data/evaluation/`. The ten templates and the first variant are built by hand; a seeded generator is planned (`generator.py` is still a stub).
 2. **Draft once.** The advisor answers with the shared `advisor-v1` prompt, following the scenario's `NEUTRAL_OUTPUT_V1` contract. The draft is **saved once per task and repeat (`results/drafts/`), then reused in every condition**.
 3. **Verify.** The selected condition checks the draft (or doesn't) and produces the final answer: accepted, revised once, or sent to human review.
@@ -289,7 +295,7 @@ data/scenarios/   scenario files (S01.json … S10.json, T03-v001.json), given t
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
 data/injected/    answers with known injected errors, plus correct controls
 results/          runs.jsonl (every model call), results.jsonl (one row per run), drafts/, answers/, seeded/, pilot/, report/
-docs/             proposal.pdf, topic_selection.pdf, pilot write-up
+docs/             proposal.pdf, topic_selection.pdf, CS5130_progress_report.pdf, pilot write-up, study_design.svg/.png (report diagram)
 assets/           README images and animations
 pyproject.toml    package metadata and dependencies (pip install -e ".[dev]")
 .env.example      template for your local .env (API keys)
