@@ -318,3 +318,37 @@ def test_build_replaces_old_output(built, tmp_path):
 def test_cli_refuses_a_folder_without_results(tmp_path, capsys):
     assert build_data.main(["--results", str(tmp_path), "--out", str(tmp_path / "out")]) == 1
     assert "No results.jsonl" in capsys.readouterr().err
+
+
+# --------------------------------------------------------------------------- pairs and seeded by type
+
+
+def test_pairs_cover_every_ordered_pair_of_finished_settings_and_mirror(built):
+    pairs = built["load"]("pairs.json")
+    assert pairs["complete"] == ["none", "self", "dedicated"]
+    keyed = {(p["a"], p["b"]): p for p in pairs["pairs"]}
+    assert set(keyed) == {(a, b) for a in pairs["complete"] for b in pairs["complete"] if a != b}
+    fwd, back = keyed[("none", "dedicated")], keyed[("dedicated", "none")]
+    assert fwd["delta"] == pytest.approx(0.25) and back["delta"] == pytest.approx(-0.25)
+    assert (back["ci_low"], back["ci_high"]) == (-fwd["ci_high"], -fwd["ci_low"])
+    assert fwd["tasks_b_better"] == back["tasks_a_better"]
+    # dedicated fixed S01 r2, which none left wrong; nothing the other way round
+    assert [(x["task_id"], x["run_number"], x["b_outcome"]) for x in fwd["runs_only_b_right"]] == [("S01", 2, "fixed")]
+    assert fwd["runs_only_a_right"] == []
+    assert back["runs_only_a_right"][0]["a_run_id"] == "dedicated-m-S01-r2"
+    # self broke T01-v001 r2 (none kept it right)
+    assert [(x["task_id"], x["a_outcome"], x["b_outcome"]) for x in keyed[("none", "self")]["runs_only_a_right"]] == [
+        ("T01-v001", "kept_correct", "broken")]
+    assert not any(p["a"] == "peer" or p["b"] == "peer" for p in pairs["pairs"])  # peer is unfinished
+
+
+def test_seeded_grouped_by_error_type_with_pending_settings(built):
+    groups = {g["error_type"]: g for g in built["load"]("seeded.json")["by_error_type"]}
+    assert set(groups) == {"policy_violation", "none"}
+    errors = groups["policy_violation"]
+    assert errors["answers"] == [ERROR_ID] and errors["seeded_error"] is True
+    assert errors["per_condition"]["dedicated"]["rejected"] == 1
+    assert errors["per_condition"]["dedicated"]["right_reason"] in (0, 1)
+    assert errors["per_condition"]["peer"] == {"status": "pending"}  # 1 of 2 seeded answers reviewed
+    controls = groups["none"]
+    assert controls["seeded_error"] is False and controls["per_condition"]["self"]["right_reason"] is None

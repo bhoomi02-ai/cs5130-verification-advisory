@@ -57,7 +57,7 @@
   // ------------------------------------------------------------------ data
 
   async function loadAll() {
-    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs"];
+    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs", "pairs"];
     const files = await Promise.all(names.map(async (n) => {
       const res = await fetch(`data/${n}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error(`data/${n}.json: HTTP ${res.status}`);
@@ -226,7 +226,7 @@
   // Rows of: name (left) and a printed value (right) on one line, a mark on the line below.
   function rowChart(slot, { rows, domain, height = 46, zero = null, axisFormat, ariaLabel, mark, valueText, tipHtml, tickCount = 5 }) {
     slot.innerHTML = "";
-    const w = slotWidth(slot), m = { l: 4, r: 8, t: 4, b: 26 };
+    const w = slotWidth(slot), m = { l: 14, r: 18, t: 4, b: 26 };
     const h = m.t + rows.length * height + m.b;
     const svg = d3.select(slot).append("svg").attr("viewBox", `0 0 ${w} ${h}`).attr("role", "group").attr("aria-label", ariaLabel);
     const x = d3.scaleLinear().domain(domain).range([m.l, w - m.r]).nice();
@@ -565,6 +565,207 @@
       `<th class="num">Calls</th><th>Verdict right?</th><th>What it said</th></tr></thead><tbody>${rows}</tbody>`;
   }
 
+  // ------------------------------------------------------------------ status: data as of + progress
+
+  function renderStatus() {
+    const { meta } = state.data;
+    const when = meta.generated_at.replace("T", " ").replace("+00:00", " UTC");
+    const bars = meta.conditions.map((c) => {
+      const share = c.runs_expected ? c.runs_done / c.runs_expected : 0;
+      const partial = !c.complete;
+      const seeded = c.seeded_expected != null ? ` · seeded ${c.seeded_done}/${c.seeded_expected}` : "";
+      return `<div class="prog${partial ? " partial" : ""}" role="img" aria-label="${esc(`${SHORT[c.id]}: ${c.runs_done} of ${c.runs_expected} runs${seeded}${partial ? ", still running" : ", finished"}`)}">` +
+        `<b>${SHORT[c.id]}</b> ${c.runs_done}/${c.runs_expected}${seeded}${partial ? " · running" : ""}` +
+        `<div class="track"><div class="done" style="width:${(share * 100).toFixed(1)}%"></div></div></div>`;
+    }).join("");
+    document.getElementById("status").innerHTML =
+      `<p class="asof">Data as of <strong>${esc(when)}</strong> (when dashboard/build_data.py last ran). Settings still running are shown as pending and are not compared.</p>${bars}`;
+  }
+
+  // ------------------------------------------------------------------ 2b. compare two settings
+
+  function setupPair() {
+    const { pairs, meta } = state.data;
+    const done = new Set(pairs.complete);
+    const opts = (sel) => ORDER.map((c) => {
+      const m = meta.conditions.find((x) => x.id === c);
+      return `<option value="${c}"${done.has(c) ? "" : " disabled"}${c === sel ? " selected" : ""}>${SHORT[c]}${done.has(c) ? "" : ` (pending ${m.runs_done}/${m.runs_expected})`}</option>`;
+    }).join("");
+    const a = document.getElementById("pair-a"), b = document.getElementById("pair-b");
+    const best = state.data.summary.headline.best;
+    a.innerHTML = opts("none");
+    b.innerHTML = opts(done.has(best) ? best : pairs.complete.find((c) => c !== "none"));
+    a.addEventListener("change", renderPair);
+    b.addEventListener("change", renderPair);
+    document.getElementById("pair-swap").addEventListener("click", () => { const t = a.value; a.value = b.value; b.value = t; renderPair(); });
+  }
+
+  function pairList(items, side, other) {
+    if (!items.length) return `<p class="tag-small">None.</p>`;
+    return `<ul>${items.map((x) => {
+      const id = side === "a" ? x.a_run_id : x.b_run_id;
+      const mine = side === "a" ? x.a_outcome : x.b_outcome;
+      const theirs = side === "a" ? x.b_outcome : x.a_outcome;
+      const st = side === "a" ? x.b_status : x.a_status;
+      return `<li><button type="button" class="linkish" data-run="${esc(id)}">${esc(x.task_id)} · run ${x.run_number}</button>` +
+        `${x.scoring_note ? ' <span class="dagger" title="Scoring under review">†</span>' : ""} ` +
+        `<span class="tag-small">draft ${x.draft_correct ? "right" : "wrong"} · here ${esc(OUTCOME[mine] || mine)}; ${esc(SHORT[other])}: ${esc(st === "human_review" ? "human review" : OUTCOME[theirs] || theirs)}</span></li>`;
+    }).join("")}</ul>`;
+  }
+
+  function renderPair() {
+    const { pairs, summary } = state.data;
+    const a = document.getElementById("pair-a").value, b = document.getElementById("pair-b").value;
+    const body = document.getElementById("pair-body");
+    if (a === b) { body.innerHTML = `<p class="tag-small">Pick two different settings.</p>`; return; }
+    const p = pairs.pairs.find((x) => x.a === a && x.b === b);
+    if (!p) { body.innerHTML = `<p class="pending">pending: both settings must finish before they can be compared.</p>`; return; }
+    const sa = summary.conditions[a].task_success, sb = summary.conditions[b].task_success;
+    body.innerHTML =
+      `<div class="pair-head">` +
+      tile("", `${SHORT[a]} (A)`, pct(sa.value), `${sa.right}/${sa.n} runs · ${ci(sa.ci_low, sa.ci_high)}`) +
+      tile("", `${SHORT[b]} (B)`, pct(sb.value), `${sb.right}/${sb.n} runs · ${ci(sb.ci_low, sb.ci_high)}`) +
+      tile("", "Change, B − A", `<span class="${p.delta > 0 ? "ok" : p.delta < 0 ? "no" : ""}">${pts(p.delta)}</span>`,
+        `95% CI ${pts(p.ci_low)} to ${pts(p.ci_high)} · ${p.n_pairs} paired runs, ${p.n_tasks} tasks`) +
+      tile("", "Sign test over tasks", pval(p.sign_test_p),
+        `B better on ${p.tasks_b_better} task${p.tasks_b_better === 1 ? "" : "s"}, A better on ${p.tasks_a_better}; the rest tie`, "small") +
+      `</div><figure class="chart" id="pair-chart"><figcaption>Change in task success, B − A, with its 95% interval</figcaption><div class="chart-slot"></div></figure>` +
+      `<div class="pair-lists"><div><h3>Right only with ${esc(SHORT[b])} (${p.runs_only_b_right.length})</h3>${pairList(p.runs_only_b_right, "b", a)}</div>` +
+      `<div><h3>Right only with ${esc(SHORT[a])} (${p.runs_only_a_right.length})</h3>${pairList(p.runs_only_a_right, "a", b)}</div></div>` +
+      `<p class="note">${esc(pairs.note)} Open a run to see its draft, verdicts and final answer in “Every run”.</p>`;
+    const slot = body.querySelector("#pair-chart .chart-slot");
+    const span = Math.max(0.05, Math.abs(p.ci_low), Math.abs(p.ci_high)) + 0.02;
+    rowChart(slot, {
+      rows: [{ condition: b, ...p }], domain: [-span, span], zero: 0, height: 44,
+      axisFormat: (v) => `${v > 0 ? "+" : ""}${Math.round(v * 100)}`,
+      ariaLabel: `Change in task success from ${SHORT[a]} to ${SHORT[b]}: ${pts(p.delta)}, 95% CI ${pts(p.ci_low)} to ${pts(p.ci_high)}.`,
+      valueText: (d) => `${pts(d.delta)} · ${pts(d.ci_low).replace(" pts", "")} to ${pts(d.ci_high)} · ${pval(d.sign_test_p)}`,
+      mark: (g, d, x, y) => {
+        g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
+          .attr("stroke", color(b)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.6);
+        g.append("circle").attr("cx", x(d.delta)).attr("cy", y).attr("r", 7).attr("fill", color(b)).attr("stroke", "#07060F").attr("stroke-width", 2);
+      },
+      tipHtml: (d) => `<strong>${SHORT[b]} − ${SHORT[a]}</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
+        `Runs right only with B: ${d.runs_only_b_right.length}; only with A: ${d.runs_only_a_right.length}<br>Sign test over tasks ${pval(d.sign_test_p)}`,
+    });
+    slot.querySelectorAll(".row text").forEach((t) => { if (t.textContent === SHORT[b]) t.textContent = `${SHORT[b]} − ${SHORT[a]}`; });
+    body.querySelectorAll("button.linkish").forEach((btn) => btn.addEventListener("click", () => {
+      openRun(btn.dataset.run);
+      document.getElementById("run-detail").scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+    }));
+    addPngButtons(body);
+  }
+
+  // ------------------------------------------------------------------ 7b. seeded errors by type
+
+  const DECISION = {
+    right_reason: ["✓", "rejected, named the error"], consequence_only: ["~", "rejected, named only a consequence"],
+    wrong_reason: ["✗?", "rejected for another reason"], abstained: ["?", "abstained"], missing_verdict: ["–", "verdict unreadable"],
+    not_flagged: ["·", "accepted"], false_alarm: ["!", "rejected a correct control"],
+  };
+
+  function renderSeededTypes() {
+    const { seeded } = state.data;
+    const head = `<thead><tr><th scope="col">Error type</th>${VERIFIED.map((c) => {
+      const e = seeded.per_condition[c];
+      return `<th scope="col" style="text-align:center">${SHORT[c]}${isPending(e) ? `<br><span class="pending tag-small">${esc(pendingLabel(e))}</span>` : ""}</th>`;
+    }).join("")}</tr></thead>`;
+    const body = seeded.by_error_type.map((g) => {
+      const label = g.seeded_error ? g.error_type.replace(/_/g, " ") : "correct controls";
+      const cells = VERIFIED.map((c) => {
+        const v = g.per_condition[c];
+        if (!v || v.status === "pending") return `<td class="cell"><span class="chip pending-chip">pending</span></td>`;
+        if (!g.seeded_error) {
+          const share = v.n ? 1 - v.rejected / v.n : 0;
+          return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)}" aria-label="${esc(`${SHORT[c]}, controls: ${v.rejected} of ${v.n} false alarms`)}">` +
+            `${v.rejected}/${v.n}<small>false alarms</small></span></td>`;
+        }
+        const share = v.n ? v.right_reason / v.n : 0;
+        return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)}" aria-label="${esc(`${SHORT[c]}, ${label}: ${v.rejected} of ${v.n} rejected, ${v.right_reason} for the right reason`)}">` +
+          `${v.rejected}/${v.n}<small>${v.right_reason} right reason</small></span></td>`;
+      }).join("");
+      return `<tr><th scope="row">${esc(label)}<span class="ci">${g.n_answers} answer${g.n_answers === 1 ? "" : "s"}</span></th>${cells}</tr>`;
+    }).join("");
+    document.getElementById("type-table").innerHTML = head + `<tbody>${body}</tbody>`;
+
+    const real = state.data.summary.conditions;
+    const lines = VERIFIED.filter((c) => !isPending(real[c]) && !isPending(seeded.per_condition[c])).map((c) =>
+      `${SHORT[c]} ${seeded.per_condition[c].catch_rate.caught}/${seeded.per_condition[c].catch_rate.n} seeded vs ${real[c].verifier.catch_rate.caught}/${real[c].verifier.catch_rate.n} real`);
+    document.getElementById("type-note").textContent = lines.length
+      ? `Errors caught, seeded vs the advisor's real errors: ${lines.join(" · ")}. The seeded errors are single, visible slips that every verifier catches; the advisor's real errors are compounding arithmetic, where only the verifier with the calculator caught them all.`
+      : "";
+
+    const answers = [...new Set(seeded.reviews.map((r) => r.answer_id))].sort();
+    const byKey = new Map(seeded.reviews.map((r) => [`${r.answer_id}|${r.condition}`, r]));
+    const rows = answers.map((id) => {
+      const any = seeded.reviews.find((r) => r.answer_id === id);
+      const cells = VERIFIED.map((c) => {
+        if (isPending(seeded.per_condition[c])) return `<td class="pending tag-small">pending</td>`;
+        const r = byKey.get(`${id}|${c}`);
+        if (!r) return `<td class="tag-small">–</td>`;
+        const [sym, words] = DECISION[r.decision] || ["?", r.decision];
+        const kind = r.seeded_error ? "err" : "ctl";
+        const issue = (r.issues || [])[0] || "";
+        return `<td><span class="dec ${esc(r.decision)} ${kind}" title="${esc(words + (issue ? `: ${issue}` : ""))}">${sym}</span> <span class="tag-small">${esc(words)}</span></td>`;
+      }).join("");
+      return `<tr><td>${esc(id)}<span class="ci">${esc(any.seeded_error ? (any.error_type || "").replace(/_/g, " ") : "correct control")}</span></td>${cells}</tr>`;
+    }).join("");
+    document.getElementById("answer-table").innerHTML =
+      `<thead><tr><th>Seeded answer</th>${VERIFIED.map((c) => `<th>${SHORT[c]}</th>`).join("")}</tr></thead><tbody>${rows}</tbody>`;
+  }
+
+  // ------------------------------------------------------------------ PNG export of a chart
+
+  const STYLE_PROPS = ["fill", "stroke", "stroke-width", "stroke-dasharray", "stroke-linecap", "opacity", "fill-opacity",
+    "font-size", "font-weight", "font-family", "text-anchor", "dominant-baseline"];
+  function svgToPng(svg, caption, filename) {
+    const clone = svg.cloneNode(true);
+    const src = [svg, ...svg.querySelectorAll("*")], dst = [clone, ...clone.querySelectorAll("*")];
+    src.forEach((el, i) => {
+      const cs = getComputedStyle(el);
+      dst[i].setAttribute("style", STYLE_PROPS.map((k) => `${k}:${cs.getPropertyValue(k)}`).join(";"));
+    });
+    const vb = svg.viewBox.baseVal;
+    const scale = 2, pad = 24, capH = caption ? 34 : 0;
+    const w = vb.width + pad * 2, h = vb.height + pad * 2 + capH;
+    clone.setAttribute("width", vb.width); clone.setAttribute("height", vb.height);
+    const data = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = w * scale; canvas.height = h * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.fillStyle = css("--card") || "#110F22"; ctx.fillRect(0, 0, w, h);
+      if (caption) { ctx.fillStyle = css("--text") || "#fff"; ctx.font = "600 15px -apple-system, Segoe UI, Helvetica, Arial, sans-serif"; ctx.fillText(caption, pad, pad + 12); }
+      ctx.drawImage(img, pad, pad + capH, vb.width, vb.height);
+      ctx.fillStyle = css("--faint") || "#7D78A3"; ctx.font = "11px -apple-system, Segoe UI, Helvetica, Arial, sans-serif";
+      ctx.fillText(`CS 5130 verification study · 32 tasks × 3 runs · data as of ${state.data.meta.generated_at.slice(0, 10)}`, pad, h - 8);
+      canvas.toBlob((blob) => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      }, "image/png");
+    };
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(data)}`;
+  }
+
+  function addPngButtons(scope = document) {
+    scope.querySelectorAll("figure.chart").forEach((fig) => {
+      const cap = fig.querySelector("figcaption");
+      if (!cap || cap.querySelector(".png-btn")) return;
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "png-btn"; btn.textContent = "PNG";
+      const label = cap.textContent.trim();
+      btn.setAttribute("aria-label", `Download “${label}” as PNG`);
+      btn.addEventListener("click", () => {
+        const svg = fig.querySelector(".chart-slot svg");
+        if (svg) svgToPng(svg, label, `${fig.id || "chart"}.png`);
+      });
+      cap.appendChild(btn);
+    });
+  }
+
   // ------------------------------------------------------------------ 8. replay
 
   let replay = null;
@@ -760,9 +961,11 @@
 
   function renderCharts() {
     renderCompare();
+    renderPair();
     renderCatch();
     renderFix();
     renderCost();
+    addPngButtons();
   }
 
   async function main() {
@@ -779,23 +982,35 @@
     renderHero();
     renderPills();
     renderKpis();
+    renderStatus();
     renderHeatmap();
     renderSanity();
+    renderSeededTypes();
+    setupPair();
     setupRunFilters();
     renderRuns();
     renderReplay();
     renderNotes();
     renderFooter();
     renderCharts();
+    document.getElementById("print-btn").addEventListener("click", () => window.print());
+    // Charts are drawn for the width they have; redraw them for the printed page and back afterwards.
+    window.addEventListener("beforeprint", () => { renderCharts(); renderKpis(); });
+    window.addEventListener("afterprint", () => { renderCharts(); renderKpis(); });
+    let replayLayout = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
     let last = window.innerWidth;
     window.addEventListener("resize", () => {
       if (Math.abs(window.innerWidth - last) < 8) return;
       last = window.innerWidth;
       clearTimeout(main.t);
-      main.t = setTimeout(() => { renderCharts(); renderKpis(); }, reduceMotion ? 0 : 120);
+      main.t = setTimeout(() => {
+        renderCharts(); renderKpis();
+        const now = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
+        if (now !== replayLayout) { replayLayout = now; renderReplay(); }
+      }, reduceMotion ? 0 : 120);
     });
   }
 
-  window.__dashboard = { state, openRun, select };
+  window.__dashboard = { state, openRun, select, svgToPng };
   main();
 })();

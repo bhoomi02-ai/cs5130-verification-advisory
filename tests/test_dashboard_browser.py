@@ -49,6 +49,11 @@ pytestmark = [
 ]
 
 
+class _Quiet(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *args):  # keep the output clean
+        pass
+
+
 def _free_port() -> int:
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
@@ -64,8 +69,7 @@ def site():
         shutil.copy(src / name, root / name)
     shutil.copytree(src / "vendor", root / "vendor")
     meta = ex.build(RESULTS, root / "data")
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(root))
-    handler.log_message = lambda *a, **k: None
+    handler = functools.partial(_Quiet, directory=str(root))
     port = _free_port()
     server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -205,3 +209,33 @@ def test_run_details_never_show_the_answer_key(site):
     assert errors == []
     assert len(with_failed_checks) > 10  # the sample really includes runs with failed checks
     assert leaks == {}
+
+
+def test_compare_view_status_strip_and_seeded_types_render_from_the_data(site):
+    pairs = json.loads((site["root"] / "data" / "pairs.json").read_text())
+    seeded = json.loads((site["root"] / "data" / "seeded.json").read_text())
+    out = {}
+
+    async def body(page):
+        out["pair"] = await page.js("document.getElementById('pair-body').innerText")
+        out["disabled"] = await page.js("[...document.querySelectorAll('#pair-b option:disabled')].map(o => o.value)")
+        out["types"] = await page.js("document.querySelectorAll('#type-table tbody tr').length")
+        out["status"] = await page.js("document.getElementById('status').innerText")
+        out["png"] = await page.js("document.querySelectorAll('.png-btn').length")
+        # the stacked replay layout below 560 px
+        await page.cmd("Emulation.setDeviceMetricsOverride", width=400, height=900, deviceScaleFactor=1, mobile=True)
+        await page.js("window.dispatchEvent(new Event('resize'))")
+        await page.wait_for("(document.querySelector('#replay-mount svg') || {}).getAttribute && document.querySelector('#replay-mount svg').getAttribute('viewBox') === '0 0 360 620'")
+        out["width"] = await page.js("[document.documentElement.scrollWidth, window.innerWidth]")
+
+    errors = asyncio.run(_with_page(site["url"], body))
+    assert errors == []
+    assert "Change, B − A" in out["pair"] and "Sign test over tasks" in out["pair"]
+    pending = [c["id"] for c in site["meta"]["conditions"] if not c["complete"]]
+    assert sorted(out["disabled"]) == sorted(pending)
+    assert out["types"] == len(seeded["by_error_type"])
+    assert "Data as of" in out["status"]
+    for c in pending:
+        assert "running" in out["status"]
+    assert out["png"] >= 7
+    assert out["width"][0] == out["width"][1] == 400

@@ -17,6 +17,9 @@
     <h1>Does a second look<br>make an AI advisor <span class="grad">safer?</span></h1>
     <p class="lede" id="headline" aria-live="polite">Loading the results…</p>
     <p class="dataset" id="dataset"></p>
+    <div class="status" id="status" aria-label="Data freshness and progress"></div>
+    <div class="toolbar"><button type="button" class="pill" id="print-btn">Save as PDF</button>
+      <span class="tag-small">Each chart also has a PNG button for slides.</span></div>
     <p class="note review-note" id="headline-note" hidden></p>
   </div>
   <figure class="hero-gauge" id="hero-gauge" aria-labelledby="hero-gauge-cap">
@@ -66,6 +69,21 @@
       <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
     </div>
     <p class="note review-note" data-review="compare" hidden></p>
+  </section>
+
+  <!-- 2b. Compare two settings -->
+  <section class="card" id="pair" aria-labelledby="pair-h">
+    <div class="card-head">
+      <h2 id="pair-h">Compare two settings</h2>
+      <p class="sub">Same tasks, same run numbers, same shared first drafts: any difference comes from the check. Only finished settings can be compared.</p>
+    </div>
+    <form class="filters" onsubmit="return false">
+      <label>Setting A <select id="pair-a"></select></label>
+      <label>Setting B <select id="pair-b"></select></label>
+      <button type="button" class="pill" id="pair-swap" aria-label="Swap A and B">Swap</button>
+    </form>
+    <div id="pair-body"></div>
+    <p class="note review-note" data-review="pair" hidden></p>
   </section>
 
   <!-- 3. Catch rate vs false alarms -->
@@ -138,6 +156,19 @@
     <h3>S04 before the main study (one known-wrong and one known-right answer)</h3>
     <p class="note" id="s04-wording"></p>
     <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
+  </section>
+
+  <!-- 7b. Seeded errors by type -->
+  <section class="card" id="seeded-types" aria-labelledby="seeded-types-h">
+    <div class="card-head">
+      <h2 id="seeded-types-h">Seeded errors by type</h2>
+      <p class="sub"><strong>Sanity checks, not results.</strong> Each seeded answer has one known error of the type shown (or none, for the 14 correct controls). A cell shows how many each verifier rejected, and how many of those it rejected for the right reason, i.e. its issues named the actual error.</p>
+    </div>
+    <div class="table-wrap"><table class="data heat" id="type-table" aria-label="Seeded errors by type and verifier"></table></div>
+    <p class="note" id="type-note"></p>
+    <details class="answers"><summary>Every seeded answer and what each verifier decided</summary>
+      <div class="table-wrap"><table class="data" id="answer-table" aria-label="Seeded answers by verifier"></table></div>
+    </details>
   </section>
 
   <!-- 8. Replay -->

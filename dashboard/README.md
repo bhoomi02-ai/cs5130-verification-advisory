@@ -23,6 +23,8 @@ The page loads `data/*.json` with `fetch`, so it needs a web server (opening `in
 | 6 | Budget bar, cost and tokens per run, cost vs success | `spend.json`, `summary.json` |
 | 7 | Verifier sanity checks: the seeded set (with "caught with the right reason") and the S04 cases | `seeded.json`, `sanity_s04.json` |
 | 8 | Replay of recorded runs for the setting picked in view 1 (play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
+| 2b | Compare two finished settings: success of each with CI, paired change B − A with CI and sign test, and the runs right only with A or only with B (each opens in the run table) | `pairs.json`, `summary.json` |
+| 7b | Seeded errors by type × verifier: rejected and "for the right reason", false alarms on the controls, every seeded answer's decision, and the seeded-vs-real catch counts | `seeded.json` |
 | 9 | Every run, filterable by setting, task and outcome; human-review runs in their own table with their route; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
 
 Design notes: unfinished settings show `pending (n/N)` everywhere and never a number; every rate prints its count and interval next to it; tasks with scoring under review (T06-v003) get a † note beside every figure they affect; every chart has an `aria-label`, printed values and a tooltip on hover and keyboard focus; the setting picker is a radio group (arrow keys); heatmap rows are buttons with `aria-expanded`; the layout works at 400 px with no sideways page scroll (wide tables scroll inside their box); `prefers-reduced-motion` turns off transitions.
@@ -73,6 +75,14 @@ Tests: `tests/test_dashboard_export.py` builds from a tiny fixture that contains
 
 `mockup/dashboard_figma.svg` (and a PNG render) is the concept design: dark theme, violet `#8B5CF6` to cyan `#22D3EE` on `#07060F`, pink `#FF5C8A` for wrong or broken. Its numbers are placeholders from the 10 × 5 pilot baseline; the page will show the main study (32 tasks × 3 runs).
 
+The top of the page shows when the data was built ("Data as of …") and a progress bar per setting, so a setting still running is never quoted as a result.
+
+## Slides and report
+
+- **PNG:** every chart has a PNG button. It downloads the chart at 2× with its caption and a "32 tasks × 3 runs · data as of …" footer.
+- **PDF:** "Save as PDF" (or the browser's print) lays the page out as 16:10 pages, one view per page, dark theme kept; the replay and the run table are left out.
+- **Replay clip:** `python dashboard/record_replay.py --setting dedicated --seconds 40 --out replay.webp` records the replay panel as an animated WebP (or `.gif`) in headless Chrome. It refuses settings that are still pending.
+
 ## Replay module
 
 `replay.js` is the team's reference module (`assets/replay.js`), adapted to the real data and the page:
@@ -80,6 +90,7 @@ Tests: `tests/test_dashboard_export.py` builds from a tiny fixture that contains
 - `normalize()` maps the real field values: `verdict` is `accept` / `reject` / `abstain` / `null` (`null` with a verifier means the reply could not be read and gets an UNREADABLE stamp); `status` `failed` runs are not replayed; `human_review_route` labels the amber "?" runs in the log.
 - Colours are read from the page's CSS variables (`--cyan`, `--pink`, `--amber`, …), so the replay and the rest of the page match.
 - The play, speed and restart buttons are real `<button>`s with `aria-pressed`. With `prefers-reduced-motion` the finished state is shown and nothing moves until you press Play.
+- Below 560 px it switches to a stacked layout (task → advisor → verifier → final answer → checker, top to bottom) so the diagram stays readable on phones; it re-mounts when the window crosses that width.
 
 The replay's "Final accuracy" counts every replayed run, human-review runs included with the final answer as recorded (the same as "all runs counted" in view 2).
 
