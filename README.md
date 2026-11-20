@@ -290,6 +290,7 @@ scripts/
   run_condition.py  run one condition over a set of tasks (resumable)
   run_seeded.py     one condition's verifier reviews the seeded answers (resumable)
   analyze.py        build the report from results/results.jsonl
+  dashboard.py      Streamlit dashboard of the results (pip install -e ".[dashboard]")
 tests/            pytest suite
 data/scenarios/   scenario files (S01.json … S10.json, T03-v001.json), given to agents
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
@@ -357,6 +358,23 @@ python scripts/analyze.py                                 # tables and chart in 
 | `verifier_rates.png` | Catch rate and false-alarm rate by verified condition |
 | `cost_vs_success.png` | Mean cost per run vs task success |
 | `right_reason.png` | Stacked right-reason decisions on flagged seeded errors (when seeded present) |
+
+**Dashboard.** An interactive view of the same numbers, for exploring results and for demos. It only reads `results/`; it never calls a model.
+
+```bash
+pip install -e ".[dashboard]"
+streamlit run scripts/dashboard.py                                   # local results/
+streamlit run scripts/dashboard.py -- --results-dir path/to/results  # e.g. results extracted from study-results
+```
+
+| Tab | What it shows |
+|---|---|
+| Overview | Task success per condition with CIs, paired gain vs `none` (hover for the sign test), the summary table, cost vs success |
+| Tasks | The 32 tasks × conditions (right finals out of saved runs); pick a task and a run to see its draft, each verifier review (issues, calculator use), the final answer and the checks it failed |
+| Verifiers | Catch and false-alarm rates on the advisor's real errors, what happened to each wrong draft, and the seeded set's right-reason results with every review |
+| Progress & spend | Runs and seeded reviews saved per condition, failures, and spend against the $20 cap by condition and day |
+
+By default it shows only finished conditions (all study runs saved, none failed), so a condition still running does not mix partial numbers into the comparison; untick the box in the sidebar to include it. The metrics come from the same code as `scripts/analyze.py` (`src/advisory/dashboard_data.py` calls `report.build_report`, `right_reason` and `spend`), so the dashboard and the report always agree.
 
 **Main study tasks.** The 32 tasks of the main study are listed in `data/study_tasks.txt`; pass `--tasks-file data/study_tasks.txt` (with `--repeats 3`) so every condition runs the exact same set.
 
