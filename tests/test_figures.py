@@ -230,7 +230,8 @@ def _six_condition_rows() -> list[dict]:
 def test_figures_created_for_all_six_conditions(tmp_path):
     path = _write_jsonl(tmp_path / "results.jsonl", _six_condition_rows())
     out_dir = tmp_path / "report"
-    outcome = analyze(results_path=path, out_dir=out_dir, seed=0)
+    # An empty seeded folder, so the real results/seeded/ on a machine that ran the study is not read.
+    outcome = analyze(results_path=path, out_dir=out_dir, seed=0, seeded_dir=tmp_path / "no-seeded")
     assert set(outcome["report"]["summary"]["condition"]) == {
         "none",
         "self",
