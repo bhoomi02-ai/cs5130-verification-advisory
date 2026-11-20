@@ -1,0 +1,130 @@
+{
+ "source": "results/runs.jsonl (every model call, as scripts/spend.py)",
+ "total_usd": 11.814306025,
+ "budget_usd": 20.0,
+ "left_usd": 8.185693975,
+ "calls": 1125,
+ "failed_calls": 34,
+ "by_condition": [
+  {
+   "name": "dedicated",
+   "cost_usd": 3.632781000000001,
+   "calls": 346
+  },
+  {
+   "name": "draft",
+   "cost_usd": 2.1544350000000003,
+   "calls": 116
+  },
+  {
+   "name": "peer",
+   "cost_usd": 1.7471624999999997,
+   "calls": 141
+  },
+  {
+   "name": "weakened",
+   "cost_usd": 1.5679020000000004,
+   "calls": 139
+  },
+  {
+   "name": "self",
+   "cost_usd": 1.52625675,
+   "calls": 143
+  },
+  {
+   "name": "pilot",
+   "cost_usd": 0.6378538,
+   "calls": 78
+  },
+  {
+   "name": "cross_family",
+   "cost_usd": 0.43770990000000015,
+   "calls": 137
+  },
+  {
+   "name": "dedicated-check",
+   "cost_usd": 0.08757375,
+   "calls": 10
+  },
+  {
+   "name": "weakened-check",
+   "cost_usd": 0.015672,
+   "calls": 2
+  },
+  {
+   "name": "cross-check",
+   "cost_usd": 0.006443325000000001,
+   "calls": 12
+  },
+  {
+   "name": "billing-check",
+   "cost_usd": 0.000516,
+   "calls": 1
+  }
+ ],
+ "by_model": [
+  {
+   "name": "gemini-3.6-flash",
+   "cost_usd": 11.660818499999998,
+   "calls": 970
+  },
+  {
+   "name": "gemini-3.5-flash-lite",
+   "cost_usd": 0.07642529999999999,
+   "calls": 25
+  },
+  {
+   "name": "openai/gpt-oss-20b",
+   "cost_usd": 0.07522897499999999,
+   "calls": 123
+  },
+  {
+   "name": "gemini-3.1-flash-lite",
+   "cost_usd": 0.00183325,
+   "calls": 1
+  },
+  {
+   "name": "gemma-4-31b-it",
+   "cost_usd": 0.0,
+   "calls": 6
+  }
+ ],
+ "by_day": [
+  {
+   "name": "2026-11-07",
+   "cost_usd": 0.0051915500000000005,
+   "calls": 2
+  },
+  {
+   "name": "2026-11-09",
+   "cost_usd": 0.042085,
+   "calls": 24
+  },
+  {
+   "name": "2026-11-13",
+   "cost_usd": 0.4045750000000001,
+   "calls": 41
+  },
+  {
+   "name": "2026-11-14",
+   "cost_usd": 0.23244449999999994,
+   "calls": 17
+  },
+  {
+   "name": "2026-11-17",
+   "cost_usd": 0.9833912250000001,
+   "calls": 76
+  },
+  {
+   "name": "2026-11-19",
+   "cost_usd": 1.2794392499999994,
+   "calls": 69
+  },
+  {
+   "name": "2026-11-20",
+   "cost_usd": 8.867179500000006,
+   "calls": 896
+  }
+ ],
+ "note": "Each run's own cost also includes its share of the shared first draft, so summing run costs across settings counts drafts more than once; this total counts every call once."
+}

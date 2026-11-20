@@ -1,0 +1,246 @@
+{
+ "run_id": "dedicated-gemini-3.6-flash-T06-v004-r1",
+ "task_id": "T06-v004",
+ "condition": "dedicated",
+ "run_number": 1,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 4,
+ "draft": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.75991965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.24008035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1247.4112702
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1247.42
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $80,000 at a monthly return rate of 0.4% (4.8% nominal annual return compounded monthly), the account grows over 120 months alongside monthly contributions of $2,500 for months 1–60 and $3,500 for months 61–120, minus a $20,000 withdrawal at month 90. The projected month-120 balance is $558,357.76. Compared to the expansion capital target of $750,000, there is a target shortfall of $191,642.24. To fully cover this shortfall over 120 months, an additional end-of-month contribution of $1,247.41127 per month is required, which rounds upward to $1,247.42 per month."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.75991965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.24008035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1247.4112702
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1247.42
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $80,000 at a monthly return rate of 0.4% (4.8% nominal annual return compounded monthly), the account grows over 120 months alongside monthly contributions of $2,500 for months 1–60 and $3,500 for months 61–120, minus a $20,000 withdrawal at month 90. The projected month-120 balance is $558,357.76. Compared to the expansion capital target of $750,000, there is a target shortfall of $191,642.24. To fully cover this shortfall over 120 months, an additional end-of-month contribution of $1,247.41127 per month is required, which rounds upward to $1,247.42 per month."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The calculated final portfolio value, target shortfall, and required extra monthly payment (both unrounded and rounded upward to cents) are correct and match the scenario specifications and output schema.",
+   "calls": 4,
+   "calculations": [
+    {
+     "expression": "fv(0.004, 60, -2500, -80000)",
+     "result": 270801.706689923
+    },
+    {
+     "expression": "fv(0.004, 30, -3500, -fv(0.004, 60, -2500, -80000))",
+     "result": 416578.6250926532
+    },
+    {
+     "expression": "fv(0.004, 30, -3500, -(fv(0.004, 30, -3500, -fv(0.004, 60, -2500, -80000)) - 20000))",
+     "result": 558357.7640051697
+    },
+    {
+     "expression": "750000 - fv(0.004, 30, -3500, -(fv(0.004, 30, -3500, -fv(0.004, 60, -2500, -80000)) - 20000))",
+     "result": 191642.23599483026
+    },
+    {
+     "expression": "pmt(0.004, 120, 0, -(750000 - fv(0.004, 30, -3500, -(fv(0.004, 30, -3500, -fv(0.004, 60, -2500, -80000)) - 20000))))",
+     "result": 1247.4112627949737
+    },
+    {
+     "expression": "80000 * (1.004**60) + 2500 * ((1.004**60 - 1) / 0.004)",
+     "result": 270801.706689923
+    },
+    {
+     "expression": "(80000 * (1.004**60) + 2500 * ((1.004**60 - 1) / 0.004)) * (1.004**30) + 3500 * ((1.004**30 - 1) / 0.004)",
+     "result": 416578.6250926532
+    },
+    {
+     "expression": "((80000 * (1.004**60) + 2500 * ((1.004**60 - 1) / 0.004)) * (1.004**30) + 3500 * ((1.004**30 - 1) / 0.004) - 20000) * (1.004**30) + 3500 * ((1.004**30 - 1) / 0.004)",
+     "result": 558357.7640051697
+    },
+    {
+     "expression": "191642.23599483026 / ((1.004**120 - 1) / 0.004)",
+     "result": 1247.4112627949737
+    },
+    {
+     "expression": "1247.4112627949737",
+     "result": 1247.4112627949737
+    }
+   ],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.75991965,
+     "target_shortfall": 191642.24008035,
+     "additional_monthly_contribution": 1247.4112702,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.7640051689,
+     "target_shortfall": 191642.23599483108,
+     "additional_monthly_contribution": 1247.411262794979,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.75991965,
+     "target_shortfall": 191642.24008035,
+     "additional_monthly_contribution": 1247.4112702,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.7640051689,
+     "target_shortfall": 191642.23599483108,
+     "additional_monthly_contribution": 1247.411262794979,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

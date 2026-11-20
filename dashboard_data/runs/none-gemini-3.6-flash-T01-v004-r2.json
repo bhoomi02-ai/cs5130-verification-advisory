@@ -1,0 +1,199 @@
+{
+ "run_id": "none-gemini-3.6-flash-T01-v004-r2",
+ "task_id": "T01-v004",
+ "condition": "none",
+ "run_number": 2,
+ "status": "unchecked",
+ "verdict": null,
+ "second_verdict": null,
+ "verifier_calls": 0,
+ "draft": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio has a total value of $100,000. The target allocations are 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). Selling 40 shares of TSLA at $300/share generates $12,000 in cash. Purchasing 125 shares of BND at $80/share costs $10,000. Post-trade allocations are exactly $55,000 in stocks (55%), $30,000 in bonds (30%), and $15,000 in cash (15%). AAPL and VOO are not sold, whole-share rules are respected, and no individual stock exceeds the 18% concentration limit (MSFT is highest at 16%)."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio has a total value of $100,000. The target allocations are 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). Selling 40 shares of TSLA at $300/share generates $12,000 in cash. Purchasing 125 shares of BND at $80/share costs $10,000. Post-trade allocations are exactly $55,000 in stocks (55%), $30,000 in bonds (30%), and $15,000 in cash (15%). AAPL and VOO are not sold, whole-share rules are respected, and no individual stock exceeds the 18% concentration limit (MSFT is highest at 16%)."
+ },
+ "reviews": [],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "final_cash": 15000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     },
+     "final_quantities": {
+      "AAPL": 75.0,
+      "TSLA": 5.0,
+      "MSFT": 40.0,
+      "VOO": 45.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 15000.0,
+      "TSLA": 1500.0,
+      "MSFT": 16000.0,
+      "VOO": 22500.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "final_cash": 15000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     },
+     "final_quantities": {
+      "AAPL": 75.0,
+      "TSLA": 5.0,
+      "MSFT": 40.0,
+      "VOO": 45.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 15000.0,
+      "TSLA": 1500.0,
+      "MSFT": 16000.0,
+      "VOO": 22500.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

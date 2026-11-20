@@ -1,0 +1,227 @@
+{
+ "run_id": "none-gemini-3.6-flash-S06-r2",
+ "task_id": "S06",
+ "condition": "none",
+ "run_number": 2,
+ "status": "unchecked",
+ "verdict": null,
+ "second_verdict": null,
+ "verifier_calls": 0,
+ "draft": {
+  "scenario_id": "S06",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1000045.8290892965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 199954.1709107035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 432.7629701026049
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 432.77
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with $150,000, compounding at 0.5% monthly over 240 months yields $496,530.67. Monthly contributions of $1,000 in months 1–120 accumulate to $298,161.64 by month 240, and $1,500 in months 121–240 accumulates to $245,819.02. The $30,000 withdrawal at month 180 reduces the final balance by $40,465.50, resulting in a projected month-240 balance of $1,000,045.83. To bridge the $199,954.17 shortfall to the $1,200,000 target, an additional monthly payment of $432.76297... is required across months 1–240, which rounds upward to $432.77."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "S06",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1000045.8290892965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 199954.1709107035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 432.7629701026049
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 432.77
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with $150,000, compounding at 0.5% monthly over 240 months yields $496,530.67. Monthly contributions of $1,000 in months 1–120 accumulate to $298,161.64 by month 240, and $1,500 in months 121–240 accumulates to $245,819.02. The $30,000 withdrawal at month 180 reduces the final balance by $40,465.50, resulting in a projected month-240 balance of $1,000,045.83. To bridge the $199,954.17 shortfall to the $1,200,000 target, an additional monthly payment of $432.76297... is required across months 1–240, which rounds upward to $432.77."
+ },
+ "reviews": [],
+ "draft_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S06_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S06_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.8290892965,
+     "target_shortfall": 199954.1709107035,
+     "additional_monthly_contribution": 432.7629701026049,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S06_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S06_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.735359339,
+     "target_shortfall": 199954.26464066096,
+     "additional_monthly_contribution": 432.7631314340293,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 1000045.8290892965
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 199954.1709107035
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "final_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S06_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S06_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.8290892965,
+     "target_shortfall": 199954.1709107035,
+     "additional_monthly_contribution": 432.7629701026049,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S06_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S06_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.735359339,
+     "target_shortfall": 199954.26464066096,
+     "additional_monthly_contribution": 432.7631314340293,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 1000045.8290892965
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 199954.1709107035
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "scoring_note": null
+}

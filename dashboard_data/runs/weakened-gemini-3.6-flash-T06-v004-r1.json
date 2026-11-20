@@ -1,0 +1,281 @@
+{
+ "run_id": "weakened-gemini-3.6-flash-T06-v004-r1",
+ "task_id": "T06-v004",
+ "condition": "weakened",
+ "run_number": 1,
+ "status": "human_review",
+ "verdict": "reject",
+ "second_verdict": "reject",
+ "verifier_calls": 2,
+ "draft": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.75991965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.24008035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1247.4112702
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1247.42
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $80,000 at a monthly return rate of 0.4% (4.8% nominal annual return compounded monthly), the account grows over 120 months alongside monthly contributions of $2,500 for months 1–60 and $3,500 for months 61–120, minus a $20,000 withdrawal at month 90. The projected month-120 balance is $558,357.76. Compared to the expansion capital target of $750,000, there is a target shortfall of $191,642.24. To fully cover this shortfall over 120 months, an additional end-of-month contribution of $1,247.41127 per month is required, which rounds upward to $1,247.42 per month."
+ },
+ "revision": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.75991965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.24008035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1248.19356351
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1248.2
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $80,000 at a monthly interest rate of 0.4% (4.8% nominal annual return compounded monthly), the account grows over 120 months alongside monthly contributions of $2,500 for months 1–60 and $3,500 for months 61–120, minus a $20,000 withdrawal at month 90. The projected month-120 balance is $558,357.75991965. Compared to the target of $750,000, the target shortfall is $191,642.24008035. Dividing this shortfall by the 120-month future value factor of an end-of-month annuity ((1.004^120 - 1) / 0.004 = 153.5356770809653) gives an exact required additional monthly contribution of $1,248.19356351, which rounds upward to $1,248.20 per month."
+ },
+ "final": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.75991965
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.24008035
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1248.19356351
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1248.2
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $80,000 at a monthly interest rate of 0.4% (4.8% nominal annual return compounded monthly), the account grows over 120 months alongside monthly contributions of $2,500 for months 1–60 and $3,500 for months 61–120, minus a $20,000 withdrawal at month 90. The projected month-120 balance is $558,357.75991965. Compared to the target of $750,000, the target shortfall is $191,642.24008035. Dividing this shortfall by the 120-month future value factor of an end-of-month annuity ((1.004^120 - 1) / 0.004 = 153.5356770809653) gives an exact required additional monthly contribution of $1,248.19356351, which rounds upward to $1,248.20 per month."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "reject",
+   "issues": [
+    "The calculated extra monthly payment is incorrect: to cover the target shortfall of $191,642.24008035 over 120 months at a 0.4% monthly interest rate (compounded monthly), the exact payment required is $1,248.1935635 (not $1,247.4112702) and the upward-rounded payment is $1,248.20 (not $1,247.42)."
+   ],
+   "reason": "The projected final portfolio value and target shortfall were computed correctly, but the additional monthly payment required to meet the shortfall was incorrectly calculated as $1,247.4112702 / $1,247.42 instead of $1,248.1935635 / $1,248.20.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  },
+  {
+   "stage": "second",
+   "verdict": "reject",
+   "issues": [
+    "The projected month-120 final portfolio value of 558,357.75991965 is incorrect; the correct projected balance is 558,506.39299417.",
+    "The target shortfall (FINAL DIFFERENCE) of 191,642.24008035 is incorrect; the correct target shortfall is 191,493.60700583 (750,000 - 558,506.39299417).",
+    "The exact required additional monthly contribution (FINAL PAYMENT with rounding NONE) of 1,248.19356351 is incorrect; the correct value is 1,247.22547146 (191,493.60700583 / 153.53567708).",
+    "The upward-rounded additional monthly contribution (FINAL PAYMENT with rounding UPWARD_CENT) of 1,248.20 is incorrect; the correct rounded amount is 1,247.23."
+   ],
+   "reason": "The advisor's financial projection contains mathematical errors in the final portfolio balance, the resulting target shortfall, and both the exact and upward-rounded additional monthly contribution amounts.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.75991965,
+     "target_shortfall": 191642.24008035,
+     "additional_monthly_contribution": 1247.4112702,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.7640051689,
+     "target_shortfall": 191642.23599483108,
+     "additional_monthly_contribution": 1247.411262794979,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.75991965,
+     "target_shortfall": 191642.24008035,
+     "additional_monthly_contribution": 1248.19356351,
+     "additional_monthly_contribution_cents": 1248.2
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.7640051689,
+     "target_shortfall": 191642.23599483108,
+     "additional_monthly_contribution": 1247.411262794979,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "additional_monthly_contribution",
+       "observed": 1248.19356351
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "additional_monthly_contribution_cents",
+       "observed": 1248.2
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "scoring_note": null
+}

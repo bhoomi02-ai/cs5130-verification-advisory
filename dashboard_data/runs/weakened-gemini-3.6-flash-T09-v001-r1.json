@@ -1,0 +1,251 @@
+{
+ "run_id": "weakened-gemini-3.6-flash-T09-v001-r1",
+ "task_id": "T09-v001",
+ "condition": "weakened",
+ "run_number": 1,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T09-v001",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 49000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Rebalancing the portfolio to the target allocation is infeasible. The STOCK class currently totals $41,000 (41.0% of the $100,000 portfolio), which exceeds the upper target tolerance bound of 40.5% (40.0% ± 0.5%). Because selling STOCK-class assets is prohibited by the NO_SELL_CLASS restriction and external cash deposits are not allowed, the STOCK allocation cannot be reduced to fit within the required range."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T09-v001",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 49000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Rebalancing the portfolio to the target allocation is infeasible. The STOCK class currently totals $41,000 (41.0% of the $100,000 portfolio), which exceeds the upper target tolerance bound of 40.5% (40.0% ± 0.5%). Because selling STOCK-class assets is prohibited by the NO_SELL_CLASS restriction and external cash deposits are not allowed, the STOCK allocation cannot be reduced to fit within the required range."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The answer correctly identifies that rebalancing is infeasible due to the restriction against selling stock-class assets when stock allocation currently exceeds the upper tolerance limit, and all metric observations and output requirements strictly comply with the schema.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T09-v001_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 41000.0,
+     "minimum_stock_pct": 0.41,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 41000.0,
+     "minimum_stock_pct": 0.41,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T09-v001_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 41000.0,
+     "minimum_stock_pct": 0.41,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 41000.0,
+     "minimum_stock_pct": 0.41,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v001_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

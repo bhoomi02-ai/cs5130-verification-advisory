@@ -1,0 +1,329 @@
+{
+ "run_id": "cross_family-gemini-3.6-flash-S06-r1",
+ "task_id": "S06",
+ "condition": "cross_family",
+ "run_number": 1,
+ "status": "human_review",
+ "verdict": "reject",
+ "second_verdict": "reject",
+ "verifier_calls": 6,
+ "draft": {
+  "scenario_id": "S06",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1000045.83
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 199954.17
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 432.762964
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 432.77
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with $150,000 and taking into account scheduled monthly contributions ($1,000/month for months 1–120 and $1,500/month for months 121–240) alongside a $30,000 withdrawal at month 180, compounding at 0.5% monthly (6% nominal annual rate) yields a projected month-240 portfolio balance of $1,000,045.83. The shortfall relative to the $1,200,000 target is $199,954.17. To bridge this gap with an additional equal end-of-month contribution over all 240 months, the required exact monthly extra payment is $432.762964, which rounds upward to $432.77."
+ },
+ "revision": {
+  "scenario_id": "S06",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1000045.73
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 199954.27
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 432.763178
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 432.77
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Re-verification of the scenario math confirms that the initial $150,000 balance compounded at 0.5% monthly over 240 months grows to $496,530.67. The monthly contributions ($1,000 for months 1–120 and $1,500 for months 121–240) compound to $298,161.54 and $245,819.02 respectively, while the $30,000 withdrawal at month 180 reduces the final value by $40,465.50. This results in a projected month-240 balance of $1,000,045.73 and a shortfall of $199,954.27 relative to the $1,200,000 target. To cover this gap over 240 months, the required additional monthly contribution is $432.763178, which rounds upward to $432.77."
+ },
+ "final": {
+  "scenario_id": "S06",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1000045.73
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 199954.27
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 432.763178
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 432.77
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Re-verification of the scenario math confirms that the initial $150,000 balance compounded at 0.5% monthly over 240 months grows to $496,530.67. The monthly contributions ($1,000 for months 1–120 and $1,500 for months 121–240) compound to $298,161.54 and $245,819.02 respectively, while the $30,000 withdrawal at month 180 reduces the final value by $40,465.50. This results in a projected month-240 balance of $1,000,045.73 and a shortfall of $199,954.27 relative to the $1,200,000 target. To cover this gap over 240 months, the required additional monthly contribution is $432.763178, which rounds upward to $432.77."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "reject",
+   "issues": [
+    "The projected month‑240 balance is $1,201,469.04, not $1,000,045.83 as stated. Consequently the shortfall relative to the $1,200,000 target is $1,469.04, not $199,954.17, and no additional monthly contribution is required (the extra payment should be $0.00)."
+   ],
+   "reason": "The arithmetic in the advisor’s answer does not match the scenario data.",
+   "calls": 3,
+   "calculations": [
+    {
+     "expression": "150000*(1+0.005)**240 + sum([1000*(1+0.005)**(240-i) for i in range(1,121)]) + sum([1500*(1+0.005)**(240-i) for i in range(121,241)]) - 30000*(1+0.005)**(240-180)",
+     "error": "Unsupported syntax: ListComp"
+    },
+    {
+     "expression": "150000*(1+0.005)**240",
+     "result": 496530.6713711046
+    },
+    {
+     "expression": "1000*(1+0.005)**240 * ((1/(1+0.005))*(1-(1/(1+0.005))**120)/(1-1/(1+0.005)))",
+     "result": 298161.5483550215
+    },
+    {
+     "expression": "1500*(1+0.005)**240 * ((1/(1+0.005))*(1-(1/(1+0.005))**120)/(1-1/(1+0.005)))",
+     "result": 447242.3225325323
+    },
+    {
+     "expression": "-30000*(1+0.005)**(240-180)",
+     "result": -40465.50457647922
+    }
+   ],
+   "error": null
+  },
+  {
+   "stage": "second",
+   "verdict": "reject",
+   "issues": [
+    "The required additional end‑of‑month contribution to bridge the shortfall of $199,954.27 over 240 months is $199,954.27 ÷ 240 = $833.226, which rounds upward to $833.23, not the $432.76 reported.",
+    "The answer’s payment value of $432.763178 is incorrect because it does not cover the full shortfall when applied over 240 months."
+   ],
+   "reason": "The calculated extra contribution is wrong; the correct value is $833.23 per month.",
+   "calls": 3,
+   "calculations": [
+    {
+     "expression": "150000*(1+0.005)**240",
+     "result": 496530.6713711046
+    },
+    {
+     "expression": "sum([1000*(1+0.005)**(240-i) for i in range(1,121)])",
+     "error": "Unsupported syntax: ListComp"
+    },
+    {
+     "expression": "sum([1500*(1+0.005)**(240-i) for i in range(121,241)])",
+     "error": "Unsupported syntax: ListComp"
+    },
+    {
+     "expression": "30000*(1+0.005)**(240-180)",
+     "result": 40465.50457647922
+    },
+    {
+     "expression": "((1+0.005)**120 -1)/0.005",
+     "result": 163.87934680645802
+    },
+    {
+     "expression": "1000*(((1+0.005)**120 -1)/0.005)*(1+0.005)**120",
+     "result": 298161.54835501476
+    },
+    {
+     "expression": "1500*(((1+0.005)**120 -1)/0.005)",
+     "result": 245819.02020968703
+    }
+   ],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S06_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S06_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.83,
+     "target_shortfall": 199954.17,
+     "additional_monthly_contribution": 432.762964,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S06_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S06_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.735359339,
+     "target_shortfall": 199954.26464066096,
+     "additional_monthly_contribution": 432.7631314340293,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 1000045.83
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 199954.17
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S06_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S06_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.73,
+     "target_shortfall": 199954.27,
+     "additional_monthly_contribution": 432.763178,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S06_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S06_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 150000.0,
+     "final_balance": 1000045.735359339,
+     "target_shortfall": 199954.26464066096,
+     "additional_monthly_contribution": 432.7631314340293,
+     "additional_monthly_contribution_cents": 432.77
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

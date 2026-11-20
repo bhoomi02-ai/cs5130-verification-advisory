@@ -1,0 +1,107 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-11-20T22:03:53+00:00",
+ "study": {
+  "question": "Which verification strategy makes multi-agent financial advisory systems more reliable?",
+  "advisor_model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": "default",
+  "n_tasks": 32,
+  "repeats": 3,
+  "n_scenarios": 10,
+  "n_seeded_answers": 31,
+  "budget_usd": 20.0
+ },
+ "conditions": [
+  {
+   "id": "none",
+   "label": "None · no check",
+   "runs_done": 96,
+   "runs_expected": 96,
+   "runs_failed": 0,
+   "complete": true
+  },
+  {
+   "id": "self",
+   "label": "Self · re-reads its answer",
+   "runs_done": 96,
+   "runs_expected": 96,
+   "runs_failed": 0,
+   "complete": true,
+   "seeded_done": 31,
+   "seeded_expected": 31,
+   "seeded_failed": 0,
+   "seeded_complete": true
+  },
+  {
+   "id": "peer",
+   "label": "Peer · a second advisor call",
+   "runs_done": 96,
+   "runs_expected": 96,
+   "runs_failed": 0,
+   "complete": true,
+   "seeded_done": 31,
+   "seeded_expected": 31,
+   "seeded_failed": 0,
+   "seeded_complete": true
+  },
+  {
+   "id": "dedicated",
+   "label": "Dedicated · verifier + calculator",
+   "runs_done": 96,
+   "runs_expected": 96,
+   "runs_failed": 0,
+   "complete": true,
+   "seeded_done": 31,
+   "seeded_expected": 31,
+   "seeded_failed": 0,
+   "seeded_complete": true
+  },
+  {
+   "id": "weakened",
+   "label": "No calculator · same verifier",
+   "runs_done": 96,
+   "runs_expected": 96,
+   "runs_failed": 0,
+   "complete": true,
+   "seeded_done": 31,
+   "seeded_expected": 31,
+   "seeded_failed": 0,
+   "seeded_complete": true
+  },
+  {
+   "id": "cross_family",
+   "label": "Cross-family · gpt-oss-20b verifier",
+   "runs_done": 54,
+   "runs_expected": 96,
+   "runs_failed": 1,
+   "complete": false,
+   "seeded_done": 0,
+   "seeded_expected": 31,
+   "seeded_failed": 0,
+   "seeded_complete": false
+  }
+ ],
+ "complete_conditions": [
+  "none",
+  "self",
+  "peer",
+  "dedicated",
+  "weakened"
+ ],
+ "scoring_under_review": {
+  "T06-v003": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+ },
+ "rejected_rows": 0,
+ "files": [
+  "heatmap.json",
+  "runs.json",
+  "sanity_s04.json",
+  "seeded.json",
+  "spend.json",
+  "summary.json",
+  "runs/<run_id>.json"
+ ],
+ "run_details": 533
+}

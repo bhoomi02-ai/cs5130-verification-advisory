@@ -1,0 +1,259 @@
+{
+ "run_id": "peer-gemini-3.6-flash-T10-v001-r2",
+ "task_id": "T10-v001",
+ "condition": "peer",
+ "run_number": 2,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T10-v001",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 30000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "To complete the $46,000 withdrawal on 2026-11-23 while retaining the required minimum cash balance of $5,000, the portfolio must have at least $51,000 in cash prior to withdrawal. Starting with $10,000 in cash, an additional $41,000 in cash must be generated through asset sales. However, AAPL ($20,000) and MSFT ($30,000) are subject to a NO_SELL restriction. The total market value of all sellable holdings (VOO at $20,000 and BND at $20,000) is $40,000. Liquidating all sellable assets yields a maximum cash balance of $50,000 before withdrawal. Subtracting the $46,000 withdrawal leaves $4,000 in cash, which violates the $5,000 minimum cash constraint. Consequently, the client request cannot be satisfied under the investment restrictions."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T10-v001",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 30000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "To complete the $46,000 withdrawal on 2026-11-23 while retaining the required minimum cash balance of $5,000, the portfolio must have at least $51,000 in cash prior to withdrawal. Starting with $10,000 in cash, an additional $41,000 in cash must be generated through asset sales. However, AAPL ($20,000) and MSFT ($30,000) are subject to a NO_SELL restriction. The total market value of all sellable holdings (VOO at $20,000 and BND at $20,000) is $40,000. Liquidating all sellable assets yields a maximum cash balance of $50,000 before withdrawal. Subtracting the $46,000 withdrawal leaves $4,000 in cash, which violates the $5,000 minimum cash constraint. Consequently, the client request cannot be satisfied under the investment restrictions."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The analysis correctly identifies that the withdrawal request is infeasible under the NO_SELL restriction on AAPL and MSFT, and all numbers, observations, and JSON schema requirements are accurately fulfilled.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T10-v001_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "restricted_value": 50000.0,
+     "sellable_value": 40000.0,
+     "available_liquidity": 50000.0,
+     "required_liquidity": 51000.0,
+     "liquidity_shortfall": 1000.0,
+     "max_withdrawal_preserving_reserve": 45000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "restricted_value": 50000.0,
+     "sellable_value": 40000.0,
+     "available_liquidity": 50000.0,
+     "required_liquidity": 51000.0,
+     "liquidity_shortfall": 1000.0,
+     "max_withdrawal_preserving_reserve": 45000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T10-v001_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "restricted_value": 50000.0,
+     "sellable_value": 40000.0,
+     "available_liquidity": 50000.0,
+     "required_liquidity": 51000.0,
+     "liquidity_shortfall": 1000.0,
+     "max_withdrawal_preserving_reserve": 45000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "restricted_value": 50000.0,
+     "sellable_value": 40000.0,
+     "available_liquidity": 50000.0,
+     "required_liquidity": 51000.0,
+     "liquidity_shortfall": 1000.0,
+     "max_withdrawal_preserving_reserve": 45000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T10-v001_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

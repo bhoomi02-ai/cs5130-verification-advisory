@@ -1,0 +1,1512 @@
+{
+ "repeats": 3,
+ "conditions": [
+  "none",
+  "self",
+  "peer",
+  "dedicated",
+  "weakened",
+  "cross_family"
+ ],
+ "pending": {
+  "cross_family": {
+   "status": "pending",
+   "done": 54,
+   "total": 96,
+   "failed": 1,
+   "label": "pending (54/96)"
+  }
+ },
+ "groups": [
+  {
+   "scenario": "S01",
+   "tasks": [
+    "S01",
+    "T01-v003",
+    "T01-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S01",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T01-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T01-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S02",
+   "tasks": [
+    "S02",
+    "T02-v003",
+    "T02-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S02",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T02-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T02-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S03",
+   "tasks": [
+    "S03",
+    "T03-v001",
+    "T03-v002"
+   ],
+   "cells": {
+    "none": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S03",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T03-v001",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T03-v002",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S04",
+   "tasks": [
+    "S04",
+    "T04-v003",
+    "T04-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 6,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 6,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 6,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 6,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S04",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T04-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T04-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S05",
+   "tasks": [
+    "S05",
+    "T05-v003",
+    "T05-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S05",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T05-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T05-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S06",
+   "tasks": [
+    "S06",
+    "T06-v003",
+    "T06-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 2,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 2,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 2,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 7,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 1,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S06",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T06-v003",
+     "note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+     "cells": {
+      "none": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T06-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 1,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 0,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S07",
+   "tasks": [
+    "S07",
+    "T07-v003",
+    "T07-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S07",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T07-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T07-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S08",
+   "tasks": [
+    "S08",
+    "T08-v003",
+    "T08-v004"
+   ],
+   "cells": {
+    "none": {
+     "right": 8,
+     "n": 9,
+     "failed": 0
+    },
+    "self": {
+     "right": 8,
+     "n": 9,
+     "failed": 0
+    },
+    "peer": {
+     "right": 8,
+     "n": 9,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 9,
+     "n": 9,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 8,
+     "n": 9,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S08",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T08-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T08-v004",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 2,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S09",
+   "tasks": [
+    "S09",
+    "T09-v001",
+    "T09-v002",
+    "T09-v003"
+   ],
+   "cells": {
+    "none": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "self": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "peer": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S09",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T09-v001",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T09-v002",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T09-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "scenario": "S10",
+   "tasks": [
+    "S10",
+    "T10-v001",
+    "T10-v002",
+    "T10-v003"
+   ],
+   "cells": {
+    "none": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "self": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "peer": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "dedicated": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "weakened": {
+     "right": 12,
+     "n": 12,
+     "failed": 0
+    },
+    "cross_family": {
+     "status": "pending"
+    }
+   },
+   "rows": [
+    {
+     "task_id": "S10",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T10-v001",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T10-v002",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    },
+    {
+     "task_id": "T10-v003",
+     "note": null,
+     "cells": {
+      "none": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "self": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "peer": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "dedicated": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "weakened": {
+       "right": 3,
+       "n": 3,
+       "failed": 0
+      },
+      "cross_family": {
+       "status": "pending"
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

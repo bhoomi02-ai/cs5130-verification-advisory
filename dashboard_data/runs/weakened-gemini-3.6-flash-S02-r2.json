@@ -1,0 +1,233 @@
+{
+ "run_id": "weakened-gemini-3.6-flash-S02-r2",
+ "task_id": "S02",
+ "condition": "weakened",
+ "run_number": 2,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "S02",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "VOO",
+    "quantity_delta": -38
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 18000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 12000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Selling 38 shares of VOO at $500 per share generates $19,000 in cash, bringing cash to $37,000 prior to the withdrawal. After funding the $25,000 expense, $12,000 remains in cash, satisfying the minimum cash policy restriction without external deposits or borrowing."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "S02",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "VOO",
+    "quantity_delta": -38
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 18000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 12000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Selling 38 shares of VOO at $500 per share generates $19,000 in cash, bringing cash to $37,000 prior to the withdrawal. After funding the $25,000 expense, $12,000 remains in cash, satisfying the minimum cash policy restriction without external deposits or borrowing."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The proposed trade plan accurately calculates the needed cash proceeds, satisfies all client requirements and investment policy restrictions, and complies fully with the JSON schema.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S02_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S02_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 98000.0,
+     "final_total": 73000.0,
+     "cash_before_withdrawal": 37000.0,
+     "final_cash": 12000.0,
+     "allocations": {
+      "STOCK": 0.5068493150684932,
+      "BOND": 0.3287671232876712,
+      "CASH": 0.1643835616438356
+     },
+     "additional_liquidity_needed": 19000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S02_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S02_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 98000.0,
+     "cash_before_trades": 18000.0,
+     "cash_before_withdrawal": 37000.0,
+     "final_cash": 12000.0,
+     "final_total": 73000.0,
+     "allocations": {
+      "STOCK": 0.5068493150684932,
+      "BOND": 0.3287671232876712,
+      "CASH": 0.1643835616438356
+     },
+     "final_quantities": {
+      "AAPL": 50.0,
+      "MSFT": 40.0,
+      "VOO": 22.0,
+      "BND": 300.0
+     },
+     "final_values": {
+      "AAPL": 10000.0,
+      "MSFT": 16000.0,
+      "VOO": 11000.0,
+      "BND": 24000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": 19000.0
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S02_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S02_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 98000.0,
+     "final_total": 73000.0,
+     "cash_before_withdrawal": 37000.0,
+     "final_cash": 12000.0,
+     "allocations": {
+      "STOCK": 0.5068493150684932,
+      "BOND": 0.3287671232876712,
+      "CASH": 0.1643835616438356
+     },
+     "additional_liquidity_needed": 19000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S02_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S02_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 98000.0,
+     "cash_before_trades": 18000.0,
+     "cash_before_withdrawal": 37000.0,
+     "final_cash": 12000.0,
+     "final_total": 73000.0,
+     "allocations": {
+      "STOCK": 0.5068493150684932,
+      "BOND": 0.3287671232876712,
+      "CASH": 0.1643835616438356
+     },
+     "final_quantities": {
+      "AAPL": 50.0,
+      "MSFT": 40.0,
+      "VOO": 22.0,
+      "BND": 300.0
+     },
+     "final_values": {
+      "AAPL": 10000.0,
+      "MSFT": 16000.0,
+      "VOO": 11000.0,
+      "BND": 24000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": 19000.0
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

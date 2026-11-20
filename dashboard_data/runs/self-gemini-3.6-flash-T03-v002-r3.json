@@ -1,0 +1,273 @@
+{
+ "run_id": "self-gemini-3.6-flash-T03-v002-r3",
+ "task_id": "T03-v002",
+ "condition": "self",
+ "run_number": 3,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T03-v002",
+  "answer_type": "VIOLATION_LIST",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000.0
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000.0
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000.0
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000.0
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 50000.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "A review of the portfolio shows that all asset class allocations and concentration levels comply with the investment policy statement. Total portfolio value is $100,000. Stocks account for 35.0% ($35,000), within the allowed 20% to 40% range. Bonds account for 50.0% ($50,000), within the allowed 45% to 65% range. Cash accounts for 15.0% ($15,000), within the allowed 5% to 25% range. Prohibited cryptocurrency exposure is 0.0%. Individual stock concentrations (AAPL at 10.0% and MSFT at 10.0%) are both under the 15.0% maximum threshold. No policy violations were identified."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T03-v002",
+  "answer_type": "VIOLATION_LIST",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000.0
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000.0
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000.0
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000.0
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 50000.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "A review of the portfolio shows that all asset class allocations and concentration levels comply with the investment policy statement. Total portfolio value is $100,000. Stocks account for 35.0% ($35,000), within the allowed 20% to 40% range. Bonds account for 50.0% ($50,000), within the allowed 45% to 65% range. Cash accounts for 15.0% ($15,000), within the allowed 5% to 25% range. Prohibited cryptocurrency exposure is 0.0%. Individual stock concentrations (AAPL at 10.0% and MSFT at 10.0%) are both under the 15.0% maximum threshold. No policy violations were identified."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The audit accurately recomputed all asset class and individual stock allocations, confirmed that no policy violations exist, and satisfied all schema and formatting rules.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T03-v002_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.35,
+      "BOND": 0.5,
+      "CASH": 0.15
+     },
+     "violation_count": 0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.35,
+      "BOND": 0.5,
+      "CASH": 0.15
+     },
+     "violation_count": 0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_violations",
+    "check_type": "EXACT_SCOPED_VIOLATIONS",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T03-v002_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.35,
+      "BOND": 0.5,
+      "CASH": 0.15
+     },
+     "violation_count": 0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.35,
+      "BOND": 0.5,
+      "CASH": 0.15
+     },
+     "violation_count": 0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_violations",
+    "check_type": "EXACT_SCOPED_VIOLATIONS",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   },
+   {
+    "check_id": "T03-v002_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

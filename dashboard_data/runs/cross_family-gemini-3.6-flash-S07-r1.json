@@ -1,0 +1,432 @@
+{
+ "run_id": "cross_family-gemini-3.6-flash-S07-r1",
+ "task_id": "S07",
+ "condition": "cross_family",
+ "run_number": 1,
+ "status": "human_review",
+ "verdict": "reject",
+ "second_verdict": "reject",
+ "verifier_calls": 3,
+ "draft": {
+  "scenario_id": "S07",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "BND",
+    "quantity_delta": 220
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -12
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -20
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 11200
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The $12,000 deposit increases portfolio value from $100,000 to $112,000 and cash to $14,000. To achieve exact target allocations of 60% Stock ($67,200), 30% Bond ($33,600), and 10% Cash ($11,200), buy 220 shares of BND ($17,600), sell 12 shares of MSFT ($4,800), and sell 20 shares of VOO ($10,000). AAPL is untouched, preserving the NO_SELL restriction, and all individual stock concentrations remain well below 25%."
+ },
+ "revision": {
+  "scenario_id": "S07",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "BND",
+    "quantity_delta": 220
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -12
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -20
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 11200
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The proposed trade plan is fully valid and feasible. Following the $12,000 deposit, cash before trades is $14,000 and total portfolio value is $112,000. Selling 12 shares of MSFT ($4,800) and 20 shares of VOO ($10,000) generates $14,800 in total sale proceeds, raising total available cash to $28,800 ($14,000 + $14,800). Purchasing 220 shares of BND ($17,600) leaves exactly $11,200 in cash ($28,800 - $17,600). Total portfolio value remains $112,000, achieving exact target allocations of 60.0% Stock ($67,200), 30.0% Bond ($33,600), and 10.0% Cash ($11,200). AAPL is not sold, whole shares are maintained, and all individual stock concentration limits are satisfied."
+ },
+ "final": {
+  "scenario_id": "S07",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "BND",
+    "quantity_delta": 220
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -12
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -20
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 11200
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The proposed trade plan is fully valid and feasible. Following the $12,000 deposit, cash before trades is $14,000 and total portfolio value is $112,000. Selling 12 shares of MSFT ($4,800) and 20 shares of VOO ($10,000) generates $14,800 in total sale proceeds, raising total available cash to $28,800 ($14,000 + $14,800). Purchasing 220 shares of BND ($17,600) leaves exactly $11,200 in cash ($28,800 - $17,600). Total portfolio value remains $112,000, achieving exact target allocations of 60.0% Stock ($67,200), 30.0% Bond ($33,600), and 10.0% Cash ($11,200). AAPL is not sold, whole shares are maintained, and all individual stock concentration limits are satisfied."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "reject",
+   "issues": [
+    "After the $12,000 deposit, the portfolio cash is $14,000. The proposed trades buy 220 BND shares costing $17,600, which exceeds the available cash. The advisor sells 12 MSFT shares ($4,800) and 20 VOO shares ($10,000), generating $14,800 in proceeds. The net cash after trades is $14,000 – $17,600 + $14,800 = $7,200, not the $11,200 reported. Consequently the final portfolio value is $110,000 + $7,200 = $117,200, not $112,000. The resulting asset allocations are Stock $67,200/117,200 ≈ 57.3%, Bond $33,600/117,200 ≈ 28.7%, Cash $7,200/117,200 ≈ 6.1%, which do not meet the target 60/30/10 within the 0.5 tolerance. The plan therefore fails to satisfy the client request and the policy constraints."
+   ],
+   "reason": "",
+   "calls": 2,
+   "calculations": [
+    {
+     "expression": "22000+20000+40000+16000",
+     "result": 98000
+    },
+    {
+     "expression": "200*80+50*400+80*500+100*220",
+     "result": 98000
+    }
+   ],
+   "error": null
+  },
+  {
+   "stage": "second",
+   "verdict": "reject",
+   "issues": [
+    "Individual stock VOO concentration is 0.2679 (26.79%) which exceeds the maximum allowed 25% of portfolio value per the MAX_INDIVIDUAL_STOCK restriction."
+   ],
+   "reason": "The trade plan violates the individual stock concentration limit.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S07_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S07_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 112000.0,
+     "cash_before_trades": 14000.0,
+     "final_cash": 11200.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "historical_total": 92000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S07_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S07_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 14000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 11200.0,
+     "final_total": 112000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 38.0,
+      "VOO": 60.0,
+      "BND": 420.0
+     },
+     "final_values": {
+      "AAPL": 22000.0,
+      "MSFT": 15200.0,
+      "VOO": 30000.0,
+      "BND": 33600.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": 92000.0,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S07_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S07_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 112000.0,
+     "cash_before_trades": 14000.0,
+     "final_cash": 11200.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "historical_total": 92000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S07_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S07_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 14000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 11200.0,
+     "final_total": 112000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 38.0,
+      "VOO": 60.0,
+      "BND": 420.0
+     },
+     "final_values": {
+      "AAPL": 22000.0,
+      "MSFT": 15200.0,
+      "VOO": 30000.0,
+      "BND": 33600.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": 92000.0,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

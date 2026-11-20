@@ -1,0 +1,235 @@
+{
+ "run_id": "none-gemini-3.6-flash-T06-v003-r2",
+ "task_id": "T06-v003",
+ "condition": "none",
+ "run_number": 2,
+ "status": "unchecked",
+ "verdict": null,
+ "second_verdict": null,
+ "verifier_calls": 0,
+ "draft": {
+  "scenario_id": "T06-v003",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1091695.51
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 108304.49
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 353.75
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $250,000 compounding at a monthly rate of 0.55% (6.6% nominal annual), with scheduled end-of-month contributions of $1,500 for months 1–90 and $2,000 for months 91–180, plus a $50,000 withdrawal at month 60, the projected balance at month 180 is $1,091,695.51. Relative to the education target of $1,200,000, there is a shortfall of $108,304.49. To eliminate this shortfall over 180 months, an additional end-of-month contribution of $353.7412 per month is required, which rounds upward to $353.75 per month."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T06-v003",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1091695.51
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 108304.49
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 353.75
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial portfolio of $250,000 compounding at a monthly rate of 0.55% (6.6% nominal annual), with scheduled end-of-month contributions of $1,500 for months 1–90 and $2,000 for months 91–180, plus a $50,000 withdrawal at month 60, the projected balance at month 180 is $1,091,695.51. Relative to the education target of $1,200,000, there is a shortfall of $108,304.49. To eliminate this shortfall over 180 months, an additional end-of-month contribution of $353.7412 per month is required, which rounds upward to $353.75 per month."
+ },
+ "reviews": [],
+ "draft_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": false,
+    "observed": {
+     "initial_total": 250000.0,
+     "final_balance": 1091695.51,
+     "target_shortfall": 108304.49,
+     "additional_monthly_contribution_cents": 353.75
+    },
+    "details": {
+     "reason": "missing_observation",
+     "missing_observation": [
+      "additional_monthly_contribution"
+     ],
+     "not_computed": []
+    }
+   },
+   {
+    "check_id": "T06-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v003_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 250000.0,
+     "final_balance": 1091703.7224440877,
+     "target_shortfall": 108296.27755591227,
+     "additional_monthly_contribution": 353.7109571174611,
+     "additional_monthly_contribution_cents": 353.72
+    },
+    "details": {
+     "reason": "missing_observation",
+     "missing_observation": [
+      "additional_monthly_contribution"
+     ],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 1091695.51
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 108304.49
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "additional_monthly_contribution_cents",
+       "observed": 353.75
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "final_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": false,
+    "observed": {
+     "initial_total": 250000.0,
+     "final_balance": 1091695.51,
+     "target_shortfall": 108304.49,
+     "additional_monthly_contribution_cents": 353.75
+    },
+    "details": {
+     "reason": "missing_observation",
+     "missing_observation": [
+      "additional_monthly_contribution"
+     ],
+     "not_computed": []
+    }
+   },
+   {
+    "check_id": "T06-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v003_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 250000.0,
+     "final_balance": 1091703.7224440877,
+     "target_shortfall": 108296.27755591227,
+     "additional_monthly_contribution": 353.7109571174611,
+     "additional_monthly_contribution_cents": 353.72
+    },
+    "details": {
+     "reason": "missing_observation",
+     "missing_observation": [
+      "additional_monthly_contribution"
+     ],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 1091695.51
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 108304.49
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "additional_monthly_contribution_cents",
+       "observed": 353.75
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+}

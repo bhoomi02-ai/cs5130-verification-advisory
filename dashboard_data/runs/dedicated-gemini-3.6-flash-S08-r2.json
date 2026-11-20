@@ -1,0 +1,332 @@
+{
+ "run_id": "dedicated-gemini-3.6-flash-S08-r2",
+ "task_id": "S08",
+ "condition": "dedicated",
+ "run_number": 2,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 2,
+ "draft": {
+  "scenario_id": "S08",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "VOO",
+    "quantity_delta": -60
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 80000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.375
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.125
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "To fund the $20,000 withdrawal while maintaining the target post-withdrawal allocations (50% STOCK, 37.5% BOND, 12.5% CASH) on the remaining $80,000 total portfolio value: sell 60 shares of VOO for $30,000 cash and purchase 125 shares of BND for $10,000. Before withdrawal, cash balance reaches $30,000 ($10,000 initial + $30,000 proceeds - $10,000 BND purchase). After withdrawing $20,000, remaining cash is $10,000 (12.5% allocation, satisfying the $10,000 minimum cash constraint). Post-withdrawal stock value is $40,000 (100 AAPL at $200 + 50 MSFT at $400 = 50.0%), bond value is $30,000 (375 BND at $80 = 37.5%), and AAPL remains un-traded per the NO_SELL restriction."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "S08",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "VOO",
+    "quantity_delta": -60
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 80000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.375
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.125
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "To fund the $20,000 withdrawal while maintaining the target post-withdrawal allocations (50% STOCK, 37.5% BOND, 12.5% CASH) on the remaining $80,000 total portfolio value: sell 60 shares of VOO for $30,000 cash and purchase 125 shares of BND for $10,000. Before withdrawal, cash balance reaches $30,000 ($10,000 initial + $30,000 proceeds - $10,000 BND purchase). After withdrawing $20,000, remaining cash is $10,000 (12.5% allocation, satisfying the $10,000 minimum cash constraint). Post-withdrawal stock value is $40,000 (100 AAPL at $200 + 50 MSFT at $400 = 50.0%), bond value is $30,000 (375 BND at $80 = 37.5%), and AAPL remains un-traded per the NO_SELL restriction."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The proposed trade plan correctly achieves the target allocations post-withdrawal while respecting all policy limits, whole-share rules, and cash constraints.",
+   "calls": 2,
+   "calculations": [
+    {
+     "expression": "20000 + 20000 + 30000 + 20000 + 10000",
+     "result": 100000
+    },
+    {
+     "expression": "100*200 + 50*400",
+     "result": 40000
+    },
+    {
+     "expression": "250*80 + 125*80",
+     "result": 30000
+    },
+    {
+     "expression": "10000 + 60*500 - 125*80 - 20000",
+     "result": 10000
+    },
+    {
+     "expression": "40000 / 80000",
+     "result": 0.5
+    },
+    {
+     "expression": "30000 / 80000",
+     "result": 0.375
+    },
+    {
+     "expression": "10000 / 80000",
+     "result": 0.125
+    }
+   ],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S08_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S08_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 80000.0,
+     "cash_before_withdrawal": 30000.0,
+     "final_cash": 10000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.375,
+      "CASH": 0.125
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S08_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S08_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 10000.0,
+     "cash_before_withdrawal": 30000.0,
+     "final_cash": 10000.0,
+     "final_total": 80000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.375,
+      "CASH": 0.125
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 50.0,
+      "VOO": 0.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "MSFT": 20000.0,
+      "VOO": 0.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": 20000.0
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S08_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S08_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 80000.0,
+     "cash_before_withdrawal": 30000.0,
+     "final_cash": 10000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.375,
+      "CASH": 0.125
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S08_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S08_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 10000.0,
+     "cash_before_withdrawal": 30000.0,
+     "final_cash": 10000.0,
+     "final_total": 80000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.375,
+      "CASH": 0.125
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 50.0,
+      "VOO": 0.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "MSFT": 20000.0,
+      "VOO": 0.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": 20000.0
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

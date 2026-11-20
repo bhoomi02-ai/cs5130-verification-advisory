@@ -1,0 +1,447 @@
+{
+ "run_id": "cross_family-gemini-3.6-flash-T01-v004-r1",
+ "task_id": "T01-v004",
+ "condition": "cross_family",
+ "run_number": 1,
+ "status": "revised",
+ "verdict": "reject",
+ "second_verdict": "accept",
+ "verifier_calls": 2,
+ "draft": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -20
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -15
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.67
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.2
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.13
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.55
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.15
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": " The portfolio is rebalanced to target allocations of 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). AAPL and VOO are held per the NO_SELL restriction. To reduce total stock allocation from $67,000 to $55,000, 20 shares of TSLA ($6,000) and 15 shares of MSFT ($6,000) are sold. To increase bond allocation from $20,000 to $30,000, 125 shares of BND ($10,000) are purchased. Net proceeds of $2,000 increase cash balance from $13,000 to $15,000. All individual stock holdings remain under the 18% maximum concentration constraint."
+ },
+ "revision": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -20
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -15
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.67
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.2
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.13
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.55
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.15
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio is successfully rebalanced to 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). AAPL and VOO are retained per NO_SELL. VOO is an ETF (asset_type: ETF), so the MAX_INDIVIDUAL_STOCK restriction (18%) applies only to individual stocks (AAPL at 15%, TSLA at 7.5%, and MSFT at 10% after trades), none of which exceed 18%. To reach target allocations, 20 shares of TSLA ($6,000) and 15 shares of MSFT ($6,000) are sold, and 125 shares of BND ($10,000) are bought. Net trading proceeds of $2,000 increase cash balance to $15,000."
+ },
+ "final": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -20
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -15
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 13000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.67
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.2
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.13
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.55
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.15
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio is successfully rebalanced to 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). AAPL and VOO are retained per NO_SELL. VOO is an ETF (asset_type: ETF), so the MAX_INDIVIDUAL_STOCK restriction (18%) applies only to individual stocks (AAPL at 15%, TSLA at 7.5%, and MSFT at 10% after trades), none of which exceed 18%. To reach target allocations, 20 shares of TSLA ($6,000) and 15 shares of MSFT ($6,000) are sold, and 125 shares of BND ($10,000) are bought. Net trading proceeds of $2,000 increase cash balance to $15,000."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "reject",
+   "issues": [
+    "The plan violates the MAX_INDIVIDUAL_STOCK restriction: VOO’s value is $22,500, which is 22.5% of the $100,000 portfolio, exceeding the 18% maximum. The advisor’s trade plan does not address this violation."
+   ],
+   "reason": "",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  },
+  {
+   "stage": "second",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "All calculations and constraints are satisfied; the proposed trades achieve the target allocations without violating any restrictions.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "final_cash": 15000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     },
+     "final_quantities": {
+      "AAPL": 75.0,
+      "TSLA": 25.0,
+      "MSFT": 25.0,
+      "VOO": 45.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 15000.0,
+      "TSLA": 7500.0,
+      "MSFT": 10000.0,
+      "VOO": 22500.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "final_cash": 15000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     },
+     "final_quantities": {
+      "AAPL": 75.0,
+      "TSLA": 25.0,
+      "MSFT": 25.0,
+      "VOO": 45.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 15000.0,
+      "TSLA": 7500.0,
+      "MSFT": 10000.0,
+      "VOO": 22500.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

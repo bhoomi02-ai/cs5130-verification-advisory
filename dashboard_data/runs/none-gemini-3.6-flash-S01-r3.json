@@ -1,0 +1,249 @@
+{
+ "run_id": "none-gemini-3.6-flash-S01-r3",
+ "task_id": "S01",
+ "condition": "none",
+ "run_number": 3,
+ "status": "unchecked",
+ "verdict": null,
+ "second_verdict": null,
+ "verifier_calls": 0,
+ "draft": {
+  "scenario_id": "S01",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio total value is $100,000. Currently, STOCK is 70% ($70,000), BOND is 20% ($20,000), and CASH is 10% ($10,000). To achieve the target allocation of 60% STOCK, 30% BOND, and 10% CASH while keeping cash at 10% and respecting all restrictions (do not sell AAPL, max 20% per individual stock, whole shares), we sell 25 shares of MSFT ($10,000) and buy 125 shares of BND ($10,000). Post-trade allocations are STOCK 60.0%, BOND 30.0%, and CASH 10.0%, with individual stocks AAPL at 20.0%, TSLA at 15.0%, and MSFT at 10.0%."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "S01",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio total value is $100,000. Currently, STOCK is 70% ($70,000), BOND is 20% ($20,000), and CASH is 10% ($10,000). To achieve the target allocation of 60% STOCK, 30% BOND, and 10% CASH while keeping cash at 10% and respecting all restrictions (do not sell AAPL, max 20% per individual stock, whole shares), we sell 25 shares of MSFT ($10,000) and buy 125 shares of BND ($10,000). Post-trade allocations are STOCK 60.0%, BOND 30.0%, and CASH 10.0%, with individual stocks AAPL at 20.0%, TSLA at 15.0%, and MSFT at 10.0%."
+ },
+ "reviews": [],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S01_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S01_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 10000.0,
+     "final_cash": 10000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S01_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S01_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 10000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 10000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "TSLA": 50.0,
+      "MSFT": 25.0,
+      "VOO": 30.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "TSLA": 15000.0,
+      "MSFT": 10000.0,
+      "VOO": 15000.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S01_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S01_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 10000.0,
+     "final_cash": 10000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S01_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S01_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 10000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 10000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "TSLA": 50.0,
+      "MSFT": 25.0,
+      "VOO": 30.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "TSLA": 15000.0,
+      "MSFT": 10000.0,
+      "VOO": 15000.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

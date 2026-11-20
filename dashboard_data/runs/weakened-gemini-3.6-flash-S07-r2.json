@@ -1,0 +1,345 @@
+{
+ "run_id": "weakened-gemini-3.6-flash-S07-r2",
+ "task_id": "S07",
+ "condition": "weakened",
+ "run_number": 2,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "S07",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "BND",
+    "quantity_delta": 220
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -12
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -20
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 11200
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "With the $12,000 deposit, total portfolio value increases to $112,000 (cash increases to $14,000). To achieve target allocations of 60% STOCK ($67,200), 30% BOND ($33,600), and 10% CASH ($11,200), buy 220 shares of BND (+$17,600), sell 12 shares of MSFT (-$4,800), and sell 20 shares of VOO (-$10,000). No shares of AAPL are sold, all trade quantities are whole shares, and individual stock weights (AAPL at 19.64% and MSFT at 13.57%) remain below the 25% maximum restriction."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "S07",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "BND",
+    "quantity_delta": 220
+   },
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -12
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -20
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 112000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "BEFORE_TRADES",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 11200
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.6
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "With the $12,000 deposit, total portfolio value increases to $112,000 (cash increases to $14,000). To achieve target allocations of 60% STOCK ($67,200), 30% BOND ($33,600), and 10% CASH ($11,200), buy 220 shares of BND (+$17,600), sell 12 shares of MSFT (-$4,800), and sell 20 shares of VOO (-$10,000). No shares of AAPL are sold, all trade quantities are whole shares, and individual stock weights (AAPL at 19.64% and MSFT at 13.57%) remain below the 25% maximum restriction."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The trade plan correctly rebalances the portfolio to the target 60/30/10 allocation using whole shares, respects the $12,000 deposit, maintains cash balances properly, avoids selling AAPL, and complies with all individual stock concentration limits.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S07_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S07_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 112000.0,
+     "cash_before_trades": 14000.0,
+     "final_cash": 11200.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "historical_total": 92000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S07_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S07_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 14000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 11200.0,
+     "final_total": 112000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 38.0,
+      "VOO": 60.0,
+      "BND": 420.0
+     },
+     "final_values": {
+      "AAPL": 22000.0,
+      "MSFT": 15200.0,
+      "VOO": 30000.0,
+      "BND": 33600.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": 92000.0,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S07_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S07_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 112000.0,
+     "cash_before_trades": 14000.0,
+     "final_cash": 11200.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "historical_total": 92000.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S07_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S07_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 14000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 11200.0,
+     "final_total": 112000.0,
+     "allocations": {
+      "STOCK": 0.6,
+      "BOND": 0.3,
+      "CASH": 0.1
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 38.0,
+      "VOO": 60.0,
+      "BND": 420.0
+     },
+     "final_values": {
+      "AAPL": 22000.0,
+      "MSFT": 15200.0,
+      "VOO": 30000.0,
+      "BND": 33600.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": 92000.0,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

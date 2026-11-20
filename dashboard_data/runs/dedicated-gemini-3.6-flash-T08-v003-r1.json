@@ -1,0 +1,324 @@
+{
+ "run_id": "dedicated-gemini-3.6-flash-T08-v003-r1",
+ "task_id": "T08-v003",
+ "condition": "dedicated",
+ "run_number": 1,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 2,
+ "draft": {
+  "scenario_id": "T08-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -2
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -56
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 51
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 103000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 6000.0
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 85000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 12720.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The trade plan is feasible and complies with all restrictions. Selling 2 shares of MSFT ($800) and 56 shares of VOO ($28,000) generates $28,800 in cash. Purchasing 51 shares of BND ($4,080) leaves $24,720 net trade cash. Combined with initial cash of $6,000, cash before withdrawal is $30,720. After executing the $18,000 withdrawal, the remaining cash is $12,720, meeting the $12,000 minimum cash constraint. Total portfolio value post-withdrawal is $85,000. Allocations are 52.00% stocks ($44,200), 33.04% bonds ($28,080), and 14.96% cash ($12,720), all within the 0.5% tolerance of the 52/33/15 target. No prohibited sales of AAPL or BND occur, and only whole shares of existing assets are traded."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T08-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -2
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -56
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 51
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 103000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 6000.0
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 85000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 12720.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The trade plan is feasible and complies with all restrictions. Selling 2 shares of MSFT ($800) and 56 shares of VOO ($28,000) generates $28,800 in cash. Purchasing 51 shares of BND ($4,080) leaves $24,720 net trade cash. Combined with initial cash of $6,000, cash before withdrawal is $30,720. After executing the $18,000 withdrawal, the remaining cash is $12,720, meeting the $12,000 minimum cash constraint. Total portfolio value post-withdrawal is $85,000. Allocations are 52.00% stocks ($44,200), 33.04% bonds ($28,080), and 14.96% cash ($12,720), all within the 0.5% tolerance of the 52/33/15 target. No prohibited sales of AAPL or BND occur, and only whole shares of existing assets are traded."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The proposed trade plan is feasible and complies with all investment constraints, including no sales of AAPL/BND, whole shares, min cash, and target asset class allocations within tolerance.",
+   "calls": 2,
+   "calculations": [
+    {
+     "expression": "80*200",
+     "result": 16000
+    },
+    {
+     "expression": "(55-2)*400",
+     "result": 21200
+    },
+    {
+     "expression": "(70-56)*500",
+     "result": 7000
+    },
+    {
+     "expression": "(300+51)*80",
+     "result": 28080
+    },
+    {
+     "expression": "16000 + (55-2)*400 + (70-56)*500",
+     "result": 44200
+    },
+    {
+     "expression": "(300+51)*80",
+     "result": 28080
+    },
+    {
+     "expression": "6000 + 2*400 + 56*500 - 51*80 - 18000",
+     "result": 12720
+    },
+    {
+     "expression": "16000 + (55-2)*400 + (70-56)*500 + (300+51)*80 + (6000 + 2*400 + 56*500 - 51*80 - 18000)",
+     "result": 85000
+    },
+    {
+     "expression": "(16000 + (55-2)*400 + (70-56)*500) / 85000",
+     "result": 0.52
+    },
+    {
+     "expression": "((300+51)*80) / 85000",
+     "result": 0.33035294117647057
+    },
+    {
+     "expression": "(6000 + 2*400 + 56*500 - 51*80 - 18000) / 85000",
+     "result": 0.1496470588235294
+    }
+   ],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T08-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T08-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 103000.0,
+     "final_total": 85000.0,
+     "cash_before_withdrawal": 30720.0,
+     "final_cash": 12720.0,
+     "allocations": {
+      "STOCK": 0.52,
+      "BOND": 0.33035294117647057,
+      "CASH": 0.1496470588235294
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T08-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T08-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 103000.0,
+     "cash_before_trades": 6000.0,
+     "cash_before_withdrawal": 30720.0,
+     "final_cash": 12720.0,
+     "final_total": 85000.0,
+     "allocations": {
+      "STOCK": 0.52,
+      "BOND": 0.33035294117647057,
+      "CASH": 0.1496470588235294
+     },
+     "final_quantities": {
+      "AAPL": 80.0,
+      "MSFT": 53.0,
+      "VOO": 14.0,
+      "BND": 351.0
+     },
+     "final_values": {
+      "AAPL": 16000.0,
+      "MSFT": 21200.0,
+      "VOO": 7000.0,
+      "BND": 28080.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": 24000.0
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T08-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T08-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 103000.0,
+     "final_total": 85000.0,
+     "cash_before_withdrawal": 30720.0,
+     "final_cash": 12720.0,
+     "allocations": {
+      "STOCK": 0.52,
+      "BOND": 0.33035294117647057,
+      "CASH": 0.1496470588235294
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T08-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T08-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 103000.0,
+     "cash_before_trades": 6000.0,
+     "cash_before_withdrawal": 30720.0,
+     "final_cash": 12720.0,
+     "final_total": 85000.0,
+     "allocations": {
+      "STOCK": 0.52,
+      "BOND": 0.33035294117647057,
+      "CASH": 0.1496470588235294
+     },
+     "final_quantities": {
+      "AAPL": 80.0,
+      "MSFT": 53.0,
+      "VOO": 14.0,
+      "BND": 351.0
+     },
+     "final_values": {
+      "AAPL": 16000.0,
+      "MSFT": 21200.0,
+      "VOO": 7000.0,
+      "BND": 28080.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": 24000.0
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

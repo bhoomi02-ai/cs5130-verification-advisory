@@ -1,0 +1,341 @@
+{
+ "run_id": "peer-gemini-3.6-flash-T05-v003-r3",
+ "task_id": "T05-v003",
+ "condition": "peer",
+ "run_number": 3,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T05-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "NVDA",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -14
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 213
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.78
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.18
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.04
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3504
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1496
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio was rebalanced to achieve target asset allocations within tolerance (50% stocks, 35.04% bonds, and 14.96% cash) while satisfying all constraints. Selling 40 shares of MSFT, 25 shares of NVDA, and 14 shares of VOO generated $28,000 in proceeds. Purchasing 213 shares of BND used $17,040, leaving cash at $14,960. Direct technology exposure (AAPL, MSFT, NVDA) was reduced to 32%, below the 33% maximum limit, and no individual stock exceeds 21% of total portfolio value. AAPL and BND were not sold, and all trades use whole shares with existing portfolio assets."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T05-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "NVDA",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -14
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 213
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.78
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.18
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.04
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3504
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1496
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio was rebalanced to achieve target asset allocations within tolerance (50% stocks, 35.04% bonds, and 14.96% cash) while satisfying all constraints. Selling 40 shares of MSFT, 25 shares of NVDA, and 14 shares of VOO generated $28,000 in proceeds. Purchasing 213 shares of BND used $17,040, leaving cash at $14,960. Direct technology exposure (AAPL, MSFT, NVDA) was reduced to 32%, below the 33% maximum limit, and no individual stock exceeds 21% of total portfolio value. AAPL and BND were not sold, and all trades use whole shares with existing portfolio assets."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The trade plan is feasible and correctly satisfies all allocation targets, sector limits, individual stock limits, and trade restrictions using whole shares.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T05-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "final_cash": 14960.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "direct_technology_pct": 0.32
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 14960.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 10.0,
+      "NVDA": 40.0,
+      "VOO": 36.0,
+      "BND": 438.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "MSFT": 4000.0,
+      "NVDA": 8000.0,
+      "VOO": 18000.0,
+      "BND": 35040.0
+     },
+     "direct_technology_pct": 0.32,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T05-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "final_cash": 14960.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "direct_technology_pct": 0.32
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 14960.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 10.0,
+      "NVDA": 40.0,
+      "VOO": 36.0,
+      "BND": 438.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "MSFT": 4000.0,
+      "NVDA": 8000.0,
+      "VOO": 18000.0,
+      "BND": 35040.0
+     },
+     "direct_technology_pct": 0.32,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

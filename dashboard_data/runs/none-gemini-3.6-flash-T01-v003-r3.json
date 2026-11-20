@@ -1,0 +1,241 @@
+{
+ "run_id": "none-gemini-3.6-flash-T01-v003-r3",
+ "task_id": "T01-v003",
+ "condition": "none",
+ "run_number": 3,
+ "status": "unchecked",
+ "verdict": null,
+ "second_verdict": null,
+ "verifier_calls": 0,
+ "draft": {
+  "scenario_id": "T01-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -15
+   },
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 137
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The trade plan rebalances the portfolio to meet target allocations while respecting all constraints. Selling 15 shares of MSFT ($6,000) reduces its concentration from 22% to 16%, resolving the individual stock limit violation. Selling 40 shares of TSLA ($12,000) reduces total stock exposure to exactly $50,000 (50.0%). Purchasing 137 shares of BND ($10,960) increases bond value to $34,960 (34.96%), leaving cash at $15,040 (15.04%). All final asset class allocations fall within the 0.5% tolerance of target allocations, and AAPL/BND sell restrictions and whole-share rules are respected."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T01-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -15
+   },
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 137
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The trade plan rebalances the portfolio to meet target allocations while respecting all constraints. Selling 15 shares of MSFT ($6,000) reduces its concentration from 22% to 16%, resolving the individual stock limit violation. Selling 40 shares of TSLA ($12,000) reduces total stock exposure to exactly $50,000 (50.0%). Purchasing 137 shares of BND ($10,960) increases bond value to $34,960 (34.96%), leaving cash at $15,040 (15.04%). All final asset class allocations fall within the 0.5% tolerance of target allocations, and AAPL/BND sell restrictions and whole-share rules are respected."
+ },
+ "reviews": [],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 8000.0,
+     "final_cash": 15040.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3496,
+      "CASH": 0.1504
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 8000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15040.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3496,
+      "CASH": 0.1504
+     },
+     "final_quantities": {
+      "AAPL": 80.0,
+      "TSLA": 20.0,
+      "MSFT": 40.0,
+      "VOO": 24.0,
+      "BND": 437.0
+     },
+     "final_values": {
+      "AAPL": 16000.0,
+      "TSLA": 6000.0,
+      "MSFT": 16000.0,
+      "VOO": 12000.0,
+      "BND": 34960.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 8000.0,
+     "final_cash": 15040.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3496,
+      "CASH": 0.1504
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 8000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15040.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3496,
+      "CASH": 0.1504
+     },
+     "final_quantities": {
+      "AAPL": 80.0,
+      "TSLA": 20.0,
+      "MSFT": 40.0,
+      "VOO": 24.0,
+      "BND": 437.0
+     },
+     "final_values": {
+      "AAPL": 16000.0,
+      "TSLA": 6000.0,
+      "MSFT": 16000.0,
+      "VOO": 12000.0,
+      "BND": 34960.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

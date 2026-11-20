@@ -1,0 +1,421 @@
+{
+ "headline": {
+  "text": "With no check the advisor is right 88.5% of the time (85/96 runs); dedicated is 97.9% (94/96). The difference is +9.4 points (95% CI +3.1 to +17.7, sign test p = 0.031, 32 tasks × 3 runs).",
+  "best": "dedicated"
+ },
+ "conditions": {
+  "none": {
+   "status": "complete",
+   "label": "None · no check",
+   "n_runs": 96,
+   "n_tasks": 32,
+   "task_success": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.7916666666666666,
+    "ci_high": 0.9583333333333333,
+    "right": 85,
+    "n": 96
+   },
+   "task_success_excl_human_review": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.7916666666666666,
+    "ci_high": 0.9583333333333333,
+    "right": 85,
+    "n": 96
+   },
+   "first_draft_success": {
+    "value": 0.8854166666666666,
+    "right": 85,
+    "n": 96
+   },
+   "human_review": {
+    "n": 0,
+    "rate": 0.0,
+    "final_right": 0,
+    "routes": {
+     "abstain": 0,
+     "unreadable": 0,
+     "revision_not_accepted": 0
+    }
+   },
+   "outcomes": {
+    "kept_correct": 85,
+    "fixed": 0,
+    "broken": 0,
+    "still_wrong": 11
+   },
+   "cost": {
+    "mean_cost_usd": 0.0189393359375,
+    "total_cost_usd": 1.81817625,
+    "mean_tokens_in": 2837.96875,
+    "mean_tokens_out": 4482.895833333333,
+    "median_latency_s": 17.55085287449947,
+    "extra_cost_per_extra_correct": null,
+    "includes_shared_draft": true
+   },
+   "n_failed": 0
+  },
+  "self": {
+   "status": "complete",
+   "label": "Self · re-reads its answer",
+   "n_runs": 96,
+   "n_tasks": 32,
+   "task_success": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.78125,
+    "ci_high": 0.96875,
+    "right": 85,
+    "n": 96
+   },
+   "task_success_excl_human_review": {
+    "value": 0.9340659340659341,
+    "ci_low": 0.8387096774193549,
+    "ci_high": 0.9892473118279569,
+    "right": 85,
+    "n": 91
+   },
+   "first_draft_success": {
+    "value": 0.8854166666666666,
+    "right": 85,
+    "n": 96
+   },
+   "human_review": {
+    "n": 5,
+    "rate": 0.052083333333333336,
+    "final_right": 0,
+    "routes": {
+     "abstain": 0,
+     "unreadable": 0,
+     "revision_not_accepted": 5
+    }
+   },
+   "outcomes": {
+    "kept_correct": 84,
+    "fixed": 1,
+    "broken": 1,
+    "still_wrong": 10
+   },
+   "cost": {
+    "mean_cost_usd": 0.031778523437500004,
+    "total_cost_usd": 3.05073825,
+    "mean_tokens_in": 7022.25,
+    "mean_tokens_out": 7069.822916666667,
+    "median_latency_s": 24.040072625002722,
+    "extra_cost_per_extra_correct": null,
+    "includes_shared_draft": true
+   },
+   "n_failed": 0,
+   "verifier": {
+    "catch_rate": {
+     "value": 0.5454545454545454,
+     "caught": 6,
+     "n": 11
+    },
+    "false_alarm_rate": {
+     "value": 0.023529411764705882,
+     "flagged": 2,
+     "n": 85
+    },
+    "mcc": 0.6014889966790012,
+    "missing_verdicts": 0,
+    "wrong_draft_fates": {
+     "missed": 5,
+     "caught_fixed": 1,
+     "caught_not_fixed": 5,
+     "caught_escalated": 0
+    },
+    "mean_verifier_calls": 1.0833333333333333
+   }
+  },
+  "peer": {
+   "status": "complete",
+   "label": "Peer · a second advisor call",
+   "n_runs": 96,
+   "n_tasks": 32,
+   "task_success": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.78125,
+    "ci_high": 0.96875,
+    "right": 85,
+    "n": 96
+   },
+   "task_success_excl_human_review": {
+    "value": 0.9438202247191011,
+    "ci_low": 0.8722222222222222,
+    "ci_high": 0.9888888888888888,
+    "right": 84,
+    "n": 89
+   },
+   "first_draft_success": {
+    "value": 0.8854166666666666,
+    "right": 85,
+    "n": 96
+   },
+   "human_review": {
+    "n": 7,
+    "rate": 0.07291666666666667,
+    "final_right": 1,
+    "routes": {
+     "abstain": 0,
+     "unreadable": 0,
+     "revision_not_accepted": 7
+    }
+   },
+   "outcomes": {
+    "kept_correct": 84,
+    "fixed": 1,
+    "broken": 1,
+    "still_wrong": 10
+   },
+   "cost": {
+    "mean_cost_usd": 0.0337425390625,
+    "total_cost_usd": 3.2392837500000002,
+    "mean_tokens_in": 6847.708333333333,
+    "mean_tokens_out": 7628.46875,
+    "median_latency_s": 24.04545112499909,
+    "extra_cost_per_extra_correct": null,
+    "includes_shared_draft": true
+   },
+   "n_failed": 0,
+   "verifier": {
+    "catch_rate": {
+     "value": 0.5454545454545454,
+     "caught": 6,
+     "n": 11
+    },
+    "false_alarm_rate": {
+     "value": 0.011764705882352941,
+     "flagged": 1,
+     "n": 85
+    },
+    "mcc": 0.653808732476217,
+    "missing_verdicts": 0,
+    "wrong_draft_fates": {
+     "missed": 5,
+     "caught_fixed": 1,
+     "caught_not_fixed": 5,
+     "caught_escalated": 0
+    },
+    "mean_verifier_calls": 1.0729166666666667
+   }
+  },
+  "dedicated": {
+   "status": "complete",
+   "label": "Dedicated · verifier + calculator",
+   "n_runs": 96,
+   "n_tasks": 32,
+   "task_success": {
+    "value": 0.9791666666666666,
+    "ci_low": 0.9375,
+    "ci_high": 1.0,
+    "right": 94,
+    "n": 96
+   },
+   "task_success_excl_human_review": {
+    "value": 0.9789473684210527,
+    "ci_low": 0.9375,
+    "ci_high": 1.0,
+    "right": 93,
+    "n": 95
+   },
+   "first_draft_success": {
+    "value": 0.8854166666666666,
+    "right": 85,
+    "n": 96
+   },
+   "human_review": {
+    "n": 1,
+    "rate": 0.010416666666666666,
+    "final_right": 1,
+    "routes": {
+     "abstain": 0,
+     "unreadable": 1,
+     "revision_not_accepted": 0
+    }
+   },
+   "outcomes": {
+    "kept_correct": 85,
+    "fixed": 9,
+    "broken": 0,
+    "still_wrong": 2
+   },
+   "cost": {
+    "mean_cost_usd": 0.04892725781250001,
+    "total_cost_usd": 4.69701675,
+    "mean_tokens_in": 14290.875,
+    "mean_tokens_out": 10189.09375,
+    "median_latency_s": 31.33198902150434,
+    "extra_cost_per_extra_correct": 0.31987116666666676,
+    "includes_shared_draft": true
+   },
+   "n_failed": 0,
+   "verifier": {
+    "catch_rate": {
+     "value": 1.0,
+     "caught": 11,
+     "n": 11
+    },
+    "false_alarm_rate": {
+     "value": 0.023809523809523808,
+     "flagged": 2,
+     "n": 85
+    },
+    "mcc": 0.9088494517835867,
+    "missing_verdicts": 1,
+    "wrong_draft_fates": {
+     "missed": 0,
+     "caught_fixed": 9,
+     "caught_not_fixed": 2,
+     "caught_escalated": 0
+    },
+    "mean_verifier_calls": 2.7395833333333335
+   }
+  },
+  "weakened": {
+   "status": "complete",
+   "label": "No calculator · same verifier",
+   "n_runs": 96,
+   "n_tasks": 32,
+   "task_success": {
+    "value": 0.875,
+    "ci_low": 0.7708333333333333,
+    "ci_high": 0.9583333333333333,
+    "right": 84,
+    "n": 96
+   },
+   "task_success_excl_human_review": {
+    "value": 0.9333333333333333,
+    "ci_low": 0.8225806451612904,
+    "ci_high": 0.9784946236559139,
+    "right": 84,
+    "n": 90
+   },
+   "first_draft_success": {
+    "value": 0.8854166666666666,
+    "right": 85,
+    "n": 96
+   },
+   "human_review": {
+    "n": 6,
+    "rate": 0.0625,
+    "final_right": 0,
+    "routes": {
+     "abstain": 0,
+     "unreadable": 0,
+     "revision_not_accepted": 6
+    }
+   },
+   "outcomes": {
+    "kept_correct": 84,
+    "fixed": 0,
+    "broken": 1,
+    "still_wrong": 11
+   },
+   "cost": {
+    "mean_cost_usd": 0.032222125,
+    "total_cost_usd": 3.093324,
+    "mean_tokens_in": 6792.885416666667,
+    "mean_tokens_out": 7233.989583333333,
+    "median_latency_s": 24.751740791503835,
+    "extra_cost_per_extra_correct": null,
+    "includes_shared_draft": true
+   },
+   "n_failed": 0,
+   "verifier": {
+    "catch_rate": {
+     "value": 0.45454545454545453,
+     "caught": 5,
+     "n": 11
+    },
+    "false_alarm_rate": {
+     "value": 0.011764705882352941,
+     "flagged": 1,
+     "n": 85
+    },
+    "mcc": 0.5826364566706338,
+    "missing_verdicts": 0,
+    "wrong_draft_fates": {
+     "missed": 6,
+     "caught_fixed": 0,
+     "caught_not_fixed": 5,
+     "caught_escalated": 0
+    },
+    "mean_verifier_calls": 1.0625
+   }
+  },
+  "cross_family": {
+   "status": "pending",
+   "done": 54,
+   "total": 96,
+   "failed": 1,
+   "label": "pending (54/96)"
+  }
+ },
+ "comparisons": [
+  {
+   "condition": "self",
+   "n_tasks": 32,
+   "n_pairs": 96,
+   "success_none": 0.8854166666666666,
+   "success": 0.8854166666666666,
+   "delta": 0.0,
+   "ci_low": -0.03125,
+   "ci_high": 0.03125,
+   "runs_only_condition_right": 1,
+   "runs_only_none_right": 1,
+   "tasks_better": 1,
+   "tasks_worse": 1,
+   "sign_test_p": 1.0,
+   "note": ""
+  },
+  {
+   "condition": "peer",
+   "n_tasks": 32,
+   "n_pairs": 96,
+   "success_none": 0.8854166666666666,
+   "success": 0.8854166666666666,
+   "delta": 0.0,
+   "ci_low": -0.03125,
+   "ci_high": 0.03125,
+   "runs_only_condition_right": 1,
+   "runs_only_none_right": 1,
+   "tasks_better": 1,
+   "tasks_worse": 1,
+   "sign_test_p": 1.0,
+   "note": ""
+  },
+  {
+   "condition": "dedicated",
+   "n_tasks": 32,
+   "n_pairs": 96,
+   "success_none": 0.8854166666666666,
+   "success": 0.9791666666666667,
+   "delta": 0.09375,
+   "ci_low": 0.03125,
+   "ci_high": 0.17708333333333334,
+   "runs_only_condition_right": 9,
+   "runs_only_none_right": 0,
+   "tasks_better": 6,
+   "tasks_worse": 0,
+   "sign_test_p": 0.03125,
+   "note": ""
+  },
+  {
+   "condition": "weakened",
+   "n_tasks": 32,
+   "n_pairs": 96,
+   "success_none": 0.8854166666666666,
+   "success": 0.875,
+   "delta": -0.010416666666666666,
+   "ci_low": -0.03151041666666665,
+   "ci_high": 0.0,
+   "runs_only_condition_right": 0,
+   "runs_only_none_right": 1,
+   "tasks_better": 0,
+   "tasks_worse": 1,
+   "sign_test_p": 1.0,
+   "note": ""
+  }
+ ],
+ "interval_note": "Intervals are 95% bootstrap intervals over the 32 tasks; with 32 tasks and 3 runs each they are wide, so small differences are not conclusive."
+}

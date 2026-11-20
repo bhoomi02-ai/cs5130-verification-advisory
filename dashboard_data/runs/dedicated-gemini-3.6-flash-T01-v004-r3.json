@@ -1,0 +1,384 @@
+{
+ "run_id": "dedicated-gemini-3.6-flash-T01-v004-r3",
+ "task_id": "T01-v004",
+ "condition": "dedicated",
+ "run_number": 3,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 2,
+ "draft": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.67
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.2
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.13
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.55
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.15
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio initial value is $100,000. Selling 40 shares of TSLA at $300/share generates $12,000 in cash, reducing stock holdings from $67,000 (67%) to $55,000 (55%). Purchasing 125 shares of BND at $80/share uses $10,000 of cash, raising bond holdings from $20,000 (20%) to $30,000 (30%). The remaining net cash proceeds of $2,000 increase cash from $13,000 (13%) to $15,000 (15%). All target allocations (55% stocks, 30% bonds, 15% cash) are achieved exactly without selling restricted assets (AAPL, VOO), violating individual stock limits (max 18%), using fractional shares, or borrowing."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T01-v004",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "TSLA",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 125
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.67
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.2
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.13
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.55
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.15
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio initial value is $100,000. Selling 40 shares of TSLA at $300/share generates $12,000 in cash, reducing stock holdings from $67,000 (67%) to $55,000 (55%). Purchasing 125 shares of BND at $80/share uses $10,000 of cash, raising bond holdings from $20,000 (20%) to $30,000 (30%). The remaining net cash proceeds of $2,000 increase cash from $13,000 (13%) to $15,000 (15%). All target allocations (55% stocks, 30% bonds, 15% cash) are achieved exactly without selling restricted assets (AAPL, VOO), violating individual stock limits (max 18%), using fractional shares, or borrowing."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The trade plan correctly rebalances the portfolio to the target allocations (55% stock, 30% bond, 15% cash) using whole-share trades while respecting all restrictions including NO_SELL on AAPL/VOO and individual stock concentration limits.",
+   "calls": 2,
+   "calculations": [
+    {
+     "expression": "75 * 200",
+     "result": 15000
+    },
+    {
+     "expression": "45 * 300",
+     "result": 13500
+    },
+    {
+     "expression": "40 * 400",
+     "result": 16000
+    },
+    {
+     "expression": "45 * 500",
+     "result": 22500
+    },
+    {
+     "expression": "250 * 80",
+     "result": 20000
+    },
+    {
+     "expression": "15000 + 13500 + 16000 + 22500 + 20000 + 13000",
+     "result": 100000
+    },
+    {
+     "expression": "(15000 + 13500 + 16000 + 22500) / 100000",
+     "result": 0.67
+    },
+    {
+     "expression": "20000 / 100000",
+     "result": 0.2
+    },
+    {
+     "expression": "13000 / 100000",
+     "result": 0.13
+    },
+    {
+     "expression": "(45 - 40) * 300",
+     "result": 1500
+    },
+    {
+     "expression": "15000 + 1500 + 16000 + 22500",
+     "result": 55000
+    },
+    {
+     "expression": "55000 / 100000",
+     "result": 0.55
+    },
+    {
+     "expression": "(250 + 125) * 80",
+     "result": 30000
+    },
+    {
+     "expression": "30000 / 100000",
+     "result": 0.3
+    },
+    {
+     "expression": "13000 + 40 * 300 - 125 * 80",
+     "result": 15000
+    }
+   ],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "final_cash": 15000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     },
+     "final_quantities": {
+      "AAPL": 75.0,
+      "TSLA": 5.0,
+      "MSFT": 40.0,
+      "VOO": 45.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 15000.0,
+      "TSLA": 1500.0,
+      "MSFT": 16000.0,
+      "VOO": 22500.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T01-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "final_cash": 15000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     }
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T01-v004_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 13000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 15000.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.3,
+      "CASH": 0.15
+     },
+     "final_quantities": {
+      "AAPL": 75.0,
+      "TSLA": 5.0,
+      "MSFT": 40.0,
+      "VOO": 45.0,
+      "BND": 375.0
+     },
+     "final_values": {
+      "AAPL": 15000.0,
+      "TSLA": 1500.0,
+      "MSFT": 16000.0,
+      "VOO": 22500.0,
+      "BND": 30000.0
+     },
+     "direct_technology_pct": null,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

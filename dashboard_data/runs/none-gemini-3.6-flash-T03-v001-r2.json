@@ -1,0 +1,383 @@
+{
+ "run_id": "none-gemini-3.6-flash-T03-v001-r2",
+ "task_id": "T03-v001",
+ "condition": "none",
+ "run_number": 2,
+ "status": "unchecked",
+ "verdict": null,
+ "second_verdict": null,
+ "verifier_calls": 0,
+ "draft": {
+  "scenario_id": "T03-v001",
+  "answer_type": "VIOLATION_LIST",
+  "status": "VIOLATIONS_FOUND",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 5000.0
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000.0
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000.0
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000.0
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 35000.0
+    },
+    {
+     "subject": "BTC",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 5000.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [
+   {
+    "kind": "CLASS_MAX",
+    "scope": "STOCK",
+    "observed": 0.55,
+    "limit": 0.4
+   },
+   {
+    "kind": "CLASS_MIN",
+    "scope": "BOND",
+    "observed": 0.35,
+    "limit": 0.45
+   },
+   {
+    "kind": "PROHIBITED_CLASS",
+    "scope": "CRYPTO",
+    "observed": 0.05,
+    "limit": 0.0
+   },
+   {
+    "kind": "INDIVIDUAL_MAX",
+    "scope": "MSFT",
+    "observed": 0.2,
+    "limit": 0.15
+   }
+  ],
+  "explanation": "The portfolio has a total value of $100,000. Four policy violations were identified:\n1. STOCK allocation is 55% ($55,000), exceeding the maximum allowed limit of 40% (CLASS_MAX).\n2. BOND allocation is 35% ($35,000), falling below the minimum required limit of 45% (CLASS_MIN).\n3. CRYPTO allocation is 5% ($5,000), violating the prohibited asset class rule of 0% max limit (PROHIBITED_CLASS).\n4. MSFT represents 20% ($20,000) of the portfolio, exceeding the maximum individual stock concentration limit of 15% (INDIVIDUAL_MAX)."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T03-v001",
+  "answer_type": "VIOLATION_LIST",
+  "status": "VIOLATIONS_FOUND",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 5000.0
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000.0
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000.0
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000.0
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 35000.0
+    },
+    {
+     "subject": "BTC",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 5000.0
+    }
+   ],
+   "selection": null
+  },
+  "violations": [
+   {
+    "kind": "CLASS_MAX",
+    "scope": "STOCK",
+    "observed": 0.55,
+    "limit": 0.4
+   },
+   {
+    "kind": "CLASS_MIN",
+    "scope": "BOND",
+    "observed": 0.35,
+    "limit": 0.45
+   },
+   {
+    "kind": "PROHIBITED_CLASS",
+    "scope": "CRYPTO",
+    "observed": 0.05,
+    "limit": 0.0
+   },
+   {
+    "kind": "INDIVIDUAL_MAX",
+    "scope": "MSFT",
+    "observed": 0.2,
+    "limit": 0.15
+   }
+  ],
+  "explanation": "The portfolio has a total value of $100,000. Four policy violations were identified:\n1. STOCK allocation is 55% ($55,000), exceeding the maximum allowed limit of 40% (CLASS_MAX).\n2. BOND allocation is 35% ($35,000), falling below the minimum required limit of 45% (CLASS_MIN).\n3. CRYPTO allocation is 5% ($5,000), violating the prohibited asset class rule of 0% max limit (PROHIBITED_CLASS).\n4. MSFT represents 20% ($20,000) of the portfolio, exceeding the maximum individual stock concentration limit of 15% (INDIVIDUAL_MAX)."
+ },
+ "reviews": [],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T03-v001_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.35,
+      "CRYPTO": 0.05,
+      "CASH": 0.05
+     },
+     "violation_count": 4
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "VIOLATIONS_FOUND",
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.35,
+      "CRYPTO": 0.05,
+      "CASH": 0.05
+     },
+     "violation_count": 4
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_violations",
+    "check_type": "EXACT_SCOPED_VIOLATIONS",
+    "passed": true,
+    "observed": [
+     {
+      "kind": "CLASS_MAX",
+      "scope": "STOCK",
+      "observed": 0.55,
+      "limit": 0.4
+     },
+     {
+      "kind": "CLASS_MIN",
+      "scope": "BOND",
+      "observed": 0.35,
+      "limit": 0.45
+     },
+     {
+      "kind": "PROHIBITED_CLASS",
+      "scope": "CRYPTO",
+      "observed": 0.05,
+      "limit": 0.0
+     },
+     {
+      "kind": "INDIVIDUAL_MAX",
+      "scope": "MSFT",
+      "observed": 0.2,
+      "limit": 0.15
+     }
+    ],
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T03-v001_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.35,
+      "CRYPTO": 0.05,
+      "CASH": 0.05
+     },
+     "violation_count": 4
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "VIOLATIONS_FOUND",
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.55,
+      "BOND": 0.35,
+      "CRYPTO": 0.05,
+      "CASH": 0.05
+     },
+     "violation_count": 4
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_violations",
+    "check_type": "EXACT_SCOPED_VIOLATIONS",
+    "passed": true,
+    "observed": [
+     {
+      "kind": "CLASS_MAX",
+      "scope": "STOCK",
+      "observed": 0.55,
+      "limit": 0.4
+     },
+     {
+      "kind": "CLASS_MIN",
+      "scope": "BOND",
+      "observed": 0.35,
+      "limit": 0.45
+     },
+     {
+      "kind": "PROHIBITED_CLASS",
+      "scope": "CRYPTO",
+      "observed": 0.05,
+      "limit": 0.0
+     },
+     {
+      "kind": "INDIVIDUAL_MAX",
+      "scope": "MSFT",
+      "observed": 0.2,
+      "limit": 0.15
+     }
+    ],
+    "details": {}
+   },
+   {
+    "check_id": "T03-v001_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

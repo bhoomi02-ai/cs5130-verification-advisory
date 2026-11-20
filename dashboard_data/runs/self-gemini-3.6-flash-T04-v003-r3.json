@@ -1,0 +1,221 @@
+{
+ "run_id": "self-gemini-3.6-flash-T04-v003-r3",
+ "task_id": "T04-v003",
+ "condition": "self",
+ "run_number": 3,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T04-v003",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "Fund A",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 192392.60985355565
+    },
+    {
+     "subject": "Fund B",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 212893.98781425008
+    },
+    {
+     "subject": "OPTIONS",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20501.37796069443
+    }
+   ],
+   "selection": "Fund B"
+  },
+  "violations": [],
+  "explanation": "Fund A has no entry fee, leaving an initial investment of $100,000. Its net annual growth factor is (1 + 0.095) * (1 - 0.025) = 1.067625. Over 10 years, Fund A grows to $100,000 * (1.067625)^10 ≈ $192,392.61. Fund B charges a 1% entry fee, resulting in a net initial investment of $99,000. Its net annual growth factor is (1 + 0.085) * (1 - 0.005) = 1.079575. Over 10 years, Fund B grows to $99,000 * (1.079575)^10 ≈ $212,893.99. Fund B outperforms Fund A by an absolute difference of approximately $20,501.38."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T04-v003",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "Fund A",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 192392.60985355565
+    },
+    {
+     "subject": "Fund B",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 212893.98781425008
+    },
+    {
+     "subject": "OPTIONS",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20501.37796069443
+    }
+   ],
+   "selection": "Fund B"
+  },
+  "violations": [],
+  "explanation": "Fund A has no entry fee, leaving an initial investment of $100,000. Its net annual growth factor is (1 + 0.095) * (1 - 0.025) = 1.067625. Over 10 years, Fund A grows to $100,000 * (1.067625)^10 ≈ $192,392.61. Fund B charges a 1% entry fee, resulting in a net initial investment of $99,000. Its net annual growth factor is (1 + 0.085) * (1 - 0.005) = 1.079575. Over 10 years, Fund B grows to $99,000 * (1.079575)^10 ≈ $212,893.99. Fund B outperforms Fund A by an absolute difference of approximately $20,501.38."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "All calculations, observations, option selection, and formatting rules conform strictly to the scenario requirements.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T04-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T04-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 192392.60985355565,
+     "fund_b_final": 212893.98781425008,
+     "absolute_difference": 20501.37796069443,
+     "better_fund": "Fund B"
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T04-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T04-v003_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 192392.15035523064,
+     "fund_b_final": 212893.9813858809,
+     "absolute_difference": 20501.831030650268,
+     "better_fund": "Fund B"
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "fund_a_final",
+       "observed": 192392.60985355565
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "absolute_difference",
+       "observed": 20501.37796069443
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "final_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T04-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T04-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 192392.60985355565,
+     "fund_b_final": 212893.98781425008,
+     "absolute_difference": 20501.37796069443,
+     "better_fund": "Fund B"
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T04-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T04-v003_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 192392.15035523064,
+     "fund_b_final": 212893.9813858809,
+     "absolute_difference": 20501.831030650268,
+     "better_fund": "Fund B"
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "fund_a_final",
+       "observed": 192392.60985355565
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "absolute_difference",
+       "observed": 20501.37796069443
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "scoring_note": null
+}

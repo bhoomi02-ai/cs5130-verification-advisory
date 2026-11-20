@@ -1,0 +1,251 @@
+{
+ "run_id": "weakened-gemini-3.6-flash-S09-r1",
+ "task_id": "S09",
+ "condition": "weakened",
+ "run_number": 1,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "S09",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 30000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Rebalancing to the target allocation (STOCK 40%, BOND 50%, CASH 10% ±0.5%) is infeasible. The portfolio currently holds $60,000 in STOCK assets, representing 60% of the $100,000 total portfolio value. Achieving the target STOCK upper bound of 40.5% ($40,500) without external deposits would require selling at least $19,500 of STOCK assets. However, policy restrictions strictly prohibit selling STOCK-class assets, as well as making external deposits, borrowing, or short selling."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "S09",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 20000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 30000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Rebalancing to the target allocation (STOCK 40%, BOND 50%, CASH 10% ±0.5%) is infeasible. The portfolio currently holds $60,000 in STOCK assets, representing 60% of the $100,000 total portfolio value. Achieving the target STOCK upper bound of 40.5% ($40,500) without external deposits would require selling at least $19,500 of STOCK assets. However, policy restrictions strictly prohibit selling STOCK-class assets, as well as making external deposits, borrowing, or short selling."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The answer correctly identifies that rebalancing is infeasible due to the restriction against selling stock-class assets, and all metrics, trades, status, and JSON schema requirements are fully satisfied.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S09_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S09_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 60000.0,
+     "minimum_stock_pct": 0.6,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 19500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S09_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S09_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 60000.0,
+     "minimum_stock_pct": 0.6,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 19500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S09_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "S09_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "S09_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 60000.0,
+     "minimum_stock_pct": 0.6,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 19500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S09_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "S09_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 60000.0,
+     "minimum_stock_pct": 0.6,
+     "maximum_target_stock_pct": 0.405,
+     "stock_value_excess_above_tolerance": 19500.0
+    },
+    "details": {}
+   },
+   {
+    "check_id": "S09_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

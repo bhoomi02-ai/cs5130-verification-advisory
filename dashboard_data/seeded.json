@@ -1,0 +1,1638 @@
+{
+ "n_answers": 31,
+ "per_condition": {
+  "self": {
+   "status": "complete",
+   "n_errors": 17,
+   "n_controls": 14,
+   "n_failed": 0,
+   "missing_verdicts": 1,
+   "catch_rate": {
+    "value": 1.0,
+    "caught": 17,
+    "n": 17
+   },
+   "false_alarm_rate": {
+    "value": 0.23076923076923078,
+    "flagged": 3,
+    "n": 14
+   },
+   "right_reason": {
+    "right_reason": 17,
+    "consequence_only": 0,
+    "wrong_reason": 0,
+    "abstained": 0
+   },
+   "right_reason_rate": 1.0,
+   "cost_usd": 0.29369475
+  },
+  "peer": {
+   "status": "complete",
+   "n_errors": 17,
+   "n_controls": 14,
+   "n_failed": 0,
+   "missing_verdicts": 0,
+   "catch_rate": {
+    "value": 1.0,
+    "caught": 17,
+    "n": 17
+   },
+   "false_alarm_rate": {
+    "value": 0.07142857142857142,
+    "flagged": 1,
+    "n": 14
+   },
+   "right_reason": {
+    "right_reason": 16,
+    "consequence_only": 0,
+    "wrong_reason": 1,
+    "abstained": 0
+   },
+   "right_reason_rate": 0.9411764705882353,
+   "cost_usd": 0.326055
+  },
+  "dedicated": {
+   "status": "complete",
+   "n_errors": 17,
+   "n_controls": 14,
+   "n_failed": 0,
+   "missing_verdicts": 0,
+   "catch_rate": {
+    "value": 1.0,
+    "caught": 17,
+    "n": 17
+   },
+   "false_alarm_rate": {
+    "value": 0.07142857142857142,
+    "flagged": 1,
+    "n": 14
+   },
+   "right_reason": {
+    "right_reason": 16,
+    "consequence_only": 0,
+    "wrong_reason": 1,
+    "abstained": 0
+   },
+   "right_reason_rate": 0.9411764705882353,
+   "cost_usd": 0.7539405
+  },
+  "weakened": {
+   "status": "complete",
+   "n_errors": 17,
+   "n_controls": 14,
+   "n_failed": 0,
+   "missing_verdicts": 0,
+   "catch_rate": {
+    "value": 0.9411764705882353,
+    "caught": 16,
+    "n": 17
+   },
+   "false_alarm_rate": {
+    "value": 0.07142857142857142,
+    "flagged": 1,
+    "n": 14
+   },
+   "right_reason": {
+    "right_reason": 16,
+    "consequence_only": 0,
+    "wrong_reason": 0,
+    "abstained": 0
+   },
+   "right_reason_rate": 1.0,
+   "cost_usd": 0.29275425
+  },
+  "cross_family": {
+   "status": "pending",
+   "done": 0,
+   "total": 31,
+   "failed": 0,
+   "label": "pending (0/31)"
+  }
+ },
+ "reviews": [
+  {
+   "answer_id": "S01_none_alternative",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_reference",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_policy_violation_sell_aapl",
+   "scenario_id": "S01",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed trade plan includes selling 1 share of AAPL (quantity_delta: -1), which violates the explicit NO_SELL restriction on AAPL."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_unit_stock_allocation_percent",
+   "scenario_id": "S01",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation value for STOCK ALLOCATION is given as 60, but with unit FRACTION it must be 0.6."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_alternative",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_reference",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_policy_violation_short_reserve",
+   "scenario_id": "S02",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "Selling 20 shares of VOO generates $10,000 in cash, bringing cash to $28,000; after the $25,000 withdrawal, the remaining cash balance is $3,000, which fails to meet the minimum required cash balance of $12,000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_none_reference",
+   "scenario_id": "S03",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_cash_at_limit",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "CASH is incorrectly listed as a CLASS_MIN violation; the observed cash fraction (0.05) meets the required minimum fraction (0.05) and is within the permitted range of 0.05 to 0.25."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_missed_crypto",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The response failed to report the policy violation for the prohibited asset class CRYPTO (BTC with an observed allocation of 0.05 against a limit of 0.0)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_wrong_status_feasible",
+   "scenario_id": "S03",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status field must be 'VIOLATIONS_FOUND' rather than 'FEASIBLE' when policy violations are identified."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_arithmetic_ignore_entry_fee",
+   "scenario_id": "S04",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The final value for Fund A is incorrect. The entry fee of 1% was not deducted prior to compounding; applying the entry fee gives an initial value of $99,000 and a 5-year final value of $137,688.62 (calculated as 99,000 * ((1 + 0.09) * (1 - 0.02))^5), whereas the answer reported $139,079.42.",
+    "The absolute difference observation for OPTIONS is incorrect due to the error in Fund A's final value; the correct difference is $7,780.72 ($145,469.35 - $137,688.62), not $6,389.93."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_none_reference",
+   "scenario_id": "S04",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_grounding_voo_in_technology",
+   "scenario_id": "S05",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The final allocation observation for subject 'TECHNOLOGY' is incorrectly listed as 0.6, whereas the post-trade technology direct sector allocation (AAPL + MSFT + NVDA) is 0.35 (35%)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_alternative",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_reference",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_policy_violation_technology_36",
+   "scenario_id": "S05",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed trade plan leaves $36,000 in direct technology stocks (AAPL $20,000 + MSFT $6,000 + NVDA $10,000), which is 36% of the portfolio total value and exceeds the 35% MAX_DIRECT_SECTOR policy limit."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_unit_technology_allocation_percent",
+   "scenario_id": "S05",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In the observations metric, the value for TECHNOLOGY ALLOCATION is reported as 35 instead of 0.35 for unit FRACTION."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_arithmetic_payment_over_months",
+   "scenario_id": "S06",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The extra monthly payment metrics (observations for PAYMENT with rounding NONE and UPWARD_CENT) are incorrect because the shortfall was divided by 240 months without taking into account compound interest; the exact unrounded payment is approximately 432.763131 and the upward-rounded payment is 432.77."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_grounding_omit_withdrawal",
+   "scenario_id": "S06",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The projected month-240 balance is incorrect because the $30,000 withdrawal at month 180 was not properly subtracted (projected balance should be approximately $1,000,045.74 instead of $1,040,511.24).",
+    "The target minus projected balance standard metric is incorrect (should be approximately $199,954.26 instead of $159,488.76).",
+    "The exact and rounded additional monthly contributions are incorrect (should be approximately $432.7631 and $432.77 instead of $345.1832 and $345.19)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_none_reference",
+   "scenario_id": "S06",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_grounding_historical_value",
+   "scenario_id": "S07",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for final portfolio value (PORTFOLIO, VALUE, FINAL) is listed as 92000, but the correct post-deposit final portfolio value is $112,000 ($100,000 initial portfolio + $12,000 deposit)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_alternative",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_reference",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_arithmetic_skip_withdrawal",
+   "scenario_id": "S08",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The FINAL CASH VALUE observation is listed as 30000, but after executing the $20,000 withdrawal, the final cash value is 10000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_none_reference",
+   "scenario_id": "S08",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_unit_stock_allocation_percent",
+   "scenario_id": "S08",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In metrics.observations[0], the value for STOCK ALLOCATION (unit FRACTION) is given as 50 instead of 0.5."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_none_reference",
+   "scenario_id": "S09",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "false_alarm",
+   "issues": [
+    "The explanation field contains 'plan', which fails to explain the recommendation and supporting calculations/reasoning as required by the client request and explanation_rule."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_wrong_status_feasible",
+   "scenario_id": "S09",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status is incorrectly marked as FEASIBLE. Rebalancing is INFEASIBLE because current stock holdings total $60,000 (60% of the $100,000 portfolio), exceeding the maximum allowed target of 40.5% (40% ± 0.5%), and restrictions prohibit selling stock assets (NO_SELL_CLASS) or bringing in external cash (NO_EXTERNAL_DEPOSITS).",
+    "The explanation 'plan' is uninformative and fails to provide the reasoning required by the client request."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_none_reference",
+   "scenario_id": "S10",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "dedicated",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_wrong_status_feasible",
+   "scenario_id": "S10",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "dedicated",
+   "verdict": "reject",
+   "decision": "wrong_reason",
+   "issues": [
+    "The request to withdraw $80,000 while retaining $5,000 in cash is INFEASIBLE because AAPL and MSFT are subject to a NO_SELL restriction. Selling all unrestricted holdings (VOO for $20,000 and BND for $20,000) along with using the existing $10,000 cash yields at most $50,000, which is insufficient to cover the $80,000 withdrawal."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_alternative",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_reference",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_policy_violation_sell_aapl",
+   "scenario_id": "S01",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The trade plan proposes selling 1 share of AAPL (quantity_delta: -1), which violates the NO_SELL restriction on AAPL."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_unit_stock_allocation_percent",
+   "scenario_id": "S01",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation metric for subject 'STOCK' with unit 'FRACTION' has a value of 60 instead of 0.6."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_alternative",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_reference",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_policy_violation_short_reserve",
+   "scenario_id": "S02",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed trade of selling 20 shares of VOO generates $10,000 in cash, bringing cash before withdrawal to $28,000; after the $25,000 withdrawal, remaining cash is $3,000, violating the MIN_CASH policy requirement of $12,000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_none_reference",
+   "scenario_id": "S03",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_cash_at_limit",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "CASH was incorrectly listed as a CLASS_MIN violation when its observed allocation (0.05) meets the minimum policy requirement (0.05)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_missed_crypto",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The advisor omitted the policy violation for the prohibited asset class CRYPTO (BTC represents 0.05 of the portfolio, exceeding the 0 limit)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_wrong_status_feasible",
+   "scenario_id": "S03",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status field should be 'VIOLATIONS_FOUND' rather than 'FEASIBLE' because current policy violations were identified in the audit."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_arithmetic_ignore_entry_fee",
+   "scenario_id": "S04",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The final value for Fund A is incorrect because the 1% entry fee was not deducted from the initial investment before compounding; using $99,000 instead of $100,000 gives $137,688.62493758878.",
+    "The absolute difference in final values is incorrect due to the error in Fund A's final value; it should be $7,780.72023504382 instead of $6,389.926043755055."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_none_reference",
+   "scenario_id": "S04",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_grounding_voo_in_technology",
+   "scenario_id": "S05",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The metric observation for subject 'TECHNOLOGY' stage 'FINAL' reports an ALLOCATION of 0.6, whereas the final direct Technology allocation is 0.35 (and if intended to report the total stock allocation of 0.6, the subject must be 'STOCK')."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_alternative",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_reference",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_policy_violation_technology_36",
+   "scenario_id": "S05",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed trades leave $36,000 in direct Technology sector holdings (AAPL $20,000, NVDA $10,000, MSFT $6,000), which equals 36.0% of the portfolio and violates the 35.0% MAX_DIRECT_SECTOR limit."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_unit_technology_allocation_percent",
+   "scenario_id": "S05",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for TECHNOLOGY allocation lists a value of 35 with unit FRACTION, which should be 0.35."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_arithmetic_payment_over_months",
+   "scenario_id": "S06",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The extra end-of-month monthly payment calculation incorrectly divides the final balance shortfall by 240 instead of accounting for compound interest over the 240 months; the correct fixed extra monthly contribution required to reach the $1,200,000 target is approximately $432.77 (unrounded $432.763...), not $833.15 ($833.142...)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_grounding_omit_withdrawal",
+   "scenario_id": "S06",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The projected month-240 balance failed to account for the $30,000 withdrawal at month 180, resulting in incorrect values for the final balance, target difference, and required monthly payments."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_none_reference",
+   "scenario_id": "S06",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_grounding_historical_value",
+   "scenario_id": "S07",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The PORTFOLIO FINAL VALUE observation is reported as 92000, but the correct portfolio value after the $12,000 deposit and trades is 112000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_alternative",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_reference",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_arithmetic_skip_withdrawal",
+   "scenario_id": "S08",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The cash value observation at stage FINAL is incorrect; cash after the $20,000 withdrawal is $10,000, not $30,000 ($30,000 is the cash balance at stage BEFORE_WITHDRAWAL)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_none_reference",
+   "scenario_id": "S08",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_unit_stock_allocation_percent",
+   "scenario_id": "S08",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In metrics.observations[0], the value for STOCK ALLOCATION with unit FRACTION is given as 50 instead of 0.5."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_none_reference",
+   "scenario_id": "S09",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "false_alarm",
+   "issues": [
+    "The explanation field contains placeholder text ('plan') and fails to explain why the rebalance is infeasible (i.e., STOCK assets currently total 60% / $60,000 of the portfolio and cannot be reduced to 40% without selling STOCK assets, which is prohibited by policy)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_wrong_status_feasible",
+   "scenario_id": "S09",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status is incorrect: it is reported as FEASIBLE, but rebalancing to target allocations (STOCK 40%) is INFEASIBLE because current STOCK holdings total $60,000 (60% of the $100,000 portfolio) and selling STOCK assets or adding external deposits is strictly prohibited.",
+    "The explanation is inadequate as it merely says 'plan' without providing reasoning or bounds explaining why rebalancing cannot be achieved."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_none_reference",
+   "scenario_id": "S10",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "peer",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_wrong_status_feasible",
+   "scenario_id": "S10",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "peer",
+   "verdict": "reject",
+   "decision": "wrong_reason",
+   "issues": [
+    "The requested $80,000 withdrawal (plus $5,000 minimum cash requirement) is INFEASIBLE because AAPL and MSFT cannot be sold under the NO_SELL restriction, leaving only $40,000 in sellable holdings (VOO and BND) and $10,000 initial cash, yielding a maximum achievable cash balance of $50,000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_alternative",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_reference",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_policy_violation_sell_aapl",
+   "scenario_id": "S01",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The trade plan proposes selling 1 share of AAPL (quantity_delta: -1), violating the explicit NO_SELL restriction on AAPL."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_unit_stock_allocation_percent",
+   "scenario_id": "S01",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for STOCK ALLOCATION has value 60 instead of 0.6 for unit FRACTION."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_alternative",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_reference",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_policy_violation_short_reserve",
+   "scenario_id": "S02",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "Selling 20 shares of VOO yields $10,000 in cash, raising total cash before withdrawal to $28,000. After the $25,000 withdrawal, the remaining cash balance is $3,000, which violates the $12,000 MIN_CASH restriction (a total of $19,000 must be raised through trades)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_none_reference",
+   "scenario_id": "S03",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_cash_at_limit",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "CASH allocation of 0.05 meets the minimum required fraction of 0.05 and was incorrectly reported as a violation."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_missed_crypto",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "Missing PROHIBITED_CLASS violation for scope 'CRYPTO' (observed 0.05, limit 0.0).",
+    "Explanation text 'plan' is inadequate and non-descriptive."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_wrong_status_feasible",
+   "scenario_id": "S03",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status field must be 'VIOLATIONS_FOUND' instead of 'FEASIBLE' when investment policy violations are identified."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_arithmetic_ignore_entry_fee",
+   "scenario_id": "S04",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "Fund A final value is calculated without deducting the 1% entry fee from the initial investment: 100,000 * (1 - 0.01) * (1.0682)^5 = 137,688.624927, whereas the answer reported 139,079.419129.",
+    "The options final value difference is incorrect due to the Fund A error: it should be 145,469.345173 - 137,688.624927 = 7,780.720246, whereas the answer reported 6,389.926044."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_none_reference",
+   "scenario_id": "S04",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "false_alarm",
+   "issues": [
+    "The reported final value for Fund A (137688.62493758881) is incorrect; the exact calculation 99000 * ((1 + 0.09) * (1 - 0.02))^5 yields 137688.62493943173.",
+    "The reported OPTIONS absolute difference (7780.720235043729) is incorrect due to the calculation error in Fund A; it should be 7780.720233200805."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_grounding_voo_in_technology",
+   "scenario_id": "S05",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In metrics.observations, the observation with subject 'TECHNOLOGY' and measure 'ALLOCATION' reports a value of 0.6, but direct technology exposure is $35,000 (0.35). If reporting the total STOCK asset class allocation, the subject should be 'STOCK'."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_alternative",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_reference",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_policy_violation_technology_36",
+   "scenario_id": "S05",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed trade plan results in direct Technology sector exposure (AAPL + MSFT + NVDA) of $36,000 (36.0% of the portfolio), which exceeds the MAX_DIRECT_SECTOR cap of 35.0% ($35,000). MSFT must be reduced further (e.g., selling 63 shares instead of 60)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_unit_technology_allocation_percent",
+   "scenario_id": "S05",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In the metrics observations, the ALLOCATION value for TECHNOLOGY is reported as 35 instead of 0.35 for unit FRACTION."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_arithmetic_payment_over_months",
+   "scenario_id": "S06",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The fixed extra end-of-month contribution was calculated by dividing the balance shortfall directly by 240 months ($199,954.26 / 240 = $833.14) without incorporating the 0.5% monthly compound interest rate over 240 months; using the annuity future value factor ((1.005^240 - 1) / 0.005 ≈ 462.0409), the correct fixed payment is approximately $432.77 ($432.7631... unrounded)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_grounding_omit_withdrawal",
+   "scenario_id": "S06",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The projected month-240 portfolio balance of 1040511.24 is incorrect because it fails to properly subtract the $30,000 withdrawal at month 180 (the correct projected balance is $1,000,045.83). Consequently, the calculated difference ($199,954.17) and required monthly additional payment ($432.77) are also incorrect."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_none_reference",
+   "scenario_id": "S06",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_grounding_historical_value",
+   "scenario_id": "S07",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for PORTFOLIO FINAL VALUE is incorrect: the total portfolio value after the $12,000 deposit and trades is $112,000, not $92,000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_alternative",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": null,
+   "decision": "missing_verdict",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_reference",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_arithmetic_skip_withdrawal",
+   "scenario_id": "S08",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In metrics.observations, the CASH VALUE at stage FINAL is reported as 30000, but after executing the $20,000 withdrawal, the FINAL cash balance is 10000 (30000 is the balance at stage BEFORE_WITHDRAWAL)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_none_reference",
+   "scenario_id": "S08",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_unit_stock_allocation_percent",
+   "scenario_id": "S08",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In metrics.observations, the ALLOCATION metric for STOCK with unit FRACTION has value 50 instead of 0.5 (fractions must be expressed as numbers between 0 and 1, matching target_allocations format)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_none_reference",
+   "scenario_id": "S09",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "false_alarm",
+   "issues": [
+    "The explanation field contains a placeholder ('plan') rather than explaining the reasoning and mathematical bound showing why rebalancing is infeasible."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_wrong_status_feasible",
+   "scenario_id": "S09",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The rebalancing request is INFEASIBLE, but the response reported status FEASIBLE. The current STOCK allocation is 60% ($60,000 / $100,000), while the target is 40% (±0.5%). Because selling STOCK assets and adding external deposits are both prohibited, the target allocation cannot be reached.",
+    "The explanation field is uninformative ('plan') and fails to explain the reasoning as requested."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_none_reference",
+   "scenario_id": "S10",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "false_alarm",
+   "issues": [
+    "The explanation field contains only the placeholder 'plan', which fails to explain the infeasibility or provide the supporting calculations."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_wrong_status_feasible",
+   "scenario_id": "S10",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "self",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The requested withdrawal of $80,000 (plus $5,000 minimum cash retention) requires $85,000 in cash, but due to NO_SELL restrictions on AAPL ($20,000) and MSFT ($30,000), only VOO ($20,000), BND ($20,000), and cash ($10,000) are available, yielding at most $50,000 in cash. Thus, the scenario is INFEASIBLE, but the response reported FEASIBLE with empty trades."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_alternative",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_none_reference",
+   "scenario_id": "S01",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_policy_violation_sell_aapl",
+   "scenario_id": "S01",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The trade plan proposes selling 1 share of AAPL (quantity_delta: -1), which violates the NO_SELL restriction on AAPL."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S01_unit_stock_allocation_percent",
+   "scenario_id": "S01",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for STOCK ALLOCATION has a value of 60, but when unit is FRACTION the value must be 0.6."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_alternative",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_none_reference",
+   "scenario_id": "S02",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S02_policy_violation_short_reserve",
+   "scenario_id": "S02",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed sale of 20 shares of VOO generates $10,000 in cash, resulting in $28,000 cash prior to withdrawal and $3,000 remaining after the $25,000 withdrawal, which fails to meet the $12,000 minimum cash requirement."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_none_reference",
+   "scenario_id": "S03",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_cash_at_limit",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "CASH allocation of 0.05 (5%) meets the policy minimum requirement of 0.05 (5%) and should not be included in the violations list."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_violation_list_missed_crypto",
+   "scenario_id": "S03",
+   "error_type": "violation_list",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The response fails to report the policy violation for the prohibited asset class CRYPTO (scope: CRYPTO, observed: 0.05, limit: 0.0)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S03_wrong_status_feasible",
+   "scenario_id": "S03",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status field should be set to 'VIOLATIONS_FOUND' instead of 'FEASIBLE' because policy violations were identified."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_arithmetic_ignore_entry_fee",
+   "scenario_id": "S04",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The final value for Fund A was calculated without deducting the 1% entry fee prior to compounding, resulting in an incorrect final value of 139079.42 instead of 137688.62.",
+    "The final option difference is incorrect due to the calculation error in Fund A, resulting in 6389.93 instead of 7780.72."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S04_none_reference",
+   "scenario_id": "S04",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_grounding_voo_in_technology",
+   "scenario_id": "S05",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for FINAL ALLOCATION of TECHNOLOGY has an incorrect value of 0.6 (60%); post-trade direct Technology allocation is 0.35 (35%) ($35,000 out of $100,000)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_alternative",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_none_reference",
+   "scenario_id": "S05",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_policy_violation_technology_36",
+   "scenario_id": "S05",
+   "error_type": "policy_violation",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The proposed trade plan results in a direct Technology sector allocation of 36.0% ($36,000 across AAPL, MSFT, and NVDA), which exceeds the MAX_DIRECT_SECTOR limit of 35.0% ($35,000). Selling 60 shares of MSFT leaves 15 shares ($6,000), which combined with AAPL ($20,000) and NVDA ($10,000) totals $36,000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S05_unit_technology_allocation_percent",
+   "scenario_id": "S05",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "In metrics.observations, the subject 'TECHNOLOGY' is invalid; observations must use PORTFOLIO, CASH, exact supplied symbols, or asset-class names (e.g., STOCK, BOND).",
+    "In metrics.observations, the value for ALLOCATION with unit FRACTION is reported as 35 instead of 0.35."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_arithmetic_payment_over_months",
+   "scenario_id": "S06",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_grounding_omit_withdrawal",
+   "scenario_id": "S06",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The projected month-240 portfolio balance fails to include the $30,000 withdrawal scheduled at month 180.",
+    "The reported target minus projected balance difference and the required monthly extra contributions (exact and upward-rounded) are incorrect because they were calculated from the erroneous projected balance."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S06_none_reference",
+   "scenario_id": "S06",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_grounding_historical_value",
+   "scenario_id": "S07",
+   "error_type": "grounding",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The reported FINAL PORTFOLIO VALUE metric of 92,000 is incorrect; the total portfolio value after adding the $12,000 deposit is $112,000."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_alternative",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S07_none_reference",
+   "scenario_id": "S07",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_arithmetic_skip_withdrawal",
+   "scenario_id": "S08",
+   "error_type": "arithmetic",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for CASH VALUE at stage FINAL is given as 30000, but after executing the trades (+ $20,000 cash) and the $20,000 withdrawal from the initial $10,000 cash balance, the final cash value is 10000 (30000 is the balance at stage BEFORE_WITHDRAWAL)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_none_reference",
+   "scenario_id": "S08",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S08_unit_stock_allocation_percent",
+   "scenario_id": "S08",
+   "error_type": "unit",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The observation for STOCK ALLOCATION at stage FINAL specifies unit FRACTION but reports value 50 instead of 0.5."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_none_reference",
+   "scenario_id": "S09",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "accept",
+   "decision": "not_flagged",
+   "issues": [],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S09_wrong_status_feasible",
+   "scenario_id": "S09",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The status should be 'INFEASIBLE' because reducing the STOCK allocation from 60% ($60,000) to 40% (±0.5%) is impossible without selling STOCK assets or adding external deposits, both of which are prohibited."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_none_reference",
+   "scenario_id": "S10",
+   "error_type": "none",
+   "seeded_error": false,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "false_alarm",
+   "issues": [
+    "The explanation ('plan') fails to provide the supporting calculation or bound explaining why the withdrawal request is infeasible (e.g., that NO_SELL restrictions on AAPL and MSFT cap total reachable cash at $50,000, which cannot cover the $80,000 withdrawal and $5,000 minimum cash requirement)."
+   ],
+   "status": "reviewed"
+  },
+  {
+   "answer_id": "S10_wrong_status_feasible",
+   "scenario_id": "S10",
+   "error_type": "wrong_status",
+   "seeded_error": true,
+   "condition": "weakened",
+   "verdict": "reject",
+   "decision": "right_reason",
+   "issues": [
+    "The request is INFEASIBLE because generating an $80,000 withdrawal plus retaining $5,000 in cash requires $85,000, but available cash ($10,000) plus total sellable holdings VOO ($20,000) and BND ($20,000) only sum to $50,000 (AAPL and MSFT are subject to NO_SELL restrictions). The status should be INFEASIBLE rather than FEASIBLE."
+   ],
+   "status": "reviewed"
+  }
+ ],
+ "wording": "Sanity checks, not results: 17 seeded answers with one known error and 14 correct controls, each reviewed once per verifier."
+}

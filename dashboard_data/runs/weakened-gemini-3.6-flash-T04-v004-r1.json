@@ -1,0 +1,189 @@
+{
+ "run_id": "weakened-gemini-3.6-flash-T04-v004-r1",
+ "task_id": "T04-v004",
+ "condition": "weakened",
+ "run_number": 1,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T04-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "Fund A",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 174770.99816455113
+    },
+    {
+     "subject": "Fund B",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 168052.74100688024
+    },
+    {
+     "subject": "OPTIONS",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 6718.2571576709
+    }
+   ],
+   "selection": "Fund A"
+  },
+  "violations": [],
+  "explanation": "Fund A starts with $97,500 after the 2.5% entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.004) = 1.07568, reaching approximately $174,771.00 after 8 years. Fund B starts with $100,000 and grows at an annual factor of (1 + 0.08) * (1 - 0.012) = 1.06704, reaching approximately $168,052.74 after 8 years. Fund A is the better-performing option with an absolute advantage of $6,718.26."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T04-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "Fund A",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 174770.99816455113
+    },
+    {
+     "subject": "Fund B",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 168052.74100688024
+    },
+    {
+     "subject": "OPTIONS",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 6718.2571576709
+    }
+   ],
+   "selection": "Fund A"
+  },
+  "violations": [],
+  "explanation": "Fund A starts with $97,500 after the 2.5% entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.004) = 1.07568, reaching approximately $174,771.00 after 8 years. Fund B starts with $100,000 and grows at an annual factor of (1 + 0.08) * (1 - 0.012) = 1.06704, reaching approximately $168,052.74 after 8 years. Fund A is the better-performing option with an absolute advantage of $6,718.26."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The calculations, metrics, selection, and output schema compliance are all correct.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T04-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T04-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 174770.99816455113,
+     "fund_b_final": 168052.74100688024,
+     "absolute_difference": 6718.2571576709,
+     "better_fund": "Fund A"
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T04-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T04-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 174770.9983125537,
+     "fund_b_final": 168052.74109125722,
+     "absolute_difference": 6718.257221296488,
+     "better_fund": "Fund A"
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T04-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T04-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 174770.99816455113,
+     "fund_b_final": 168052.74100688024,
+     "absolute_difference": 6718.2571576709,
+     "better_fund": "Fund A"
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T04-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T04-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "fund_a_final": 174770.9983125537,
+     "fund_b_final": 168052.74109125722,
+     "absolute_difference": 6718.257221296488,
+     "better_fund": "Fund A"
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}

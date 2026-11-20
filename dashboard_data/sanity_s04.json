@@ -1,0 +1,130 @@
+{
+ "task": "S04",
+ "wording": "Sanity checks, not results: one known-wrong and one known-right S04 answer, reviewed before the main study.",
+ "cases": [
+  {
+   "case": "live-cross-gemma-4-31b-it-correct",
+   "setting": "cross_family",
+   "verifier_model": "gemma-4-31b-it",
+   "used_in_study": false,
+   "answer_was": "correct",
+   "calls": 3,
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The calculations for both funds are correct according to the specified conventions, and the final values and difference match the calculator results to the nearest cent.",
+   "verdict_right": true,
+   "date": "2026-11-17"
+  },
+  {
+   "case": "live-cross-gemma-4-31b-it-wrong",
+   "setting": "cross_family",
+   "verifier_model": "gemma-4-31b-it",
+   "used_in_study": false,
+   "answer_was": "wrong",
+   "calls": 3,
+   "verdict": "reject",
+   "issues": [
+    "The final value for Fund B is incorrect. It should be approximately 145,469.35 (100,000 * 1.07784^5), but the advisor reported 145,470.3447101633."
+   ],
+   "reason": "The advisor calculated an incorrect final value for Fund B, which subsequently led to an incorrect absolute difference.",
+   "verdict_right": true,
+   "date": "2026-11-17"
+  },
+  {
+   "case": "live-cross-openai/gpt-oss-20b-correct",
+   "setting": "cross_family",
+   "verifier_model": "openai/gpt-oss-20b",
+   "used_in_study": true,
+   "answer_was": "correct",
+   "calls": 4,
+   "verdict": "accept",
+   "issues": [],
+   "reason": "All calculations and outputs comply with the scenario and schema.",
+   "verdict_right": true,
+   "date": "2026-11-17"
+  },
+  {
+   "case": "live-cross-openai/gpt-oss-20b-wrong",
+   "setting": "cross_family",
+   "verifier_model": "openai/gpt-oss-20b",
+   "used_in_study": true,
+   "answer_was": "wrong",
+   "calls": 2,
+   "verdict": "reject",
+   "issues": [
+    "The calculated final value for Fund A using the given entry fee and growth factor should be approximately $137,472 (99,000 * 1.0682^5), not $137,688.62. This arithmetic error leads to an incorrect difference and selection."
+   ],
+   "reason": "",
+   "verdict_right": true,
+   "date": "2026-11-17"
+  },
+  {
+   "case": "live-dedicated-correct",
+   "setting": "dedicated",
+   "verifier_model": "gemini-3.6-flash",
+   "used_in_study": true,
+   "answer_was": "correct",
+   "calls": 4,
+   "verdict": "unreadable",
+   "issues": [],
+   "reason": null,
+   "verdict_right": null,
+   "date": "2026-11-14"
+  },
+  {
+   "case": "live-dedicated-correct-2",
+   "setting": "dedicated",
+   "verifier_model": "gemini-3.6-flash",
+   "used_in_study": true,
+   "answer_was": "correct",
+   "calls": 4,
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The answer correctly calculates the five-year final values for Fund A ($137,688.62) and Fund B ($145,469.34), correctly identifies Fund B as the better-performing fund, and reports the absolute difference ($7,780.72) in full accordance with the scenario rules and output contract.",
+   "verdict_right": true,
+   "date": "2026-11-17"
+  },
+  {
+   "case": "live-dedicated-wrong",
+   "setting": "dedicated",
+   "verifier_model": "gemini-3.6-flash",
+   "used_in_study": true,
+   "answer_was": "wrong",
+   "calls": 2,
+   "verdict": "reject",
+   "issues": [
+    "The final value for Fund B is incorrect: $100,000 * ((1 + 0.08) * (1 - 0.002))^5 = $145,469.35 (145469.3451726326), whereas the answer reports 145470.3447101633.",
+    "The absolute difference (OPTIONS DIFFERENCE) is incorrect due to the error in Fund B's value: it should be $7,780.72 (7780.7202350438165) instead of 7781.719774689987."
+   ],
+   "reason": "The calculated final value for Fund B and the resulting option value difference are inaccurate.",
+   "verdict_right": true,
+   "date": "2026-11-14"
+  },
+  {
+   "case": "live-weakened-correct",
+   "setting": "weakened",
+   "verifier_model": "gemini-3.6-flash",
+   "used_in_study": true,
+   "answer_was": "correct",
+   "calls": 1,
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The calculation and output format strictly adhere to the scenario conventions, calculation instructions, and response schema.",
+   "verdict_right": true,
+   "date": "2026-11-17"
+  },
+  {
+   "case": "live-weakened-wrong",
+   "setting": "weakened",
+   "verifier_model": "gemini-3.6-flash",
+   "used_in_study": true,
+   "answer_was": "wrong",
+   "calls": 1,
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The advisor's calculations, output formatting, schema compliance, and fund selection are all completely correct according to the scenario instructions.",
+   "verdict_right": false,
+   "date": "2026-11-17"
+  }
+ ]
+}
