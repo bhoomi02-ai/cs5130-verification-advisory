@@ -1,0 +1,343 @@
+{
+  "run_id": "weakened-gemini-3.6-flash-T01-v004-r1",
+  "task_id": "T01-v004",
+  "condition": "weakened",
+  "run_number": 1,
+  "draft": "{\n  \"scenario_id\": \"T01-v004\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"TSLA\",\n      \"quantity_delta\": -20\n    },\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -15\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 125\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 13000.0\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.67\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.20\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.13\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.55\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.30\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.15\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \" The portfolio is rebalanced to target allocations of 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). AAPL and VOO are held per the NO_SELL restriction. To reduce total stock allocation from $67,000 to $55,000, 20 shares of TSLA ($6,000) and 15 shares of MSFT ($6,000) are sold. To increase bond allocation from $20,000 to $30,000, 125 shares of BND ($10,000) are purchased. Net proceeds of $2,000 increase cash balance from $13,000 to $15,000. All individual stock holdings remain under the 18% maximum concentration constraint.\"\n}",
+  "revision": null,
+  "final": "{\n  \"scenario_id\": \"T01-v004\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"TSLA\",\n      \"quantity_delta\": -20\n    },\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -15\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 125\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 13000.0\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.67\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.20\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.13\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.55\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.30\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.15\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \" The portfolio is rebalanced to target allocations of 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). AAPL and VOO are held per the NO_SELL restriction. To reduce total stock allocation from $67,000 to $55,000, 20 shares of TSLA ($6,000) and 15 shares of MSFT ($6,000) are sold. To increase bond allocation from $20,000 to $30,000, 125 shares of BND ($10,000) are purchased. Net proceeds of $2,000 increase cash balance from $13,000 to $15,000. All individual stock holdings remain under the 18% maximum concentration constraint.\"\n}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The trade plan correctly rebalances the portfolio to target allocations while strictly adhering to all restrictions, including no-sell rules, individual stock concentration limits, and whole-share execution.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The trade plan correctly rebalances the portfolio to target allocations while strictly adhering to all restrictions, including no-sell rules, individual stock concentration limits, and whole-share execution.\"}",
+      "trailing": "",
+      "calls": 1,
+      "calculations": [],
+      "ignored": [],
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an independent verifier at a financial advisory firm. You did not write\nthe answer you are given. Your only job is to decide whether it is correct before\nit reaches the client. You receive the complete client scenario as JSON and the\nadvisor's answer.\n"
+        },
+        {
+          "role": "user",
+          "content": "Scenario:\n{\n  \"scenario_id\": \"T01-v004\",\n  \"schema_version\": \"2.0-revised-draft\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"client\": {},\n  \"valuation_date\": null,\n  \"portfolio\": {\n    \"holdings\": [\n      {\n        \"symbol\": \"AAPL\",\n        \"asset_class\": \"STOCK\",\n        \"asset_type\": \"INDIVIDUAL_STOCK\",\n        \"quantity\": 75,\n        \"current_price\": 200,\n        \"market_value\": 15000.0\n      },\n      {\n        \"symbol\": \"TSLA\",\n        \"asset_class\": \"STOCK\",\n        \"asset_type\": \"INDIVIDUAL_STOCK\",\n        \"quantity\": 45,\n        \"current_price\": 300,\n        \"market_value\": 13500.0\n      },\n      {\n        \"symbol\": \"MSFT\",\n        \"asset_class\": \"STOCK\",\n        \"asset_type\": \"INDIVIDUAL_STOCK\",\n        \"quantity\": 40,\n        \"current_price\": 400,\n        \"market_value\": 16000.0\n      },\n      {\n        \"symbol\": \"VOO\",\n        \"asset_class\": \"STOCK\",\n        \"asset_type\": \"ETF\",\n        \"quantity\": 45,\n        \"current_price\": 500,\n        \"market_value\": 22500.0\n      },\n      {\n        \"symbol\": \"BND\",\n        \"asset_class\": \"BOND\",\n        \"asset_type\": \"ETF\",\n        \"quantity\": 250,\n        \"current_price\": 80,\n        \"market_value\": 20000.0\n      }\n    ],\n    \"cash_balance\": 13000.0,\n    \"total_value\": 100000.0\n  },\n  \"investment_policy\": {\n    \"target_allocations\": {\n      \"STOCK\": 0.55,\n      \"BOND\": 0.3,\n      \"CASH\": 0.15\n    },\n    \"restrictions\": [\n      {\n        \"restriction_type\": \"WHOLE_SHARES\",\n        \"parameters_json\": {}\n      },\n      {\n        \"restriction_type\": \"NO_SELL\",\n        \"parameters_json\": {\n          \"symbols\": [\n            \"AAPL\",\n            \"VOO\"\n          ]\n        }\n      },\n      {\n        \"restriction_type\": \"MAX_INDIVIDUAL_STOCK\",\n        \"parameters_json\": {\n          \"max_pct\": 0.18\n        }\n      }\n    ],\n    \"allocation_tolerance\": 0.005\n  },\n  \"cash_flows\": [],\n  \"client_request\": \"My financial objective is preserving long-term investment positions. Rebalance my portfolio to 55% stocks, 30% bonds, and 15% cash. Do not sell AAPL, VOO. No individual stock may exceed 18% of the total portfolio value. Use whole-share trades only. Do not use borrowing or external deposits. Provide a valid trade plan.\",\n  \"assumptions\": [\n    {\n      \"assumption_id\": \"QUOTED_PRICE_ZERO_FRICTION\",\n      \"status\": \"APPROVED\",\n      \"description\": \"For this experiment, trades execute at the quoted scenario prices with zero taxes, transaction fees, and price slippage. Future price changes are not modeled.\"\n    },\n    {\n      \"assumption_id\": \"CLOSED_LONG_ONLY_LEDGER\",\n      \"status\": \"APPROVED\",\n      \"description\": \"For this experiment, trading is restricted to existing holdings and available cash. Short selling, borrowing, and additional deposits beyond explicitly listed scenario cash flows are not permitted.\"\n    }\n  ],\n  \"output_requirements\": {\n    \"contract_id\": \"NEUTRAL_OUTPUT_V1\",\n    \"delivery\": \"Every Advisor and verifier receives this COMPLETE scenario JSON unchanged plus its role-specific prompt. No scenario-specific filtering, field removal or special delivery logic. The same full scenario and output contract are used by all four conditions. checks.json and ground_truth.json are evaluator-only and must never be supplied to any Advisor or verifier.\",\n    \"required_metrics\": [\n      \"observations\",\n      \"selection\"\n    ],\n    \"response_schema\": {\n      \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n      \"type\": \"object\",\n      \"additionalProperties\": false,\n      \"required\": [\n        \"scenario_id\",\n        \"answer_type\",\n        \"status\",\n        \"trades\",\n        \"metrics\",\n        \"violations\",\n        \"explanation\"\n      ],\n      \"properties\": {\n        \"scenario_id\": {\n          \"enum\": [\n            \"T01-v004\"\n          ]\n        },\n        \"answer_type\": {\n          \"enum\": [\n            \"TRADE_PLAN\",\n            \"VIOLATION_LIST\",\n            \"NUMERIC_RESULT\"\n          ]\n        },\n        \"status\": {\n          \"enum\": [\n            \"FEASIBLE\",\n            \"INFEASIBLE\",\n            \"VIOLATIONS_FOUND\",\n            \"INSUFFICIENT_INFORMATION\"\n          ]\n        },\n        \"trades\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"additionalProperties\": false,\n            \"required\": [\n              \"symbol\",\n              \"quantity_delta\"\n            ],\n            \"properties\": {\n              \"symbol\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"quantity_delta\": {\n                \"type\": \"number\"\n              }\n            }\n          }\n        },\n        \"metrics\": {\n          \"type\": \"object\",\n          \"additionalProperties\": false,\n          \"required\": [\n            \"observations\",\n            \"selection\"\n          ],\n          \"properties\": {\n            \"observations\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"object\",\n                \"additionalProperties\": false,\n                \"required\": [\n                  \"subject\",\n                  \"measure\",\n                  \"stage\",\n                  \"rounding\",\n                  \"unit\",\n                  \"value\"\n                ],\n                \"properties\": {\n                  \"subject\": {\n                    \"type\": \"string\",\n                    \"minLength\": 1\n                  },\n                  \"measure\": {\n                    \"enum\": [\n                      \"VALUE\",\n                      \"ALLOCATION\",\n                      \"QUANTITY\",\n                      \"PAYMENT\",\n                      \"DIFFERENCE\"\n                    ]\n                  },\n                  \"stage\": {\n                    \"enum\": [\n                      \"INITIAL\",\n                      \"HISTORICAL\",\n                      \"BEFORE_TRADES\",\n                      \"BEFORE_WITHDRAWAL\",\n                      \"FINAL\"\n                    ]\n                  },\n                  \"rounding\": {\n                    \"enum\": [\n                      \"NONE\",\n                      \"UPWARD_CENT\"\n                    ]\n                  },\n                  \"unit\": {\n                    \"enum\": [\n                      \"MONEY\",\n                      \"FRACTION\",\n                      \"SHARES\"\n                    ]\n                  },\n                  \"value\": {\n                    \"type\": \"number\"\n                  }\n                }\n              }\n            },\n            \"selection\": {\n              \"oneOf\": [\n                {\n                  \"type\": \"string\",\n                  \"minLength\": 1\n                },\n                {\n                  \"type\": \"null\"\n                }\n              ]\n            }\n          }\n        },\n        \"violations\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"additionalProperties\": false,\n            \"required\": [\n              \"kind\",\n              \"scope\",\n              \"observed\",\n              \"limit\"\n            ],\n            \"properties\": {\n              \"kind\": {\n                \"enum\": [\n                  \"CLASS_MAX\",\n                  \"CLASS_MIN\",\n                  \"INDIVIDUAL_MAX\",\n                  \"PROHIBITED_CLASS\"\n                ]\n              },\n              \"scope\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"observed\": {\n                \"type\": \"number\"\n              },\n              \"limit\": {\n                \"type\": \"number\"\n              }\n            }\n          }\n        },\n        \"explanation\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      },\n      \"$comment\": \"Neutral contract shared by every scenario and condition. Output status is chosen from the analysis; no status or outcome is prescribed by a scenario-specific output requirement.\"\n    },\n    \"status_meanings\": {\n      \"FEASIBLE\": \"The requested plan or calculation is achievable under the supplied conditions.\",\n      \"INFEASIBLE\": \"The requested requirements cannot jointly be met under the supplied conditions.\",\n      \"VIOLATIONS_FOUND\": \"The analysis identified one or more current policy violations.\",\n      \"INSUFFICIENT_INFORMATION\": \"Essential information is unavailable; identify what is missing.\"\n    },\n    \"trades_rule\": \"Always include trades as an array. Positive quantity_delta means buy; negative means sell. [] means no transactions are proposed and does not itself establish feasibility. Use [] for calculations or policy audits that do not propose transactions, or when no executable plan is offered. Enforce whole shares only where stated in the scenario.\",\n    \"observations_rule\": \"Each observation is identified by (subject, measure, stage, rounding); do not duplicate that key. Use PORTFOLIO for the whole account, CASH for cash, exact supplied symbols or asset-class names for holdings, or exact supplied option names; use OPTIONS for a comparison of named options. VALUE and DIFFERENCE use MONEY, ALLOCATION uses FRACTION, QUANTITY uses SHARES, and PAYMENT uses MONEY per monthly payment. Normally rounding is NONE; use UPWARD_CENT only for the upward-rounded payment requested by the client. selection is the exact chosen option name when the client asks to compare named options, otherwise null.\",\n    \"task_completion\": \"Answer only the supplied client request. For executable portfolio plans the evaluator derives balances and allocations from the supplied inputs and your trades; supporting observations may be supplied and must be consistent. For portfolio analysis without an executable plan, include INITIAL VALUE observations for PORTFOLIO, CASH and each supplied holding to support the analysis. For numerical questions report the requested final amounts as FINAL VALUE observations; report requested differences as FINAL DIFFERENCE observations (OPTIONS for absolute option-value differences, PORTFOLIO for target minus projected balance), and any requested exact and upward-cent recurring payment as FINAL PAYMENT observations. This reporting convention applies uniformly; it does not prescribe an outcome.\",\n    \"stage_meanings\": {\n      \"INITIAL\": \"Supplied current portfolio before listed external cash flows and trades.\",\n      \"HISTORICAL\": \"The supplied historical snapshot.\",\n      \"BEFORE_TRADES\": \"After listed deposits, immediately before any proposed trades; no withdrawal has been executed.\",\n      \"BEFORE_WITHDRAWAL\": \"After proposed trades and deposits, immediately before listed withdrawals.\",\n      \"FINAL\": \"After listed trades and external flows, or at the requested calculation horizon.\"\n    },\n    \"violation_meanings\": {\n      \"CLASS_MAX\": \"An asset class exceeds its permitted maximum.\",\n      \"CLASS_MIN\": \"An asset class is below its permitted minimum.\",\n      \"INDIVIDUAL_MAX\": \"An individual stock exceeds its permitted concentration maximum.\",\n      \"PROHIBITED_CLASS\": \"A prohibited asset class is present. Report each rule/scope once.\"\n    },\n    \"violations_rule\": \"Always include violations as an array, [] if none are reported. scope is the exact supplied symbol or class. observed and limit are fractions of the relevant portfolio value. Do not infer a violation merely because the answer_type permits an audit.\",\n    \"explanation_rule\": \"Explain the recommendation and supporting calculation or bound concisely, including any unresolved assumption used conditionally. Do not treat a listed status choice, metric vocabulary or empty array as a hint to the reference outcome.\"\n  }\n}\n\nThe advisor's answer:\n{\n  \"scenario_id\": \"T01-v004\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"TSLA\",\n      \"quantity_delta\": -20\n    },\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -15\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 125\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 13000.0\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.67\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.20\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.13\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.55\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.30\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.15\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \" The portfolio is rebalanced to target allocations of 55% stocks ($55,000), 30% bonds ($30,000), and 15% cash ($15,000). AAPL and VOO are held per the NO_SELL restriction. To reduce total stock allocation from $67,000 to $55,000, 20 shares of TSLA ($6,000) and 15 shares of MSFT ($6,000) are sold. To increase bond allocation from $20,000 to $30,000, 125 shares of BND ($10,000) are purchased. Net proceeds of $2,000 increase cash balance from $13,000 to $15,000. All individual stock holdings remain under the 18% maximum concentration constraint.\"\n}\n\nCheck the answer against the scenario. Check everything that decides whether it is right:\n- It answers the client_request and follows output_requirements and response_schema.\n- Every restriction, policy limit, cash requirement and approved assumption in the scenario is respected.\n- Every number is correct. Recompute trades, cash, values, allocations and totals from the scenario's own data; do not trust the answer's arithmetic.\n- The status (for example FEASIBLE or INFEASIBLE) is right.\n\nThen give exactly one verdict:\n- \"accept\": you checked the answer and found no error.\n- \"reject\": you found at least one specific error. List every error you found, precisely enough for the advisor to fix it.\n- \"abstain\": you cannot decide, for example because the scenario is ambiguous or a figure cannot be checked from the scenario. The answer then goes to a human reviewer.\n\nJudge only against the scenario. Do not reject for style or wording, or because you would have chosen a different plan when the answer's plan also meets every requirement.\n\nReply with a single JSON object and nothing else (no markdown code fences):\n{\"verdict\": \"accept\" or \"reject\" or \"abstain\", \"issues\": [\"one specific error per item; empty unless the verdict is reject\"], \"reason\": \"one or two sentences\"}\n"
+        },
+        {
+          "role": "assistant",
+          "content": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The trade plan correctly rebalances the portfolio to target allocations while strictly adhering to all restrictions, including no-sell rules, individual stock concentration limits, and whole-share execution.\"}"
+        }
+      ]
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T01-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T01-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "final_total": 100000.0,
+          "cash_before_trades": 13000.0,
+          "final_cash": 15000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          }
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T01-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T01-v004_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "cash_before_trades": 13000.0,
+          "cash_before_withdrawal": null,
+          "final_cash": 15000.0,
+          "final_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          },
+          "final_quantities": {
+            "AAPL": 75.0,
+            "TSLA": 25.0,
+            "MSFT": 25.0,
+            "VOO": 45.0,
+            "BND": 375.0
+          },
+          "final_values": {
+            "AAPL": 15000.0,
+            "TSLA": 7500.0,
+            "MSFT": 10000.0,
+            "VOO": 22500.0,
+            "BND": 30000.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": null
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": -20.0,
+        "limit": -20
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": -15.0,
+        "limit": -15
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "BND",
+        "passed": true,
+        "observed": 125.0,
+        "limit": 125
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "VOO",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": 0.075,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.1,
+        "limit": 0.18
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "STOCK",
+        "passed": true,
+        "observed": 0.55,
+        "limit": 0.55
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "BOND",
+        "passed": true,
+        "observed": 0.3,
+        "limit": 0.3
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.15
+      }
+    ]
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T01-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T01-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "final_total": 100000.0,
+          "cash_before_trades": 13000.0,
+          "final_cash": 15000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          }
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T01-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T01-v004_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "cash_before_trades": 13000.0,
+          "cash_before_withdrawal": null,
+          "final_cash": 15000.0,
+          "final_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3,
+            "CASH": 0.15
+          },
+          "final_quantities": {
+            "AAPL": 75.0,
+            "TSLA": 25.0,
+            "MSFT": 25.0,
+            "VOO": 45.0,
+            "BND": 375.0
+          },
+          "final_values": {
+            "AAPL": 15000.0,
+            "TSLA": 7500.0,
+            "MSFT": 10000.0,
+            "VOO": 22500.0,
+            "BND": 30000.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": null
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": -20.0,
+        "limit": -20
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": -15.0,
+        "limit": -15
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "BND",
+        "passed": true,
+        "observed": 125.0,
+        "limit": 125
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "VOO",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": 0.075,
+        "limit": 0.18
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.1,
+        "limit": 0.18
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "STOCK",
+        "passed": true,
+        "observed": 0.55,
+        "limit": 0.55
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "BOND",
+        "passed": true,
+        "observed": 0.3,
+        "limit": 0.3
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0.15,
+        "limit": 0.15
+      }
+    ]
+  }
+}
