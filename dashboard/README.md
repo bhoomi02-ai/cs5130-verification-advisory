@@ -2,7 +2,7 @@
 
 A single-page, read-only view of the study results. It never calls a model, never reads the answer key and never spends money: the page only loads small JSON files that `build_data.py` derives from `results/`.
 
-> Work in progress: views 1–7 are built; the live replay (8) and the run table (9) come next.
+> All nine views are built. Regenerate the data after each batch; unfinished settings show as pending.
 
 ## View it
 
@@ -22,6 +22,8 @@ The page loads `data/*.json` with `fetch`, so it needs a web server (opening `in
 | 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants | `heatmap.json` |
 | 6 | Budget bar, cost and tokens per run, cost vs success | `spend.json`, `summary.json` |
 | 7 | Verifier sanity checks: the seeded set (with "caught with the right reason") and the S04 cases | `seeded.json`, `sanity_s04.json` |
+| 8 | Replay of recorded runs for the setting picked in view 1 (play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
+| 9 | Every run, filterable by setting, task and outcome; human-review runs in their own table with their route; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
 
 Design notes: unfinished settings show `pending (n/N)` everywhere and never a number; every rate prints its count and interval next to it; tasks with scoring under review (T06-v003) get a † note beside every figure they affect; every chart has an `aria-label`, printed values and a tooltip on hover and keyboard focus; the setting picker is a radio group (arrow keys); heatmap rows are buttons with `aria-expanded`; the layout works at 400 px with no sideways page scroll (wide tables scroll inside their box); `prefers-reduced-motion` turns off transitions.
 
@@ -70,3 +72,18 @@ Tests: `tests/test_dashboard_export.py` builds from a tiny fixture that contains
 ## Mockup
 
 `mockup/dashboard_figma.svg` (and a PNG render) is the concept design: dark theme, violet `#8B5CF6` to cyan `#22D3EE` on `#07060F`, pink `#FF5C8A` for wrong or broken. Its numbers are placeholders from the 10 × 5 pilot baseline; the page will show the main study (32 tasks × 3 runs).
+
+## Replay module
+
+`replay.js` is the team's reference module (`assets/replay.js`), adapted to the real data and the page:
+
+- `normalize()` maps the real field values: `verdict` is `accept` / `reject` / `abstain` / `null` (`null` with a verifier means the reply could not be read and gets an UNREADABLE stamp); `status` `failed` runs are not replayed; `human_review_route` labels the amber "?" runs in the log.
+- Colours are read from the page's CSS variables (`--cyan`, `--pink`, `--amber`, …), so the replay and the rest of the page match.
+- The play, speed and restart buttons are real `<button>`s with `aria-pressed`. With `prefers-reduced-motion` the finished state is shown and nothing moves until you press Play.
+
+The replay's "Final accuracy" counts every replayed run, human-review runs included with the final answer as recorded (the same as "all runs counted" in view 2).
+
+## Tests
+
+- `tests/test_dashboard_export.py`: the data script, from a tiny fixture with planted answer-key values and account identifiers.
+- `tests/test_dashboard_browser.py`: builds the data from the real `results/`, serves the page and drives headless Chrome. It checks that the replay mounts for every finished setting with no JavaScript errors, that unfinished settings show `pending (n/N)`, that reduced motion shows the finished state, and that opening run details never brings an `expected` key into the page (neither in the fetched JSON nor in the DOM). It is skipped without Chrome, the `websockets` package or `results/` (set `DASHBOARD_TEST_RESULTS` to point it at another results folder).

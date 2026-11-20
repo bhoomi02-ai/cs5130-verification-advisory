@@ -57,7 +57,7 @@
   // ------------------------------------------------------------------ data
 
   async function loadAll() {
-    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04"];
+    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs"];
     const files = await Promise.all(names.map(async (n) => {
       const res = await fetch(`data/${n}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error(`data/${n}.json: HTTP ${res.status}`);
@@ -171,6 +171,7 @@
     state.selected = c;
     renderPills();
     renderKpis();
+    renderReplay();
     if (focus) document.querySelector(`.pill[data-condition="${c}"]`).focus();
   }
 
@@ -564,6 +565,182 @@
       `<th class="num">Calls</th><th>Verdict right?</th><th>What it said</th></tr></thead><tbody>${rows}</tbody>`;
   }
 
+  // ------------------------------------------------------------------ 8. replay
+
+  let replay = null;
+  function renderReplay() {
+    const { meta, summary, runs } = state.data;
+    const c = state.selected;
+    const entry = summary.conditions[c];
+    const s = meta.study;
+    const mountEl = document.getElementById("replay-mount");
+    if (replay) { replay.destroy(); replay = null; }
+    mountEl.innerHTML = "";
+    document.getElementById("replay-dataset").textContent =
+      `Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs, advisor ${s.advisor_model}. Setting: ${SHORT[c]} (change it in “Explore a setting”).`;
+    if (isPending(entry)) {
+      document.getElementById("replay-sub").textContent = `${SHORT[c]} is still running, so it is not replayed yet.`;
+      mountEl.innerHTML = `<p class="replay-pending">${esc(pendingLabel(entry))}</p>`;
+      return;
+    }
+    const rows = runs.runs.filter((r) => r.condition === c).map(AdvisoryReplay.normalize).filter(Boolean);
+    document.getElementById("replay-sub").textContent =
+      `${rows.length} recorded ${SHORT[c]} runs in the order they were run.` +
+      (reduceMotion ? " Your system asks for reduced motion, so the finished state is shown; press Play to animate." : "");
+    replay = AdvisoryReplay.mount(mountEl, { runs: rows, setting: c, measured: true, advisorLabel: s.advisor_model });
+  }
+
+  // ------------------------------------------------------------------ 9. run table
+
+  const OUTCOME = {
+    kept_correct: "kept correct", fixed: "fixed", broken: "broken", still_wrong: "still wrong", failed: "failed call",
+  };
+  const ROUTE = { abstain: "verifier abstained", unreadable: "verdict unreadable", revision_not_accepted: "revision not accepted" };
+  const PAGE = 40;
+  const runState = { shown: PAGE, current: null };
+
+  // Defensive: the export already drops these keys; never render them even if a file had them.
+  const FORBIDDEN = new Set(["expected", "correct_value", "wrong_value"]);
+  function stripForbidden(v) {
+    if (Array.isArray(v)) return v.map(stripForbidden);
+    if (v && typeof v === "object") {
+      return Object.fromEntries(Object.entries(v).filter(([k]) => !FORBIDDEN.has(k)).map(([k, x]) => [k, stripForbidden(x)]));
+    }
+    return v;
+  }
+
+  function setupRunFilters() {
+    const { runs, meta } = state.data;
+    running = new Set(meta.conditions.filter((c) => !c.complete).map((c) => c.id));
+    const sSel = document.getElementById("f-setting");
+    sSel.innerHTML = `<option value="">All settings</option>` + ORDER.map((c) => {
+      const m = meta.conditions.find((x) => x.id === c);
+      return `<option value="${c}">${SHORT[c]}${m && !m.complete ? ` (still running, ${m.runs_done}/${m.runs_expected})` : ""}</option>`;
+    }).join("");
+    const tasks = [...new Set(runs.runs.map((r) => r.task_id))].sort();
+    document.getElementById("f-task").innerHTML = `<option value="">All tasks</option>` + tasks.map((t) => `<option>${esc(t)}</option>`).join("");
+    ["f-setting", "f-task", "f-outcome"].forEach((id) => document.getElementById(id).addEventListener("change", () => { runState.shown = PAGE; renderRuns(); }));
+    document.getElementById("run-more").addEventListener("click", () => { runState.shown += PAGE; renderRuns(); });
+  }
+
+  let running = new Set();
+  function runRow(r) {
+    const hr = r.status === "human_review";
+    const outcome = hr ? `<span class="badge hr">human review</span> <span class="tag-small">${esc(ROUTE[r.human_review_route] || "")}</span>`
+      : `<span class="badge ${r.outcome}">${esc(OUTCOME[r.outcome] || r.outcome)}</span>`;
+    const verdicts = r.condition === "none" ? '<span class="tag-small">no check</span>'
+      : `${esc(r.verdict || "unreadable")}${r.second_verdict ? ` → ${esc(r.second_verdict)}` : ""}`;
+    const tick = (v) => (v ? '<span class="ok">right</span>' : '<span class="no">wrong</span>');
+    return `<tr data-run="${esc(r.run_id)}"${runState.current === r.run_id ? ' aria-current="true"' : ""}>` +
+      `<td><button type="button" class="linkish" data-run="${esc(r.run_id)}">${esc(r.task_id)} · run ${r.run_number}</button>${r.scoring_note ? ' <span class="dagger" title="Scoring under review">†</span>' : ""}</td>` +
+      `<td>${SHORT[r.condition]}${running.has(r.condition) ? ' <span class="tag-small pending">still running</span>' : ""}</td><td>${r.status === "failed" ? "–" : tick(r.initial_correct)}</td><td>${verdicts}</td>` +
+      `<td>${r.status === "failed" ? "–" : tick(r.final_correct)}</td><td>${outcome}</td><td class="num">${usd(r.cost_usd, 3)}</td></tr>`;
+  }
+
+  function renderRuns() {
+    const { runs } = state.data;
+    const fs = document.getElementById("f-setting").value;
+    const ft = document.getElementById("f-task").value;
+    const fo = document.getElementById("f-outcome").value;
+    const order = Object.fromEntries(ORDER.map((c, i) => [c, i]));
+    const match = runs.runs.filter((r) => (!fs || r.condition === fs) && (!ft || r.task_id === ft))
+      .slice().sort((a, b) => a.task_id.localeCompare(b.task_id) || order[a.condition] - order[b.condition] || a.run_number - b.run_number);
+    const decided = match.filter((r) => r.status !== "human_review" && (!fo || (fo !== "human_review" && r.outcome === fo)));
+    const hr = match.filter((r) => r.status === "human_review" && (!fo || fo === "human_review" || r.outcome === fo));
+    const head = `<thead><tr><th>Run</th><th>Setting</th><th>Draft</th><th>Verdict</th><th>Final</th><th>Outcome</th><th class="num">Cost</th></tr></thead>`;
+    const shown = decided.slice(0, runState.shown);
+    document.getElementById("run-table").innerHTML = head + `<tbody>${shown.map(runRow).join("") || '<tr><td colspan="7" class="tag-small">No runs match.</td></tr>'}</tbody>`;
+    document.getElementById("hr-run-table").innerHTML = head + `<tbody>${hr.map(runRow).join("") || '<tr><td colspan="7" class="tag-small">No human-review runs match.</td></tr>'}</tbody>`;
+    const more = document.getElementById("run-more");
+    more.hidden = decided.length <= runState.shown;
+    more.textContent = `Show more (${decided.length - shown.length} left)`;
+    const pending = fs && state.data.meta.conditions.find((x) => x.id === fs && !x.complete);
+    document.getElementById("run-count").textContent =
+      `${decided.length} decided run${decided.length === 1 ? "" : "s"} and ${hr.length} human-review run${hr.length === 1 ? "" : "s"} match.` +
+      (pending ? ` ${SHORT[fs]} is still running (${pending.runs_done}/${pending.runs_expected}); these are its saved runs so far, not a result.` : "");
+    document.querySelectorAll("table.runs tbody tr[data-run]").forEach((tr) => {
+      tr.addEventListener("click", (e) => { if (!e.target.closest("button")) openRun(tr.dataset.run); });
+    });
+    document.querySelectorAll("table.runs button.linkish").forEach((b) => b.addEventListener("click", () => openRun(b.dataset.run)));
+  }
+
+  function answerBlock(title, answer) {
+    if (answer == null) return `<h4>${title}</h4><p class="tag-small">none</p>`;
+    const obs = answer && answer.metrics && Array.isArray(answer.metrics.observations) ? answer.metrics.observations : [];
+    const obsHtml = obs.length
+      ? `<ul class="obs">${obs.map((o) => `<li>${esc([o.subject, o.measure, o.stage, o.rounding !== "NONE" ? o.rounding : ""].filter(Boolean).join(" · "))}: <b>${esc(o.value)}</b></li>`).join("")}</ul>`
+      : "";
+    const extra = answer && typeof answer === "object"
+      ? `${answer.status ? `<p class="tag-small">status ${esc(answer.status)}${answer.answer_type ? ` · ${esc(answer.answer_type)}` : ""}${Array.isArray(answer.trades) ? ` · ${answer.trades.length} trade(s)` : ""}</p>` : ""}`
+      : "";
+    return `<h4>${title}</h4>${extra}${obsHtml}<details><summary class="tag-small">Full answer</summary><pre>${esc(typeof answer === "string" ? answer : JSON.stringify(answer, null, 2))}</pre></details>`;
+  }
+
+  function checksBlock(title, check) {
+    if (!check) return `<h4>${title}</h4><p class="tag-small">not graded</p>`;
+    const failed = (check.checks || []).filter((c) => !c.passed);
+    const head = `<h4>${title}: <span class="${check.correct ? "ok" : "no"}">${check.correct ? "right" : "wrong"}</span>${check.format_failure ? " (format failure)" : ""}</h4>`;
+    if (!failed.length) return head + `<p class="tag-small">All ${(check.checks || []).length} checks passed.</p>`;
+    return head + `<ul>${failed.map((c) => {
+      const d = c.details || {};
+      const items = (d.items || []).map((it) => `${esc(it.metric || "")} ${esc(it.reason || "")}${it.observed !== undefined ? `, the answer reported ${esc(it.observed)}` : ""}`);
+      const missing = (d.missing_observation || []).length ? `missing: ${esc(d.missing_observation.join(", "))}` : "";
+      const reasons = [d.reason, ...(d.reasons || [])].filter(Boolean).map(esc);
+      return `<li><b>${esc(c.check_type)}</b> (${esc(c.check_id)}): ${[...new Set(reasons)].join(", ")}${missing ? ` · ${missing}` : ""}` +
+        `${items.length ? `<ul>${items.map((x) => `<li>${x}</li>`).join("")}</ul>` : ""}</li>`;
+    }).join("")}</ul><p class="tag-small">Only what the answer reported and why the check failed; the answer key stays on the scorer side.</p>`;
+  }
+
+  function reviewBlock(rv) {
+    const calc = (rv.calculations || []).length
+      ? `<details><summary class="tag-small">Calculator (${rv.calculations.length} expression${rv.calculations.length > 1 ? "s" : ""})</summary><ul class="obs">${rv.calculations.map((c) => `<li>${esc(c.expression)} = ${esc(c.result ?? c.error ?? "")}</li>`).join("")}</ul></details>`
+      : "";
+    return `<h4>${rv.stage === "second" ? "Second check (of the revision)" : "Verifier review"}: ` +
+      `<span class="${rv.verdict === "accept" ? "ok" : rv.verdict === "reject" ? "no" : "pending"}">${esc(rv.verdict || "unreadable")}</span> ` +
+      `<span class="tag-small">${rv.calls ?? "?"} call(s)</span></h4>` +
+      (rv.reason ? `<p>${esc(rv.reason)}</p>` : "") +
+      ((rv.issues || []).length ? `<ul>${rv.issues.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>` : "") +
+      (rv.error ? `<p class="no">${esc(rv.error)}</p>` : "") + calc;
+  }
+
+  async function openRun(runId) {
+    const panel = document.getElementById("run-detail");
+    runState.current = runId;
+    document.querySelectorAll("table.runs tbody tr").forEach((tr) => tr.toggleAttribute("aria-current", tr.dataset.run === runId));
+    const row = state.data.runs.runs.find((r) => r.run_id === runId);
+    panel.hidden = false;
+    panel.innerHTML = `<p class="tag-small">Loading ${esc(runId)}…</p>`;
+    let d;
+    try {
+      const res = await fetch(`data/runs/${encodeURIComponent(runId.replace(/[^A-Za-z0-9._-]/g, "_"))}.json`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      d = stripForbidden(await res.json());
+    } catch (err) {
+      panel.innerHTML = `<p class="no">No saved answer file for ${esc(runId)}${row && row.status === "failed" ? " (the API call failed, so there is no answer)" : ""}.</p>`;
+      panel.focus();
+      return;
+    }
+    const hr = row && row.status === "human_review";
+    panel.innerHTML =
+      `<button type="button" class="pill close" id="run-close">Close</button>` +
+      `<h3>${esc(d.task_id)} · ${SHORT[d.condition]} · run ${d.run_number}</h3>` +
+      `<div class="meta"><span>status <b>${esc(d.status)}</b></span>` +
+      `${row ? `<span>outcome <b>${esc(hr ? `human review (${ROUTE[row.human_review_route] || ""})` : OUTCOME[row.outcome] || row.outcome)}</b></span>` : ""}` +
+      `<span>verifier calls <b>${d.verifier_calls ?? 0}</b></span>${row ? `<span>cost <b>${usd(row.cost_usd, 4)}</b> (includes the shared draft)</span>` : ""}</div>` +
+      (d.scoring_note ? `<p class="note review-note">${esc(d.scoring_note)}</p>` : "") +
+      `<div class="cols"><div>${answerBlock("First draft", d.draft)}${checksBlock("Checker on the draft", d.draft_check)}</div>` +
+      `<div>${d.reviews.length ? d.reviews.map(reviewBlock).join("") : `<h4>Verifier</h4><p class="tag-small">No verifier in this setting.</p>`}</div></div>` +
+      `<div class="cols"><div>${d.revision ? answerBlock("Revision", d.revision) : ""}${answerBlock("Final answer", d.final)}</div>` +
+      `<div>${checksBlock("Checker on the final answer", d.final_check)}</div></div>`;
+    document.getElementById("run-close").addEventListener("click", () => {
+      panel.hidden = true; runState.current = null;
+      const back = document.querySelector(`table.runs button.linkish[data-run="${CSS.escape(runId)}"]`);
+      (back || document.getElementById("runs-h")).focus();
+    });
+    panel.focus();
+    panel.scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
+  }
+
   // ------------------------------------------------------------------ boot
 
   function renderNotes() {
@@ -604,6 +781,9 @@
     renderKpis();
     renderHeatmap();
     renderSanity();
+    setupRunFilters();
+    renderRuns();
+    renderReplay();
     renderNotes();
     renderFooter();
     renderCharts();
@@ -616,5 +796,6 @@
     });
   }
 
+  window.__dashboard = { state, openRun, select };
   main();
 })();

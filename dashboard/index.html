@@ -140,6 +140,47 @@
     <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
   </section>
 
+  <!-- 8. Replay -->
+  <section class="card" id="replay" aria-labelledby="replay-h">
+    <div class="card-head">
+      <h2 id="replay-h">Replay of recorded runs</h2>
+      <p class="sub" id="replay-sub"></p>
+      <p class="note" id="replay-dataset"></p>
+    </div>
+    <div id="replay-mount"></div>
+    <p class="note">Each dot is one saved run, played in the order it was run: task → advisor's first draft → verifier verdict → (reject: one revision, checked again) → final answer → hidden checker. Cyan is right, pink is wrong, amber "?" is a run handed to human review. Nothing is re-run; it only replays results.jsonl.</p>
+    <p class="note review-note" data-review="replay" hidden></p>
+  </section>
+
+  <!-- 9. Run table -->
+  <section class="card" id="runs" aria-labelledby="runs-h">
+    <div class="card-head">
+      <h2 id="runs-h">Every run</h2>
+      <p class="sub">Filter, then open a run to see its draft, the verifier's verdicts and issues, the revision, the final answer and the checks it failed. The answer key is never shown: failed checks list what the answer reported and why it failed.</p>
+    </div>
+    <form class="filters" id="run-filters" onsubmit="return false">
+      <label>Setting <select id="f-setting"></select></label>
+      <label>Task <select id="f-task"></select></label>
+      <label>Outcome <select id="f-outcome">
+        <option value="">All</option>
+        <option value="kept_correct">Kept correct</option>
+        <option value="fixed">Fixed (wrong → right)</option>
+        <option value="broken">Broken (right → wrong)</option>
+        <option value="still_wrong">Still wrong</option>
+        <option value="human_review">Human review</option>
+        <option value="failed">Failed call</option>
+      </select></label>
+    </form>
+    <p class="note" id="run-count" aria-live="polite"></p>
+    <h3>Decided runs</h3>
+    <div class="table-wrap"><table class="data runs" id="run-table" aria-label="Runs"></table></div>
+    <button type="button" class="pill more" id="run-more" hidden>Show more</button>
+    <h3>Handed to human review</h3>
+    <p class="note">Counted separately: the verifier abstained, its verdict could not be read, or the second check did not accept the revision. Their final answers are shown as recorded.</p>
+    <div class="table-wrap"><table class="data runs" id="hr-run-table" aria-label="Human-review runs"></table></div>
+    <div class="detail" id="run-detail" tabindex="-1" hidden></div>
+  </section>
+
 </main>
 
 <footer class="foot">
@@ -150,6 +191,7 @@
 <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
 
 <script src="vendor/d3-7.9.0.min.js"></script>
+<script src="replay.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -209,3 +209,44 @@ td .ci { color: var(--faint); font-size: 12px; display: block; }
 #hr-table, #seeded-table { min-width: 640px; }
 #s04-table { min-width: 860px; }
 #s04-table td:last-child { min-width: 300px; }
+
+/* ---------- replay ---------- */
+#replay-mount { min-height: 200px; }
+.replay-pending { color: var(--amber); font-weight: 600; padding: 24px 0; }
+
+/* ---------- run table ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+.filters label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+.filters select {
+  font: inherit; font-size: 14px; color: var(--text); background: var(--card); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 10px; min-width: 150px;
+}
+table.runs { min-width: 640px; }
+table.runs tbody tr { cursor: pointer; }
+table.runs tbody tr:hover td { background: rgba(139, 92, 246, .08); }
+table.runs tbody tr[aria-current="true"] td { background: rgba(34, 211, 238, .10); }
+.linkish { font: inherit; color: var(--cyan); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.more { margin-top: 10px; }
+.badge { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700; color: var(--bg); }
+.badge.kept_correct { background: var(--cyan); }
+.badge.fixed { background: var(--cyan); }
+.badge.broken { background: var(--pink); }
+.badge.still_wrong { background: var(--pink); }
+.badge.failed { background: var(--muted); }
+.badge.hr { background: var(--amber); }
+
+.detail { margin-top: 20px; border: 1px solid var(--violet); border-radius: 12px; padding: 18px; background: rgba(7, 6, 15, .45); }
+.detail:focus { outline: none; }
+.detail h3 { margin-top: 0; color: var(--text); font-size: 16px; }
+.detail h4 { margin: 16px 0 6px; font-size: 13px; color: var(--muted); }
+.detail .meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+.detail .meta b { color: var(--text); font-weight: 600; }
+.detail .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.detail ul { margin: 4px 0; padding-left: 18px; font-size: 13px; }
+.detail pre {
+  white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 12px; color: var(--text);
+  background: var(--card); border: 1px solid var(--line-soft); border-radius: 8px; padding: 10px; max-height: 320px; overflow: auto; margin: 4px 0;
+}
+.detail .obs { font-family: var(--mono); font-size: 12px; }
+.detail .close { float: right; }
+@media (max-width: 860px) { .detail .cols { grid-template-columns: 1fr; } }
