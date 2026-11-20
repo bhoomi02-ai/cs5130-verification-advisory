@@ -1,0 +1,620 @@
+/* CS 5130 verification study dashboard. Display only: every number comes from data/*.json,
+   which dashboard/build_data.py derives from results/. Nothing here calls a model. */
+(() => {
+  "use strict";
+
+  const ORDER = ["none", "self", "peer", "dedicated", "weakened", "cross_family"];
+  const VERIFIED = ORDER.slice(1);
+  const SHORT = {
+    none: "None", self: "Self", peer: "Peer", dedicated: "Dedicated",
+    weakened: "No calculator", cross_family: "Cross-family",
+  };
+  const PINK = "#FF5C8A", CYAN = "#22D3EE", VIOLET = "#8B5CF6", AMBER = "#FBBF24";
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const color = (c) => css(`--c-${c}`) || "#A9A4C8";
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const state = { data: null, selected: null };
+
+  // ------------------------------------------------------------------ formatting
+
+  const pct = (v, d = 1) => (v == null ? "–" : `${(v * 100).toFixed(d)}%`);
+  const ci = (lo, hi) => (lo == null || hi == null ? "" : `95% CI ${pct(lo)}–${pct(hi)}`);
+  const usd = (v, d = 2) => (v == null ? "–" : `$${v.toFixed(d)}`);
+  const pts = (v) => (v == null ? "–" : `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(1)} pts`);
+  const kfmt = (v) => (v == null ? "–" : v >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${Math.round(v)}`);
+  const pval = (p) => (p == null ? "–" : p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(3)}`);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const isPending = (entry) => !entry || entry.status !== "complete";
+  const pendingLabel = (entry) => (entry && entry.label) || "pending";
+
+  // ------------------------------------------------------------------ tooltip
+
+  const tip = document.getElementById("tooltip");
+  function showTip(html, x, y) {
+    tip.innerHTML = html;
+    tip.hidden = false;
+    const r = tip.getBoundingClientRect();
+    const left = Math.min(Math.max(8, x + 14), window.innerWidth - r.width - 8);
+    const top = y + 14 + r.height > window.innerHeight ? y - r.height - 10 : y + 14;
+    tip.style.left = `${left}px`;
+    tip.style.top = `${Math.max(8, top)}px`;
+  }
+  const hideTip = () => { tip.hidden = true; };
+  function attachTip(selection, html) {
+    selection
+      .attr("tabindex", 0)
+      .on("mouseenter mousemove", (event, d) => showTip(html(d), event.clientX, event.clientY))
+      .on("mouseleave blur", hideTip)
+      .on("focus", function (event, d) {
+        const b = this.getBoundingClientRect();
+        showTip(html(d), b.left + b.width / 2, b.top + b.height / 2);
+      });
+  }
+  window.addEventListener("scroll", hideTip, { passive: true });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
+
+  // ------------------------------------------------------------------ data
+
+  async function loadAll() {
+    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04"];
+    const files = await Promise.all(names.map(async (n) => {
+      const res = await fetch(`data/${n}.json`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`data/${n}.json: HTTP ${res.status}`);
+      return res.json();
+    }));
+    return Object.fromEntries(names.map((n, i) => [n, files[i]]));
+  }
+
+  function slotWidth(el) {
+    return Math.max(280, Math.floor(el.getBoundingClientRect().width));
+  }
+
+  function reviewNoteText() {
+    const notes = state.data.meta.scoring_under_review || {};
+    return Object.entries(notes).map(([task, text]) => `${task}: ${text}`).join(" ");
+  }
+
+  // ------------------------------------------------------------------ gauge
+
+  function gauge(container, { value, big, label, detail, size = 300, pending = false, ariaLabel }) {
+    const w = size, h = detail ? size * 0.92 : size * 0.8, r = size * 0.4, thick = Math.max(10, size * 0.06);
+    const start = -0.75 * Math.PI, end = 0.75 * Math.PI;
+    const id = `g${Math.random().toString(36).slice(2, 8)}`;
+    const svg = d3.select(container).append("svg")
+      .attr("viewBox", `0 0 ${w} ${h}`)
+      .attr("role", "img")
+      .attr("aria-label", ariaLabel);
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id", id).attr("x1", 0).attr("y1", 1).attr("x2", 1).attr("y2", 0);
+    grad.append("stop").attr("offset", 0).attr("stop-color", VIOLET);
+    grad.append("stop").attr("offset", 1).attr("stop-color", CYAN);
+    const glow = defs.append("filter").attr("id", `${id}f`).attr("x", "-30%").attr("y", "-30%").attr("width", "160%").attr("height", "160%");
+    glow.append("feGaussianBlur").attr("stdDeviation", size * 0.02).attr("result", "b");
+    const merge = glow.append("feMerge");
+    merge.append("feMergeNode").attr("in", "b");
+    merge.append("feMergeNode").attr("in", "SourceGraphic");
+    const g = svg.append("g").attr("transform", `translate(${w / 2},${r + thick})`);
+    const arc = d3.arc().innerRadius(r - thick / 2).outerRadius(r + thick / 2).cornerRadius(thick / 2);
+    g.append("path").attr("d", arc({ startAngle: start, endAngle: end })).attr("fill", "#1E1B3A");
+    if (!pending && value != null) {
+      g.append("path").attr("d", arc({ startAngle: start, endAngle: start + (end - start) * value }))
+        .attr("fill", `url(#${id})`).attr("filter", `url(#${id}f)`);
+    }
+    g.append("text").attr("text-anchor", "middle").attr("y", size * 0.04)
+      .attr("fill", pending ? AMBER : "#fff").attr("font-weight", 700)
+      .attr("font-size", pending ? size * 0.075 : size * 0.18).text(big);
+    g.append("text").attr("text-anchor", "middle").attr("y", size * 0.14).attr("fill", "#A9A4C8")
+      .attr("font-size", size * 0.05).text(label);
+    if (detail) {
+      g.append("text").attr("text-anchor", "middle").attr("y", size * 0.37).attr("fill", "#A9A4C8")
+        .attr("font-size", size * 0.046).text(detail);
+    }
+    return svg;
+  }
+
+  // ------------------------------------------------------------------ 1. hero + explore
+
+  function renderHero() {
+    const { summary, meta } = state.data;
+    const s = meta.study;
+    document.getElementById("headline").textContent = summary.headline.text;
+    document.getElementById("dataset").innerHTML =
+      `<strong>Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs</strong> ` +
+      `(${s.n_scenarios} scenarios S01–S10 and their variants) · advisor ${esc(s.advisor_model)}, ` +
+      `temperature ${s.temperature}, top-p ${s.top_p}, ${esc(s.thinking_level)} thinking.`;
+    const note = document.getElementById("headline-note");
+    if (reviewNoteText()) { note.hidden = false; note.textContent = reviewNoteText(); }
+
+    const none = summary.conditions.none;
+    const slot = document.querySelector("#hero-gauge .gauge-slot");
+    slot.innerHTML = "";
+    if (isPending(none)) {
+      gauge(slot, { pending: true, big: pendingLabel(none), label: "No-check baseline", ariaLabel: `No-check baseline: ${pendingLabel(none)}` });
+    } else {
+      const t = none.task_success;
+      gauge(slot, {
+        value: t.value, big: pct(t.value, 0), label: "Baseline accuracy (no check)",
+        detail: `${t.right} of ${t.n} runs · ${ci(t.ci_low, t.ci_high)}`,
+        ariaLabel: `No-check baseline accuracy ${pct(t.value)}, ${t.right} of ${t.n} runs, ${ci(t.ci_low, t.ci_high)}`,
+      });
+    }
+  }
+
+  function renderPills() {
+    const { summary } = state.data;
+    const box = document.getElementById("pills");
+    box.innerHTML = "";
+    ORDER.forEach((c) => {
+      const entry = summary.conditions[c];
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "pill";
+      b.setAttribute("role", "radio");
+      b.setAttribute("aria-checked", String(c === state.selected));
+      b.tabIndex = c === state.selected ? 0 : -1;
+      b.dataset.condition = c;
+      b.innerHTML = esc(SHORT[c]) + (isPending(entry) ? `<span class="tag">${esc(pendingLabel(entry))}</span>` : "");
+      b.addEventListener("click", () => select(c, true));
+      box.appendChild(b);
+    });
+    box.onkeydown = (e) => {
+      const i = ORDER.indexOf(state.selected);
+      const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      if (step) { e.preventDefault(); select(ORDER[(i + step + ORDER.length) % ORDER.length], true); }
+      if (e.key === "Home") { e.preventDefault(); select(ORDER[0], true); }
+      if (e.key === "End") { e.preventDefault(); select(ORDER[ORDER.length - 1], true); }
+    };
+  }
+
+  function select(c, focus) {
+    state.selected = c;
+    renderPills();
+    renderKpis();
+    if (focus) document.querySelector(`.pill[data-condition="${c}"]`).focus();
+  }
+
+  function tile(cls, k, v, d, vClass = "") {
+    return `<div class="kpi ${cls}"><p class="k">${k}</p><p class="v ${vClass}">${v}</p>${d ? `<p class="d">${d}</p>` : ""}</div>`;
+  }
+
+  function renderKpis() {
+    const { summary, spend } = state.data;
+    const c = state.selected;
+    const e = summary.conditions[c];
+    const box = document.getElementById("kpis");
+    const spendTile = tile("",
+      "Total spend (all settings)",
+      `${usd(spend.total_usd)}`,
+      `of the $${spend.budget_usd.toFixed(0)} cap · ${spend.calls.toLocaleString()} model calls`);
+    if (isPending(e)) {
+      const p = `<span class="pending">${esc(pendingLabel(e))}</span>`;
+      box.innerHTML =
+        tile("", "Task success", p, "runs still in progress", "small") +
+        tile("", "Catch rate", p, "", "small") +
+        tile("", "False alarms", p, "", "small") +
+        tile("", "Fixed vs broken", p, "", "small") +
+        tile("", "Cost per run", p, "", "small") + spendTile;
+      return;
+    }
+    const t = e.task_success;
+    const v = e.verifier;
+    const o = e.outcomes;
+    const review = c !== "none" ? "" : "";
+    box.innerHTML =
+      `<div class="kpi" id="kpi-success"><p class="k">Task success</p><div class="mini"></div>` +
+      `<p class="d">${t.right}/${t.n} runs · ${ci(t.ci_low, t.ci_high)}${review}</p></div>` +
+      (v
+        ? tile("", "Catch rate", pct(v.catch_rate.value, 0), `${v.catch_rate.caught}/${v.catch_rate.n} wrong drafts rejected · MCC ${v.mcc == null ? "–" : v.mcc.toFixed(2)}`, "good") +
+          tile("", "False alarms", pct(v.false_alarm_rate.value), `${v.false_alarm_rate.flagged}/${v.false_alarm_rate.n} right drafts rejected`, v.false_alarm_rate.value > 0 ? "bad" : "")
+        : tile("", "Catch rate", "–", "no verifier in this setting", "small") + tile("", "False alarms", "–", "no verifier in this setting", "small")) +
+      tile("", "Fixed vs broken",
+        `<span class="ok">+${o.fixed}</span> <span class="tag-small">/</span> <span class="no">−${o.broken}</span>`,
+        `${o.fixed} wrong → right · ${o.broken} right → wrong (of ${e.n_runs} runs)`) +
+      tile("", "Cost per run", usd(e.cost.mean_cost_usd, 3),
+        `${kfmt(e.cost.mean_tokens_in)} in / ${kfmt(e.cost.mean_tokens_out)} out tokens · includes the shared draft`) +
+      spendTile;
+    gauge(box.querySelector("#kpi-success .mini"), {
+      value: t.value, big: pct(t.value, 1), label: SHORT[c], size: 200,
+      ariaLabel: `${SHORT[c]} task success ${pct(t.value)}, ${t.right} of ${t.n} runs, ${ci(t.ci_low, t.ci_high)}`,
+    });
+  }
+
+  // ------------------------------------------------------------------ shared row chart
+
+  // Rows of: name (left) and a printed value (right) on one line, a mark on the line below.
+  function rowChart(slot, { rows, domain, height = 46, zero = null, axisFormat, ariaLabel, mark, valueText, tipHtml, tickCount = 5 }) {
+    slot.innerHTML = "";
+    const w = slotWidth(slot), m = { l: 4, r: 8, t: 4, b: 26 };
+    const h = m.t + rows.length * height + m.b;
+    const svg = d3.select(slot).append("svg").attr("viewBox", `0 0 ${w} ${h}`).attr("role", "group").attr("aria-label", ariaLabel);
+    const x = d3.scaleLinear().domain(domain).range([m.l, w - m.r]).nice();
+    svg.append("g").attr("class", "grid").attr("transform", `translate(0,${h - m.b})`)
+      .call(d3.axisBottom(x).ticks(tickCount).tickSize(-(h - m.b - m.t)).tickFormat(""));
+    svg.append("g").attr("class", "axis").attr("transform", `translate(0,${h - m.b})`)
+      .call(d3.axisBottom(x).ticks(tickCount).tickFormat(axisFormat));
+    if (zero != null) {
+      svg.append("line").attr("x1", x(zero)).attr("x2", x(zero)).attr("y1", m.t).attr("y2", h - m.b)
+        .attr("stroke", "#A9A4C8").attr("stroke-dasharray", "4 4").attr("stroke-width", 1);
+    }
+    const row = svg.selectAll("g.row").data(rows).join("g").attr("class", "row mark")
+      .attr("transform", (d, i) => `translate(0,${m.t + i * height})`)
+      .attr("role", "img")
+      .attr("aria-label", (d) => `${SHORT[d.condition]}: ${valueText(d)}`);
+    row.append("rect").attr("class", "focus-ring").attr("x", 0).attr("y", 0).attr("width", w).attr("height", height - 4)
+      .attr("rx", 6).attr("fill", "transparent").attr("stroke", "transparent");
+    row.append("text").attr("class", "lbl-strong").attr("x", m.l).attr("y", 14).text((d) => SHORT[d.condition]);
+    row.append("text").attr("x", w - m.r).attr("y", 14).attr("text-anchor", "end")
+      .attr("class", (d) => (d.pending ? "lbl-pending" : "lbl-muted")).text(valueText);
+    row.each(function (d) { if (!d.pending) mark(d3.select(this), d, x, 28); });
+    attachTip(row, tipHtml);
+    return { svg, x };
+  }
+
+  // ------------------------------------------------------------------ 2. comparison
+
+  function renderCompare() {
+    const { summary } = state.data;
+    document.getElementById("interval-note").textContent = summary.interval_note;
+    const rows = ORDER.map((c) => {
+      const e = summary.conditions[c];
+      return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.task_success };
+    });
+    const done = rows.filter((r) => !r.pending);
+    const lo = Math.min(...done.map((r) => r.ci_low ?? r.value));
+    const base = summary.conditions.none;
+    rowChart(document.querySelector("#success-chart .chart-slot"), {
+      rows,
+      domain: [Math.max(0, Math.floor((lo - 0.05) * 10) / 10), 1],
+      zero: isPending(base) ? null : base.task_success.value,
+      axisFormat: (v) => `${Math.round(v * 100)}%`,
+      ariaLabel: "Task success per setting with 95% intervals over tasks; the dashed line is the no-check baseline.",
+      valueText: (d) => (d.pending ? d.label : `${pct(d.value)} (${d.right}/${d.n}) · ${pct(d.ci_low, 0)}–${pct(d.ci_high, 0)}`),
+      mark: (g, d, x, y) => {
+        g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
+          .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
+        g.append("circle").attr("cx", x(d.value)).attr("cy", y).attr("r", 6).attr("fill", color(d.condition))
+          .attr("stroke", "#07060F").attr("stroke-width", 2);
+      },
+      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)} runs saved; no numbers until it finishes.`
+        : `<strong>${SHORT[d.condition]}</strong><br>Task success ${pct(d.value)}<br>${d.right} of ${d.n} runs right<br>${ci(d.ci_low, d.ci_high)} (bootstrap over tasks)`),
+    });
+
+    const comps = Object.fromEntries(summary.comparisons.map((c) => [c.condition, c]));
+    const prow = VERIFIED.map((c) => {
+      const e = summary.conditions[c];
+      if (isPending(e) || !comps[c]) return { condition: c, pending: true, label: pendingLabel(e) };
+      return { condition: c, ...comps[c] };
+    });
+    const pdone = prow.filter((r) => !r.pending);
+    const span = Math.max(0.05, ...pdone.map((r) => Math.max(Math.abs(r.ci_low), Math.abs(r.ci_high))));
+    rowChart(document.querySelector("#paired-chart .chart-slot"), {
+      rows: prow,
+      domain: [-Math.min(span, 0.1) - 0.02, span + 0.02],
+      zero: 0,
+      axisFormat: (v) => `${v > 0 ? "+" : ""}${Math.round(v * 100)}`,
+      ariaLabel: "Change in task success against no check, in percentage points, with 95% intervals.",
+      valueText: (d) => (d.pending ? d.label : `${pts(d.delta)} · ${pts(d.ci_low).replace(" pts", "")} to ${pts(d.ci_high)} · ${pval(d.sign_test_p)}`),
+      mark: (g, d, x, y) => {
+        g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
+          .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
+        g.append("rect").attr("x", x(d.delta) - 6).attr("y", y - 6).attr("width", 12).attr("height", 12)
+          .attr("transform", `rotate(45 ${x(d.delta)} ${y})`).attr("fill", color(d.condition)).attr("stroke", "#07060F").attr("stroke-width", 2);
+      },
+      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}: no comparison until it finishes.`
+        : `<strong>${SHORT[d.condition]} vs none</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
+          `${d.n_pairs} paired runs over ${d.n_tasks} tasks<br>Right only here: ${d.runs_only_condition_right} runs; right only without a check: ${d.runs_only_none_right}<br>` +
+          `Better on ${d.tasks_better} tasks, worse on ${d.tasks_worse} · sign test ${pval(d.sign_test_p)}`),
+    });
+
+    const t = document.getElementById("hr-table");
+    const head = `<thead><tr><th>Setting</th><th class="num">All runs counted</th><th class="num">Sent to human review</th><th>Why (abstain · unreadable · revision not accepted)</th><th class="num">Not counting human review</th></tr></thead>`;
+    const body = ORDER.map((c) => {
+      const e = summary.conditions[c];
+      if (isPending(e)) return `<tr><td>${SHORT[c]}</td><td class="pending" colspan="4">${esc(pendingLabel(e))}</td></tr>`;
+      const a = e.task_success, b = e.task_success_excl_human_review, h = e.human_review;
+      return `<tr><td>${SHORT[c]}</td>` +
+        `<td class="num">${pct(a.value)} <span class="tag-small">(${a.right}/${a.n})</span><span class="ci">${ci(a.ci_low, a.ci_high)}</span></td>` +
+        `<td class="num">${h.n} <span class="tag-small">of ${e.n_runs}</span><span class="ci">${h.final_right} of them right</span></td>` +
+        `<td>${h.routes.abstain} · ${h.routes.unreadable} · ${h.routes.revision_not_accepted}</td>` +
+        `<td class="num">${pct(b.value)} <span class="tag-small">(${b.right}/${b.n})</span><span class="ci">${ci(b.ci_low, b.ci_high)}</span></td></tr>`;
+    }).join("");
+    t.innerHTML = head + `<tbody>${body}</tbody>`;
+  }
+
+  // ------------------------------------------------------------------ 3. catches
+
+  function renderCatch() {
+    const { summary } = state.data;
+    const rows = VERIFIED.map((c) => {
+      const e = summary.conditions[c];
+      return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.verifier, n_runs: e.n_runs };
+    });
+    const slot = document.querySelector("#catch-chart .chart-slot");
+    rowChart(slot, {
+      rows,
+      height: 62,
+      domain: [0, 1],
+      axisFormat: (v) => `${Math.round(v * 100)}%`,
+      ariaLabel: "Catch rate (wrong drafts rejected) and false-alarm rate (right drafts rejected) per setting.",
+      valueText: (d) => (d.pending ? d.label : `MCC ${d.mcc == null ? "–" : d.mcc.toFixed(2)}`),
+      mark: (g, d, x, y) => {
+        const bar = (yy, v, fill, text) => {
+          g.append("rect").attr("x", x(0)).attr("y", yy - 6).attr("height", 12).attr("rx", 3)
+            .attr("width", Math.max(2, x(v) - x(0))).attr("fill", fill);
+          const tx = x(v) + 6, inside = tx > x.range()[1] - 150;
+          g.append("text").attr("x", inside ? x(v) - 6 : tx).attr("y", yy + 4).attr("text-anchor", inside ? "end" : "start")
+            .attr("class", "lbl").style("fill", inside ? "#07060F" : null).style("font-weight", inside ? 700 : null).text(text);
+        };
+        bar(y, d.catch_rate.value, CYAN, `caught ${pct(d.catch_rate.value, 0)} (${d.catch_rate.caught}/${d.catch_rate.n})`);
+        bar(y + 18, d.false_alarm_rate.value, PINK, `false alarms ${pct(d.false_alarm_rate.value)} (${d.false_alarm_rate.flagged}/${d.false_alarm_rate.n})`);
+      },
+      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}`
+        : `<strong>${SHORT[d.condition]}</strong><br>Catch rate ${pct(d.catch_rate.value)}: rejected ${d.catch_rate.caught} of ${d.catch_rate.n} wrong drafts<br>` +
+          `False alarms ${pct(d.false_alarm_rate.value)}: rejected ${d.false_alarm_rate.flagged} of ${d.false_alarm_rate.n} right drafts<br>` +
+          `MCC ${d.mcc == null ? "–" : d.mcc.toFixed(2)}${d.missing_verdicts ? `<br>${d.missing_verdicts} unreadable verdict(s), counted as not rejected` : ""}<br>` +
+          `Mean verifier calls per run: ${d.mean_verifier_calls == null ? "–" : d.mean_verifier_calls.toFixed(1)}`),
+    });
+    const small = summary.conditions.none;
+    if (!isPending(small)) {
+      const wrong = small.n_runs - small.first_draft_success.right;
+      slot.insertAdjacentHTML("beforeend", `<p class="note">Only ${wrong} of ${small.n_runs} first drafts were wrong, so each catch rate rests on ${wrong} drafts: one more or fewer catch moves it by ${(100 / wrong).toFixed(0)} points.</p>`);
+    }
+  }
+
+  // ------------------------------------------------------------------ 4. fixed vs broken
+
+  function renderFix() {
+    const { summary } = state.data;
+    const rows = ORDER.map((c) => {
+      const e = summary.conditions[c];
+      return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.outcomes, n: e.n_runs };
+    });
+    const max = Math.max(3, ...rows.filter((r) => !r.pending).map((r) => Math.max(r.fixed, r.broken)));
+    rowChart(document.querySelector("#fix-chart .chart-slot"), {
+      rows,
+      domain: [-max, max],
+      zero: 0,
+      axisFormat: (v) => `${Math.abs(v)}`,
+      tickCount: Math.min(8, max * 2),
+      ariaLabel: "Runs broken by the revision (left, pink) and fixed (right, cyan) per setting.",
+      valueText: (d) => (d.pending ? d.label : d.condition === "none" ? "no review, nothing revised" : `fixed ${d.fixed} · broken ${d.broken} · net ${d.fixed - d.broken >= 0 ? "+" : "−"}${Math.abs(d.fixed - d.broken)}`),
+      mark: (g, d, x, y) => {
+        if (d.broken) g.append("rect").attr("x", x(-d.broken)).attr("y", y - 7).attr("width", x(0) - x(-d.broken)).attr("height", 14).attr("rx", 3).attr("fill", PINK);
+        if (d.fixed) g.append("rect").attr("x", x(0)).attr("y", y - 7).attr("width", x(d.fixed) - x(0)).attr("height", 14).attr("rx", 3).attr("fill", CYAN);
+        if (d.broken) g.append("text").attr("x", x(-d.broken) - 6).attr("y", y + 4).attr("text-anchor", "end").attr("class", "lbl").text(`−${d.broken}`);
+        if (d.fixed) g.append("text").attr("x", x(d.fixed) + 6).attr("y", y + 4).attr("class", "lbl").text(`+${d.fixed}`);
+        if (!d.fixed && !d.broken) g.append("text").attr("x", x(0) + 6).attr("y", y + 4).attr("class", "lbl-muted").text("0");
+      },
+      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}`
+        : `<strong>${SHORT[d.condition]}</strong> (${d.n} runs)<br><span class="ok">Fixed ${d.fixed}</span>: wrong draft, right final<br>` +
+          `<span class="no">Broken ${d.broken}</span>: right draft, wrong final<br>Kept right ${d.kept_correct} · still wrong ${d.still_wrong}`),
+    });
+  }
+
+  // ------------------------------------------------------------------ 5. heatmap
+
+  const heatColor = d3.scaleLinear().domain([0, 0.5, 1]).range([PINK, VIOLET, CYAN]).interpolate(d3.interpolateRgb);
+
+  function chip(cell, where) {
+    if (!cell || cell.status === "pending") {
+      return `<span class="chip pending-chip" aria-label="${esc(where)}: pending">pending</span>`;
+    }
+    if (!cell.n) return `<span class="chip pending-chip" aria-label="${esc(where)}: no runs">–</span>`;
+    const share = cell.right / cell.n;
+    const failed = cell.failed ? ` <small>(+${cell.failed} failed)</small>` : "";
+    return `<span class="chip mark-cell" role="img" style="background:${heatColor(share)}" ` +
+      `data-tip="${esc(`<strong>${where}</strong><br>${cell.right} of ${cell.n} runs right${cell.failed ? `<br>${cell.failed} failed run(s) not counted` : ""}`)}" ` +
+      `aria-label="${esc(`${where}: ${cell.right} of ${cell.n} right`)}">${cell.right}/${cell.n}${failed}</span>`;
+  }
+
+  function renderHeatmap() {
+    const { heatmap, meta } = state.data;
+    const review = meta.scoring_under_review || {};
+    const table = document.getElementById("heat-table");
+    const head = `<caption class="sr-only">Right final answers per scenario and setting</caption><thead><tr><th scope="col">Scenario</th>` +
+      heatmap.conditions.map((c) => {
+        const p = heatmap.pending[c];
+        return `<th scope="col" class="num" style="text-align:center">${SHORT[c]}${p ? `<br><span class="pending tag-small">${esc(p.label)}</span>` : ""}</th>`;
+      }).join("") + `</tr></thead>`;
+    const body = heatmap.groups.map((g, gi) => {
+      const flagged = g.tasks.some((t) => review[t]);
+      const groupCells = heatmap.conditions.map((c) => `<td class="cell">${chip(g.cells[c], `${g.scenario} (all ${g.tasks.length} tasks), ${SHORT[c]}`)}</td>`).join("");
+      const sub = g.rows.map((r) =>
+        `<tr class="sub-row" data-group="${gi}" hidden><th scope="row" style="font-weight:500">${esc(r.task_id)}${review[r.task_id] ? ` <span class="dagger" title="${esc(review[r.task_id])}">†</span><span class="sr-only"> (scoring under review)</span>` : ""}</th>` +
+        heatmap.conditions.map((c) => `<td class="cell">${chip(r.cells[c], `${r.task_id}, ${SHORT[c]}`)}</td>`).join("") + `</tr>`).join("");
+      return `<tr><th scope="row"><button type="button" class="expander" aria-expanded="false" data-group="${gi}">` +
+        `<span class="tri" aria-hidden="true">▶</span>${esc(g.scenario)} <span class="tag-small">${g.tasks.length} task${g.tasks.length > 1 ? "s" : ""}</span>` +
+        `${flagged ? ' <span class="dagger" aria-hidden="true">†</span>' : ""}</button></th>${groupCells}</tr>${sub}`;
+    }).join("");
+    table.innerHTML = head + `<tbody>${body}</tbody>`;
+    table.querySelectorAll(".expander").forEach((btn) => btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") !== "true";
+      btn.setAttribute("aria-expanded", String(open));
+      table.querySelectorAll(`tr.sub-row[data-group="${btn.dataset.group}"]`).forEach((tr) => { tr.hidden = !open; });
+    }));
+    table.querySelectorAll(".mark-cell").forEach((el) => {
+      el.addEventListener("mouseenter", (e) => showTip(el.dataset.tip, e.clientX, e.clientY));
+      el.addEventListener("mousemove", (e) => showTip(el.dataset.tip, e.clientX, e.clientY));
+      el.addEventListener("mouseleave", hideTip);
+      el.addEventListener("blur", hideTip);
+      el.addEventListener("focus", () => { const b = el.getBoundingClientRect(); showTip(el.dataset.tip, b.left + b.width / 2, b.bottom); });
+    });
+    document.getElementById("heat-legend").innerHTML =
+      `<span>0 right</span><span class="ramp" style="background:linear-gradient(90deg,${PINK},${VIOLET},${CYAN})"></span><span>all right</span>` +
+      `<span>· scenario rows add up their tasks (3 runs each)</span>`;
+  }
+
+  // ------------------------------------------------------------------ 6. cost
+
+  function renderCost() {
+    const { summary, spend } = state.data;
+    document.getElementById("cost-sub").textContent = spend.note;
+    const share = Math.min(1, spend.total_usd / spend.budget_usd);
+    const top = spend.by_condition.slice(0, 6).map((r) => `${esc(r.name)} ${usd(r.cost_usd)}`).join(" · ");
+    document.getElementById("budget").innerHTML =
+      `<div class="row"><span><span class="big">${usd(spend.total_usd)}</span> spent of the $${spend.budget_usd.toFixed(0)} cap</span>` +
+      `<span>${usd(spend.left_usd)} left · ${spend.calls.toLocaleString()} model calls (${spend.failed_calls} failed)</span></div>` +
+      `<div class="bar" role="progressbar" aria-label="Spend against the cap" aria-valuemin="0" aria-valuemax="${spend.budget_usd}" aria-valuenow="${spend.total_usd.toFixed(2)}" aria-valuetext="${usd(spend.total_usd)} of $${spend.budget_usd}">` +
+      `<div class="fill" style="width:${(share * 100).toFixed(1)}%"></div></div>` +
+      `<div class="row"><span>Largest items: ${top}</span><span>Source: run log, every call counted once</span></div>`;
+
+    const rows = ORDER.map((c) => {
+      const e = summary.conditions[c];
+      return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.cost, n: e.n_runs, success: e.task_success };
+    });
+    const done = rows.filter((r) => !r.pending);
+    rowChart(document.querySelector("#cost-chart .chart-slot"), {
+      rows,
+      domain: [0, Math.max(...done.map((r) => r.mean_cost_usd)) * 1.1],
+      axisFormat: (v) => `$${v.toFixed(2)}`,
+      ariaLabel: "Mean cost per run per setting, with tokens.",
+      valueText: (d) => (d.pending ? d.label : `${usd(d.mean_cost_usd, 3)} · ${kfmt(d.mean_tokens_in)} in / ${kfmt(d.mean_tokens_out)} out`),
+      mark: (g, d, x, y) => {
+        g.append("rect").attr("x", x(0)).attr("y", y - 6).attr("height", 12).attr("rx", 3)
+          .attr("width", Math.max(2, x(d.mean_cost_usd) - x(0))).attr("fill", color(d.condition));
+      },
+      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}`
+        : `<strong>${SHORT[d.condition]}</strong> (${d.n} runs)<br>Mean ${usd(d.mean_cost_usd, 4)} per run, total ${usd(d.total_cost_usd)}<br>` +
+          `${kfmt(d.mean_tokens_in)} tokens in, ${kfmt(d.mean_tokens_out)} out per run<br>` +
+          `${d.extra_cost_per_extra_correct == null ? "" : `${usd(d.extra_cost_per_extra_correct)} per extra right answer vs none<br>`}Includes the shared first draft`),
+    });
+    renderScatter(done);
+  }
+
+  function renderScatter(points) {
+    const slot = document.querySelector("#scatter-chart .chart-slot");
+    slot.innerHTML = "";
+    const w = slotWidth(slot), h = 260, m = { l: 44, r: 16, t: 12, b: 34 };
+    const svg = d3.select(slot).append("svg").attr("viewBox", `0 0 ${w} ${h}`).attr("role", "group")
+      .attr("aria-label", "Mean cost per run against task success, one point per finished setting, with 95% intervals.");
+    const x = d3.scaleLinear().domain(d3.extent(points, (p) => p.mean_cost_usd)).range([m.l, w - m.r]).nice();
+    x.domain([x.domain()[0] - (x.domain()[1] - x.domain()[0]) * 0.08, x.domain()[1] + (x.domain()[1] - x.domain()[0]) * 0.08]);
+    const ylo = Math.min(...points.map((p) => p.success.ci_low));
+    const y = d3.scaleLinear().domain([Math.max(0, Math.floor(ylo * 10) / 10 - 0.05), 1]).range([h - m.b, m.t]);
+    svg.append("g").attr("class", "grid").attr("transform", `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(w - m.l - m.r)).tickFormat(""));
+    svg.append("g").attr("class", "axis").attr("transform", `translate(0,${h - m.b})`).call(d3.axisBottom(x).ticks(5).tickFormat((v) => `$${v.toFixed(3)}`));
+    svg.append("g").attr("class", "axis").attr("transform", `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat((v) => `${Math.round(v * 100)}%`));
+    svg.append("text").attr("class", "lbl-muted").attr("x", w - m.r).attr("y", h - 4).attr("text-anchor", "end").text("mean cost per run");
+    const g = svg.selectAll("g.pt").data(points).join("g").attr("class", "pt mark").attr("role", "img")
+      .attr("aria-label", (d) => `${SHORT[d.condition]}: ${usd(d.mean_cost_usd, 3)} per run, task success ${pct(d.success.value)}`);
+    g.append("line").attr("x1", (d) => x(d.mean_cost_usd)).attr("x2", (d) => x(d.mean_cost_usd))
+      .attr("y1", (d) => y(d.success.ci_low)).attr("y2", (d) => y(d.success.ci_high))
+      .attr("stroke", (d) => color(d.condition)).attr("stroke-width", 2).attr("opacity", 0.5);
+    g.append("circle").attr("cx", (d) => x(d.mean_cost_usd)).attr("cy", (d) => y(d.success.value)).attr("r", 7)
+      .attr("fill", (d) => color(d.condition)).attr("stroke", "#07060F").attr("stroke-width", 2);
+    // Printed labels, nudged apart vertically so close points stay readable.
+    const labels = points.map((p) => ({ p, x: x(p.mean_cost_usd), y: y(p.success.value) - 12 }))
+      .sort((a, b) => a.y - b.y);
+    // Points closer than ~40px share one label column to the right of the group.
+    labels.forEach((l) => { l.x0 = l.x; l.y0 = l.y; });
+    labels.forEach((l) => {
+      const near = labels.filter((o) => Math.abs(o.x0 - l.x0) < 40 && Math.abs(o.y0 - l.y0) < 40);
+      l.x = Math.max(...near.map((o) => o.x0)) + (near.length > 1 ? 8 : 0);
+    });
+    for (let i = 1; i < labels.length; i++) {
+      for (let j = 0; j < i; j++) {
+        if (Math.abs(labels[i].x - labels[j].x) < 110 && labels[i].y - labels[j].y < 15) labels[i].y = labels[j].y + 15;
+      }
+    }
+    labels.forEach((l) => {
+      const text = `${SHORT[l.p.condition]} ${pct(l.p.success.value)}`;
+      const right = l.x + 10 + text.length * 6.6 < w - m.r;
+      svg.append("text").attr("class", "lbl").attr("x", l.x + (right ? 10 : -10)).attr("y", l.y)
+        .attr("text-anchor", right ? "start" : "end")
+        .text(text);
+    });
+    attachTip(g, (d) => `<strong>${SHORT[d.condition]}</strong><br>${usd(d.mean_cost_usd, 4)} per run (includes the shared draft)<br>` +
+      `Task success ${pct(d.success.value)} (${d.success.right}/${d.success.n}), ${ci(d.success.ci_low, d.success.ci_high)}`);
+  }
+
+  // ------------------------------------------------------------------ 7. sanity checks
+
+  function renderSanity() {
+    const { seeded, sanity_s04: s04 } = state.data;
+    const st = document.getElementById("seeded-table");
+    document.getElementById("seeded-wording").textContent = seeded.wording;
+    const head = `<thead><tr><th>Setting</th><th class="num">Errors caught</th><th class="num">False alarms on correct controls</th>` +
+      `<th class="num">Caught with the right reason</th><th class="num">Only the consequence</th><th class="num">Wrong reason</th><th class="num">Cost</th></tr></thead>`;
+    const body = VERIFIED.map((c) => {
+      const e = seeded.per_condition[c];
+      if (isPending(e)) return `<tr><td>${SHORT[c]}</td><td class="pending" colspan="6">${esc(pendingLabel(e))}</td></tr>`;
+      const rr = e.right_reason;
+      const flagged = rr.right_reason + rr.consequence_only + rr.wrong_reason + rr.abstained;
+      return `<tr><td>${SHORT[c]}</td>` +
+        `<td class="num">${pct(e.catch_rate.value, 0)} <span class="tag-small">(${e.catch_rate.caught}/${e.catch_rate.n})</span></td>` +
+        `<td class="num">${pct(e.false_alarm_rate.value, 0)} <span class="tag-small">(${e.false_alarm_rate.flagged}/${e.false_alarm_rate.n})</span>${e.missing_verdicts ? `<span class="ci">${e.missing_verdicts} unreadable</span>` : ""}</td>` +
+        `<td class="num">${pct(e.right_reason_rate, 0)} <span class="tag-small">(${rr.right_reason}/${flagged})</span></td>` +
+        `<td class="num">${rr.consequence_only}</td><td class="num">${rr.wrong_reason}</td><td class="num">${usd(e.cost_usd)}</td></tr>`;
+    }).join("");
+    st.innerHTML = head + `<tbody>${body}</tbody>`;
+
+    const t = document.getElementById("s04-table");
+    const rows = s04.cases.map((c) => {
+      const right = c.verdict_right == null ? `<span class="pending">no verdict</span>` : c.verdict_right ? `<span class="ok">yes</span>` : `<span class="no">no</span>`;
+      const verdict = c.verdict === "reject" ? `<span class="${c.answer_was === "wrong" ? "ok" : "no"}">reject</span>`
+        : c.verdict === "accept" ? `<span class="${c.answer_was === "wrong" ? "no" : "ok"}">accept</span>` : `<span class="pending">${esc(c.verdict)}</span>`;
+      const issue = (c.issues && c.issues[0]) || c.reason || "";
+      return `<tr><td>${SHORT[c.setting]}${c.used_in_study ? "" : ' <span class="tag-small">(not used in the study)</span>'}</td>` +
+        `<td>${esc(c.verifier_model)}</td><td>${c.answer_was === "wrong" ? '<span class="no">wrong</span>' : '<span class="ok">right</span>'}</td>` +
+        `<td>${verdict}</td><td class="num">${c.calls}</td><td>${right}</td><td>${esc(issue.length > 140 ? `${issue.slice(0, 140)}…` : issue)}</td></tr>`;
+    }).join("");
+    document.getElementById("s04-wording").textContent = s04.wording;
+    t.innerHTML = `<thead><tr><th>Setting</th><th>Verifier model</th><th>Answer was</th><th>Verdict</th>` +
+      `<th class="num">Calls</th><th>Verdict right?</th><th>What it said</th></tr></thead><tbody>${rows}</tbody>`;
+  }
+
+  // ------------------------------------------------------------------ boot
+
+  function renderNotes() {
+    const text = reviewNoteText();
+    document.querySelectorAll("[data-review]").forEach((el) => {
+      el.hidden = !text;
+      el.textContent = text;
+    });
+  }
+
+  function renderFooter() {
+    const { meta } = state.data;
+    const done = meta.conditions.map((c) => `${SHORT[c.id]} ${c.runs_done}/${c.runs_expected}`).join(" · ");
+    document.getElementById("foot-meta").textContent =
+      `Data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
+  }
+
+  function renderCharts() {
+    renderCompare();
+    renderCatch();
+    renderFix();
+    renderCost();
+  }
+
+  async function main() {
+    try {
+      state.data = await loadAll();
+    } catch (err) {
+      const msg = location.protocol === "file:"
+        ? "Open this page through a local web server so it can load data/*.json: run <code>python -m http.server -d dashboard</code> and visit http://localhost:8000."
+        : `Could not load the data (${esc(err.message)}). Run <code>python dashboard/build_data.py</code> first.`;
+      document.getElementById("headline").innerHTML = `<span class="error">${msg}</span>`;
+      return;
+    }
+    state.selected = state.data.summary.headline.best || "none";
+    renderHero();
+    renderPills();
+    renderKpis();
+    renderHeatmap();
+    renderSanity();
+    renderNotes();
+    renderFooter();
+    renderCharts();
+    let last = window.innerWidth;
+    window.addEventListener("resize", () => {
+      if (Math.abs(window.innerWidth - last) < 8) return;
+      last = window.innerWidth;
+      clearTimeout(main.t);
+      main.t = setTimeout(() => { renderCharts(); renderKpis(); }, reduceMotion ? 0 : 120);
+    });
+  }
+
+  main();
+})();

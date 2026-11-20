@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does a second look make an AI advisor safer? · CS 5130 verification study</title>
+<meta name="description" content="Results of the CS 5130 study on verification strategies for an AI financial advisor.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the results</a>
+<div class="bg" aria-hidden="true"></div>
+
+<header class="hero" id="top">
+  <div class="hero-text">
+    <p class="eyebrow">CS 5130 · Theme 6 · Verification study</p>
+    <h1>Does a second look<br>make an AI advisor <span class="grad">safer?</span></h1>
+    <p class="lede" id="headline" aria-live="polite">Loading the results…</p>
+    <p class="dataset" id="dataset"></p>
+    <p class="note review-note" id="headline-note" hidden></p>
+  </div>
+  <figure class="hero-gauge" id="hero-gauge" aria-labelledby="hero-gauge-cap">
+    <div class="gauge-slot"></div>
+    <figcaption id="hero-gauge-cap" class="sr-only">No-check baseline accuracy</figcaption>
+  </figure>
+</header>
+
+<main id="main">
+
+  <!-- 1. Headline KPIs for one setting -->
+  <section class="card" id="explore" aria-labelledby="explore-h">
+    <div class="card-head">
+      <h2 id="explore-h">Explore a setting</h2>
+      <p class="sub">Every number is for the setting you pick, over the same shared first drafts.</p>
+    </div>
+    <div class="pills" role="radiogroup" aria-label="Verification setting" id="pills"></div>
+    <div class="kpis" id="kpis"></div>
+    <dl class="glossary" id="glossary">
+      <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
+      <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
+      <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
+      <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
+      <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
+      <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
+    </dl>
+  </section>
+
+  <!-- 2. Settings comparison -->
+  <section class="card" id="compare" aria-labelledby="compare-h">
+    <div class="card-head">
+      <h2 id="compare-h">Settings compared</h2>
+      <p class="sub" id="interval-note"></p>
+    </div>
+    <div class="grid2">
+      <figure class="chart" id="success-chart">
+        <figcaption>Task success, with 95% intervals over tasks</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
+      <figure class="chart" id="paired-chart">
+        <figcaption>Paired change against no check (same drafts, same tasks)</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
+    </div>
+    <p class="note">Task success counted two ways. Human review means the run was handed to a person: the verifier abstained, its verdict could not be read, or it rejected and the second check did not accept the revision.</p>
+    <div class="table-wrap">
+      <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
+    </div>
+    <p class="note review-note" data-review="compare" hidden></p>
+  </section>
+
+  <!-- 3. Catch rate vs false alarms -->
+  <section class="card" id="verifiers" aria-labelledby="verifiers-h">
+    <div class="card-head">
+      <h2 id="verifiers-h">Catches and false alarms</h2>
+      <p class="sub">On the advisor's own drafts. A good verifier rejects the wrong drafts (catch rate) and leaves the right ones alone (few false alarms).</p>
+    </div>
+    <figure class="chart" id="catch-chart">
+      <figcaption>Catch rate and false-alarm rate per setting, with MCC</figcaption>
+      <div class="chart-slot"></div>
+    </figure>
+  </section>
+
+  <!-- 4. Fixed vs broken -->
+  <section class="card" id="fixbreak" aria-labelledby="fixbreak-h">
+    <div class="card-head">
+      <h2 id="fixbreak-h">Fixed versus broken</h2>
+      <p class="sub">What the revision did: wrong → right is fixed, right → wrong is broken. Runs the verifier accepted keep their draft.</p>
+    </div>
+    <figure class="chart" id="fix-chart">
+      <figcaption>Runs fixed and broken by the revision, per setting</figcaption>
+      <div class="chart-slot"></div>
+    </figure>
+    <p class="note review-note" data-review="fixbreak" hidden></p>
+  </section>
+
+  <!-- 5. Heatmap -->
+  <section class="card" id="heatmap" aria-labelledby="heatmap-h">
+    <div class="card-head">
+      <h2 id="heatmap-h">Scenario by setting</h2>
+      <p class="sub">Right final answers out of 3 runs per task. Each scenario row adds up its variants; open a row to see them.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="heat" id="heat-table"></table>
+    </div>
+    <div class="legend" id="heat-legend" aria-hidden="true"></div>
+    <p class="note review-note" data-review="heatmap" hidden></p>
+  </section>
+
+  <!-- 6. Cost -->
+  <section class="card" id="cost" aria-labelledby="cost-h">
+    <div class="card-head">
+      <h2 id="cost-h">What it costs</h2>
+      <p class="sub" id="cost-sub"></p>
+    </div>
+    <div class="budget" id="budget"></div>
+    <div class="grid2">
+      <figure class="chart" id="cost-chart">
+        <figcaption>Mean cost and tokens per run (each run includes its share of the shared first draft)</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
+      <figure class="chart" id="scatter-chart">
+        <figcaption>Cost per run against task success</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
+    </div>
+    <p class="note review-note" data-review="cost" hidden></p>
+  </section>
+
+  <!-- 7. Verifier sanity checks -->
+  <section class="card" id="sanity" aria-labelledby="sanity-h">
+    <div class="card-head">
+      <h2 id="sanity-h">Verifier sanity checks</h2>
+      <p class="sub"><strong>Sanity checks, not results.</strong> Small, hand-made tests that the verifiers react to known errors at all.</p>
+    </div>
+    <h3>Seeded answers (17 with one known error, 14 correct controls)</h3>
+    <p class="note" id="seeded-wording"></p>
+    <div class="table-wrap"><table class="data" id="seeded-table" aria-label="Seeded-answer sanity checks"></table></div>
+    <h3>S04 before the main study (one known-wrong and one known-right answer)</h3>
+    <p class="note" id="s04-wording"></p>
+    <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p id="foot-meta"></p>
+  <p>Read-only view of the saved results. It never calls a model, never shows the answer key and never spends money. Built with d3 7.9.0.</p>
+</footer>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+
+<script src="vendor/d3-7.9.0.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

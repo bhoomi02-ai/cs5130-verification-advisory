@@ -2,7 +2,28 @@
 
 A single-page, read-only view of the study results. It never calls a model, never reads the answer key and never spends money: the page only loads small JSON files that `build_data.py` derives from `results/`.
 
-> Work in progress. Step 2 of 4 is done (the data files). The page itself (views 1–9) comes next.
+> Work in progress: views 1–7 are built; the live replay (8) and the run table (9) come next.
+
+## View it
+
+```bash
+python dashboard/build_data.py              # (re)build dashboard/data/ from results/
+python -m http.server 8000 -d dashboard     # then open http://localhost:8000
+```
+
+The page loads `data/*.json` with `fetch`, so it needs a web server (opening `index.html` as a file shows a hint instead). It is plain HTML, CSS and JavaScript with d3 7.9.0 included in `vendor/` (checked against the npm registry's SHA-512), so there is no build step and nothing is loaded from the internet.
+
+| # | View | Reads |
+|---|---|---|
+| 1 | Headline sentence and data set, no-check gauge, and KPI tiles for a chosen setting (task success with CI, catch rate, false alarms, fixed vs broken, cost per run, total spend vs the $20 cap) | `summary.json`, `spend.json`, `meta.json` |
+| 2 | Task success per setting with 95% CIs; paired change vs `none` with CI and sign test; success with and without human review | `summary.json` |
+| 3 | Catch rate and false-alarm rate with counts, and MCC | `summary.json` |
+| 4 | Fixed (wrong → right) vs broken (right → wrong) per setting | `summary.json` |
+| 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants | `heatmap.json` |
+| 6 | Budget bar, cost and tokens per run, cost vs success | `spend.json`, `summary.json` |
+| 7 | Verifier sanity checks: the seeded set (with "caught with the right reason") and the S04 cases | `seeded.json`, `sanity_s04.json` |
+
+Design notes: unfinished settings show `pending (n/N)` everywhere and never a number; every rate prints its count and interval next to it; tasks with scoring under review (T06-v003) get a † note beside every figure they affect; every chart has an `aria-label`, printed values and a tooltip on hover and keyboard focus; the setting picker is a radio group (arrow keys); heatmap rows are buttons with `aria-expanded`; the layout works at 400 px with no sideways page scroll (wide tables scroll inside their box); `prefers-reduced-motion` turns off transitions.
 
 ## Regenerate the data
 
