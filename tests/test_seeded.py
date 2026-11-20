@@ -181,3 +181,34 @@ def test_script_refuses_records_made_with_other_settings(script, out, capsys):
     code = run_seeded.main(["--condition", "peer", "--model", "gemini-3.6-flash", "--answers", CONTROL, "--temperature", "0.2"])
     assert code == 1
     assert "other settings" in capsys.readouterr().out
+
+
+def test_dry_run_calls_nothing_saves_nothing_and_estimates_from_saved_reviews(script, out, capsys):
+    calls = script()
+    args = ["--condition", "peer", "--model", "gemini-3.6-flash", "--answers", ERROR, CONTROL, "--dry-run"]
+    assert run_seeded.main(args) == 0
+    assert calls == [] and not out.exists()
+    text = capsys.readouterr().out
+    assert text.count("plan") == 2 and "no saved peer reviews" in text
+
+    script(ACCEPT)
+    run_seeded.main(["--condition", "peer", "--model", "gemini-3.6-flash", "--answers", CONTROL])
+    path = out / f"{seeded.seeded_run_id('peer', 'gemini-3.6-flash', CONTROL, 1)}.json"
+    rec = json.loads(path.read_text())
+    rec["cost_usd"] = 0.01
+    path.write_text(json.dumps(rec))
+    capsys.readouterr()
+    calls = script()  # the fixture keeps one list per test: the review above is already in it
+    assert run_seeded.main(args) == 0
+    text = capsys.readouterr().out
+    assert len(calls) == 1
+    assert "skip" in text and text.count("plan") == 1
+    assert "1 review(s) would run" in text and "about $0.01 at $0.0100 per review (mean of 1 saved)" in text
+
+
+def test_dry_run_still_refuses_records_made_with_other_settings(script, out, capsys):
+    script(ACCEPT)
+    run_seeded.main(["--condition", "peer", "--model", "gemini-3.6-flash", "--answers", CONTROL])
+    code = run_seeded.main(["--condition", "peer", "--model", "gemini-3.6-flash", "--answers", CONTROL,
+                            "--temperature", "0.2", "--dry-run"])
+    assert code == 1 and "other settings" in capsys.readouterr().out
