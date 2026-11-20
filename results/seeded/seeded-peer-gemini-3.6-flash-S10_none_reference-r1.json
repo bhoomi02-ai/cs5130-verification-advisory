@@ -1,0 +1,39 @@
+{
+  "run_id": "seeded-peer-gemini-3.6-flash-S10_none_reference-r1",
+  "answer_id": "S10_none_reference",
+  "scenario_id": "S10",
+  "error_type": "none",
+  "seeded_error": false,
+  "condition": "peer",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S10\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"INFEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "accept",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The status INFEASIBLE is correct because the client cannot raise the required $85,000 cash due to the NO_SELL restriction on AAPL and MSFT. All requested initial observations, trades, metrics, and schema requirements are satisfied.",
+      "error": null,
+      "raw": "```json\n{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The status INFEASIBLE is correct because the client cannot raise the required $85,000 cash due to the NO_SELL restriction on AAPL and MSFT. All requested initial observations, trades, metrics, and schema requirements are satisfied.\"}\n```",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 3603,
+  "tokens_out": 1291,
+  "cost_usd": 0.0075435,
+  "latency_s": 5.924226625000301,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}

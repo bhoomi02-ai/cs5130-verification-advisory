@@ -1,0 +1,39 @@
+{
+  "run_id": "seeded-peer-gemini-3.6-flash-S06_none_reference-r1",
+  "answer_id": "S06_none_reference",
+  "scenario_id": "S06",
+  "error_type": "none",
+  "seeded_error": false,
+  "condition": "peer",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S06\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 1000045.735359339\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 199954.26464066096\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 432.76313143402\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 432.77\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "accept",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The projected balance, shortfall difference, exact monthly payment, and upward-rounded payment were all calculated correctly and reported according to the required output schema and reporting rules.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The projected balance, shortfall difference, exact monthly payment, and upward-rounded payment were all calculated correctly and reported according to the required output schema and reporting rules.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 3236,
+  "tokens_out": 4904,
+  "cost_usd": 0.020817,
+  "latency_s": 19.910984291003842,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}

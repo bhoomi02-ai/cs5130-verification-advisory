@@ -1,0 +1,42 @@
+{
+  "run_id": "seeded-self-gemini-3.6-flash-S03_violation_list_missed_crypto-r1",
+  "answer_id": "S03_violation_list_missed_crypto",
+  "scenario_id": "S03",
+  "error_type": "violation_list",
+  "seeded_error": true,
+  "condition": "self",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S03\",\n  \"answer_type\": \"VIOLATION_LIST\",\n  \"status\": \"VIOLATIONS_FOUND\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 5000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"BTC\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 5000.0\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [\n    {\n      \"kind\": \"CLASS_MAX\",\n      \"scope\": \"STOCK\",\n      \"observed\": 0.6,\n      \"limit\": 0.4\n    },\n    {\n      \"kind\": \"CLASS_MIN\",\n      \"scope\": \"BOND\",\n      \"observed\": 0.3,\n      \"limit\": 0.45\n    },\n    {\n      \"kind\": \"INDIVIDUAL_MAX\",\n      \"scope\": \"AAPL\",\n      \"observed\": 0.2,\n      \"limit\": 0.15\n    },\n    {\n      \"kind\": \"INDIVIDUAL_MAX\",\n      \"scope\": \"MSFT\",\n      \"observed\": 0.2,\n      \"limit\": 0.15\n    }\n  ],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "reject",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "reject",
+      "issues": [
+        "Missing PROHIBITED_CLASS violation for scope 'CRYPTO' (observed 0.05, limit 0.0).",
+        "Explanation text 'plan' is inadequate and non-descriptive."
+      ],
+      "reason": "The analysis missed the PROHIBITED_CLASS policy violation for CRYPTO, which holds $5,000 (5%) of the portfolio against a 0% maximum limit.",
+      "error": null,
+      "raw": "{\"verdict\": \"reject\", \"issues\": [\"Missing PROHIBITED_CLASS violation for scope 'CRYPTO' (observed 0.05, limit 0.0).\", \"Explanation text 'plan' is inadequate and non-descriptive.\"], \"reason\": \"The analysis missed the PROHIBITED_CLASS policy violation for CRYPTO, which holds $5,000 (5%) of the portfolio against a 0% maximum limit.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 3904,
+  "tokens_out": 997,
+  "cost_usd": 0.00666675,
+  "latency_s": 5.195557500002906,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}

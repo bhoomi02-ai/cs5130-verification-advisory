@@ -1,0 +1,41 @@
+{
+  "run_id": "seeded-self-gemini-3.6-flash-S08_unit_stock_allocation_percent-r1",
+  "answer_id": "S08_unit_stock_allocation_percent",
+  "scenario_id": "S08",
+  "error_type": "unit",
+  "seeded_error": true,
+  "condition": "self",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S08\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"MSFT\",\n      \"quantity_delta\": -25\n    },\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": -40\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 125\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 50\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "reject",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "reject",
+      "issues": [
+        "In metrics.observations, the ALLOCATION metric for STOCK with unit FRACTION has value 50 instead of 0.5 (fractions must be expressed as numbers between 0 and 1, matching target_allocations format)."
+      ],
+      "reason": "The trade plan is mathematically sound and respects all policy constraints, but the reported observation metric contains a value formatting error where 50 was entered instead of 0.5 for a FRACTION unit.",
+      "error": null,
+      "raw": "{\"verdict\": \"reject\", \"issues\": [\"In metrics.observations, the ALLOCATION metric for STOCK with unit FRACTION has value 50 instead of 0.5 (fractions must be expressed as numbers between 0 and 1, matching target_allocations format).\"], \"reason\": \"The trade plan is mathematically sound and respects all policy constraints, but the reported observation metric contains a value formatting error where 50 was entered instead of 0.5 for a FRACTION unit.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 3532,
+  "tokens_out": 1795,
+  "cost_usd": 0.00938025,
+  "latency_s": 8.728491082998517,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}

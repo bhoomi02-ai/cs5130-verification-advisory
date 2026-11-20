@@ -1,0 +1,41 @@
+{
+  "run_id": "seeded-peer-gemini-3.6-flash-S02_policy_violation_short_reserve-r1",
+  "answer_id": "S02_policy_violation_short_reserve",
+  "scenario_id": "S02",
+  "error_type": "policy_violation",
+  "seeded_error": true,
+  "condition": "peer",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S02\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": -20\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "reject",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "reject",
+      "issues": [
+        "The proposed trade of selling 20 shares of VOO generates $10,000 in cash, bringing cash before withdrawal to $28,000; after the $25,000 withdrawal, remaining cash is $3,000, violating the MIN_CASH policy requirement of $12,000."
+      ],
+      "reason": "The trade plan fails to raise sufficient cash to satisfy the withdrawal and the minimum cash requirement.",
+      "error": null,
+      "raw": "{\"verdict\": \"reject\", \"issues\": [\"The proposed trade of selling 20 shares of VOO generates $10,000 in cash, bringing cash before withdrawal to $28,000; after the $25,000 withdrawal, remaining cash is $3,000, violating the MIN_CASH policy requirement of $12,000.\"], \"reason\": \"The trade plan fails to raise sufficient cash to satisfy the withdrawal and the minimum cash requirement.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 3153,
+  "tokens_out": 1486,
+  "cost_usd": 0.00793725,
+  "latency_s": 6.825371874998382,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}

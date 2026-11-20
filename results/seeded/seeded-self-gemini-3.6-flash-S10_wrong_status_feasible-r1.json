@@ -1,0 +1,41 @@
+{
+  "run_id": "seeded-self-gemini-3.6-flash-S10_wrong_status_feasible-r1",
+  "answer_id": "S10_wrong_status_feasible",
+  "scenario_id": "S10",
+  "error_type": "wrong_status",
+  "seeded_error": true,
+  "condition": "self",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S10\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "reject",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "reject",
+      "issues": [
+        "The requested withdrawal of $80,000 (plus $5,000 minimum cash retention) requires $85,000 in cash, but due to NO_SELL restrictions on AAPL ($20,000) and MSFT ($30,000), only VOO ($20,000), BND ($20,000), and cash ($10,000) are available, yielding at most $50,000 in cash. Thus, the scenario is INFEASIBLE, but the response reported FEASIBLE with empty trades."
+      ],
+      "reason": "The plan is INFEASIBLE because the client cannot raise the required $80,000 withdrawal without violating the NO_SELL restriction on AAPL and MSFT.",
+      "error": null,
+      "raw": "{\"verdict\": \"reject\", \"issues\": [\" The requested withdrawal of $80,000 (plus $5,000 minimum cash retention) requires $85,000 in cash, but due to NO_SELL restrictions on AAPL ($20,000) and MSFT ($30,000), only VOO ($20,000), BND ($20,000), and cash ($10,000) are available, yielding at most $50,000 in cash. Thus, the scenario is INFEASIBLE, but the response reported FEASIBLE with empty trades.\"], \"reason\": \"The plan is INFEASIBLE because the client cannot raise the required $80,000 withdrawal without violating the NO_SELL restriction on AAPL and MSFT.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 3706,
+  "tokens_out": 1171,
+  "cost_usd": 0.00717075,
+  "latency_s": 6.037447458002134,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}

@@ -1,0 +1,42 @@
+{
+  "run_id": "seeded-peer-gemini-3.6-flash-S04_arithmetic_ignore_entry_fee-r1",
+  "answer_id": "S04_arithmetic_ignore_entry_fee",
+  "scenario_id": "S04",
+  "error_type": "arithmetic",
+  "seeded_error": true,
+  "condition": "peer",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null,
+  "verifier_model": "gemini-3.6-flash",
+  "verifier_thinking_level": null,
+  "verifier_prompt_version": "verifier-v1",
+  "answer": "{\n  \"scenario_id\": \"S04\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"Fund A\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 139079.41912887755\n      },\n      {\n        \"subject\": \"Fund B\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 145469.3451726326\n      },\n      {\n        \"subject\": \"OPTIONS\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 6389.926043755055\n      }\n    ],\n    \"selection\": \"Fund B\"\n  },\n  \"violations\": [],\n  \"explanation\": \"plan\"\n}",
+  "verdict": "reject",
+  "status": "reviewed",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "reject",
+      "issues": [
+        "The final value for Fund A is incorrect because the 1% entry fee was not deducted from the initial investment before compounding; using $99,000 instead of $100,000 gives $137,688.62493758878.",
+        "The absolute difference in final values is incorrect due to the error in Fund A's final value; it should be $7,780.72023504382 instead of $6,389.926043755055."
+      ],
+      "reason": "Fund A's entry fee was not deducted prior to compounding as required by the calculation convention, leading to incorrect calculations for Fund A's final value and the absolute difference between the funds.",
+      "error": null,
+      "raw": "{\"verdict\": \"reject\", \"issues\": [\"The final value for Fund A is incorrect because the 1% entry fee was not deducted from the initial investment before compounding; using $99,000 instead of $100,000 gives $137,688.62493758878.\", \"The absolute difference in final values is incorrect due to the error in Fund A's final value; it should be $7,780.72023504382 instead of $6,389.926043755055.\"], \"reason\": \"Fund A's entry fee was not deducted prior to compounding as required by the calculation convention, leading to incorrect calculations for Fund A's final value and the absolute difference between the funds.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "error": null,
+  "tokens_in": 2976,
+  "tokens_out": 2250,
+  "cost_usd": 0.0106695,
+  "latency_s": 9.55738562499755,
+  "n_calls": 1,
+  "n_failed_calls": 0
+}
