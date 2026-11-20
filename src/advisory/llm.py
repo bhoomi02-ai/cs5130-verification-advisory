@@ -67,6 +67,7 @@ GROQ_MAX_COMPLETION_TOKENS = 8192
 GROQ_REASONING_EFFORTS = ("low", "medium", "high")
 
 _MAX_RETRIES = 5
+GEMINI_TIMEOUT_S = 300  # per request, like the Groq calls
 _RETRY_STATUS = (429, 500, 503)
 
 # Spending cap for the whole project, in USD (team decision, 2026-11-13).
@@ -176,7 +177,11 @@ def _get_gemini_client():
         key = os.environ.get("GOOGLE_API_KEY")
         if not key:
             raise RuntimeError("GOOGLE_API_KEY is not set; add it to .env")
-        _gemini_client = genai.Client(api_key=key)
+        # Without a timeout a stalled connection waits forever (seen in the main study).
+        # A timeout raises an httpx TransportError, which call_gemini retries.
+        _gemini_client = genai.Client(
+            api_key=key, http_options=genai.types.HttpOptions(timeout=GEMINI_TIMEOUT_S * 1000)
+        )
     return _gemini_client
 
 
