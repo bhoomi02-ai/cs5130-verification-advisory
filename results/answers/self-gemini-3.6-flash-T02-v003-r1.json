@@ -1,0 +1,241 @@
+{
+  "run_id": "self-gemini-3.6-flash-T02-v003-r1",
+  "task_id": "T02-v003",
+  "condition": "self",
+  "run_number": 1,
+  "draft": "{\"scenario_id\":\"T02-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-30},{\"symbol\":\"VOO\",\"quantity_delta\":-40}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":92000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_WITHDRAWAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":42000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":62000.0}],\"selection\":null},\"violations\":[],\"explanation\":\"To fulfill the $30,000 withdrawal request while maintaining the mandatory $12,000 cash buffer, a total of $42,000 in cash is required prior to withdrawal. Starting with $10,000 in initial cash, $32,000 must be raised through asset sales. AAPL and BND are subject to a no-sell restriction. Selling 30 shares of MSFT ($12,000) and 40 shares of VOO ($20,000) generates exactly $32,000 in proceeds. After executing the trades and completing the $30,000 withdrawal, the remaining cash balance is $12,000, satisfying all client preferences and policy requirements.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T02-v003\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-30},{\"symbol\":\"VOO\",\"quantity_delta\":-40}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":92000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_WITHDRAWAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":42000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":62000.0}],\"selection\":null},\"violations\":[],\"explanation\":\"To fulfill the $30,000 withdrawal request while maintaining the mandatory $12,000 cash buffer, a total of $42,000 in cash is required prior to withdrawal. Starting with $10,000 in initial cash, $32,000 must be raised through asset sales. AAPL and BND are subject to a no-sell restriction. Selling 30 shares of MSFT ($12,000) and 40 shares of VOO ($20,000) generates exactly $32,000 in proceeds. After executing the trades and completing the $30,000 withdrawal, the remaining cash balance is $12,000, satisfying all client preferences and policy requirements.\"}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The trade plan correctly sells whole shares of MSFT and VOO to raise $32,000, respecting the NO_SELL restriction on AAPL and BND. After the $30,000 withdrawal, the final cash balance is exactly $12,000, satisfying the minimum cash requirement and all schema conditions.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The trade plan correctly sells whole shares of MSFT and VOO to raise $32,000, respecting the NO_SELL restriction on AAPL and BND. After the $30,000 withdrawal, the final cash balance is exactly $12,000, satisfying the minimum cash requirement and all schema conditions.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T02-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T02-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 92000.0,
+          "final_total": 62000.0,
+          "cash_before_withdrawal": 42000.0,
+          "final_cash": 12000.0,
+          "allocations": {
+            "STOCK": 0.4838709677419355,
+            "BOND": 0.3225806451612903,
+            "CASH": 0.1935483870967742
+          },
+          "additional_liquidity_needed": 32000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T02-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T02-v003_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 92000.0,
+          "cash_before_trades": 10000.0,
+          "cash_before_withdrawal": 42000.0,
+          "final_cash": 12000.0,
+          "final_total": 62000.0,
+          "allocations": {
+            "STOCK": 0.4838709677419355,
+            "BOND": 0.3225806451612903,
+            "CASH": 0.1935483870967742
+          },
+          "final_quantities": {
+            "AAPL": 50.0,
+            "MSFT": 25.0,
+            "VOO": 20.0,
+            "BND": 250.0
+          },
+          "final_values": {
+            "AAPL": 10000.0,
+            "MSFT": 10000.0,
+            "VOO": 10000.0,
+            "BND": 20000.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": 32000.0
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "NO_EXTERNAL_DEPOSITS",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_BORROWING",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 0
+      },
+      {
+        "rule": "MIN_CASH",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 12000.0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "BND",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      }
+    ]
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T02-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T02-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 92000.0,
+          "final_total": 62000.0,
+          "cash_before_withdrawal": 42000.0,
+          "final_cash": 12000.0,
+          "allocations": {
+            "STOCK": 0.4838709677419355,
+            "BOND": 0.3225806451612903,
+            "CASH": 0.1935483870967742
+          },
+          "additional_liquidity_needed": 32000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T02-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T02-v003_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 92000.0,
+          "cash_before_trades": 10000.0,
+          "cash_before_withdrawal": 42000.0,
+          "final_cash": 12000.0,
+          "final_total": 62000.0,
+          "allocations": {
+            "STOCK": 0.4838709677419355,
+            "BOND": 0.3225806451612903,
+            "CASH": 0.1935483870967742
+          },
+          "final_quantities": {
+            "AAPL": 50.0,
+            "MSFT": 25.0,
+            "VOO": 20.0,
+            "BND": 250.0
+          },
+          "final_values": {
+            "AAPL": 10000.0,
+            "MSFT": 10000.0,
+            "VOO": 10000.0,
+            "BND": 20000.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": 32000.0
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "NO_EXTERNAL_DEPOSITS",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_BORROWING",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 0
+      },
+      {
+        "rule": "MIN_CASH",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 12000.0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "BND",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      }
+    ]
+  }
+}

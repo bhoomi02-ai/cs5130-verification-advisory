@@ -1,0 +1,119 @@
+{
+  "run_id": "self-gemini-3.6-flash-T04-v003-r2",
+  "task_id": "T04-v003",
+  "condition": "self",
+  "run_number": 2,
+  "draft": "{\"scenario_id\":\"T04-v003\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":192392.15082126085},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":212893.9841210014},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20501.83329974054}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"To compare Fund A and Fund B over a 10-year period:\\n\\n1. Fund A:\\n   - Initial net investment: $100,000 (no entry fee)\\n   - Annual net growth factor: (1 + 0.095) * (1 - 0.025) = 1.067625\\n   - Final value after 10 years: $100,000 * (1.067625)^10 = $192,392.15\\n\\n2. Fund B:\\n   - Initial net investment after 1% entry fee: $100,000 * (1 - 0.01) = $99,000\\n   - Annual net growth factor: (1 + 0.085) * (1 - 0.005) = 1.079575\\n   - Final value after 10 years: $99,000 * (1.079575)^10 = $212,893.98\\n\\n3. Comparison:\\n   - Fund B generates $212,893.98 versus Fund A's $192,392.15, resulting in an absolute difference of $20,501.83 in favor of Fund B.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T04-v003\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":192392.15082126085},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":212893.9841210014},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20501.83329974054}],\"selection\":\"Fund B\"},\"violations\":[],\"explanation\":\"To compare Fund A and Fund B over a 10-year period:\\n\\n1. Fund A:\\n   - Initial net investment: $100,000 (no entry fee)\\n   - Annual net growth factor: (1 + 0.095) * (1 - 0.025) = 1.067625\\n   - Final value after 10 years: $100,000 * (1.067625)^10 = $192,392.15\\n\\n2. Fund B:\\n   - Initial net investment after 1% entry fee: $100,000 * (1 - 0.01) = $99,000\\n   - Annual net growth factor: (1 + 0.085) * (1 - 0.005) = 1.079575\\n   - Final value after 10 years: $99,000 * (1.079575)^10 = $212,893.98\\n\\n3. Comparison:\\n   - Fund B generates $212,893.98 versus Fund A's $192,392.15, resulting in an absolute difference of $20,501.83 in favor of Fund B.\"}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The calculated final values for Fund A ($192,392.15) and Fund B ($212,893.98), the absolute difference ($20,501.83), and the selected fund (Fund B) are exact according to the stated calculation conventions and output requirements.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The calculated final values for Fund A ($192,392.15) and Fund B ($212,893.98), the absolute difference ($20,501.83), and the selected fund (Fund B) are exact according to the stated calculation conventions and output requirements.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T04-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T04-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 192392.15082126085,
+          "fund_b_final": 212893.9841210014,
+          "absolute_difference": 20501.83329974054,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T04-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T04-v003_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 192392.15035523064,
+          "fund_b_final": 212893.9813858809,
+          "absolute_difference": 20501.831030650268,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T04-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T04-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 192392.15082126085,
+          "fund_b_final": 212893.9841210014,
+          "absolute_difference": 20501.83329974054,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T04-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T04-v003_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 192392.15035523064,
+          "fund_b_final": 212893.9813858809,
+          "absolute_difference": 20501.831030650268,
+          "better_fund": "Fund B"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

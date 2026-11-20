@@ -1,0 +1,181 @@
+{
+  "run_id": "self-gemini-3.6-flash-T06-v003-r3",
+  "task_id": "T06-v003",
+  "condition": "self",
+  "run_number": 3,
+  "draft": "{\n  \"scenario_id\": \"T06-v003\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 1091704.3\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 108295.7\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 353.71\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"Starting with $250,000 at a monthly rate of 0.55% (6.6% annual nominal compound monthly), the portfolio grows over 180 months while incorporating scheduled cash flows ($1,500/month for months 1-90, a $50,000 withdrawal at month 60, and $2,000/month for months 91-180). The projected month-180 balance is $1,091,704.30. Against the education funding target of $1,200,000, there is a shortfall of $108,295.70. To cover this shortfall over 180 months, an additional fixed end-of-month contribution of $353.7089 per month is required, which rounds upward to $353.71 per month.\"\n}",
+  "revision": null,
+  "final": "{\n  \"scenario_id\": \"T06-v003\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 1091704.3\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 108295.7\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"PAYMENT\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"UPWARD_CENT\",\n        \"unit\": \"MONEY\",\n        \"value\": 353.71\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"Starting with $250,000 at a monthly rate of 0.55% (6.6% annual nominal compound monthly), the portfolio grows over 180 months while incorporating scheduled cash flows ($1,500/month for months 1-90, a $50,000 withdrawal at month 60, and $2,000/month for months 91-180). The projected month-180 balance is $1,091,704.30. Against the education funding target of $1,200,000, there is a shortfall of $108,295.70. To cover this shortfall over 180 months, an additional fixed end-of-month contribution of $353.7089 per month is required, which rounds upward to $353.71 per month.\"\n}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The solution accurately calculates the projected month-180 portfolio balance, target shortfall, and required additional monthly contribution rounded upward to the nearest cent, adhering fully to the specified cash flows, interest rate, and output schema.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The solution accurately calculates the projected month-180 portfolio balance, target shortfall, and required additional monthly contribution rounded upward to the nearest cent, adhering fully to the specified cash flows, interest rate, and output schema.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": false,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T06-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T06-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": false,
+        "observed": {
+          "initial_total": 250000.0,
+          "final_balance": 1091704.3,
+          "target_shortfall": 108295.7,
+          "additional_monthly_contribution_cents": 353.71
+        },
+        "details": {
+          "reason": "missing_observation",
+          "missing_observation": [
+            "additional_monthly_contribution"
+          ],
+          "not_computed": []
+        }
+      },
+      {
+        "check_id": "T06-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T06-v003_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": false,
+        "observed": {
+          "initial_total": 250000.0,
+          "final_balance": 1091703.7224440877,
+          "target_shortfall": 108296.27755591227,
+          "additional_monthly_contribution": 353.7109571174611,
+          "additional_monthly_contribution_cents": 353.72
+        },
+        "details": {
+          "reason": "missing_observation",
+          "missing_observation": [
+            "additional_monthly_contribution"
+          ],
+          "not_computed": [],
+          "items": [
+            {
+              "reason": "value_mismatch",
+              "metric": "final_balance",
+              "observed": 1091704.3,
+              "expected": 1091703.7224440877
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "target_shortfall",
+              "observed": 108295.7,
+              "expected": 108296.27755591227
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "additional_monthly_contribution_cents",
+              "observed": 353.71,
+              "expected": 353.72
+            }
+          ]
+        }
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": false,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T06-v003_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T06-v003_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": false,
+        "observed": {
+          "initial_total": 250000.0,
+          "final_balance": 1091704.3,
+          "target_shortfall": 108295.7,
+          "additional_monthly_contribution_cents": 353.71
+        },
+        "details": {
+          "reason": "missing_observation",
+          "missing_observation": [
+            "additional_monthly_contribution"
+          ],
+          "not_computed": []
+        }
+      },
+      {
+        "check_id": "T06-v003_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T06-v003_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": false,
+        "observed": {
+          "initial_total": 250000.0,
+          "final_balance": 1091703.7224440877,
+          "target_shortfall": 108296.27755591227,
+          "additional_monthly_contribution": 353.7109571174611,
+          "additional_monthly_contribution_cents": 353.72
+        },
+        "details": {
+          "reason": "missing_observation",
+          "missing_observation": [
+            "additional_monthly_contribution"
+          ],
+          "not_computed": [],
+          "items": [
+            {
+              "reason": "value_mismatch",
+              "metric": "final_balance",
+              "observed": 1091704.3,
+              "expected": 1091703.7224440877
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "target_shortfall",
+              "observed": 108295.7,
+              "expected": 108296.27755591227
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "additional_monthly_contribution_cents",
+              "observed": 353.71,
+              "expected": 353.72
+            }
+          ]
+        }
+      }
+    ],
+    "restriction_results": []
+  }
+}

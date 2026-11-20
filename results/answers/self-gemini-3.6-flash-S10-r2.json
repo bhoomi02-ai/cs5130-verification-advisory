@@ -1,0 +1,141 @@
+{
+  "run_id": "self-gemini-3.6-flash-S10-r2",
+  "task_id": "S10",
+  "condition": "self",
+  "run_number": 2,
+  "draft": "{\n  \"scenario_id\": \"S10\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"INFEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To fund the $80,000 withdrawal while maintaining the required minimum cash balance of $5,000, total cash of $85,000 is needed. Starting cash is $10,000, creating an $75,000 cash requirement. Due to NO_SELL restrictions on AAPL ($20,000) and MSFT ($30,000), only VOO ($20,000) and BND ($20,000) can be liquidated. Selling all available shares of VOO and BND yields $40,000, resulting in maximum available cash of $50,000, which is insufficient to cover the withdrawal and minimum cash requirement.\"\n}",
+  "revision": null,
+  "final": "{\n  \"scenario_id\": \"S10\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"INFEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To fund the $80,000 withdrawal while maintaining the required minimum cash balance of $5,000, total cash of $85,000 is needed. Starting cash is $10,000, creating an $75,000 cash requirement. Due to NO_SELL restrictions on AAPL ($20,000) and MSFT ($30,000), only VOO ($20,000) and BND ($20,000) can be liquidated. Selling all available shares of VOO and BND yields $40,000, resulting in maximum available cash of $50,000, which is insufficient to cover the withdrawal and minimum cash requirement.\"\n}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The request is correctly identified as INFEASIBLE due to NO_SELL restrictions on AAPL and MSFT limiting total liquidatable assets to $40,000 against a $75,000 cash requirement. All observations, schema constraints, and rules are fully satisfied.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The request is correctly identified as INFEASIBLE due to NO_SELL restrictions on AAPL and MSFT limiting total liquidatable assets to $40,000 against a $75,000 cash requirement. All observations, schema constraints, and rules are fully satisfied.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S10_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S10_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "restricted_value": 50000.0,
+          "sellable_value": 40000.0,
+          "available_liquidity": 50000.0,
+          "required_liquidity": 85000.0,
+          "liquidity_shortfall": 35000.0,
+          "max_withdrawal_preserving_reserve": 45000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S10_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S10_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "restricted_value": 50000.0,
+          "sellable_value": 40000.0,
+          "available_liquidity": 50000.0,
+          "required_liquidity": 85000.0,
+          "liquidity_shortfall": 35000.0,
+          "max_withdrawal_preserving_reserve": 45000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S10_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S10_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S10_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "restricted_value": 50000.0,
+          "sellable_value": 40000.0,
+          "available_liquidity": 50000.0,
+          "required_liquidity": 85000.0,
+          "liquidity_shortfall": 35000.0,
+          "max_withdrawal_preserving_reserve": 45000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S10_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S10_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "restricted_value": 50000.0,
+          "sellable_value": 40000.0,
+          "available_liquidity": 50000.0,
+          "required_liquidity": 85000.0,
+          "liquidity_shortfall": 35000.0,
+          "max_withdrawal_preserving_reserve": 45000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S10_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

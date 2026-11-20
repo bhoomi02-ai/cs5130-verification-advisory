@@ -1,0 +1,133 @@
+{
+  "run_id": "self-gemini-3.6-flash-S09-r3",
+  "task_id": "S09",
+  "condition": "self",
+  "run_number": 3,
+  "draft": "{\n  \"scenario_id\": \"S09\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"INFEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"The portfolio currently holds $60,000 in STOCK assets (60% of the $100,000 total portfolio). Reducing the STOCK allocation to the target range of 39.5% to 40.5% ($39,500 to $40,500) requires selling at least $19,500 of STOCK assets or adding substantial external cash. Because restrictions prohibit selling STOCK assets (NO_SELL_CLASS) and making external deposits (NO_EXTERNAL_DEPOSITS), rebalancing to the target allocation is infeasible.\"\n}",
+  "revision": null,
+  "final": "{\n  \"scenario_id\": \"S09\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"INFEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10000\n      },\n      {\n        \"subject\": \"AAPL\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"MSFT\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"VOO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 20000\n      },\n      {\n        \"subject\": \"BND\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 30000\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"The portfolio currently holds $60,000 in STOCK assets (60% of the $100,000 total portfolio). Reducing the STOCK allocation to the target range of 39.5% to 40.5% ($39,500 to $40,500) requires selling at least $19,500 of STOCK assets or adding substantial external cash. Because restrictions prohibit selling STOCK assets (NO_SELL_CLASS) and making external deposits (NO_EXTERNAL_DEPOSITS), rebalancing to the target allocation is infeasible.\"\n}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The rebalancing target is mathematically impossible under the NO_SELL_CLASS constraint for STOCK and NO_EXTERNAL_DEPOSITS constraint. The response accurately assesses status as INFEASIBLE and strictly adheres to the schema and metrics conventions.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The rebalancing target is mathematically impossible under the NO_SELL_CLASS constraint for STOCK and NO_EXTERNAL_DEPOSITS constraint. The response accurately assesses status as INFEASIBLE and strictly adheres to the schema and metrics conventions.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S09_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S09_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 60000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.405,
+          "stock_value_excess_above_tolerance": 19500.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S09_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S09_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 60000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.405,
+          "stock_value_excess_above_tolerance": 19500.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S09_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S09_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S09_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 60000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.405,
+          "stock_value_excess_above_tolerance": 19500.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S09_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "INFEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S09_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "locked_stock_value": 60000.0,
+          "minimum_stock_pct": 0.6,
+          "maximum_target_stock_pct": 0.405,
+          "stock_value_excess_above_tolerance": 19500.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S09_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

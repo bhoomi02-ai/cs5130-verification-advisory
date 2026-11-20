@@ -1,0 +1,151 @@
+{
+  "run_id": "self-gemini-3.6-flash-S06-r2",
+  "task_id": "S06",
+  "condition": "self",
+  "run_number": 2,
+  "draft": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.8290892965},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.1709107035},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.7629701026049},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with $150,000, compounding at 0.5% monthly over 240 months yields $496,530.67. Monthly contributions of $1,000 in months 1\u2013120 accumulate to $298,161.64 by month 240, and $1,500 in months 121\u2013240 accumulates to $245,819.02. The $30,000 withdrawal at month 180 reduces the final balance by $40,465.50, resulting in a projected month-240 balance of $1,000,045.83. To bridge the $199,954.17 shortfall to the $1,200,000 target, an additional monthly payment of $432.76297... is required across months 1\u2013240, which rounds upward to $432.77.\"}",
+  "revision": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.7353590616},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.2646409384},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.763172986283},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Recalculating without intermediate rounding yields an exact projected month-240 balance of $1,000,045.7353590616. Subtracting this balance from the $1,200,000 target leaves a shortfall of $199,954.2646409384. Dividing this shortfall by the annuity factor for 240 monthly payments at 0.5% interest ((1.005^240 - 1) / 0.005 = 462.0408951626267) gives an exact additional monthly contribution of $432.763172986283, which rounds upward to $432.77.\"}",
+  "final": "{\"scenario_id\":\"S06\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1000045.7353590616},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":199954.2646409384},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":432.763172986283},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":432.77}],\"selection\":null},\"violations\":[],\"explanation\":\"Recalculating without intermediate rounding yields an exact projected month-240 balance of $1,000,045.7353590616. Subtracting this balance from the $1,200,000 target leaves a shortfall of $199,954.2646409384. Dividing this shortfall by the annuity factor for 240 monthly payments at 0.5% interest ((1.005^240 - 1) / 0.005 = 462.0408951626267) gives an exact additional monthly contribution of $432.763172986283, which rounds upward to $432.77.\"}",
+  "verdict": "reject",
+  "second_verdict": "accept",
+  "status": "revised",
+  "verifier_calls": 2,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "reject",
+      "issues": [
+        "The month-240 projected balance (PORTFOLIO VALUE) is incorrect (1000045.7353590616 unrounded, or 1000045.74, rather than 1000045.8290892965) due to premature intermediate rounding at month 120.",
+        "The reported difference from target (PORTFOLIO DIFFERENCE) is incorrect (199954.2646409384 rather than 199954.1709107035).",
+        "The exact additional monthly payment (PORTFOLIO PAYMENT with NONE rounding) is incorrect (432.763172986283 rather than 432.7629701026049)."
+      ],
+      "reason": "Premature rounding of the accumulated balance at month 120 led to arithmetic inaccuracies in the final projected balance, difference, and exact monthly payment.",
+      "error": null,
+      "raw": "{\"verdict\": \"reject\", \"issues\": [\"The month-240 projected balance (PORTFOLIO VALUE) is incorrect (1000045.7353590616 unrounded, or 1000045.74, rather than 1000045.8290892965) due to premature intermediate rounding at month 120.\", \"The reported difference from target (PORTFOLIO DIFFERENCE) is incorrect (199954.2646409384 rather than 199954.1709107035).\", \"The exact additional monthly payment (PORTFOLIO PAYMENT with NONE rounding) is incorrect (432.763172986283 rather than 432.7629701026049).\"], \"reason\": \"Premature rounding of the accumulated balance at month 120 led to arithmetic inaccuracies in the final projected balance, difference, and exact monthly payment.\"}",
+      "trailing": "",
+      "calls": 1
+    },
+    {
+      "stage": "second",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The answer accurately computes the month-240 balance, target shortfall, exact recurring extra payment, and upward-cent rounded payment according to all supplied rules, cash flows, and interest rates.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The answer accurately computes the month-240 balance, target shortfall, exact recurring extra payment, and upward-cent rounded payment according to all supplied rules, cash flows, and interest rates.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": false,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S06_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S06_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.8290892965,
+          "target_shortfall": 199954.1709107035,
+          "additional_monthly_contribution": 432.7629701026049,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S06_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S06_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": false,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.735359339,
+          "target_shortfall": 199954.26464066096,
+          "additional_monthly_contribution": 432.7631314340293,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {
+          "reason": "value_mismatch",
+          "missing_observation": [],
+          "not_computed": [],
+          "items": [
+            {
+              "reason": "value_mismatch",
+              "metric": "final_balance",
+              "observed": 1000045.8290892965,
+              "expected": 1000045.735359339
+            },
+            {
+              "reason": "value_mismatch",
+              "metric": "target_shortfall",
+              "observed": 199954.1709107035,
+              "expected": 199954.26464066096
+            }
+          ]
+        }
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "S06_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "S06_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.7353590616,
+          "target_shortfall": 199954.2646409384,
+          "additional_monthly_contribution": 432.763172986283,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      },
+      {
+        "check_id": "S06_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "S06_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 150000.0,
+          "final_balance": 1000045.735359339,
+          "target_shortfall": 199954.26464066096,
+          "additional_monthly_contribution": 432.7631314340293,
+          "additional_monthly_contribution_cents": 432.77
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

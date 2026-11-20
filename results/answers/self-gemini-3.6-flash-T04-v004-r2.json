@@ -1,0 +1,119 @@
+{
+  "run_id": "self-gemini-3.6-flash-T04-v004-r2",
+  "task_id": "T04-v004",
+  "condition": "self",
+  "run_number": 2,
+  "draft": "```json\n{\n  \"scenario_id\": \"T04-v004\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"Fund A\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 174770.9984279981\n      },\n      {\n        \"subject\": \"Fund B\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 168052.74102925273\n      },\n      {\n        \"subject\": \"OPTIONS\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 6718.257398745378\n      }\n    ],\n    \"selection\": \"Fund A\"\n  },\n  \"violations\": [],\n  \"explanation\": \"Fund A starts with $97,500 net initial investment after a 2.5% entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.004) = 1.07568 per year, reaching $174,770.9984279981 after 8 years. Fund B starts with $100,000 with no entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.012) = 1.06704 per year, reaching $168,052.74102925273 after 8 years. Fund A performs better by $6,718.257398745378.\"\n}\n```",
+  "revision": null,
+  "final": "```json\n{\n  \"scenario_id\": \"T04-v004\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"Fund A\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 174770.9984279981\n      },\n      {\n        \"subject\": \"Fund B\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 168052.74102925273\n      },\n      {\n        \"subject\": \"OPTIONS\",\n        \"measure\": \"DIFFERENCE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 6718.257398745378\n      }\n    ],\n    \"selection\": \"Fund A\"\n  },\n  \"violations\": [],\n  \"explanation\": \"Fund A starts with $97,500 net initial investment after a 2.5% entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.004) = 1.07568 per year, reaching $174,770.9984279981 after 8 years. Fund B starts with $100,000 with no entry fee and grows at an annual factor of (1 + 0.08) * (1 - 0.012) = 1.06704 per year, reaching $168,052.74102925273 after 8 years. Fund A performs better by $6,718.257398745378.\"\n}\n```",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 1,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "The calculations for both funds, their difference, and selection strictly adhere to the scenario's calculation convention and output schema requirements.",
+      "error": null,
+      "raw": "{\"verdict\": \"accept\", \"issues\": [], \"reason\": \"The calculations for both funds, their difference, and selection strictly adhere to the scenario's calculation convention and output schema requirements.\"}",
+      "trailing": "",
+      "calls": 1
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T04-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.9984279981,
+          "fund_b_final": 168052.74102925273,
+          "absolute_difference": 6718.257398745378,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.9983125537,
+          "fund_b_final": 168052.74109125722,
+          "absolute_difference": 6718.257221296488,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T04-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.9984279981,
+          "fund_b_final": 168052.74102925273,
+          "absolute_difference": 6718.257398745378,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.9983125537,
+          "fund_b_final": 168052.74109125722,
+          "absolute_difference": 6718.257221296488,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}
