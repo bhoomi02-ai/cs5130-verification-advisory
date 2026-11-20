@@ -1,0 +1,1 @@
+Draft report from results.jsonl without cross_family (still running on Groq): none, self, peer, dedicated, weakened, 32 tasks x 3 = 480 rows, plus seeded reviews for those four verifiers. Made with scripts/analyze.py on 2026-11-20. Re-run on the full results once cross_family is done.
