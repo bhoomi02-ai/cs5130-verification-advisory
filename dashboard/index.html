@@ -20,6 +20,19 @@
     <div class="toolbar"><button type="button" class="pill" id="print-btn">Save as PDF</button>
       <span class="tag-small">Each chart also has a PNG button for slides.</span></div>
     <p class="note review-note" id="headline-note" hidden></p>
+    <details class="howto">
+      <summary>How to read this</summary>
+      <dl class="glossary">
+        <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
+        <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
+        <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
+        <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
+        <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
+        <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
+        <div><dt>Human review</dt><dd>the verifier abstained, its verdict could not be read, or the second check did not accept the revision.</dd></div>
+        <div><dt>95% CI</dt><dd>bootstrap interval over the 32 tasks; wide intervals mean small differences are not conclusive.</dd></div>
+      </dl>
+    </details>
   </div>
   <figure class="hero-gauge" id="hero-gauge" aria-labelledby="hero-gauge-cap">
     <div class="gauge-slot"></div>
@@ -39,7 +52,6 @@
     <div class="pills" role="radiogroup" aria-label="Setting to replay" id="replay-pills"></div>
     <div id="replay-mount"></div>
     <p class="note">Each dot is one saved run, played in the order it was run: task → advisor's first draft → verifier verdict → (reject: one revision, checked again) → final answer → hidden checker. Cyan is right, pink is wrong, amber "?" is a run handed to human review. Nothing is re-run; it only replays results.jsonl.</p>
-    <p class="note review-note" data-review="replay" hidden></p>
   </section>
 
   <!-- 2. Settings comparison -->
@@ -65,25 +77,6 @@
         <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
       </div>
     </details>
-    <p class="note review-note" data-review="compare" hidden></p>
-  </section>
-
-  <!-- 1. Headline KPIs for one setting -->
-  <section class="card" id="explore" aria-labelledby="explore-h">
-    <div class="card-head">
-      <h2 id="explore-h">Explore a setting</h2>
-      <p class="sub">Every number is for the setting you pick, over the same shared first drafts.</p>
-    </div>
-    <div class="pills" role="radiogroup" aria-label="Verification setting" id="pills"></div>
-    <div class="kpis" id="kpis"></div>
-    <dl class="glossary" id="glossary">
-      <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
-      <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
-      <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
-      <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
-      <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
-      <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
-    </dl>
   </section>
 
   <!-- 2b. Compare two settings -->
@@ -98,32 +91,24 @@
       <button type="button" class="pill" id="pair-swap" aria-label="Swap A and B">Swap</button>
     </form>
     <div id="pair-body"></div>
-    <p class="note review-note" data-review="pair" hidden></p>
   </section>
 
-  <!-- 3. Catch rate vs false alarms -->
+  <!-- 3+4. What the verifier did: catches / false alarms, and fixed / broken -->
   <section class="card" id="verifiers" aria-labelledby="verifiers-h">
     <div class="card-head">
-      <h2 id="verifiers-h">Catches and false alarms</h2>
-      <p class="sub">On the advisor's own drafts. A good verifier rejects the wrong drafts (catch rate) and leaves the right ones alone (few false alarms).</p>
+      <h2 id="verifiers-h">What the verifier did</h2>
+      <p class="sub">On the advisor's own drafts: did the verifier reject the wrong drafts and leave the right ones alone, and did the revision then fix them (wrong → right) or break them (right → wrong)?</p>
     </div>
-    <figure class="chart" id="catch-chart">
-      <figcaption>Catch rate and false-alarm rate per setting, with MCC</figcaption>
-      <div class="chart-slot"></div>
-    </figure>
-  </section>
-
-  <!-- 4. Fixed vs broken -->
-  <section class="card" id="fixbreak" aria-labelledby="fixbreak-h">
-    <div class="card-head">
-      <h2 id="fixbreak-h">Fixed versus broken</h2>
-      <p class="sub">What the revision did: wrong → right is fixed, right → wrong is broken. Runs the verifier accepted keep their draft.</p>
+    <div class="grid2">
+      <figure class="chart" id="catch-chart">
+        <figcaption>Catch rate and false-alarm rate, with MCC</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
+      <figure class="chart" id="fix-chart">
+        <figcaption>Runs fixed and broken by the revision</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
     </div>
-    <figure class="chart" id="fix-chart">
-      <figcaption>Runs fixed and broken by the revision, per setting</figcaption>
-      <div class="chart-slot"></div>
-    </figure>
-    <p class="note review-note" data-review="fixbreak" hidden></p>
   </section>
 
   <!-- 5. Heatmap -->
@@ -146,17 +131,10 @@
       <p class="sub" id="cost-sub"></p>
     </div>
     <div class="budget" id="budget"></div>
-    <div class="grid2">
-      <figure class="chart" id="cost-chart">
-        <figcaption>Mean cost and tokens per run (each run includes its share of the shared first draft)</figcaption>
-        <div class="chart-slot"></div>
-      </figure>
-      <figure class="chart" id="scatter-chart">
-        <figcaption>Cost per run against task success</figcaption>
-        <div class="chart-slot"></div>
-      </figure>
-    </div>
-    <p class="note review-note" data-review="cost" hidden></p>
+    <figure class="chart" id="scatter-chart">
+      <figcaption>Mean cost per run against task success (hover a point for tokens; each run's cost includes its share of the shared first draft)</figcaption>
+      <div class="chart-slot"></div>
+    </figure>
   </section>
 
   <!-- 7. Verifier sanity checks: seeded errors by type, and the pre-study S04 check -->

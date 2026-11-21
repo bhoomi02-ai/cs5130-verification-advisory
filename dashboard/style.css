@@ -336,3 +336,9 @@ table.anim.pending .chip { opacity: 0; transform: scale(.85); }
   .pending .anim-bar, .pending .anim-ci, .pending .chip { transform: none !important; }
   .pending .anim-pt, .pending .chip { opacity: 1 !important; }
 }
+
+/* ---------- "How to read this" ---------- */
+.howto { margin-top: 10px; max-width: 760px; }
+.howto summary { cursor: pointer; color: var(--accent-from); font-size: 13px; }
+.howto .glossary { margin-top: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb, var(--card) 70%, transparent); }
+@media print { .howto { display: none; } }

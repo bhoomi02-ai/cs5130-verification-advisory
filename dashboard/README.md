@@ -13,20 +13,19 @@ python -m http.server 8000 -d dashboard     # then open http://localhost:8000
 
 The page loads `data/*.json` with `fetch`, so it needs a web server (opening `index.html` as a file shows a hint instead). It is plain HTML, CSS and JavaScript with d3 7.9.0 included in `vendor/` (checked against the npm registry's SHA-512), so there is no build step and nothing is loaded from the internet.
 
-| # | View | Reads |
+| # | View (in page order) | Reads |
 |---|---|---|
-| 1 | Headline sentence and data set, no-check gauge, and KPI tiles for a chosen setting (task success with CI, catch rate, false alarms, fixed vs broken, cost per run, total spend vs the $20 cap) | `summary.json`, `spend.json`, `meta.json` |
-| 2 | Shown right after the replay: task success per setting with 95% CIs and the paired change vs `none` with CI and sign test; success with and without human review in a collapsible section | `summary.json` |
-| 3 | Catch rate and false-alarm rate with counts, and MCC | `summary.json` |
-| 4 | Fixed (wrong → right) vs broken (right → wrong) per setting | `summary.json` |
-| 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants | `heatmap.json` |
-| 6 | Budget bar, cost and tokens per run, cost vs success | `spend.json`, `summary.json` |
-| 7 | Verifier sanity checks: seeded errors by type × verifier (rejected, for the right reason, false alarms on the controls) with a Total row, every seeded answer's decision (folded), and a one-sentence summary of the pre-study S04 check with its table folded | `seeded.json`, `sanity_s04.json` |
-| 8 | Shown first, under the headline: replay of recorded runs for the chosen setting (its picker stays in sync with view 1) (play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
-| 2b | Compare two finished settings: success of each with CI, paired change B − A with CI and sign test, and the runs right only with A or only with B (each opens in the run table) | `pairs.json`, `summary.json` |
-| 9 | Folded behind "Browse all N runs" (opens by itself when a run is opened from another view): every run, filterable by setting, task and outcome; human-review runs in their own table with their route; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
+| – | Headline sentence (built from the data), one line with the data set, advisor, data-as-of time and anything still running; the no-check gauge; "How to read this" (plain-word definitions) | `summary.json`, `meta.json` |
+| 8 | Replay of recorded runs for the chosen setting (setting picker, play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
+| 2 | Settings compared: task success per setting with 95% CIs and the paired change vs `none` with CI and sign test; success with and without human review in a collapsible section | `summary.json` |
+| 2b | Compare two finished settings: success of each with CI, paired change B − A with CI and sign test, and the runs right only with A or only with B (each opens in the run list) | `pairs.json`, `summary.json` |
+| 3+4 | What the verifier did: catch rate and false alarms with counts and MCC, next to runs fixed (wrong → right) and broken (right → wrong) | `summary.json` |
+| 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants; the T06-v003 scoring note | `heatmap.json` |
+| 6 | Budget bar ($ spent of the $20 cap) and cost per run against task success (tokens on hover) | `spend.json`, `summary.json` |
+| 7 | Verifier sanity checks: seeded errors by type × verifier with a Total row, every seeded answer's decision (folded), and a one-sentence summary of the pre-study S04 check with its table folded | `seeded.json`, `sanity_s04.json` |
+| 9 | Folded behind "Browse all N runs" (opens by itself when a run is opened from another view): every run, filterable by setting, task and outcome; human-review runs in their own table; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
 
-Design notes: unfinished settings show `pending (n/N)` everywhere and never a number; every rate prints its count and interval next to it; tasks with scoring under review (T06-v003) get a † note beside every figure they affect; every chart has an `aria-label`, printed values and a tooltip on hover and keyboard focus; the setting picker is a radio group (arrow keys); heatmap rows are buttons with `aria-expanded`; the layout works at 400 px with no sideways page scroll (wide tables scroll inside their box); `prefers-reduced-motion` turns off transitions.
+Design notes: unfinished settings show `pending (n/N)` everywhere and never a number; every rate prints its count and interval next to it; tasks with scoring under review (T06-v003) are marked † with one short note under the headline and the full note beside the heatmap and in each affected run; every chart has an `aria-label`, printed values and a tooltip on hover and keyboard focus; the setting picker is a radio group (arrow keys); heatmap rows are buttons with `aria-expanded`; the layout works at 400 px with no sideways page scroll (wide tables scroll inside their box); `prefers-reduced-motion` turns off transitions.
 
 ## Regenerate the data
 
@@ -82,7 +81,7 @@ The top of the page shows when the data was built ("Data as of …") and a progr
 
 ## Motion
 
-Chart bars grow out of the zero line, intervals open, points fade in, and heatmap and seeded-grid cells fill in one setting at a time, once, when each part first scrolls into view. KPI numbers count up when the setting changes. The printed values never move, nothing animates with `prefers-reduced-motion`, and print/PDF always shows the finished state.
+Chart bars grow out of the zero line, intervals open, points fade in, and heatmap and seeded-grid cells fill in one setting at a time, once, when each part first scrolls into view. The printed values never move, nothing animates with `prefers-reduced-motion`, and print/PDF always shows the finished state.
 
 ## Slides and report
 

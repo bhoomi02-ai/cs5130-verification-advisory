@@ -134,19 +134,6 @@
     animObserver.observe(node);
   }
 
-  // KPI numbers count up to their value when the setting changes. The final text is what was printed.
-  const COUNT_FMT = { pct0: (v) => `${Math.round(v)}%`, pct1: (v) => `${v.toFixed(1)}%`, usd2: (v) => `$${v.toFixed(2)}`, usd3: (v) => `$${v.toFixed(3)}`, int: (v) => `${Math.round(v)}` };
-  const num = (value, fmt) => `<span data-count="${value}" data-fmt="${fmt}">${COUNT_FMT[fmt](value)}</span>`;
-  function countUp(scope) {
-    if (reduceMotion) return;
-    scope.querySelectorAll("[data-count]").forEach((el) => {
-      const target = +el.dataset.count, fmt = COUNT_FMT[el.dataset.fmt];
-      d3.select(el).transition().duration(650).ease(d3.easeCubicOut)
-        .tween("text", () => (t) => { el.textContent = fmt(target * t); })
-        .on("end interrupt", () => { el.textContent = fmt(target); });
-    });
-  }
-
   // ------------------------------------------------------------------ 1. hero + explore
 
   function renderHero() {
@@ -165,7 +152,7 @@
     const tasks = Object.keys(meta.scoring_under_review || {});
     if (tasks.length) {
       note.hidden = false;
-      note.textContent = `${tasks.length === 1 ? "One task's" : `${tasks.length} tasks'`} scoring is under review (${tasks.join(", ")}); details beside each affected figure.`;
+      note.textContent = `${tasks.length === 1 ? "One task's" : `${tasks.length} tasks'`} scoring is under review (${tasks.join(", ")}), marked † below; details beside the heatmap and in each affected run.`;
     }
 
     const none = summary.conditions.none;
@@ -183,8 +170,8 @@
     }
   }
 
-  // The same setting picker appears twice (above the replay and in "Explore a setting"); both stay in sync.
-  const PICKERS = ["replay-pills", "pills"];
+  // The setting picker above the replay.
+  const PICKERS = ["replay-pills"];
   function renderPills() {
     const { summary } = state.data;
     PICKERS.forEach((id) => {
@@ -218,59 +205,15 @@
   function select(c, focusIn) {
     state.selected = c;
     renderPills();
-    renderKpis();
-    countUp(document.getElementById("kpis"));
     renderReplay();
     if (focusIn) {
-      const box = document.getElementById(typeof focusIn === "string" ? focusIn : PICKERS[1]);
+      const box = document.getElementById(typeof focusIn === "string" ? focusIn : PICKERS[0]);
       box.querySelector(`.pill[data-condition="${c}"]`).focus();
     }
   }
 
   function tile(cls, k, v, d, vClass = "") {
     return `<div class="kpi ${cls}"><p class="k">${k}</p><p class="v ${vClass}">${v}</p>${d ? `<p class="d">${d}</p>` : ""}</div>`;
-  }
-
-  function renderKpis() {
-    const { summary, spend } = state.data;
-    const c = state.selected;
-    const e = summary.conditions[c];
-    const box = document.getElementById("kpis");
-    const spendTile = tile("",
-      "Total spend (all settings)",
-      `${usd(spend.total_usd)}`,
-      `of the $${spend.budget_usd.toFixed(0)} cap · ${spend.calls.toLocaleString()} model calls`);
-    if (isPending(e)) {
-      const p = `<span class="pending">${esc(pendingLabel(e))}</span>`;
-      box.innerHTML =
-        tile("", "Task success", p, "runs still in progress", "small") +
-        tile("", "Catch rate", p, "", "small") +
-        tile("", "False alarms", p, "", "small") +
-        tile("", "Fixed vs broken", p, "", "small") +
-        tile("", "Cost per run", p, "", "small") + spendTile;
-      return;
-    }
-    const t = e.task_success;
-    const v = e.verifier;
-    const o = e.outcomes;
-    const review = c !== "none" ? "" : "";
-    box.innerHTML =
-      `<div class="kpi" id="kpi-success"><p class="k">Task success</p><div class="mini"></div>` +
-      `<p class="d">${t.right}/${t.n} runs · ${ci(t.ci_low, t.ci_high)}${review}</p></div>` +
-      (v
-        ? tile("", "Catch rate", num(v.catch_rate.value * 100, "pct0"), `${v.catch_rate.caught}/${v.catch_rate.n} wrong drafts rejected · MCC ${v.mcc == null ? "–" : v.mcc.toFixed(2)}`, "good") +
-          tile("", "False alarms", num(v.false_alarm_rate.value * 100, "pct1"), `${v.false_alarm_rate.flagged}/${v.false_alarm_rate.n} right drafts rejected`, v.false_alarm_rate.value > 0 ? "bad" : "")
-        : tile("", "Catch rate", "–", "no verifier in this setting", "small") + tile("", "False alarms", "–", "no verifier in this setting", "small")) +
-      tile("", "Fixed vs broken",
-        `<span class="ok">+${num(o.fixed, "int")}</span> <span class="tag-small">/</span> <span class="no">−${num(o.broken, "int")}</span>`,
-        `${o.fixed} wrong → right · ${o.broken} right → wrong (of ${e.n_runs} runs)`) +
-      tile("", "Cost per run", num(e.cost.mean_cost_usd, "usd3"),
-        `${kfmt(e.cost.mean_tokens_in)} in / ${kfmt(e.cost.mean_tokens_out)} out tokens · includes the shared draft`) +
-      spendTile;
-    gauge(box.querySelector("#kpi-success .mini"), {
-      value: t.value, big: pct(t.value, 1), label: SHORT[c], size: 200,
-      ariaLabel: `${SHORT[c]} task success ${pct(t.value)}, ${t.right} of ${t.n} runs, ${ci(t.ci_low, t.ci_high)}`,
-    });
   }
 
   // ------------------------------------------------------------------ shared row chart
@@ -530,21 +473,6 @@
       return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.cost, n: e.n_runs, success: e.task_success };
     });
     const done = rows.filter((r) => !r.pending);
-    rowChart(document.querySelector("#cost-chart .chart-slot"), {
-      rows,
-      domain: [0, Math.max(...done.map((r) => r.mean_cost_usd)) * 1.1],
-      axisFormat: (v) => `$${v.toFixed(2)}`,
-      ariaLabel: "Mean cost per run per setting, with tokens.",
-      valueText: (d) => (d.pending ? d.label : `${usd(d.mean_cost_usd, 3)} · ${kfmt(d.mean_tokens_in)} in / ${kfmt(d.mean_tokens_out)} out`),
-      mark: (g, d, x, y) => {
-        g.append("rect").attr("x", x(0)).attr("y", y - 6).attr("height", 12).attr("rx", 3)
-          .attr("width", Math.max(2, x(d.mean_cost_usd) - x(0))).attr("fill", color(d.condition));
-      },
-      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}`
-        : `<strong>${SHORT[d.condition]}</strong> (${d.n} runs)<br>Mean ${usd(d.mean_cost_usd, 4)} per run, total ${usd(d.total_cost_usd)}<br>` +
-          `${kfmt(d.mean_tokens_in)} tokens in, ${kfmt(d.mean_tokens_out)} out per run<br>` +
-          `${d.extra_cost_per_extra_correct == null ? "" : `${usd(d.extra_cost_per_extra_correct)} per extra right answer vs none<br>`}Includes the shared first draft`),
-    });
     renderScatter(done);
   }
 
@@ -572,10 +500,10 @@
     // Printed labels, nudged apart vertically so close points stay readable.
     const labels = points.map((p) => ({ p, x: x(p.mean_cost_usd), y: y(p.success.value) - 12 }))
       .sort((a, b) => a.y - b.y);
-    // Points closer than ~40px share one label column to the right of the group.
+    // Points closer than ~60px share one label column to the right of the group.
     labels.forEach((l) => { l.x0 = l.x; l.y0 = l.y; });
     labels.forEach((l) => {
-      const near = labels.filter((o) => Math.abs(o.x0 - l.x0) < 40 && Math.abs(o.y0 - l.y0) < 40);
+      const near = labels.filter((o) => Math.abs(o.x0 - l.x0) < 60 && Math.abs(o.y0 - l.y0) < 40);
       l.x = Math.max(...near.map((o) => o.x0)) + (near.length > 1 ? 8 : 0);
     });
     for (let i = 1; i < labels.length; i++) {
@@ -593,6 +521,7 @@
     g.selectAll("line, circle").classed("anim-pt", true);
     animateWhenVisible(svg.node(), "scatter-chart");
     attachTip(g, (d) => `<strong>${SHORT[d.condition]}</strong><br>${usd(d.mean_cost_usd, 4)} per run (includes the shared draft)<br>` +
+      `${kfmt(d.mean_tokens_in)} tokens in, ${kfmt(d.mean_tokens_out)} out per run · total ${usd(d.total_cost_usd)}<br>` +
       `Task success ${pct(d.success.value)} (${d.success.right}/${d.success.n}), ${ci(d.success.ci_low, d.success.ci_high)}`);
   }
 
@@ -1056,7 +985,6 @@
     state.selected = state.data.summary.headline.best || "none";
     renderHero();
     renderPills();
-    renderKpis();
     renderHeatmap();
     renderSanity();
     renderSeededTypes();
@@ -1069,8 +997,8 @@
     renderCharts();
     document.getElementById("print-btn").addEventListener("click", () => window.print());
     // Charts are drawn for the width they have; redraw them for the printed page and back afterwards.
-    window.addEventListener("beforeprint", () => { renderCharts(); renderKpis(); });
-    window.addEventListener("afterprint", () => { renderCharts(); renderKpis(); });
+    window.addEventListener("beforeprint", renderCharts);
+    window.addEventListener("afterprint", renderCharts);
     let replayLayout = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
     let last = window.innerWidth;
     window.addEventListener("resize", () => {
@@ -1078,7 +1006,7 @@
       last = window.innerWidth;
       clearTimeout(main.t);
       main.t = setTimeout(() => {
-        renderCharts(); renderKpis();
+        renderCharts();
         const now = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
         if (now !== replayLayout) { replayLayout = now; renderReplay(); }
       }, reduceMotion ? 0 : 120);

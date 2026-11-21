@@ -238,7 +238,7 @@ def test_compare_view_status_strip_and_seeded_types_render_from_the_data(site):
     for c in site["meta"]["conditions"]:
         if not c["complete"]:
             assert f"still running ({c['runs_done']}/{c['runs_expected']})" in out["status"]
-    assert out["png"] >= 7
+    assert out["png"] >= 6
     assert out["width"][0] == out["width"][1] == 400
 
 
