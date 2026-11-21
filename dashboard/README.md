@@ -16,7 +16,7 @@ The page loads `data/*.json` with `fetch`, so it needs a web server (opening `in
 | # | View | Reads |
 |---|---|---|
 | 1 | Headline sentence and data set, no-check gauge, and KPI tiles for a chosen setting (task success with CI, catch rate, false alarms, fixed vs broken, cost per run, total spend vs the $20 cap) | `summary.json`, `spend.json`, `meta.json` |
-| 2 | Task success per setting with 95% CIs; paired change vs `none` with CI and sign test; success with and without human review | `summary.json` |
+| 2 | Shown right after the replay: task success per setting with 95% CIs and the paired change vs `none` with CI and sign test; success with and without human review in a collapsible section | `summary.json` |
 | 3 | Catch rate and false-alarm rate with counts, and MCC | `summary.json` |
 | 4 | Fixed (wrong → right) vs broken (right → wrong) per setting | `summary.json` |
 | 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants | `heatmap.json` |

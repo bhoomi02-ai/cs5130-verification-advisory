@@ -42,24 +42,6 @@
     <p class="note review-note" data-review="replay" hidden></p>
   </section>
 
-  <!-- 1. Headline KPIs for one setting -->
-  <section class="card" id="explore" aria-labelledby="explore-h">
-    <div class="card-head">
-      <h2 id="explore-h">Explore a setting</h2>
-      <p class="sub">Every number is for the setting you pick, over the same shared first drafts.</p>
-    </div>
-    <div class="pills" role="radiogroup" aria-label="Verification setting" id="pills"></div>
-    <div class="kpis" id="kpis"></div>
-    <dl class="glossary" id="glossary">
-      <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
-      <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
-      <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
-      <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
-      <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
-      <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
-    </dl>
-  </section>
-
   <!-- 2. Settings comparison -->
   <section class="card" id="compare" aria-labelledby="compare-h">
     <div class="card-head">
@@ -76,11 +58,32 @@
         <div class="chart-slot"></div>
       </figure>
     </div>
-    <p class="note">Task success counted two ways. Human review means the run was handed to a person: the verifier abstained, its verdict could not be read, or it rejected and the second check did not accept the revision.</p>
-    <div class="table-wrap">
-      <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
-    </div>
+    <details class="answers" id="hr-details">
+      <summary>Without human-review runs</summary>
+      <p class="note">Task success counted two ways. Human review means the run was handed to a person: the verifier abstained, its verdict could not be read, or it rejected and the second check did not accept the revision.</p>
+      <div class="table-wrap">
+        <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
+      </div>
+    </details>
     <p class="note review-note" data-review="compare" hidden></p>
+  </section>
+
+  <!-- 1. Headline KPIs for one setting -->
+  <section class="card" id="explore" aria-labelledby="explore-h">
+    <div class="card-head">
+      <h2 id="explore-h">Explore a setting</h2>
+      <p class="sub">Every number is for the setting you pick, over the same shared first drafts.</p>
+    </div>
+    <div class="pills" role="radiogroup" aria-label="Verification setting" id="pills"></div>
+    <div class="kpis" id="kpis"></div>
+    <dl class="glossary" id="glossary">
+      <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
+      <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
+      <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
+      <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
+      <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
+      <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
+    </dl>
   </section>
 
   <!-- 2b. Compare two settings -->
