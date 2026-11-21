@@ -79,6 +79,11 @@ All colours are CSS variables at the top of `style.css` (palette "midnight teal 
 
 The top of the page shows when the data was built ("Data as of …") and a progress bar per setting, so a setting still running is never quoted as a result.
 
+## Names and p-values
+
+- **Setting names** on the page, in the report and on slides: None, Self, Peer, Dedicated, **No calculator**, Cross-family. The code keeps its IDs (`weakened`, `cross_family`); `dashboard_export.SPEND_LABELS` maps them for the spend lines.
+- **p-values** are task-level sign tests. Comparisons with None are shown raw and Holm-adjusted for the number of finished comparisons (`sign_test_p_holm`); "Compare two settings" shows the raw value, marked unadjusted. The proposal predicted the dedicated verifier would help most but did not name one primary test. Bootstrap intervals are not adjusted.
+
 ## Motion
 
 Chart bars grow out of the zero line, intervals open, points fade in, and heatmap and seeded-grid cells fill in one setting at a time, once, when each part first scrolls into view. The printed values never move, nothing animates with `prefers-reduced-motion`, and print/PDF always shows the finished state.

@@ -106,7 +106,7 @@
     }
     g.append("text").attr("text-anchor", "middle").attr("y", size * 0.04)
       .attr("fill", pending ? AMBER : TEXT).attr("font-weight", 700)
-      .attr("font-size", pending ? size * 0.075 : size * 0.18).text(big);
+      .attr("font-size", pending ? size * 0.075 : big.length > 4 ? size * 0.155 : size * 0.18).text(big);
     g.append("text").attr("text-anchor", "middle").attr("y", size * 0.14).attr("fill", MUTED)
       .attr("font-size", size * 0.05).text(label);
     if (detail) {
@@ -163,7 +163,7 @@
     } else {
       const t = none.task_success;
       gauge(slot, {
-        value: t.value, big: pct(t.value, 0), label: "Baseline accuracy (no check)",
+        value: t.value, big: pct(t.value), label: "Baseline accuracy (no check)",
         detail: `${t.right} of ${t.n} runs · ${ci(t.ci_low, t.ci_high)}`,
         ariaLabel: `No-check baseline accuracy ${pct(t.value)}, ${t.right} of ${t.n} runs, ${ci(t.ci_low, t.ci_high)}`,
       });
@@ -302,7 +302,7 @@
       zero: 0,
       axisFormat: (v) => `${v > 0 ? "+" : ""}${Math.round(v * 100)}`,
       ariaLabel: "Change in task success against no check, in percentage points, with 95% intervals.",
-      valueText: (d) => (d.pending ? d.label : `${pts(d.delta)} · ${pts(d.ci_low).replace(" pts", "")} to ${pts(d.ci_high)} · ${pval(d.sign_test_p)}`),
+      valueText: (d) => (d.pending ? d.label : `${pts(d.delta)} · ${pts(d.ci_low).replace(" pts", "")} to ${pts(d.ci_high)} · ${pval(d.sign_test_p)}${d.sign_test_p_holm != null ? ` (Holm ${d.sign_test_p_holm.toFixed(3)})` : ""}`),
       mark: (g, d, x, y) => {
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
@@ -312,9 +312,18 @@
       tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}: no comparison until it finishes.`
         : `<strong>${SHORT[d.condition]} vs none</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
           `${d.n_pairs} paired runs over ${d.n_tasks} tasks<br>Right only here: ${d.runs_only_condition_right} runs; right only without a check: ${d.runs_only_none_right}<br>` +
-          `Better on ${d.tasks_better} tasks, worse on ${d.tasks_worse} · sign test ${pval(d.sign_test_p)}`),
+          `Better on ${d.tasks_better} tasks, worse on ${d.tasks_worse} · sign test ${pval(d.sign_test_p)}` +
+          `${d.sign_test_p_holm != null ? `<br>Holm-adjusted over ${d.n_comparisons} comparisons with None: p = ${d.sign_test_p_holm.toFixed(3)}` : ""}`),
     });
 
+    const holm = summary.comparisons.filter((c) => c.sign_test_p_holm != null);
+    const best = holm.slice().sort((a, b) => a.sign_test_p - b.sign_test_p)[0];
+    document.getElementById("p-note").textContent = best
+      ? `p is a task-level sign test, shown raw and Holm-adjusted for the ${best.n_comparisons} comparisons with None. ` +
+        `The proposal predicted the dedicated verifier would help most but did not name one primary test, so the adjusted value is the one to quote: ` +
+        `${SHORT[best.condition]} p = ${best.sign_test_p.toFixed(3)} raw, ${best.sign_test_p_holm.toFixed(3)} adjusted. ` +
+        `With only ${best.tasks_better + best.tasks_worse} tasks changing, the raw p cannot go below ${(2 * 0.5 ** (best.tasks_better + best.tasks_worse)).toFixed(3)}. The intervals are not adjusted either.`
+      : "";
     const t = document.getElementById("hr-table");
     const head = `<thead><tr><th>Setting</th><th class="num">All runs counted</th><th class="num">Sent to human review</th><th>Why (abstain · unreadable · revision not accepted)</th><th class="num">Not counting human review</th></tr></thead>`;
     const body = ORDER.map((c) => {
@@ -460,7 +469,7 @@
     const { summary, spend } = state.data;
     document.getElementById("cost-sub").textContent = spend.note;
     const share = Math.min(1, spend.total_usd / spend.budget_usd);
-    const top = spend.by_condition.slice(0, 6).map((r) => `${esc(r.name)} ${usd(r.cost_usd)}`).join(" · ");
+    const top = spend.by_condition.slice(0, 6).map((r) => `${esc(r.label || r.name)} ${usd(r.cost_usd)}`).join(" · ");
     document.getElementById("budget").innerHTML =
       `<div class="row"><span><span class="big">${usd(spend.total_usd)}</span> spent of the $${spend.budget_usd.toFixed(0)} cap</span>` +
       `<span>${usd(spend.left_usd)} left · ${spend.calls.toLocaleString()} model calls (${spend.failed_calls} failed)</span></div>` +
@@ -497,29 +506,17 @@
       .attr("stroke", (d) => color(d.condition)).attr("stroke-width", 2).attr("opacity", 0.5);
     g.append("circle").attr("cx", (d) => x(d.mean_cost_usd)).attr("cy", (d) => y(d.success.value)).attr("r", 7)
       .attr("fill", (d) => color(d.condition)).attr("stroke", BG).attr("stroke-width", 2);
-    // Printed labels, nudged apart vertically so close points stay readable.
-    const labels = points.map((p) => ({ p, x: x(p.mean_cost_usd), y: y(p.success.value) - 12 }))
-      .sort((a, b) => a.y - b.y);
-    // Points closer than ~60px share one label column to the right of the group.
-    labels.forEach((l) => { l.x0 = l.x; l.y0 = l.y; });
-    labels.forEach((l) => {
-      const near = labels.filter((o) => Math.abs(o.x0 - l.x0) < 60 && Math.abs(o.y0 - l.y0) < 40);
-      l.x = Math.max(...near.map((o) => o.x0)) + (near.length > 1 ? 8 : 0);
-    });
-    for (let i = 1; i < labels.length; i++) {
-      for (let j = 0; j < i; j++) {
-        if (Math.abs(labels[i].x - labels[j].x) < 110 && labels[i].y - labels[j].y < 15) labels[i].y = labels[j].y + 15;
-      }
-    }
-    labels.forEach((l) => {
+    // On-chart labels only for points with no neighbour within 70 px; every value is also printed in the list below.
+    const pos = points.map((p) => ({ p, x: x(p.mean_cost_usd), y: y(p.success.value) }));
+    pos.forEach((l) => {
+      if (pos.some((o) => o !== l && Math.abs(o.x - l.x) < 70 && Math.abs(o.y - l.y) < 24)) return;
       const text = `${SHORT[l.p.condition]} ${pct(l.p.success.value)}`;
       const right = l.x + 10 + text.length * 6.6 < w - m.r;
-      svg.append("text").attr("class", "lbl").attr("x", l.x + (right ? 10 : -10)).attr("y", l.y)
-        .attr("text-anchor", right ? "start" : "end")
-        .text(text);
+      svg.append("text").attr("class", "lbl").attr("x", l.x + (right ? 10 : -10)).attr("y", l.y - 10)
+        .attr("text-anchor", right ? "start" : "end").text(text);
     });
-    g.selectAll("line, circle").classed("anim-pt", true);
-    animateWhenVisible(svg.node(), "scatter-chart");
+    slot.insertAdjacentHTML("beforeend", `<ul class="value-list">${points.map((p) =>
+      `<li><span class="dot" style="background:${color(p.condition)}"></span><b>${SHORT[p.condition]}</b> ${usd(p.mean_cost_usd, 3)} per run · ${pct(p.success.value)} right</li>`).join("")}</ul>`);
     attachTip(g, (d) => `<strong>${SHORT[d.condition]}</strong><br>${usd(d.mean_cost_usd, 4)} per run (includes the shared draft)<br>` +
       `${kfmt(d.mean_tokens_in)} tokens in, ${kfmt(d.mean_tokens_out)} out per run · total ${usd(d.total_cost_usd)}<br>` +
       `Task success ${pct(d.success.value)} (${d.success.right}/${d.success.n}), ${ci(d.success.ci_low, d.success.ci_high)}`);
@@ -608,7 +605,7 @@
       tile("", "Change, B − A", `<span class="${p.delta > 0 ? "ok" : p.delta < 0 ? "no" : ""}">${pts(p.delta)}</span>`,
         `95% CI ${pts(p.ci_low)} to ${pts(p.ci_high)} · ${p.n_pairs} paired runs, ${p.n_tasks} tasks`) +
       tile("", "Sign test over tasks", pval(p.sign_test_p),
-        `B better on ${p.tasks_b_better} task${p.tasks_b_better === 1 ? "" : "s"}, A better on ${p.tasks_a_better}; the rest tie`, "small") +
+        `unadjusted for multiple comparisons · B better on ${p.tasks_b_better} task${p.tasks_b_better === 1 ? "" : "s"}, A better on ${p.tasks_a_better}; the rest tie`, "small") +
       `</div><figure class="chart" id="pair-chart"><figcaption>Change in task success, B − A, with its 95% interval</figcaption><div class="chart-slot"></div></figure>` +
       `<div class="pair-lists"><div><h3>Right only with ${esc(SHORT[b])} (${p.runs_only_b_right.length})</h3>${pairList(p.runs_only_b_right, "b", a)}</div>` +
       `<div><h3>Right only with ${esc(SHORT[a])} (${p.runs_only_a_right.length})</h3>${pairList(p.runs_only_a_right, "a", b)}</div></div>` +

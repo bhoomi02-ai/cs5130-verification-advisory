@@ -299,7 +299,15 @@ def comparisons(rows: list[dict], complete: list[str], seed: int = 0) -> list[di
             "sign_test_p": _stat(c["sign_test_p"]),
             "note": None if pd.isna(c.get("note")) else c.get("note"),
         })
-    return sorted(out, key=lambda x: order.get(x["condition"], 99))
+    out = sorted(out, key=lambda x: order.get(x["condition"], 99))
+    # Holm adjustment over the comparisons against none that are shown (finished settings only).
+    usable = sorted((c for c in out if c["sign_test_p"] is not None), key=lambda c: c["sign_test_p"])
+    m, running = len(usable), 0.0
+    for i, c in enumerate(usable):
+        running = max(running, min(1.0, (m - i) * c["sign_test_p"]))
+        c["sign_test_p_holm"] = running
+        c["n_comparisons"] = m
+    return out
 
 
 def pairwise(rows: list[dict], complete: list[str], seed: int = 0) -> list[dict]:
@@ -445,6 +453,19 @@ def heatmap(rows: list[dict], tasks: list[str], complete: list[str], prog: dict)
 # --------------------------------------------------------------------------- spend
 
 
+SPEND_LABELS = {
+    "none": "None", "self": "Self", "peer": "Peer", "dedicated": "Dedicated", "weakened": "No calculator",
+    "cross_family": "Cross-family", "draft": "first drafts", "pilot": "pilot",
+}
+
+
+def spend_label(name: str) -> str:
+    """The name the dashboard, report and slides use for a spend line (code IDs stay as they are)."""
+    if name in SPEND_LABELS:
+        return SPEND_LABELS[name]
+    return "pre-study checks" if name.endswith("-check") else name
+
+
 def spend(log: list[dict], budget: float) -> dict:
     by: dict[str, dict] = {"condition": defaultdict(float), "model": defaultdict(float), "day": defaultdict(float)}
     calls: dict[str, Counter] = {"condition": Counter(), "model": Counter(), "day": Counter()}
@@ -457,7 +478,8 @@ def spend(log: list[dict], budget: float) -> dict:
     total = sum(call.get("cost_usd") or 0.0 for call in log)
 
     def rows(kind: str, sort_by_name: bool = False) -> list[dict]:
-        items = [{"name": k, "cost_usd": v, "calls": calls[kind][k]} for k, v in by[kind].items()]
+        items = [{"name": k, "label": spend_label(k) if kind == "condition" else k, "cost_usd": v, "calls": calls[kind][k]}
+                 for k, v in by[kind].items()]
         return sorted(items, key=(lambda x: x["name"]) if sort_by_name else (lambda x: -x["cost_usd"]))
 
     return {

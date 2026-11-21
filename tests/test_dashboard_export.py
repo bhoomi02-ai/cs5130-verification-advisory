@@ -364,3 +364,13 @@ def test_seeded_grouped_by_error_type_with_pending_settings(built):
     assert errors["per_condition"]["peer"] == {"status": "pending"}  # 1 of 2 seeded answers reviewed
     controls = groups["none"]
     assert controls["seeded_error"] is False and controls["per_condition"]["self"]["right_reason"] is None
+
+
+def test_comparisons_carry_holm_p_and_spend_uses_report_names(built):
+    comps = built["load"]("summary.json")["comparisons"]
+    assert all("sign_test_p_holm" in c and c["n_comparisons"] == len(comps) for c in comps)
+    assert all(c["sign_test_p_holm"] >= c["sign_test_p"] for c in comps)
+    # Holm: the smallest p is multiplied by the number of comparisons (capped at 1)
+    smallest = min(comps, key=lambda c: c["sign_test_p"])
+    assert smallest["sign_test_p_holm"] == pytest.approx(min(1.0, len(comps) * smallest["sign_test_p"]))
+    assert ex.spend_label("weakened") == "No calculator" and ex.spend_label("cross-check") == "pre-study checks"

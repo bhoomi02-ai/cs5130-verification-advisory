@@ -16,7 +16,7 @@ const TOKENS={cy:['--right','#2DD4BF'],vi:['--accent-to','#60A5FA'],vs:['--accen
 const C={};
 function readTokens(){const cs=getComputedStyle(document.documentElement);Object.entries(TOKENS).forEach(([k,[v,f]])=>{C[k]=(cs.getPropertyValue(v)||'').trim()||f})}
 readTokens();
-const NAMES={none:['No verifier','answer goes straight out'],self:['Self-check','advisor re-reads'],peer:['Peer check','second advisor'],dedicated:['Dedicated verifier','+ calculator'],weakened:['Verifier','no calculator'],cross_family:['Cross-family verifier','gpt-oss-20b + calculator'],'cross-family':['Cross-family verifier','gpt-oss-20b + calculator']};
+const NAMES={none:['No verifier','answer goes straight out'],self:['Self-check','advisor re-reads'],peer:['Peer check','second advisor'],dedicated:['Dedicated verifier','+ calculator'],weakened:['No-calculator verifier','same role, no calculator'],cross_family:['Cross-family verifier','gpt-oss-20b + calculator'],'cross-family':['Cross-family verifier','gpt-oss-20b + calculator']};
 const lerp=(a,b,t)=>a+(b-a)*Math.max(0,Math.min(1,t));
 const seg=(p,a,b)=>Math.max(0,Math.min(1,(p-a)/(b-a)));
 const reduce=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
