@@ -71,9 +71,13 @@ python dashboard/build_data.py
 
 Tests: `tests/test_dashboard_export.py` builds from a tiny fixture that contains answer-key values and account identifiers on purpose, and fails if any of them reach the output.
 
+## Colours
+
+All colours are CSS variables at the top of `style.css` (palette "midnight teal + amber"): `--right` (teal) for right and fixed, `--wrong` (red) for wrong and broken, `--pending` (amber) for pending and human review, `--accent-from`/`--accent-to` (teal → blue) for highlights, and one `--c-<setting>` colour per setting (slate, sky, indigo, teal, rose, lavender). `app.js` and `replay.js` read these variables, so a palette change is one edit. Every text colour has at least 4.5:1 contrast on every background.
+
 ## Mockup
 
-`mockup/dashboard_figma.svg` (and a PNG render) is the concept design: dark theme, violet `#8B5CF6` to cyan `#22D3EE` on `#07060F`, pink `#FF5C8A` for wrong or broken. Its numbers are placeholders from the 10 × 5 pilot baseline; the page will show the main study (32 tasks × 3 runs).
+`mockup/dashboard_figma.svg` (and a PNG render) is the original concept design (violet to cyan on near-black); the page has since moved to the midnight teal palette above. Its numbers are placeholders from the 10 × 5 pilot baseline; the page will show the main study (32 tasks × 3 runs).
 
 The top of the page shows when the data was built ("Data as of …") and a progress bar per setting, so a setting still running is never quoted as a result.
 

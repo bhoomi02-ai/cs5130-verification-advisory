@@ -12,7 +12,7 @@
    stacked layout is used below 560 px so the diagram stays readable on phones. */
 (function(){
 'use strict';
-const TOKENS={cy:['--cyan','#22D3EE'],vi:['--violet','#8B5CF6'],vs:['--violet-soft','#C4B5FD'],bad:['--pink','#FF5C8A'],amber:['--amber','#FBBF24'],mute:['--muted','#A9A4C8'],line:['--line','#2A2650'],fg:['--text','#ECEAF7'],panel:['--card-top','#1A1735'],bg:['--bg','#07060F']};
+const TOKENS={cy:['--right','#2DD4BF'],vi:['--accent-to','#60A5FA'],vs:['--accent-soft','#93C5FD'],bad:['--wrong','#F25F5C'],amber:['--pending','#F59E0B'],mute:['--muted','#9AA8BF'],line:['--line','#2A3650'],fg:['--text','#E6EDF7'],panel:['--card-top','#182238'],bg:['--bg','#0B1220']};
 const C={};
 function readTokens(){const cs=getComputedStyle(document.documentElement);Object.entries(TOKENS).forEach(([k,[v,f]])=>{C[k]=(cs.getPropertyValue(v)||'').trim()||f})}
 readTokens();
@@ -40,11 +40,11 @@ const CSS=()=>`.ar-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minm
 .ar-side{display:flex;flex-direction:column;gap:12px;min-width:0}
 .ar-ctls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .ar-btn{font:inherit;font-size:13px;color:${C.mute};background:${C.panel};border:1px solid ${C.line};border-radius:8px;padding:7px 14px;cursor:pointer}
-.ar-btn:hover{color:${C.fg}}.ar-btn.on{color:#fff;border-color:${C.cy};box-shadow:0 0 14px rgba(34,211,238,.4)}
+.ar-btn:hover{color:${C.fg}}.ar-btn.on{color:${C.fg};border-color:${C.cy};box-shadow:0 0 14px ${C.cy}66}
 .ar-btn:focus-visible{outline:2px solid ${C.fg};outline-offset:2px}
 .ar-cnts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ar-cnt{background:rgba(255,255,255,.04);border:1px solid ${C.line};border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
-.ar-cnt span{font-size:12px;color:${C.mute}}.ar-cnt b{font-size:21px;font-variant-numeric:tabular-nums;color:#fff}
+.ar-cnt span{font-size:12px;color:${C.mute}}.ar-cnt b{font-size:21px;font-variant-numeric:tabular-nums;color:${C.fg}}
 .ar-log{display:flex;flex-direction:column;gap:4px;font-size:12px;min-height:150px;overflow:hidden}
 .ar-log div{display:flex;gap:8px;padding:5px 8px;border-radius:6px;background:rgba(255,255,255,.035);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ar-banner{font-size:12px;color:${C.amber};margin-top:6px}

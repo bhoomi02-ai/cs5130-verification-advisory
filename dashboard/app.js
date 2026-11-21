@@ -9,9 +9,12 @@
     none: "None", self: "Self", peer: "Peer", dedicated: "Dedicated",
     weakened: "No calculator", cross_family: "Cross-family",
   };
-  const PINK = "#FF5C8A", CYAN = "#22D3EE", VIOLET = "#8B5CF6", AMBER = "#FBBF24";
+  // Every colour comes from the CSS variables in style.css, so the palette lives in one place.
   const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  const color = (c) => css(`--c-${c}`) || "#A9A4C8";
+  const PINK = css("--wrong"), CYAN = css("--right"), AMBER = css("--pending");
+  const VIOLET = css("--accent-to"), ACCENT_FROM = css("--accent-from");
+  const BG = css("--bg"), TEXT = css("--text"), MUTED = css("--muted"), FAINT = css("--faint"), TRACK = css("--line-soft");
+  const color = (c) => css(`--c-${c}`) || MUTED;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const state = { data: null, selected: null };
@@ -87,8 +90,8 @@
       .attr("aria-label", ariaLabel);
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id", id).attr("x1", 0).attr("y1", 1).attr("x2", 1).attr("y2", 0);
-    grad.append("stop").attr("offset", 0).attr("stop-color", VIOLET);
-    grad.append("stop").attr("offset", 1).attr("stop-color", CYAN);
+    grad.append("stop").attr("offset", 0).attr("stop-color", ACCENT_FROM);
+    grad.append("stop").attr("offset", 1).attr("stop-color", VIOLET);
     const glow = defs.append("filter").attr("id", `${id}f`).attr("x", "-30%").attr("y", "-30%").attr("width", "160%").attr("height", "160%");
     glow.append("feGaussianBlur").attr("stdDeviation", size * 0.02).attr("result", "b");
     const merge = glow.append("feMerge");
@@ -96,18 +99,18 @@
     merge.append("feMergeNode").attr("in", "SourceGraphic");
     const g = svg.append("g").attr("transform", `translate(${w / 2},${r + thick})`);
     const arc = d3.arc().innerRadius(r - thick / 2).outerRadius(r + thick / 2).cornerRadius(thick / 2);
-    g.append("path").attr("d", arc({ startAngle: start, endAngle: end })).attr("fill", "#1E1B3A");
+    g.append("path").attr("d", arc({ startAngle: start, endAngle: end })).attr("fill", TRACK);
     if (!pending && value != null) {
       g.append("path").attr("d", arc({ startAngle: start, endAngle: start + (end - start) * value }))
         .attr("fill", `url(#${id})`).attr("filter", `url(#${id}f)`);
     }
     g.append("text").attr("text-anchor", "middle").attr("y", size * 0.04)
-      .attr("fill", pending ? AMBER : "#fff").attr("font-weight", 700)
+      .attr("fill", pending ? AMBER : TEXT).attr("font-weight", 700)
       .attr("font-size", pending ? size * 0.075 : size * 0.18).text(big);
-    g.append("text").attr("text-anchor", "middle").attr("y", size * 0.14).attr("fill", "#A9A4C8")
+    g.append("text").attr("text-anchor", "middle").attr("y", size * 0.14).attr("fill", MUTED)
       .attr("font-size", size * 0.05).text(label);
     if (detail) {
-      g.append("text").attr("text-anchor", "middle").attr("y", size * 0.37).attr("fill", "#A9A4C8")
+      g.append("text").attr("text-anchor", "middle").attr("y", size * 0.37).attr("fill", MUTED)
         .attr("font-size", size * 0.046).text(detail);
     }
     return svg;
@@ -253,7 +256,7 @@
       .call(d3.axisBottom(x).ticks(tickCount).tickFormat(axisFormat));
     if (zero != null) {
       svg.append("line").attr("x1", x(zero)).attr("x2", x(zero)).attr("y1", m.t).attr("y2", h - m.b)
-        .attr("stroke", "#A9A4C8").attr("stroke-dasharray", "4 4").attr("stroke-width", 1);
+        .attr("stroke", MUTED).attr("stroke-dasharray", "4 4").attr("stroke-width", 1);
     }
     const row = svg.selectAll("g.row").data(rows).join("g").attr("class", "row mark")
       .attr("transform", (d, i) => `translate(0,${m.t + i * height})`)
@@ -292,7 +295,7 @@
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
         g.append("circle").attr("cx", x(d.value)).attr("cy", y).attr("r", 6).attr("fill", color(d.condition))
-          .attr("stroke", "#07060F").attr("stroke-width", 2);
+          .attr("stroke", BG).attr("stroke-width", 2);
       },
       tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)} runs saved; no numbers until it finishes.`
         : `<strong>${SHORT[d.condition]}</strong><br>Task success ${pct(d.value)}<br>${d.right} of ${d.n} runs right<br>${ci(d.ci_low, d.ci_high)} (bootstrap over tasks)`),
@@ -317,7 +320,7 @@
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
         g.append("rect").attr("x", x(d.delta) - 6).attr("y", y - 6).attr("width", 12).attr("height", 12)
-          .attr("transform", `rotate(45 ${x(d.delta)} ${y})`).attr("fill", color(d.condition)).attr("stroke", "#07060F").attr("stroke-width", 2);
+          .attr("transform", `rotate(45 ${x(d.delta)} ${y})`).attr("fill", color(d.condition)).attr("stroke", BG).attr("stroke-width", 2);
       },
       tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}: no comparison until it finishes.`
         : `<strong>${SHORT[d.condition]} vs none</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
@@ -362,7 +365,7 @@
             .attr("width", Math.max(2, x(v) - x(0))).attr("fill", fill);
           const tx = x(v) + 6, inside = tx > x.range()[1] - 150;
           g.append("text").attr("x", inside ? x(v) - 6 : tx).attr("y", yy + 4).attr("text-anchor", inside ? "end" : "start")
-            .attr("class", "lbl").style("fill", inside ? "#07060F" : null).style("font-weight", inside ? 700 : null).text(text);
+            .attr("class", "lbl").style("fill", inside ? BG : null).style("font-weight", inside ? 700 : null).text(text);
         };
         bar(y, d.catch_rate.value, CYAN, `caught ${pct(d.catch_rate.value, 0)} (${d.catch_rate.caught}/${d.catch_rate.n})`);
         bar(y + 18, d.false_alarm_rate.value, PINK, `false alarms ${pct(d.false_alarm_rate.value)} (${d.false_alarm_rate.flagged}/${d.false_alarm_rate.n})`);
@@ -412,7 +415,7 @@
 
   // ------------------------------------------------------------------ 5. heatmap
 
-  const heatColor = d3.scaleLinear().domain([0, 0.5, 1]).range([PINK, VIOLET, CYAN]).interpolate(d3.interpolateRgb);
+  const heatColor = d3.scaleLinear().domain([0, 0.5, 1]).range([PINK, VIOLET, CYAN]).interpolate(d3.interpolateRgb); // wrong → middle → right
 
   function chip(cell, where) {
     if (!cell || cell.status === "pending") {
@@ -520,7 +523,7 @@
       .attr("y1", (d) => y(d.success.ci_low)).attr("y2", (d) => y(d.success.ci_high))
       .attr("stroke", (d) => color(d.condition)).attr("stroke-width", 2).attr("opacity", 0.5);
     g.append("circle").attr("cx", (d) => x(d.mean_cost_usd)).attr("cy", (d) => y(d.success.value)).attr("r", 7)
-      .attr("fill", (d) => color(d.condition)).attr("stroke", "#07060F").attr("stroke-width", 2);
+      .attr("fill", (d) => color(d.condition)).attr("stroke", BG).attr("stroke-width", 2);
     // Printed labels, nudged apart vertically so close points stay readable.
     const labels = points.map((p) => ({ p, x: x(p.mean_cost_usd), y: y(p.success.value) - 12 }))
       .sort((a, b) => a.y - b.y);
@@ -643,7 +646,7 @@
       mark: (g, d, x, y) => {
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(b)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.6);
-        g.append("circle").attr("cx", x(d.delta)).attr("cy", y).attr("r", 7).attr("fill", color(b)).attr("stroke", "#07060F").attr("stroke-width", 2);
+        g.append("circle").attr("cx", x(d.delta)).attr("cy", y).attr("r", 7).attr("fill", color(b)).attr("stroke", BG).attr("stroke-width", 2);
       },
       tipHtml: (d) => `<strong>${SHORT[b]} − ${SHORT[a]}</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
         `Runs right only with B: ${d.runs_only_b_right.length}; only with A: ${d.runs_only_a_right.length}<br>Sign test over tasks ${pval(d.sign_test_p)}`,
@@ -736,10 +739,10 @@
       canvas.width = w * scale; canvas.height = h * scale;
       const ctx = canvas.getContext("2d");
       ctx.scale(scale, scale);
-      ctx.fillStyle = css("--card") || "#110F22"; ctx.fillRect(0, 0, w, h);
-      if (caption) { ctx.fillStyle = css("--text") || "#fff"; ctx.font = "600 15px -apple-system, Segoe UI, Helvetica, Arial, sans-serif"; ctx.fillText(caption, pad, pad + 12); }
+      ctx.fillStyle = css("--card"); ctx.fillRect(0, 0, w, h);
+      if (caption) { ctx.fillStyle = TEXT; ctx.font = "600 15px -apple-system, Segoe UI, Helvetica, Arial, sans-serif"; ctx.fillText(caption, pad, pad + 12); }
       ctx.drawImage(img, pad, pad + capH, vb.width, vb.height);
-      ctx.fillStyle = css("--faint") || "#7D78A3"; ctx.font = "11px -apple-system, Segoe UI, Helvetica, Arial, sans-serif";
+      ctx.fillStyle = FAINT; ctx.font = "11px -apple-system, Segoe UI, Helvetica, Arial, sans-serif";
       ctx.fillText(`CS 5130 verification study · 32 tasks × 3 runs · data as of ${state.data.meta.generated_at.slice(0, 10)}`, pad, h - 8);
       canvas.toBlob((blob) => {
         const a = document.createElement("a");
