@@ -9,9 +9,12 @@
     none: "None", self: "Self", peer: "Peer", dedicated: "Dedicated",
     weakened: "No calculator", cross_family: "Cross-family",
   };
-  const PINK = "#FF5C8A", CYAN = "#22D3EE", VIOLET = "#8B5CF6", AMBER = "#FBBF24";
+  // Every colour comes from the CSS variables in style.css, so the palette lives in one place.
   const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  const color = (c) => css(`--c-${c}`) || "#A9A4C8";
+  const PINK = css("--wrong"), CYAN = css("--right"), AMBER = css("--pending");
+  const VIOLET = css("--accent-to"), ACCENT_FROM = css("--accent-from");
+  const BG = css("--bg"), TEXT = css("--text"), MUTED = css("--muted"), FAINT = css("--faint"), TRACK = css("--line-soft");
+  const color = (c) => css(`--c-${c}`) || MUTED;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const state = { data: null, selected: null };
@@ -57,7 +60,7 @@
   // ------------------------------------------------------------------ data
 
   async function loadAll() {
-    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs"];
+    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs", "pairs"];
     const files = await Promise.all(names.map(async (n) => {
       const res = await fetch(`data/${n}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error(`data/${n}.json: HTTP ${res.status}`);
@@ -87,8 +90,8 @@
       .attr("aria-label", ariaLabel);
     const defs = svg.append("defs");
     const grad = defs.append("linearGradient").attr("id", id).attr("x1", 0).attr("y1", 1).attr("x2", 1).attr("y2", 0);
-    grad.append("stop").attr("offset", 0).attr("stop-color", VIOLET);
-    grad.append("stop").attr("offset", 1).attr("stop-color", CYAN);
+    grad.append("stop").attr("offset", 0).attr("stop-color", ACCENT_FROM);
+    grad.append("stop").attr("offset", 1).attr("stop-color", VIOLET);
     const glow = defs.append("filter").attr("id", `${id}f`).attr("x", "-30%").attr("y", "-30%").attr("width", "160%").attr("height", "160%");
     glow.append("feGaussianBlur").attr("stdDeviation", size * 0.02).attr("result", "b");
     const merge = glow.append("feMerge");
@@ -96,21 +99,39 @@
     merge.append("feMergeNode").attr("in", "SourceGraphic");
     const g = svg.append("g").attr("transform", `translate(${w / 2},${r + thick})`);
     const arc = d3.arc().innerRadius(r - thick / 2).outerRadius(r + thick / 2).cornerRadius(thick / 2);
-    g.append("path").attr("d", arc({ startAngle: start, endAngle: end })).attr("fill", "#1E1B3A");
+    g.append("path").attr("d", arc({ startAngle: start, endAngle: end })).attr("fill", TRACK);
     if (!pending && value != null) {
       g.append("path").attr("d", arc({ startAngle: start, endAngle: start + (end - start) * value }))
         .attr("fill", `url(#${id})`).attr("filter", `url(#${id}f)`);
     }
     g.append("text").attr("text-anchor", "middle").attr("y", size * 0.04)
-      .attr("fill", pending ? AMBER : "#fff").attr("font-weight", 700)
+      .attr("fill", pending ? AMBER : TEXT).attr("font-weight", 700)
       .attr("font-size", pending ? size * 0.075 : size * 0.18).text(big);
-    g.append("text").attr("text-anchor", "middle").attr("y", size * 0.14).attr("fill", "#A9A4C8")
+    g.append("text").attr("text-anchor", "middle").attr("y", size * 0.14).attr("fill", MUTED)
       .attr("font-size", size * 0.05).text(label);
     if (detail) {
-      g.append("text").attr("text-anchor", "middle").attr("y", size * 0.37).attr("fill", "#A9A4C8")
+      g.append("text").attr("text-anchor", "middle").attr("y", size * 0.37).attr("fill", MUTED)
         .attr("font-size", size * 0.046).text(detail);
     }
     return svg;
+  }
+
+  // ------------------------------------------------------------------ motion: once, when scrolled into view
+
+  const seenAnim = new Set();
+  const animObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      animObserver.unobserve(e.target);
+      requestAnimationFrame(() => requestAnimationFrame(() => e.target.classList.remove("pending")));
+    });
+  }, { threshold: 0.15 }) : null;
+  // Marks start hidden (class "pending") and play once; redraws after that (resize, print) appear at once.
+  function animateWhenVisible(node, key) {
+    if (!node || reduceMotion || !animObserver || seenAnim.has(key)) return;
+    seenAnim.add(key);
+    node.classList.add("anim", "pending");
+    animObserver.observe(node);
   }
 
   // ------------------------------------------------------------------ 1. hero + explore
@@ -119,12 +140,20 @@
     const { summary, meta } = state.data;
     const s = meta.study;
     document.getElementById("headline").textContent = summary.headline.text;
+    // One short line: data set, advisor, when the data was built, and anything still running.
+    const asof = new Date(meta.generated_at);
+    const when = isNaN(asof) ? meta.generated_at
+      : `${asof.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}, ${asof.toISOString().slice(11, 16)} UTC`;
+    const running = meta.conditions.filter((c) => !c.complete)
+      .map((c) => `<span class="pending">${esc(SHORT[c.id])} still running (${c.runs_done}/${c.runs_expected})</span>`);
     document.getElementById("dataset").innerHTML =
-      `<strong>Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs</strong> ` +
-      `(${s.n_scenarios} scenarios S01–S10 and their variants) · advisor ${esc(s.advisor_model)}, ` +
-      `temperature ${s.temperature}, top-p ${s.top_p}, ${esc(s.thinking_level)} thinking.`;
+      [`<strong>${s.n_tasks} tasks × ${s.repeats} runs</strong>`, `advisor ${esc(s.advisor_model)}`, `data as of ${esc(when)}`, ...running].join(" · ");
     const note = document.getElementById("headline-note");
-    if (reviewNoteText()) { note.hidden = false; note.textContent = reviewNoteText(); }
+    const tasks = Object.keys(meta.scoring_under_review || {});
+    if (tasks.length) {
+      note.hidden = false;
+      note.textContent = `${tasks.length === 1 ? "One task's" : `${tasks.length} tasks'`} scoring is under review (${tasks.join(", ")}), marked † below; details beside the heatmap and in each affected run.`;
+    }
 
     const none = summary.conditions.none;
     const slot = document.querySelector("#hero-gauge .gauge-slot");
@@ -141,84 +170,50 @@
     }
   }
 
+  // The setting picker above the replay.
+  const PICKERS = ["replay-pills"];
   function renderPills() {
     const { summary } = state.data;
-    const box = document.getElementById("pills");
-    box.innerHTML = "";
-    ORDER.forEach((c) => {
-      const entry = summary.conditions[c];
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "pill";
-      b.setAttribute("role", "radio");
-      b.setAttribute("aria-checked", String(c === state.selected));
-      b.tabIndex = c === state.selected ? 0 : -1;
-      b.dataset.condition = c;
-      b.innerHTML = esc(SHORT[c]) + (isPending(entry) ? `<span class="tag">${esc(pendingLabel(entry))}</span>` : "");
-      b.addEventListener("click", () => select(c, true));
-      box.appendChild(b);
+    PICKERS.forEach((id) => {
+      const box = document.getElementById(id);
+      if (!box) return;
+      box.innerHTML = "";
+      ORDER.forEach((c) => {
+        const entry = summary.conditions[c];
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "pill";
+        b.setAttribute("role", "radio");
+        b.setAttribute("aria-checked", String(c === state.selected));
+        b.tabIndex = c === state.selected ? 0 : -1;
+        b.dataset.condition = c;
+        b.innerHTML = esc(SHORT[c]) + (isPending(entry) ? `<span class="tag">${esc(pendingLabel(entry))}</span>` : "");
+        b.addEventListener("click", () => select(c, id));
+        box.appendChild(b);
+      });
+      box.onkeydown = (e) => {
+        const i = ORDER.indexOf(state.selected);
+        const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (step) { e.preventDefault(); select(ORDER[(i + step + ORDER.length) % ORDER.length], id); }
+        if (e.key === "Home") { e.preventDefault(); select(ORDER[0], id); }
+        if (e.key === "End") { e.preventDefault(); select(ORDER[ORDER.length - 1], id); }
+      };
     });
-    box.onkeydown = (e) => {
-      const i = ORDER.indexOf(state.selected);
-      const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-      if (step) { e.preventDefault(); select(ORDER[(i + step + ORDER.length) % ORDER.length], true); }
-      if (e.key === "Home") { e.preventDefault(); select(ORDER[0], true); }
-      if (e.key === "End") { e.preventDefault(); select(ORDER[ORDER.length - 1], true); }
-    };
   }
 
-  function select(c, focus) {
+  // focusIn: id of the picker to keep keyboard focus in (or a truthy value for the first one).
+  function select(c, focusIn) {
     state.selected = c;
     renderPills();
-    renderKpis();
     renderReplay();
-    if (focus) document.querySelector(`.pill[data-condition="${c}"]`).focus();
+    if (focusIn) {
+      const box = document.getElementById(typeof focusIn === "string" ? focusIn : PICKERS[0]);
+      box.querySelector(`.pill[data-condition="${c}"]`).focus();
+    }
   }
 
   function tile(cls, k, v, d, vClass = "") {
     return `<div class="kpi ${cls}"><p class="k">${k}</p><p class="v ${vClass}">${v}</p>${d ? `<p class="d">${d}</p>` : ""}</div>`;
-  }
-
-  function renderKpis() {
-    const { summary, spend } = state.data;
-    const c = state.selected;
-    const e = summary.conditions[c];
-    const box = document.getElementById("kpis");
-    const spendTile = tile("",
-      "Total spend (all settings)",
-      `${usd(spend.total_usd)}`,
-      `of the $${spend.budget_usd.toFixed(0)} cap · ${spend.calls.toLocaleString()} model calls`);
-    if (isPending(e)) {
-      const p = `<span class="pending">${esc(pendingLabel(e))}</span>`;
-      box.innerHTML =
-        tile("", "Task success", p, "runs still in progress", "small") +
-        tile("", "Catch rate", p, "", "small") +
-        tile("", "False alarms", p, "", "small") +
-        tile("", "Fixed vs broken", p, "", "small") +
-        tile("", "Cost per run", p, "", "small") + spendTile;
-      return;
-    }
-    const t = e.task_success;
-    const v = e.verifier;
-    const o = e.outcomes;
-    const review = c !== "none" ? "" : "";
-    box.innerHTML =
-      `<div class="kpi" id="kpi-success"><p class="k">Task success</p><div class="mini"></div>` +
-      `<p class="d">${t.right}/${t.n} runs · ${ci(t.ci_low, t.ci_high)}${review}</p></div>` +
-      (v
-        ? tile("", "Catch rate", pct(v.catch_rate.value, 0), `${v.catch_rate.caught}/${v.catch_rate.n} wrong drafts rejected · MCC ${v.mcc == null ? "–" : v.mcc.toFixed(2)}`, "good") +
-          tile("", "False alarms", pct(v.false_alarm_rate.value), `${v.false_alarm_rate.flagged}/${v.false_alarm_rate.n} right drafts rejected`, v.false_alarm_rate.value > 0 ? "bad" : "")
-        : tile("", "Catch rate", "–", "no verifier in this setting", "small") + tile("", "False alarms", "–", "no verifier in this setting", "small")) +
-      tile("", "Fixed vs broken",
-        `<span class="ok">+${o.fixed}</span> <span class="tag-small">/</span> <span class="no">−${o.broken}</span>`,
-        `${o.fixed} wrong → right · ${o.broken} right → wrong (of ${e.n_runs} runs)`) +
-      tile("", "Cost per run", usd(e.cost.mean_cost_usd, 3),
-        `${kfmt(e.cost.mean_tokens_in)} in / ${kfmt(e.cost.mean_tokens_out)} out tokens · includes the shared draft`) +
-      spendTile;
-    gauge(box.querySelector("#kpi-success .mini"), {
-      value: t.value, big: pct(t.value, 1), label: SHORT[c], size: 200,
-      ariaLabel: `${SHORT[c]} task success ${pct(t.value)}, ${t.right} of ${t.n} runs, ${ci(t.ci_low, t.ci_high)}`,
-    });
   }
 
   // ------------------------------------------------------------------ shared row chart
@@ -226,7 +221,7 @@
   // Rows of: name (left) and a printed value (right) on one line, a mark on the line below.
   function rowChart(slot, { rows, domain, height = 46, zero = null, axisFormat, ariaLabel, mark, valueText, tipHtml, tickCount = 5 }) {
     slot.innerHTML = "";
-    const w = slotWidth(slot), m = { l: 4, r: 8, t: 4, b: 26 };
+    const w = slotWidth(slot), m = { l: 14, r: 18, t: 4, b: 26 };
     const h = m.t + rows.length * height + m.b;
     const svg = d3.select(slot).append("svg").attr("viewBox", `0 0 ${w} ${h}`).attr("role", "group").attr("aria-label", ariaLabel);
     const x = d3.scaleLinear().domain(domain).range([m.l, w - m.r]).nice();
@@ -236,7 +231,7 @@
       .call(d3.axisBottom(x).ticks(tickCount).tickFormat(axisFormat));
     if (zero != null) {
       svg.append("line").attr("x1", x(zero)).attr("x2", x(zero)).attr("y1", m.t).attr("y2", h - m.b)
-        .attr("stroke", "#A9A4C8").attr("stroke-dasharray", "4 4").attr("stroke-width", 1);
+        .attr("stroke", MUTED).attr("stroke-dasharray", "4 4").attr("stroke-width", 1);
     }
     const row = svg.selectAll("g.row").data(rows).join("g").attr("class", "row mark")
       .attr("transform", (d, i) => `translate(0,${m.t + i * height})`)
@@ -249,6 +244,18 @@
       .attr("class", (d) => (d.pending ? "lbl-pending" : "lbl-muted")).text(valueText);
     row.each(function (d) { if (!d.pending) mark(d3.select(this), d, x, 28); });
     attachTip(row, tipHtml);
+    // Bars grow out of the zero line, interval lines open from their centre, points fade in.
+    const origin = x(zero != null ? zero : x.domain()[0]);
+    svg.selectAll("g.row rect:not(.focus-ring)").each(function () {
+      if (this.getAttribute("transform")) this.classList.add("anim-pt");
+      else { this.classList.add("anim-bar"); this.style.transformOrigin = `${origin}px 0px`; }
+    });
+    svg.selectAll("g.row line").each(function () {
+      const cx = (+this.getAttribute("x1") + +this.getAttribute("x2")) / 2;
+      this.classList.add("anim-ci"); this.style.transformOrigin = `${cx}px 0px`;
+    });
+    svg.selectAll("g.row circle").classed("anim-pt", true);
+    animateWhenVisible(svg.node(), (slot.closest("figure") || slot).id || ariaLabel);
     return { svg, x };
   }
 
@@ -275,7 +282,7 @@
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
         g.append("circle").attr("cx", x(d.value)).attr("cy", y).attr("r", 6).attr("fill", color(d.condition))
-          .attr("stroke", "#07060F").attr("stroke-width", 2);
+          .attr("stroke", BG).attr("stroke-width", 2);
       },
       tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)} runs saved; no numbers until it finishes.`
         : `<strong>${SHORT[d.condition]}</strong><br>Task success ${pct(d.value)}<br>${d.right} of ${d.n} runs right<br>${ci(d.ci_low, d.ci_high)} (bootstrap over tasks)`),
@@ -300,7 +307,7 @@
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
         g.append("rect").attr("x", x(d.delta) - 6).attr("y", y - 6).attr("width", 12).attr("height", 12)
-          .attr("transform", `rotate(45 ${x(d.delta)} ${y})`).attr("fill", color(d.condition)).attr("stroke", "#07060F").attr("stroke-width", 2);
+          .attr("transform", `rotate(45 ${x(d.delta)} ${y})`).attr("fill", color(d.condition)).attr("stroke", BG).attr("stroke-width", 2);
       },
       tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}: no comparison until it finishes.`
         : `<strong>${SHORT[d.condition]} vs none</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
@@ -345,7 +352,7 @@
             .attr("width", Math.max(2, x(v) - x(0))).attr("fill", fill);
           const tx = x(v) + 6, inside = tx > x.range()[1] - 150;
           g.append("text").attr("x", inside ? x(v) - 6 : tx).attr("y", yy + 4).attr("text-anchor", inside ? "end" : "start")
-            .attr("class", "lbl").style("fill", inside ? "#07060F" : null).style("font-weight", inside ? 700 : null).text(text);
+            .attr("class", "lbl").style("fill", inside ? BG : null).style("font-weight", inside ? 700 : null).text(text);
         };
         bar(y, d.catch_rate.value, CYAN, `caught ${pct(d.catch_rate.value, 0)} (${d.catch_rate.caught}/${d.catch_rate.n})`);
         bar(y + 18, d.false_alarm_rate.value, PINK, `false alarms ${pct(d.false_alarm_rate.value)} (${d.false_alarm_rate.flagged}/${d.false_alarm_rate.n})`);
@@ -395,16 +402,16 @@
 
   // ------------------------------------------------------------------ 5. heatmap
 
-  const heatColor = d3.scaleLinear().domain([0, 0.5, 1]).range([PINK, VIOLET, CYAN]).interpolate(d3.interpolateRgb);
+  const heatColor = d3.scaleLinear().domain([0, 0.5, 1]).range([PINK, VIOLET, CYAN]).interpolate(d3.interpolateRgb); // wrong → middle → right
 
-  function chip(cell, where) {
+  function chip(cell, where, col = 0) {
     if (!cell || cell.status === "pending") {
       return `<span class="chip pending-chip" aria-label="${esc(where)}: pending">pending</span>`;
     }
     if (!cell.n) return `<span class="chip pending-chip" aria-label="${esc(where)}: no runs">–</span>`;
     const share = cell.right / cell.n;
     const failed = cell.failed ? ` <small>(+${cell.failed} failed)</small>` : "";
-    return `<span class="chip mark-cell" role="img" style="background:${heatColor(share)}" ` +
+    return `<span class="chip mark-cell" role="img" style="background:${heatColor(share)};--col:${col}" ` +
       `data-tip="${esc(`<strong>${where}</strong><br>${cell.right} of ${cell.n} runs right${cell.failed ? `<br>${cell.failed} failed run(s) not counted` : ""}`)}" ` +
       `aria-label="${esc(`${where}: ${cell.right} of ${cell.n} right`)}">${cell.right}/${cell.n}${failed}</span>`;
   }
@@ -420,15 +427,16 @@
       }).join("") + `</tr></thead>`;
     const body = heatmap.groups.map((g, gi) => {
       const flagged = g.tasks.some((t) => review[t]);
-      const groupCells = heatmap.conditions.map((c) => `<td class="cell">${chip(g.cells[c], `${g.scenario} (all ${g.tasks.length} tasks), ${SHORT[c]}`)}</td>`).join("");
+      const groupCells = heatmap.conditions.map((c, col) => `<td class="cell">${chip(g.cells[c], `${g.scenario} (all ${g.tasks.length} tasks), ${SHORT[c]}`, col)}</td>`).join("");
       const sub = g.rows.map((r) =>
         `<tr class="sub-row" data-group="${gi}" hidden><th scope="row" style="font-weight:500">${esc(r.task_id)}${review[r.task_id] ? ` <span class="dagger" title="${esc(review[r.task_id])}">†</span><span class="sr-only"> (scoring under review)</span>` : ""}</th>` +
-        heatmap.conditions.map((c) => `<td class="cell">${chip(r.cells[c], `${r.task_id}, ${SHORT[c]}`)}</td>`).join("") + `</tr>`).join("");
+        heatmap.conditions.map((c, col) => `<td class="cell">${chip(r.cells[c], `${r.task_id}, ${SHORT[c]}`, col)}</td>`).join("") + `</tr>`).join("");
       return `<tr><th scope="row"><button type="button" class="expander" aria-expanded="false" data-group="${gi}">` +
         `<span class="tri" aria-hidden="true">▶</span>${esc(g.scenario)} <span class="tag-small">${g.tasks.length} task${g.tasks.length > 1 ? "s" : ""}</span>` +
         `${flagged ? ' <span class="dagger" aria-hidden="true">†</span>' : ""}</button></th>${groupCells}</tr>${sub}`;
     }).join("");
     table.innerHTML = head + `<tbody>${body}</tbody>`;
+    animateWhenVisible(table, "heat-table");
     table.querySelectorAll(".expander").forEach((btn) => btn.addEventListener("click", () => {
       const open = btn.getAttribute("aria-expanded") !== "true";
       btn.setAttribute("aria-expanded", String(open));
@@ -465,21 +473,6 @@
       return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.cost, n: e.n_runs, success: e.task_success };
     });
     const done = rows.filter((r) => !r.pending);
-    rowChart(document.querySelector("#cost-chart .chart-slot"), {
-      rows,
-      domain: [0, Math.max(...done.map((r) => r.mean_cost_usd)) * 1.1],
-      axisFormat: (v) => `$${v.toFixed(2)}`,
-      ariaLabel: "Mean cost per run per setting, with tokens.",
-      valueText: (d) => (d.pending ? d.label : `${usd(d.mean_cost_usd, 3)} · ${kfmt(d.mean_tokens_in)} in / ${kfmt(d.mean_tokens_out)} out`),
-      mark: (g, d, x, y) => {
-        g.append("rect").attr("x", x(0)).attr("y", y - 6).attr("height", 12).attr("rx", 3)
-          .attr("width", Math.max(2, x(d.mean_cost_usd) - x(0))).attr("fill", color(d.condition));
-      },
-      tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}`
-        : `<strong>${SHORT[d.condition]}</strong> (${d.n} runs)<br>Mean ${usd(d.mean_cost_usd, 4)} per run, total ${usd(d.total_cost_usd)}<br>` +
-          `${kfmt(d.mean_tokens_in)} tokens in, ${kfmt(d.mean_tokens_out)} out per run<br>` +
-          `${d.extra_cost_per_extra_correct == null ? "" : `${usd(d.extra_cost_per_extra_correct)} per extra right answer vs none<br>`}Includes the shared first draft`),
-    });
     renderScatter(done);
   }
 
@@ -503,14 +496,14 @@
       .attr("y1", (d) => y(d.success.ci_low)).attr("y2", (d) => y(d.success.ci_high))
       .attr("stroke", (d) => color(d.condition)).attr("stroke-width", 2).attr("opacity", 0.5);
     g.append("circle").attr("cx", (d) => x(d.mean_cost_usd)).attr("cy", (d) => y(d.success.value)).attr("r", 7)
-      .attr("fill", (d) => color(d.condition)).attr("stroke", "#07060F").attr("stroke-width", 2);
+      .attr("fill", (d) => color(d.condition)).attr("stroke", BG).attr("stroke-width", 2);
     // Printed labels, nudged apart vertically so close points stay readable.
     const labels = points.map((p) => ({ p, x: x(p.mean_cost_usd), y: y(p.success.value) - 12 }))
       .sort((a, b) => a.y - b.y);
-    // Points closer than ~40px share one label column to the right of the group.
+    // Points closer than ~60px share one label column to the right of the group.
     labels.forEach((l) => { l.x0 = l.x; l.y0 = l.y; });
     labels.forEach((l) => {
-      const near = labels.filter((o) => Math.abs(o.x0 - l.x0) < 40 && Math.abs(o.y0 - l.y0) < 40);
+      const near = labels.filter((o) => Math.abs(o.x0 - l.x0) < 60 && Math.abs(o.y0 - l.y0) < 40);
       l.x = Math.max(...near.map((o) => o.x0)) + (near.length > 1 ? 8 : 0);
     });
     for (let i = 1; i < labels.length; i++) {
@@ -525,7 +518,10 @@
         .attr("text-anchor", right ? "start" : "end")
         .text(text);
     });
+    g.selectAll("line, circle").classed("anim-pt", true);
+    animateWhenVisible(svg.node(), "scatter-chart");
     attachTip(g, (d) => `<strong>${SHORT[d.condition]}</strong><br>${usd(d.mean_cost_usd, 4)} per run (includes the shared draft)<br>` +
+      `${kfmt(d.mean_tokens_in)} tokens in, ${kfmt(d.mean_tokens_out)} out per run · total ${usd(d.total_cost_usd)}<br>` +
       `Task success ${pct(d.success.value)} (${d.success.right}/${d.success.n}), ${ci(d.success.ci_low, d.success.ci_high)}`);
   }
 
@@ -533,22 +529,23 @@
 
   function renderSanity() {
     const { seeded, sanity_s04: s04 } = state.data;
-    const st = document.getElementById("seeded-table");
-    document.getElementById("seeded-wording").textContent = seeded.wording;
-    const head = `<thead><tr><th>Setting</th><th class="num">Errors caught</th><th class="num">False alarms on correct controls</th>` +
-      `<th class="num">Caught with the right reason</th><th class="num">Only the consequence</th><th class="num">Wrong reason</th><th class="num">Cost</th></tr></thead>`;
-    const body = VERIFIED.map((c) => {
-      const e = seeded.per_condition[c];
-      if (isPending(e)) return `<tr><td>${SHORT[c]}</td><td class="pending" colspan="6">${esc(pendingLabel(e))}</td></tr>`;
-      const rr = e.right_reason;
-      const flagged = rr.right_reason + rr.consequence_only + rr.wrong_reason + rr.abstained;
-      return `<tr><td>${SHORT[c]}</td>` +
-        `<td class="num">${pct(e.catch_rate.value, 0)} <span class="tag-small">(${e.catch_rate.caught}/${e.catch_rate.n})</span></td>` +
-        `<td class="num">${pct(e.false_alarm_rate.value, 0)} <span class="tag-small">(${e.false_alarm_rate.flagged}/${e.false_alarm_rate.n})</span>${e.missing_verdicts ? `<span class="ci">${e.missing_verdicts} unreadable</span>` : ""}</td>` +
-        `<td class="num">${pct(e.right_reason_rate, 0)} <span class="tag-small">(${rr.right_reason}/${flagged})</span></td>` +
-        `<td class="num">${rr.consequence_only}</td><td class="num">${rr.wrong_reason}</td><td class="num">${usd(e.cost_usd)}</td></tr>`;
-    }).join("");
-    st.innerHTML = head + `<tbody>${body}</tbody>`;
+
+    // One sentence from the S04 cases of the models used in the study; the full table folds away.
+    const used = s04.cases.filter((c) => c.used_in_study);
+    const NAME = { dedicated: "dedicated", weakened: "no-calculator", cross_family: "cross-family" };
+    const who = (c) => (c.setting === "cross_family" ? `cross-family (${c.verifier_model.replace("openai/", "")})` : NAME[c.setting] || c.setting);
+    const list = (xs) => (xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+    const wrong = used.filter((c) => c.answer_was === "wrong");
+    const right = used.filter((c) => c.answer_was === "correct");
+    const rejected = [...new Set(wrong.filter((c) => c.verdict === "reject").map(who))];
+    const accepted = [...new Set(wrong.filter((c) => c.verdict === "accept").map(who))];
+    const rightOk = right.filter((c) => c.verdict === "accept").length;
+    const rightOdd = right.filter((c) => c.verdict !== "accept").length;
+    document.getElementById("s04-summary").innerHTML =
+      `On one known-wrong S04 answer, the ${esc(list(rejected))} verifier${rejected.length === 1 ? "" : "s"} <span class="ok">rejected it</span>` +
+      (accepted.length ? `; the ${esc(list(accepted))} verifier <span class="no">accepted it</span>` : "") + `. ` +
+      `On a known-right answer, ${rightOk} of ${right.length} attempts accepted it` +
+      (rightOdd ? ` (${rightOdd} gave ${rightOdd === 1 ? "an unreadable verdict" : "other verdicts"}).` : ".");
 
     const t = document.getElementById("s04-table");
     const rows = s04.cases.map((c) => {
@@ -565,6 +562,201 @@
       `<th class="num">Calls</th><th>Verdict right?</th><th>What it said</th></tr></thead><tbody>${rows}</tbody>`;
   }
 
+  // ------------------------------------------------------------------ 2b. compare two settings
+
+  function setupPair() {
+    const { pairs, meta } = state.data;
+    const done = new Set(pairs.complete);
+    const opts = (sel) => ORDER.map((c) => {
+      const m = meta.conditions.find((x) => x.id === c);
+      return `<option value="${c}"${done.has(c) ? "" : " disabled"}${c === sel ? " selected" : ""}>${SHORT[c]}${done.has(c) ? "" : ` (pending ${m.runs_done}/${m.runs_expected})`}</option>`;
+    }).join("");
+    const a = document.getElementById("pair-a"), b = document.getElementById("pair-b");
+    const best = state.data.summary.headline.best;
+    a.innerHTML = opts("none");
+    b.innerHTML = opts(done.has(best) ? best : pairs.complete.find((c) => c !== "none"));
+    a.addEventListener("change", renderPair);
+    b.addEventListener("change", renderPair);
+    document.getElementById("pair-swap").addEventListener("click", () => { const t = a.value; a.value = b.value; b.value = t; renderPair(); });
+  }
+
+  function pairList(items, side, other) {
+    if (!items.length) return `<p class="tag-small">None.</p>`;
+    return `<ul>${items.map((x) => {
+      const id = side === "a" ? x.a_run_id : x.b_run_id;
+      const mine = side === "a" ? x.a_outcome : x.b_outcome;
+      const theirs = side === "a" ? x.b_outcome : x.a_outcome;
+      const st = side === "a" ? x.b_status : x.a_status;
+      return `<li><button type="button" class="linkish" data-run="${esc(id)}">${esc(x.task_id)} · run ${x.run_number}</button>` +
+        `${x.scoring_note ? ' <span class="dagger" title="Scoring under review">†</span>' : ""} ` +
+        `<span class="tag-small">draft ${x.draft_correct ? "right" : "wrong"} · here ${esc(OUTCOME[mine] || mine)}; ${esc(SHORT[other])}: ${esc(st === "human_review" ? "human review" : OUTCOME[theirs] || theirs)}</span></li>`;
+    }).join("")}</ul>`;
+  }
+
+  function renderPair() {
+    const { pairs, summary } = state.data;
+    const a = document.getElementById("pair-a").value, b = document.getElementById("pair-b").value;
+    const body = document.getElementById("pair-body");
+    if (a === b) { body.innerHTML = `<p class="tag-small">Pick two different settings.</p>`; return; }
+    const p = pairs.pairs.find((x) => x.a === a && x.b === b);
+    if (!p) { body.innerHTML = `<p class="pending">pending: both settings must finish before they can be compared.</p>`; return; }
+    const sa = summary.conditions[a].task_success, sb = summary.conditions[b].task_success;
+    body.innerHTML =
+      `<div class="pair-head">` +
+      tile("", `${SHORT[a]} (A)`, pct(sa.value), `${sa.right}/${sa.n} runs · ${ci(sa.ci_low, sa.ci_high)}`) +
+      tile("", `${SHORT[b]} (B)`, pct(sb.value), `${sb.right}/${sb.n} runs · ${ci(sb.ci_low, sb.ci_high)}`) +
+      tile("", "Change, B − A", `<span class="${p.delta > 0 ? "ok" : p.delta < 0 ? "no" : ""}">${pts(p.delta)}</span>`,
+        `95% CI ${pts(p.ci_low)} to ${pts(p.ci_high)} · ${p.n_pairs} paired runs, ${p.n_tasks} tasks`) +
+      tile("", "Sign test over tasks", pval(p.sign_test_p),
+        `B better on ${p.tasks_b_better} task${p.tasks_b_better === 1 ? "" : "s"}, A better on ${p.tasks_a_better}; the rest tie`, "small") +
+      `</div><figure class="chart" id="pair-chart"><figcaption>Change in task success, B − A, with its 95% interval</figcaption><div class="chart-slot"></div></figure>` +
+      `<div class="pair-lists"><div><h3>Right only with ${esc(SHORT[b])} (${p.runs_only_b_right.length})</h3>${pairList(p.runs_only_b_right, "b", a)}</div>` +
+      `<div><h3>Right only with ${esc(SHORT[a])} (${p.runs_only_a_right.length})</h3>${pairList(p.runs_only_a_right, "a", b)}</div></div>` +
+      `<p class="note">${esc(pairs.note)} Open a run to see its draft, verdicts and final answer in “Every run”.</p>`;
+    const slot = body.querySelector("#pair-chart .chart-slot");
+    const span = Math.max(0.05, Math.abs(p.ci_low), Math.abs(p.ci_high)) + 0.02;
+    rowChart(slot, {
+      rows: [{ condition: b, ...p }], domain: [-span, span], zero: 0, height: 44,
+      axisFormat: (v) => `${v > 0 ? "+" : ""}${Math.round(v * 100)}`,
+      ariaLabel: `Change in task success from ${SHORT[a]} to ${SHORT[b]}: ${pts(p.delta)}, 95% CI ${pts(p.ci_low)} to ${pts(p.ci_high)}.`,
+      valueText: (d) => `${pts(d.delta)} · ${pts(d.ci_low).replace(" pts", "")} to ${pts(d.ci_high)} · ${pval(d.sign_test_p)}`,
+      mark: (g, d, x, y) => {
+        g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
+          .attr("stroke", color(b)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.6);
+        g.append("circle").attr("cx", x(d.delta)).attr("cy", y).attr("r", 7).attr("fill", color(b)).attr("stroke", BG).attr("stroke-width", 2);
+      },
+      tipHtml: (d) => `<strong>${SHORT[b]} − ${SHORT[a]}</strong><br>${pts(d.delta)} (95% CI ${pts(d.ci_low)} to ${pts(d.ci_high)})<br>` +
+        `Runs right only with B: ${d.runs_only_b_right.length}; only with A: ${d.runs_only_a_right.length}<br>Sign test over tasks ${pval(d.sign_test_p)}`,
+    });
+    slot.querySelectorAll(".row text").forEach((t) => { if (t.textContent === SHORT[b]) t.textContent = `${SHORT[b]} − ${SHORT[a]}`; });
+    body.querySelectorAll("button.linkish").forEach((btn) => btn.addEventListener("click", () => {
+      openRun(btn.dataset.run);
+      document.getElementById("run-detail").scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+    }));
+    addPngButtons(body);
+  }
+
+  // ------------------------------------------------------------------ 7b. seeded errors by type
+
+  const DECISION = {
+    right_reason: ["✓", "rejected, named the error"], consequence_only: ["~", "rejected, named only a consequence"],
+    wrong_reason: ["✗?", "rejected for another reason"], abstained: ["?", "abstained"], missing_verdict: ["–", "verdict unreadable"],
+    not_flagged: ["·", "accepted"], false_alarm: ["!", "rejected a correct control"],
+  };
+
+  function renderSeededTypes() {
+    const { seeded } = state.data;
+    const head = `<thead><tr><th scope="col">Error type</th>${VERIFIED.map((c) => {
+      const e = seeded.per_condition[c];
+      return `<th scope="col" style="text-align:center">${SHORT[c]}${isPending(e) ? `<br><span class="pending tag-small">${esc(pendingLabel(e))}</span>` : ""}</th>`;
+    }).join("")}</tr></thead>`;
+    const body = seeded.by_error_type.map((g) => {
+      const label = g.seeded_error ? g.error_type.replace(/_/g, " ") : "correct controls";
+      const cells = VERIFIED.map((c, col) => {
+        const v = g.per_condition[c];
+        if (!v || v.status === "pending") return `<td class="cell"><span class="chip pending-chip">pending</span></td>`;
+        if (!g.seeded_error) {
+          const share = v.n ? 1 - v.rejected / v.n : 0;
+          return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)};--col:${col}" aria-label="${esc(`${SHORT[c]}, controls: ${v.rejected} of ${v.n} false alarms`)}">` +
+            `${v.rejected}/${v.n}<small>false alarms</small></span></td>`;
+        }
+        const share = v.n ? v.right_reason / v.n : 0;
+        return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)};--col:${col}" aria-label="${esc(`${SHORT[c]}, ${label}: ${v.rejected} of ${v.n} rejected, ${v.right_reason} for the right reason`)}">` +
+          `${v.rejected}/${v.n}<small>${v.right_reason} right reason</small></span></td>`;
+      }).join("");
+      return `<tr><th scope="row">${esc(label)}<span class="ci">${g.n_answers} answer${g.n_answers === 1 ? "" : "s"}</span></th>${cells}</tr>`;
+    }).join("");
+    const total = VERIFIED.map((c) => {
+      const e = seeded.per_condition[c];
+      if (isPending(e)) return `<td class="cell pending tag-small">${esc(pendingLabel(e))}</td>`;
+      const rr = e.right_reason;
+      return `<td class="cell total"><b>${e.catch_rate.caught}/${e.catch_rate.n}</b> caught` +
+        `<span class="ci">${rr.right_reason} for the right reason</span>` +
+        `<span class="ci">${e.false_alarm_rate.flagged}/${e.false_alarm_rate.n} false alarms${e.missing_verdicts ? ` · ${e.missing_verdicts} unreadable` : ""}</span>` +
+        `<span class="ci">${usd(e.cost_usd)}</span></td>`;
+    }).join("");
+    document.getElementById("type-table").innerHTML = head + `<tbody>${body}</tbody>` +
+      `<tfoot><tr><th scope="row">Total<span class="ci">17 errors, 14 controls</span></th>${total}</tr></tfoot>`;
+    animateWhenVisible(document.getElementById("type-table"), "type-table");
+
+    const real = state.data.summary.conditions;
+    const lines = VERIFIED.filter((c) => !isPending(real[c]) && !isPending(seeded.per_condition[c])).map((c) =>
+      `${SHORT[c]} ${seeded.per_condition[c].catch_rate.caught}/${seeded.per_condition[c].catch_rate.n} seeded vs ${real[c].verifier.catch_rate.caught}/${real[c].verifier.catch_rate.n} real`);
+    document.getElementById("type-note").textContent = lines.length
+      ? `Errors caught, seeded vs the advisor's real errors: ${lines.join(" · ")}. The seeded errors are single, visible slips that every verifier catches; the advisor's real errors are compounding arithmetic, where only the verifier with the calculator caught them all.`
+      : "";
+
+    const answers = [...new Set(seeded.reviews.map((r) => r.answer_id))].sort();
+    const byKey = new Map(seeded.reviews.map((r) => [`${r.answer_id}|${r.condition}`, r]));
+    const rows = answers.map((id) => {
+      const any = seeded.reviews.find((r) => r.answer_id === id);
+      const cells = VERIFIED.map((c) => {
+        if (isPending(seeded.per_condition[c])) return `<td class="pending tag-small">pending</td>`;
+        const r = byKey.get(`${id}|${c}`);
+        if (!r) return `<td class="tag-small">–</td>`;
+        const [sym, words] = DECISION[r.decision] || ["?", r.decision];
+        const kind = r.seeded_error ? "err" : "ctl";
+        const issue = (r.issues || [])[0] || "";
+        return `<td><span class="dec ${esc(r.decision)} ${kind}" title="${esc(words + (issue ? `: ${issue}` : ""))}">${sym}</span> <span class="tag-small">${esc(words)}</span></td>`;
+      }).join("");
+      return `<tr><td>${esc(id)}<span class="ci">${esc(any.seeded_error ? (any.error_type || "").replace(/_/g, " ") : "correct control")}</span></td>${cells}</tr>`;
+    }).join("");
+    document.getElementById("answer-table").innerHTML =
+      `<thead><tr><th>Seeded answer</th>${VERIFIED.map((c) => `<th>${SHORT[c]}</th>`).join("")}</tr></thead><tbody>${rows}</tbody>`;
+  }
+
+  // ------------------------------------------------------------------ PNG export of a chart
+
+  const STYLE_PROPS = ["fill", "stroke", "stroke-width", "stroke-dasharray", "stroke-linecap", "opacity", "fill-opacity",
+    "font-size", "font-weight", "font-family", "text-anchor", "dominant-baseline"];
+  function svgToPng(svg, caption, filename) {
+    const clone = svg.cloneNode(true);
+    const src = [svg, ...svg.querySelectorAll("*")], dst = [clone, ...clone.querySelectorAll("*")];
+    src.forEach((el, i) => {
+      const cs = getComputedStyle(el);
+      dst[i].setAttribute("style", STYLE_PROPS.map((k) => `${k}:${cs.getPropertyValue(k)}`).join(";"));
+    });
+    const vb = svg.viewBox.baseVal;
+    const scale = 2, pad = 24, capH = caption ? 34 : 0;
+    const w = vb.width + pad * 2, h = vb.height + pad * 2 + capH;
+    clone.setAttribute("width", vb.width); clone.setAttribute("height", vb.height);
+    const data = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = w * scale; canvas.height = h * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.fillStyle = css("--card"); ctx.fillRect(0, 0, w, h);
+      if (caption) { ctx.fillStyle = TEXT; ctx.font = "600 15px -apple-system, Segoe UI, Helvetica, Arial, sans-serif"; ctx.fillText(caption, pad, pad + 12); }
+      ctx.drawImage(img, pad, pad + capH, vb.width, vb.height);
+      ctx.fillStyle = FAINT; ctx.font = "11px -apple-system, Segoe UI, Helvetica, Arial, sans-serif";
+      ctx.fillText(`CS 5130 verification study · 32 tasks × 3 runs · data as of ${state.data.meta.generated_at.slice(0, 10)}`, pad, h - 8);
+      canvas.toBlob((blob) => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      }, "image/png");
+    };
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(data)}`;
+  }
+
+  function addPngButtons(scope = document) {
+    scope.querySelectorAll("figure.chart").forEach((fig) => {
+      const cap = fig.querySelector("figcaption");
+      if (!cap || cap.querySelector(".png-btn")) return;
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "png-btn"; btn.textContent = "PNG";
+      const label = cap.textContent.trim();
+      btn.setAttribute("aria-label", `Download “${label}” as PNG`);
+      btn.addEventListener("click", () => {
+        const svg = fig.querySelector(".chart-slot svg");
+        if (svg) svgToPng(svg, label, `${fig.id || "chart"}.png`);
+      });
+      cap.appendChild(btn);
+    });
+  }
+
   // ------------------------------------------------------------------ 8. replay
 
   let replay = null;
@@ -577,7 +769,7 @@
     if (replay) { replay.destroy(); replay = null; }
     mountEl.innerHTML = "";
     document.getElementById("replay-dataset").textContent =
-      `Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs, advisor ${s.advisor_model}. Setting: ${SHORT[c]} (change it in “Explore a setting”).`;
+      `Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs, advisor ${s.advisor_model}. Showing: ${SHORT[c]}. The same choice drives “Explore a setting” below.`;
     if (isPending(entry)) {
       document.getElementById("replay-sub").textContent = `${SHORT[c]} is still running, so it is not replayed yet.`;
       mountEl.innerHTML = `<p class="replay-pending">${esc(pendingLabel(entry))}</p>`;
@@ -609,8 +801,18 @@
     return v;
   }
 
+  function expandRuns(open = true) {
+    const btn = document.getElementById("runs-toggle");
+    document.getElementById("runs-body").hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+    btn.textContent = open ? "Hide the run list" : `Browse all ${state.data.runs.runs.length} runs`;
+  }
+
   function setupRunFilters() {
     const { runs, meta } = state.data;
+    expandRuns(false);
+    document.getElementById("runs-toggle").addEventListener("click", () =>
+      expandRuns(document.getElementById("runs-toggle").getAttribute("aria-expanded") !== "true"));
     running = new Set(meta.conditions.filter((c) => !c.complete).map((c) => c.id));
     const sSel = document.getElementById("f-setting");
     sSel.innerHTML = `<option value="">All settings</option>` + ORDER.map((c) => {
@@ -704,6 +906,7 @@
   }
 
   async function openRun(runId) {
+    expandRuns(true);
     const panel = document.getElementById("run-detail");
     runState.current = runId;
     document.querySelectorAll("table.runs tbody tr").forEach((tr) => tr.toggleAttribute("aria-current", tr.dataset.run === runId));
@@ -754,15 +957,19 @@
   function renderFooter() {
     const { meta } = state.data;
     const done = meta.conditions.map((c) => `${SHORT[c.id]} ${c.runs_done}/${c.runs_expected}`).join(" · ");
+    const st = meta.study;
     document.getElementById("foot-meta").textContent =
-      `Data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
+      `Main study: ${st.n_tasks} tasks (${st.n_scenarios} scenarios S01–S10 and their variants) × ${st.repeats} runs · advisor ${st.advisor_model}, ` +
+      `temperature ${st.temperature}, top-p ${st.top_p}, ${st.thinking_level} thinking · data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
   }
 
   function renderCharts() {
     renderCompare();
+    renderPair();
     renderCatch();
     renderFix();
     renderCost();
+    addPngButtons();
   }
 
   async function main() {
@@ -778,24 +985,34 @@
     state.selected = state.data.summary.headline.best || "none";
     renderHero();
     renderPills();
-    renderKpis();
     renderHeatmap();
     renderSanity();
+    renderSeededTypes();
+    setupPair();
     setupRunFilters();
     renderRuns();
     renderReplay();
     renderNotes();
     renderFooter();
     renderCharts();
+    document.getElementById("print-btn").addEventListener("click", () => window.print());
+    // Charts are drawn for the width they have; redraw them for the printed page and back afterwards.
+    window.addEventListener("beforeprint", renderCharts);
+    window.addEventListener("afterprint", renderCharts);
+    let replayLayout = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
     let last = window.innerWidth;
     window.addEventListener("resize", () => {
       if (Math.abs(window.innerWidth - last) < 8) return;
       last = window.innerWidth;
       clearTimeout(main.t);
-      main.t = setTimeout(() => { renderCharts(); renderKpis(); }, reduceMotion ? 0 : 120);
+      main.t = setTimeout(() => {
+        renderCharts();
+        const now = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
+        if (now !== replayLayout) { replayLayout = now; renderReplay(); }
+      }, reduceMotion ? 0 : 120);
     });
   }
 
-  window.__dashboard = { state, openRun, select };
+  window.__dashboard = { state, openRun, select, svgToPng };
   main();
 })();

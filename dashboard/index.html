@@ -13,11 +13,26 @@
 
 <header class="hero" id="top">
   <div class="hero-text">
-    <p class="eyebrow">CS 5130 · Theme 6 · Verification study</p>
+    <p class="eyebrow">CS 5130 · Verification study</p>
     <h1>Does a second look<br>make an AI advisor <span class="grad">safer?</span></h1>
     <p class="lede" id="headline" aria-live="polite">Loading the results…</p>
     <p class="dataset" id="dataset"></p>
+    <div class="toolbar"><button type="button" class="pill" id="print-btn">Save as PDF</button>
+      <span class="tag-small">Each chart also has a PNG button for slides.</span></div>
     <p class="note review-note" id="headline-note" hidden></p>
+    <details class="howto">
+      <summary>How to read this</summary>
+      <dl class="glossary">
+        <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
+        <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
+        <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
+        <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
+        <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
+        <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
+        <div><dt>Human review</dt><dd>the verifier abstained, its verdict could not be read, or the second check did not accept the revision.</dd></div>
+        <div><dt>95% CI</dt><dd>bootstrap interval over the 32 tasks; wide intervals mean small differences are not conclusive.</dd></div>
+      </dl>
+    </details>
   </div>
   <figure class="hero-gauge" id="hero-gauge" aria-labelledby="hero-gauge-cap">
     <div class="gauge-slot"></div>
@@ -27,22 +42,16 @@
 
 <main id="main">
 
-  <!-- 1. Headline KPIs for one setting -->
-  <section class="card" id="explore" aria-labelledby="explore-h">
+  <!-- 8. Replay of recorded runs (shown first, like the mockup's "How an answer travels") -->
+  <section class="card" id="replay" aria-labelledby="replay-h">
     <div class="card-head">
-      <h2 id="explore-h">Explore a setting</h2>
-      <p class="sub">Every number is for the setting you pick, over the same shared first drafts.</p>
+      <h2 id="replay-h">Replay of recorded runs</h2>
+      <p class="sub" id="replay-sub"></p>
+      <p class="note" id="replay-dataset"></p>
     </div>
-    <div class="pills" role="radiogroup" aria-label="Verification setting" id="pills"></div>
-    <div class="kpis" id="kpis"></div>
-    <dl class="glossary" id="glossary">
-      <div><dt>Task success</dt><dd>share of runs whose final answer the hidden checker grades right.</dd></div>
-      <div><dt>Catch rate</dt><dd>of the drafts that were wrong, the share the verifier rejected.</dd></div>
-      <div><dt>False alarm</dt><dd>of the drafts that were right, the share the verifier rejected anyway.</dd></div>
-      <div><dt>MCC</dt><dd>Matthews correlation, one score from −1 to 1 for how well rejects line up with wrong drafts (1 = perfect, 0 = chance).</dd></div>
-      <div><dt>Fixed</dt><dd>wrong draft, right final answer after the revision.</dd></div>
-      <div><dt>Broken</dt><dd>right draft, wrong final answer after the revision.</dd></div>
-    </dl>
+    <div class="pills" role="radiogroup" aria-label="Setting to replay" id="replay-pills"></div>
+    <div id="replay-mount"></div>
+    <p class="note">Each dot is one saved run, played in the order it was run: task → advisor's first draft → verifier verdict → (reject: one revision, checked again) → final answer → hidden checker. Cyan is right, pink is wrong, amber "?" is a run handed to human review. Nothing is re-run; it only replays results.jsonl.</p>
   </section>
 
   <!-- 2. Settings comparison -->
@@ -61,36 +70,45 @@
         <div class="chart-slot"></div>
       </figure>
     </div>
-    <p class="note">Task success counted two ways. Human review means the run was handed to a person: the verifier abstained, its verdict could not be read, or it rejected and the second check did not accept the revision.</p>
-    <div class="table-wrap">
-      <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
-    </div>
-    <p class="note review-note" data-review="compare" hidden></p>
+    <details class="answers" id="hr-details">
+      <summary>Without human-review runs</summary>
+      <p class="note">Task success counted two ways. Human review means the run was handed to a person: the verifier abstained, its verdict could not be read, or it rejected and the second check did not accept the revision.</p>
+      <div class="table-wrap">
+        <table class="data" id="hr-table" aria-label="Task success with and without human-review runs"></table>
+      </div>
+    </details>
   </section>
 
-  <!-- 3. Catch rate vs false alarms -->
+  <!-- 2b. Compare two settings -->
+  <section class="card" id="pair" aria-labelledby="pair-h">
+    <div class="card-head">
+      <h2 id="pair-h">Compare two settings</h2>
+      <p class="sub">Same tasks, same run numbers, same shared first drafts: any difference comes from the check. Only finished settings can be compared.</p>
+    </div>
+    <form class="filters" onsubmit="return false">
+      <label>Setting A <select id="pair-a"></select></label>
+      <label>Setting B <select id="pair-b"></select></label>
+      <button type="button" class="pill" id="pair-swap" aria-label="Swap A and B">Swap</button>
+    </form>
+    <div id="pair-body"></div>
+  </section>
+
+  <!-- 3+4. What the verifier did: catches / false alarms, and fixed / broken -->
   <section class="card" id="verifiers" aria-labelledby="verifiers-h">
     <div class="card-head">
-      <h2 id="verifiers-h">Catches and false alarms</h2>
-      <p class="sub">On the advisor's own drafts. A good verifier rejects the wrong drafts (catch rate) and leaves the right ones alone (few false alarms).</p>
+      <h2 id="verifiers-h">What the verifier did</h2>
+      <p class="sub">On the advisor's own drafts: did the verifier reject the wrong drafts and leave the right ones alone, and did the revision then fix them (wrong → right) or break them (right → wrong)?</p>
     </div>
-    <figure class="chart" id="catch-chart">
-      <figcaption>Catch rate and false-alarm rate per setting, with MCC</figcaption>
-      <div class="chart-slot"></div>
-    </figure>
-  </section>
-
-  <!-- 4. Fixed vs broken -->
-  <section class="card" id="fixbreak" aria-labelledby="fixbreak-h">
-    <div class="card-head">
-      <h2 id="fixbreak-h">Fixed versus broken</h2>
-      <p class="sub">What the revision did: wrong → right is fixed, right → wrong is broken. Runs the verifier accepted keep their draft.</p>
+    <div class="grid2">
+      <figure class="chart" id="catch-chart">
+        <figcaption>Catch rate and false-alarm rate, with MCC</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
+      <figure class="chart" id="fix-chart">
+        <figcaption>Runs fixed and broken by the revision</figcaption>
+        <div class="chart-slot"></div>
+      </figure>
     </div>
-    <figure class="chart" id="fix-chart">
-      <figcaption>Runs fixed and broken by the revision, per setting</figcaption>
-      <div class="chart-slot"></div>
-    </figure>
-    <p class="note review-note" data-review="fixbreak" hidden></p>
   </section>
 
   <!-- 5. Heatmap -->
@@ -113,43 +131,29 @@
       <p class="sub" id="cost-sub"></p>
     </div>
     <div class="budget" id="budget"></div>
-    <div class="grid2">
-      <figure class="chart" id="cost-chart">
-        <figcaption>Mean cost and tokens per run (each run includes its share of the shared first draft)</figcaption>
-        <div class="chart-slot"></div>
-      </figure>
-      <figure class="chart" id="scatter-chart">
-        <figcaption>Cost per run against task success</figcaption>
-        <div class="chart-slot"></div>
-      </figure>
-    </div>
-    <p class="note review-note" data-review="cost" hidden></p>
+    <figure class="chart" id="scatter-chart">
+      <figcaption>Mean cost per run against task success (hover a point for tokens; each run's cost includes its share of the shared first draft)</figcaption>
+      <div class="chart-slot"></div>
+    </figure>
   </section>
 
-  <!-- 7. Verifier sanity checks -->
+  <!-- 7. Verifier sanity checks: seeded errors by type, and the pre-study S04 check -->
   <section class="card" id="sanity" aria-labelledby="sanity-h">
     <div class="card-head">
       <h2 id="sanity-h">Verifier sanity checks</h2>
-      <p class="sub"><strong>Sanity checks, not results.</strong> Small, hand-made tests that the verifiers react to known errors at all.</p>
+      <p class="sub"><strong>Sanity checks, not results.</strong> Hand-made answers with one known error each (and 14 correct controls), reviewed once by every verifier. A cell shows how many it rejected, and how many of those for the right reason, i.e. its issues named the actual error.</p>
     </div>
-    <h3>Seeded answers (17 with one known error, 14 correct controls)</h3>
-    <p class="note" id="seeded-wording"></p>
-    <div class="table-wrap"><table class="data" id="seeded-table" aria-label="Seeded-answer sanity checks"></table></div>
-    <h3>S04 before the main study (one known-wrong and one known-right answer)</h3>
-    <p class="note" id="s04-wording"></p>
-    <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
-  </section>
-
-  <!-- 8. Replay -->
-  <section class="card" id="replay" aria-labelledby="replay-h">
-    <div class="card-head">
-      <h2 id="replay-h">Replay of recorded runs</h2>
-      <p class="sub" id="replay-sub"></p>
-      <p class="note" id="replay-dataset"></p>
-    </div>
-    <div id="replay-mount"></div>
-    <p class="note">Each dot is one saved run, played in the order it was run: task → advisor's first draft → verifier verdict → (reject: one revision, checked again) → final answer → hidden checker. Cyan is right, pink is wrong, amber "?" is a run handed to human review. Nothing is re-run; it only replays results.jsonl.</p>
-    <p class="note review-note" data-review="replay" hidden></p>
+    <div class="table-wrap"><table class="data heat" id="type-table" aria-label="Seeded errors by type and verifier"></table></div>
+    <p class="note" id="type-note"></p>
+    <details class="answers"><summary>Every seeded answer and what each verifier decided</summary>
+      <div class="table-wrap"><table class="data" id="answer-table" aria-label="Seeded answers by verifier"></table></div>
+    </details>
+    <h3>Before the study: S04</h3>
+    <p id="s04-summary"></p>
+    <details class="answers"><summary>All S04 checks</summary>
+      <p class="note" id="s04-wording"></p>
+      <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
+    </details>
   </section>
 
   <!-- 9. Run table -->
@@ -158,27 +162,30 @@
       <h2 id="runs-h">Every run</h2>
       <p class="sub">Filter, then open a run to see its draft, the verifier's verdicts and issues, the revision, the final answer and the checks it failed. The answer key is never shown: failed checks list what the answer reported and why it failed.</p>
     </div>
-    <form class="filters" id="run-filters" onsubmit="return false">
-      <label>Setting <select id="f-setting"></select></label>
-      <label>Task <select id="f-task"></select></label>
-      <label>Outcome <select id="f-outcome">
-        <option value="">All</option>
-        <option value="kept_correct">Kept correct</option>
-        <option value="fixed">Fixed (wrong → right)</option>
-        <option value="broken">Broken (right → wrong)</option>
-        <option value="still_wrong">Still wrong</option>
-        <option value="human_review">Human review</option>
-        <option value="failed">Failed call</option>
-      </select></label>
-    </form>
-    <p class="note" id="run-count" aria-live="polite"></p>
-    <h3>Decided runs</h3>
-    <div class="table-wrap"><table class="data runs" id="run-table" aria-label="Runs"></table></div>
-    <button type="button" class="pill more" id="run-more" hidden>Show more</button>
-    <h3>Handed to human review</h3>
-    <p class="note">Counted separately: the verifier abstained, its verdict could not be read, or the second check did not accept the revision. Their final answers are shown as recorded.</p>
-    <div class="table-wrap"><table class="data runs" id="hr-run-table" aria-label="Human-review runs"></table></div>
-    <div class="detail" id="run-detail" tabindex="-1" hidden></div>
+    <button type="button" class="pill browse" id="runs-toggle" aria-expanded="false" aria-controls="runs-body">Browse all runs</button>
+    <div id="runs-body" hidden>
+      <form class="filters" id="run-filters" onsubmit="return false">
+        <label>Setting <select id="f-setting"></select></label>
+        <label>Task <select id="f-task"></select></label>
+        <label>Outcome <select id="f-outcome">
+          <option value="">All</option>
+          <option value="kept_correct">Kept correct</option>
+          <option value="fixed">Fixed (wrong → right)</option>
+          <option value="broken">Broken (right → wrong)</option>
+          <option value="still_wrong">Still wrong</option>
+          <option value="human_review">Human review</option>
+          <option value="failed">Failed call</option>
+        </select></label>
+      </form>
+      <p class="note" id="run-count" aria-live="polite"></p>
+      <h3>Decided runs</h3>
+      <div class="table-wrap"><table class="data runs" id="run-table" aria-label="Runs"></table></div>
+      <button type="button" class="pill more" id="run-more" hidden>Show more</button>
+      <h3>Handed to human review</h3>
+      <p class="note">Counted separately: the verifier abstained, its verdict could not be read, or the second check did not accept the revision. Their final answers are shown as recorded.</p>
+      <div class="table-wrap"><table class="data runs" id="hr-run-table" aria-label="Human-review runs"></table></div>
+      <div class="detail" id="run-detail" tabindex="-1" hidden></div>
+    </div>
   </section>
 
 </main>

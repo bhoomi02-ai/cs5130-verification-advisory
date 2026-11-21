@@ -302,8 +302,73 @@ def comparisons(rows: list[dict], complete: list[str], seed: int = 0) -> list[di
     return sorted(out, key=lambda x: order.get(x["condition"], 99))
 
 
+def pairwise(rows: list[dict], complete: list[str], seed: int = 0) -> list[dict]:
+    """Every ordered pair of finished settings: paired change, CI, sign test, and the runs where they disagree.
+
+    Pairs are matched on (task, run number), i.e. the same shared first draft. Each unordered
+    comparison is computed once and stored in both directions, so the page only looks it up.
+    """
+    usable = [r for r in rows if r.get("condition") in complete]
+    if len(complete) < 2 or not usable:
+        return []
+    frame = compare_conditions(usable, all_pairs=True, seed=seed)
+    by_key = {(r["condition"], r["task_id"], r["run_number"]): r for r in usable if r.get("status") != "failed"}
+    out = []
+    for _, c in frame.iterrows():
+        a, b = c["condition_a"], c["condition_b"]
+        only_a, only_b = [], []
+        for (cond, task, run), ra in sorted(by_key.items()):
+            if cond != a:
+                continue
+            rb = by_key.get((b, task, run))
+            if rb is None or bool(ra.get("final_correct")) == bool(rb.get("final_correct")):
+                continue
+            item = {"task_id": task, "run_number": run, "draft_correct": bool(ra.get("initial_correct")),
+                    "a_run_id": ra["run_id"], "b_run_id": rb["run_id"],
+                    "a_outcome": outcome(ra), "b_outcome": outcome(rb),
+                    "a_status": ra.get("status"), "b_status": rb.get("status"),
+                    "scoring_note": SCORING_UNDER_REVIEW.get(task)}
+            (only_a if ra.get("final_correct") else only_b).append(item)
+        base = {
+            "n_tasks": _int(c["n_tasks"]), "n_pairs": _int(c["n_pairs"]),
+            "sign_test_p": _stat(c["sign_test_p"]),
+            "note": None if pd.isna(c.get("note")) else c.get("note"),
+        }
+        forward = {**base, "a": a, "b": b, "success_a": _stat(c["success_a"]), "success_b": _stat(c["success_b"]),
+                   "delta": _stat(c["delta"]), "ci_low": _stat(c["delta_ci_low"]), "ci_high": _stat(c["delta_ci_high"]),
+                   "tasks_b_better": _int(c["task_b_better"]), "tasks_a_better": _int(c["task_a_better"]),
+                   "runs_only_a_right": only_a, "runs_only_b_right": only_b}
+        neg = lambda v: None if v is None else -v  # noqa: E731
+        backward = {**base, "a": b, "b": a, "success_a": forward["success_b"], "success_b": forward["success_a"],
+                    "delta": neg(forward["delta"]), "ci_low": neg(forward["ci_high"]), "ci_high": neg(forward["ci_low"]),
+                    "tasks_b_better": forward["tasks_a_better"], "tasks_a_better": forward["tasks_b_better"],
+                    "runs_only_a_right": [_swap(x) for x in only_b], "runs_only_b_right": [_swap(x) for x in only_a]}
+        out += [forward, backward]
+    order = {c: i for i, c in enumerate(CONDITION_ORDER)}
+    return sorted(out, key=lambda x: (order.get(x["a"], 99), order.get(x["b"], 99)))
+
+
+def _swap(item: dict) -> dict:
+    return {**item, "a_run_id": item["b_run_id"], "b_run_id": item["a_run_id"], "a_outcome": item["b_outcome"],
+            "b_outcome": item["a_outcome"], "a_status": item["b_status"], "b_status": item["a_status"]}
+
+
+# How each setting reads as the subject of the headline sentence.
+HEADLINE_SUBJECT = {
+    "self": "Having the advisor re-check its own answer",
+    "peer": "A second advisor call checking the answer",
+    "dedicated": "A dedicated verifier with a calculator",
+    "weakened": "A verifier without a calculator",
+    "cross_family": "A verifier from another model family",
+}
+
+
 def headline(metrics: dict, comps: list[dict], n_tasks: int, repeats: int) -> dict:
-    """The one-sentence summary, built only from complete conditions."""
+    """The one-sentence summary, built only from finished settings.
+
+    It names the setting with the largest gain over no check. If that gain's 95% interval
+    includes zero, it says so instead of claiming an improvement.
+    """
     none = metrics.get("none", {})
     if none.get("status") != "complete":
         return {"text": "Pending: the no-check baseline has not finished.", "best": None}
@@ -313,18 +378,21 @@ def headline(metrics: dict, comps: list[dict], n_tasks: int, repeats: int) -> di
         default=None,
     )
     pct = lambda v: f"{v * 100:.1f}%"  # noqa: E731
-    base = none["task_success"]
-    text = f"With no check the advisor is right {pct(base['value'])} of the time ({base['right']}/{base['n']} runs)"
+    pts = lambda v: f"{v * 100:+.1f}"  # noqa: E731
+    text = f"With no check the advisor is right {pct(none['task_success']['value'])} of the time."
     if best is None or best["delta"] <= 0:
-        text += "; no finished setting beats it yet."
+        text += " No finished setting improves on that yet."
     else:
-        b = metrics[best["condition"]]["task_success"]
-        text += (
-            f"; {best['condition']} is {pct(b['value'])} ({b['right']}/{b['n']}). "
-            f"The difference is {best['delta'] * 100:+.1f} points (95% CI {best['ci_low'] * 100:+.1f} to "
-            f"{best['ci_high'] * 100:+.1f}, sign test p = {best['sign_test_p']:.3f}, {n_tasks} tasks × {repeats} runs)."
-        )
-    return {"text": text, "best": best["condition"] if best else None}
+        value = metrics[best["condition"]]["task_success"]["value"]
+        interval = f"95% CI {pts(best['ci_low'])} to {pts(best['ci_high'])}"
+        subject = HEADLINE_SUBJECT.get(best["condition"], best["condition"])
+        if best["ci_low"] > 0:
+            text += f" {subject} raises that to {pct(value)}, {pts(best['delta'])} points ({interval})."
+        else:
+            text += (f" The best setting, {subject[0].lower() + subject[1:]}, reaches {pct(value)}, "
+                     f"{pts(best['delta'])} points, but the interval includes no change ({interval}).")
+    return {"text": text, "best": best["condition"] if best else None,
+            "data_set": f"{n_tasks} tasks × {repeats} runs"}
 
 
 # --------------------------------------------------------------------------- heatmap
@@ -438,6 +506,27 @@ def seeded(records: list[dict], prog: dict) -> dict:
             "right_reason_rate": _stat(m["right_reason_rate"]),
             "cost_usd": sum(r.get("cost_usd") or 0.0 for r in mine),
         }
+    by_type: dict[str, dict] = {}
+    for r in records:
+        et = r.get("error_type") or "?"
+        group = by_type.setdefault(et, {"error_type": et, "seeded_error": bool(r.get("seeded_error")), "answers": set(), "per_condition": {}})
+        group["answers"].add(r.get("answer_id"))
+    decisions = {}
+    if not audit.empty:
+        decisions = {(row["answer_id"], row["condition"]): row.get("decision") for row in audit.to_dict("records")}
+    for et, group in by_type.items():
+        for condition in VERIFIED:
+            if condition not in complete:
+                group["per_condition"][condition] = {"status": "pending"}
+                continue
+            mine = [r for r in records if r.get("condition") == condition and (r.get("error_type") or "?") == et
+                    and r.get("status") != "failed"]
+            rejected = sum(1 for r in mine if r.get("verdict") == "reject")
+            right = sum(1 for r in mine if decisions.get((r.get("answer_id"), condition)) == "right_reason")
+            group["per_condition"][condition] = {"n": len(mine), "rejected": rejected,
+                                                 "right_reason": right if group["seeded_error"] else None}
+        group["answers"] = sorted(a for a in group["answers"] if a)
+        group["n_answers"] = len(group["answers"])
     reviews = []
     if not audit.empty:
         meta = {(r.get("answer_id"), r.get("condition")): r for r in records}
@@ -458,6 +547,7 @@ def seeded(records: list[dict], prog: dict) -> dict:
         "n_answers": len({r.get("answer_id") for r in records}) if records else 0,
         "per_condition": per_condition,
         "reviews": reviews,
+        "by_error_type": sorted(by_type.values(), key=lambda g: (not g["seeded_error"], g["error_type"])),
         "wording": "Sanity checks, not results: 17 seeded answers with one known error and 14 correct controls, "
                    "each reviewed once per verifier.",
     }
@@ -649,6 +739,8 @@ def build(
                              f"and {repeats} runs each they are wide, so small differences are not conclusive.",
         },
         "heatmap.json": heatmap(study_rows, tasks, complete, prog),
+        "pairs.json": {"complete": complete, "pairs": pairwise(study_rows, complete, seed=seed),
+                       "note": "Paired on the same task and run number, i.e. the same shared first draft."},
         "spend.json": spend(log, budget),
         "seeded.json": seeded(seeded_records, prog),
         "sanity_s04.json": sanity_s04(log),
