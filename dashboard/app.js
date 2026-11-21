@@ -116,6 +116,37 @@
     return svg;
   }
 
+  // ------------------------------------------------------------------ motion: once, when scrolled into view
+
+  const seenAnim = new Set();
+  const animObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      animObserver.unobserve(e.target);
+      requestAnimationFrame(() => requestAnimationFrame(() => e.target.classList.remove("pending")));
+    });
+  }, { threshold: 0.15 }) : null;
+  // Marks start hidden (class "pending") and play once; redraws after that (resize, print) appear at once.
+  function animateWhenVisible(node, key) {
+    if (!node || reduceMotion || !animObserver || seenAnim.has(key)) return;
+    seenAnim.add(key);
+    node.classList.add("anim", "pending");
+    animObserver.observe(node);
+  }
+
+  // KPI numbers count up to their value when the setting changes. The final text is what was printed.
+  const COUNT_FMT = { pct0: (v) => `${Math.round(v)}%`, pct1: (v) => `${v.toFixed(1)}%`, usd2: (v) => `$${v.toFixed(2)}`, usd3: (v) => `$${v.toFixed(3)}`, int: (v) => `${Math.round(v)}` };
+  const num = (value, fmt) => `<span data-count="${value}" data-fmt="${fmt}">${COUNT_FMT[fmt](value)}</span>`;
+  function countUp(scope) {
+    if (reduceMotion) return;
+    scope.querySelectorAll("[data-count]").forEach((el) => {
+      const target = +el.dataset.count, fmt = COUNT_FMT[el.dataset.fmt];
+      d3.select(el).transition().duration(650).ease(d3.easeCubicOut)
+        .tween("text", () => (t) => { el.textContent = fmt(target * t); })
+        .on("end interrupt", () => { el.textContent = fmt(target); });
+    });
+  }
+
   // ------------------------------------------------------------------ 1. hero + explore
 
   function renderHero() {
@@ -188,6 +219,7 @@
     state.selected = c;
     renderPills();
     renderKpis();
+    countUp(document.getElementById("kpis"));
     renderReplay();
     if (focusIn) {
       const box = document.getElementById(typeof focusIn === "string" ? focusIn : PICKERS[1]);
@@ -226,13 +258,13 @@
       `<div class="kpi" id="kpi-success"><p class="k">Task success</p><div class="mini"></div>` +
       `<p class="d">${t.right}/${t.n} runs · ${ci(t.ci_low, t.ci_high)}${review}</p></div>` +
       (v
-        ? tile("", "Catch rate", pct(v.catch_rate.value, 0), `${v.catch_rate.caught}/${v.catch_rate.n} wrong drafts rejected · MCC ${v.mcc == null ? "–" : v.mcc.toFixed(2)}`, "good") +
-          tile("", "False alarms", pct(v.false_alarm_rate.value), `${v.false_alarm_rate.flagged}/${v.false_alarm_rate.n} right drafts rejected`, v.false_alarm_rate.value > 0 ? "bad" : "")
+        ? tile("", "Catch rate", num(v.catch_rate.value * 100, "pct0"), `${v.catch_rate.caught}/${v.catch_rate.n} wrong drafts rejected · MCC ${v.mcc == null ? "–" : v.mcc.toFixed(2)}`, "good") +
+          tile("", "False alarms", num(v.false_alarm_rate.value * 100, "pct1"), `${v.false_alarm_rate.flagged}/${v.false_alarm_rate.n} right drafts rejected`, v.false_alarm_rate.value > 0 ? "bad" : "")
         : tile("", "Catch rate", "–", "no verifier in this setting", "small") + tile("", "False alarms", "–", "no verifier in this setting", "small")) +
       tile("", "Fixed vs broken",
-        `<span class="ok">+${o.fixed}</span> <span class="tag-small">/</span> <span class="no">−${o.broken}</span>`,
+        `<span class="ok">+${num(o.fixed, "int")}</span> <span class="tag-small">/</span> <span class="no">−${num(o.broken, "int")}</span>`,
         `${o.fixed} wrong → right · ${o.broken} right → wrong (of ${e.n_runs} runs)`) +
-      tile("", "Cost per run", usd(e.cost.mean_cost_usd, 3),
+      tile("", "Cost per run", num(e.cost.mean_cost_usd, "usd3"),
         `${kfmt(e.cost.mean_tokens_in)} in / ${kfmt(e.cost.mean_tokens_out)} out tokens · includes the shared draft`) +
       spendTile;
     gauge(box.querySelector("#kpi-success .mini"), {
@@ -269,6 +301,18 @@
       .attr("class", (d) => (d.pending ? "lbl-pending" : "lbl-muted")).text(valueText);
     row.each(function (d) { if (!d.pending) mark(d3.select(this), d, x, 28); });
     attachTip(row, tipHtml);
+    // Bars grow out of the zero line, interval lines open from their centre, points fade in.
+    const origin = x(zero != null ? zero : x.domain()[0]);
+    svg.selectAll("g.row rect:not(.focus-ring)").each(function () {
+      if (this.getAttribute("transform")) this.classList.add("anim-pt");
+      else { this.classList.add("anim-bar"); this.style.transformOrigin = `${origin}px 0px`; }
+    });
+    svg.selectAll("g.row line").each(function () {
+      const cx = (+this.getAttribute("x1") + +this.getAttribute("x2")) / 2;
+      this.classList.add("anim-ci"); this.style.transformOrigin = `${cx}px 0px`;
+    });
+    svg.selectAll("g.row circle").classed("anim-pt", true);
+    animateWhenVisible(svg.node(), (slot.closest("figure") || slot).id || ariaLabel);
     return { svg, x };
   }
 
@@ -417,14 +461,14 @@
 
   const heatColor = d3.scaleLinear().domain([0, 0.5, 1]).range([PINK, VIOLET, CYAN]).interpolate(d3.interpolateRgb); // wrong → middle → right
 
-  function chip(cell, where) {
+  function chip(cell, where, col = 0) {
     if (!cell || cell.status === "pending") {
       return `<span class="chip pending-chip" aria-label="${esc(where)}: pending">pending</span>`;
     }
     if (!cell.n) return `<span class="chip pending-chip" aria-label="${esc(where)}: no runs">–</span>`;
     const share = cell.right / cell.n;
     const failed = cell.failed ? ` <small>(+${cell.failed} failed)</small>` : "";
-    return `<span class="chip mark-cell" role="img" style="background:${heatColor(share)}" ` +
+    return `<span class="chip mark-cell" role="img" style="background:${heatColor(share)};--col:${col}" ` +
       `data-tip="${esc(`<strong>${where}</strong><br>${cell.right} of ${cell.n} runs right${cell.failed ? `<br>${cell.failed} failed run(s) not counted` : ""}`)}" ` +
       `aria-label="${esc(`${where}: ${cell.right} of ${cell.n} right`)}">${cell.right}/${cell.n}${failed}</span>`;
   }
@@ -440,15 +484,16 @@
       }).join("") + `</tr></thead>`;
     const body = heatmap.groups.map((g, gi) => {
       const flagged = g.tasks.some((t) => review[t]);
-      const groupCells = heatmap.conditions.map((c) => `<td class="cell">${chip(g.cells[c], `${g.scenario} (all ${g.tasks.length} tasks), ${SHORT[c]}`)}</td>`).join("");
+      const groupCells = heatmap.conditions.map((c, col) => `<td class="cell">${chip(g.cells[c], `${g.scenario} (all ${g.tasks.length} tasks), ${SHORT[c]}`, col)}</td>`).join("");
       const sub = g.rows.map((r) =>
         `<tr class="sub-row" data-group="${gi}" hidden><th scope="row" style="font-weight:500">${esc(r.task_id)}${review[r.task_id] ? ` <span class="dagger" title="${esc(review[r.task_id])}">†</span><span class="sr-only"> (scoring under review)</span>` : ""}</th>` +
-        heatmap.conditions.map((c) => `<td class="cell">${chip(r.cells[c], `${r.task_id}, ${SHORT[c]}`)}</td>`).join("") + `</tr>`).join("");
+        heatmap.conditions.map((c, col) => `<td class="cell">${chip(r.cells[c], `${r.task_id}, ${SHORT[c]}`, col)}</td>`).join("") + `</tr>`).join("");
       return `<tr><th scope="row"><button type="button" class="expander" aria-expanded="false" data-group="${gi}">` +
         `<span class="tri" aria-hidden="true">▶</span>${esc(g.scenario)} <span class="tag-small">${g.tasks.length} task${g.tasks.length > 1 ? "s" : ""}</span>` +
         `${flagged ? ' <span class="dagger" aria-hidden="true">†</span>' : ""}</button></th>${groupCells}</tr>${sub}`;
     }).join("");
     table.innerHTML = head + `<tbody>${body}</tbody>`;
+    animateWhenVisible(table, "heat-table");
     table.querySelectorAll(".expander").forEach((btn) => btn.addEventListener("click", () => {
       const open = btn.getAttribute("aria-expanded") !== "true";
       btn.setAttribute("aria-expanded", String(open));
@@ -545,6 +590,8 @@
         .attr("text-anchor", right ? "start" : "end")
         .text(text);
     });
+    g.selectAll("line, circle").classed("anim-pt", true);
+    animateWhenVisible(svg.node(), "scatter-chart");
     attachTip(g, (d) => `<strong>${SHORT[d.condition]}</strong><br>${usd(d.mean_cost_usd, 4)} per run (includes the shared draft)<br>` +
       `Task success ${pct(d.success.value)} (${d.success.right}/${d.success.n}), ${ci(d.success.ci_low, d.success.ci_high)}`);
   }
@@ -553,22 +600,23 @@
 
   function renderSanity() {
     const { seeded, sanity_s04: s04 } = state.data;
-    const st = document.getElementById("seeded-table");
-    document.getElementById("seeded-wording").textContent = seeded.wording;
-    const head = `<thead><tr><th>Setting</th><th class="num">Errors caught</th><th class="num">False alarms on correct controls</th>` +
-      `<th class="num">Caught with the right reason</th><th class="num">Only the consequence</th><th class="num">Wrong reason</th><th class="num">Cost</th></tr></thead>`;
-    const body = VERIFIED.map((c) => {
-      const e = seeded.per_condition[c];
-      if (isPending(e)) return `<tr><td>${SHORT[c]}</td><td class="pending" colspan="6">${esc(pendingLabel(e))}</td></tr>`;
-      const rr = e.right_reason;
-      const flagged = rr.right_reason + rr.consequence_only + rr.wrong_reason + rr.abstained;
-      return `<tr><td>${SHORT[c]}</td>` +
-        `<td class="num">${pct(e.catch_rate.value, 0)} <span class="tag-small">(${e.catch_rate.caught}/${e.catch_rate.n})</span></td>` +
-        `<td class="num">${pct(e.false_alarm_rate.value, 0)} <span class="tag-small">(${e.false_alarm_rate.flagged}/${e.false_alarm_rate.n})</span>${e.missing_verdicts ? `<span class="ci">${e.missing_verdicts} unreadable</span>` : ""}</td>` +
-        `<td class="num">${pct(e.right_reason_rate, 0)} <span class="tag-small">(${rr.right_reason}/${flagged})</span></td>` +
-        `<td class="num">${rr.consequence_only}</td><td class="num">${rr.wrong_reason}</td><td class="num">${usd(e.cost_usd)}</td></tr>`;
-    }).join("");
-    st.innerHTML = head + `<tbody>${body}</tbody>`;
+
+    // One sentence from the S04 cases of the models used in the study; the full table folds away.
+    const used = s04.cases.filter((c) => c.used_in_study);
+    const NAME = { dedicated: "dedicated", weakened: "no-calculator", cross_family: "cross-family" };
+    const who = (c) => (c.setting === "cross_family" ? `cross-family (${c.verifier_model.replace("openai/", "")})` : NAME[c.setting] || c.setting);
+    const list = (xs) => (xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+    const wrong = used.filter((c) => c.answer_was === "wrong");
+    const right = used.filter((c) => c.answer_was === "correct");
+    const rejected = [...new Set(wrong.filter((c) => c.verdict === "reject").map(who))];
+    const accepted = [...new Set(wrong.filter((c) => c.verdict === "accept").map(who))];
+    const rightOk = right.filter((c) => c.verdict === "accept").length;
+    const rightOdd = right.filter((c) => c.verdict !== "accept").length;
+    document.getElementById("s04-summary").innerHTML =
+      `On one known-wrong S04 answer, the ${esc(list(rejected))} verifier${rejected.length === 1 ? "" : "s"} <span class="ok">rejected it</span>` +
+      (accepted.length ? `; the ${esc(list(accepted))} verifier <span class="no">accepted it</span>` : "") + `. ` +
+      `On a known-right answer, ${rightOk} of ${right.length} attempts accepted it` +
+      (rightOdd ? ` (${rightOdd} gave ${rightOdd === 1 ? "an unreadable verdict" : "other verdicts"}).` : ".");
 
     const t = document.getElementById("s04-table");
     const rows = s04.cases.map((c) => {
@@ -675,21 +723,32 @@
     }).join("")}</tr></thead>`;
     const body = seeded.by_error_type.map((g) => {
       const label = g.seeded_error ? g.error_type.replace(/_/g, " ") : "correct controls";
-      const cells = VERIFIED.map((c) => {
+      const cells = VERIFIED.map((c, col) => {
         const v = g.per_condition[c];
         if (!v || v.status === "pending") return `<td class="cell"><span class="chip pending-chip">pending</span></td>`;
         if (!g.seeded_error) {
           const share = v.n ? 1 - v.rejected / v.n : 0;
-          return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)}" aria-label="${esc(`${SHORT[c]}, controls: ${v.rejected} of ${v.n} false alarms`)}">` +
+          return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)};--col:${col}" aria-label="${esc(`${SHORT[c]}, controls: ${v.rejected} of ${v.n} false alarms`)}">` +
             `${v.rejected}/${v.n}<small>false alarms</small></span></td>`;
         }
         const share = v.n ? v.right_reason / v.n : 0;
-        return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)}" aria-label="${esc(`${SHORT[c]}, ${label}: ${v.rejected} of ${v.n} rejected, ${v.right_reason} for the right reason`)}">` +
+        return `<td class="cell"><span class="chip" role="img" style="background:${heatColor(share)};--col:${col}" aria-label="${esc(`${SHORT[c]}, ${label}: ${v.rejected} of ${v.n} rejected, ${v.right_reason} for the right reason`)}">` +
           `${v.rejected}/${v.n}<small>${v.right_reason} right reason</small></span></td>`;
       }).join("");
       return `<tr><th scope="row">${esc(label)}<span class="ci">${g.n_answers} answer${g.n_answers === 1 ? "" : "s"}</span></th>${cells}</tr>`;
     }).join("");
-    document.getElementById("type-table").innerHTML = head + `<tbody>${body}</tbody>`;
+    const total = VERIFIED.map((c) => {
+      const e = seeded.per_condition[c];
+      if (isPending(e)) return `<td class="cell pending tag-small">${esc(pendingLabel(e))}</td>`;
+      const rr = e.right_reason;
+      return `<td class="cell total"><b>${e.catch_rate.caught}/${e.catch_rate.n}</b> caught` +
+        `<span class="ci">${rr.right_reason} for the right reason</span>` +
+        `<span class="ci">${e.false_alarm_rate.flagged}/${e.false_alarm_rate.n} false alarms${e.missing_verdicts ? ` · ${e.missing_verdicts} unreadable` : ""}</span>` +
+        `<span class="ci">${usd(e.cost_usd)}</span></td>`;
+    }).join("");
+    document.getElementById("type-table").innerHTML = head + `<tbody>${body}</tbody>` +
+      `<tfoot><tr><th scope="row">Total<span class="ci">17 errors, 14 controls</span></th>${total}</tr></tfoot>`;
+    animateWhenVisible(document.getElementById("type-table"), "type-table");
 
     const real = state.data.summary.conditions;
     const lines = VERIFIED.filter((c) => !isPending(real[c]) && !isPending(seeded.per_condition[c])).map((c) =>
@@ -813,8 +872,18 @@
     return v;
   }
 
+  function expandRuns(open = true) {
+    const btn = document.getElementById("runs-toggle");
+    document.getElementById("runs-body").hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+    btn.textContent = open ? "Hide the run list" : `Browse all ${state.data.runs.runs.length} runs`;
+  }
+
   function setupRunFilters() {
     const { runs, meta } = state.data;
+    expandRuns(false);
+    document.getElementById("runs-toggle").addEventListener("click", () =>
+      expandRuns(document.getElementById("runs-toggle").getAttribute("aria-expanded") !== "true"));
     running = new Set(meta.conditions.filter((c) => !c.complete).map((c) => c.id));
     const sSel = document.getElementById("f-setting");
     sSel.innerHTML = `<option value="">All settings</option>` + ORDER.map((c) => {
@@ -908,6 +977,7 @@
   }
 
   async function openRun(runId) {
+    expandRuns(true);
     const panel = document.getElementById("run-detail");
     runState.current = runId;
     document.querySelectorAll("table.runs tbody tr").forEach((tr) => tr.toggleAttribute("aria-current", tr.dataset.run === runId));

@@ -159,30 +159,22 @@
     <p class="note review-note" data-review="cost" hidden></p>
   </section>
 
-  <!-- 7. Verifier sanity checks -->
+  <!-- 7. Verifier sanity checks: seeded errors by type, and the pre-study S04 check -->
   <section class="card" id="sanity" aria-labelledby="sanity-h">
     <div class="card-head">
       <h2 id="sanity-h">Verifier sanity checks</h2>
-      <p class="sub"><strong>Sanity checks, not results.</strong> Small, hand-made tests that the verifiers react to known errors at all.</p>
-    </div>
-    <h3>Seeded answers (17 with one known error, 14 correct controls)</h3>
-    <p class="note" id="seeded-wording"></p>
-    <div class="table-wrap"><table class="data" id="seeded-table" aria-label="Seeded-answer sanity checks"></table></div>
-    <h3>S04 before the main study (one known-wrong and one known-right answer)</h3>
-    <p class="note" id="s04-wording"></p>
-    <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
-  </section>
-
-  <!-- 7b. Seeded errors by type -->
-  <section class="card" id="seeded-types" aria-labelledby="seeded-types-h">
-    <div class="card-head">
-      <h2 id="seeded-types-h">Seeded errors by type</h2>
-      <p class="sub"><strong>Sanity checks, not results.</strong> Each seeded answer has one known error of the type shown (or none, for the 14 correct controls). A cell shows how many each verifier rejected, and how many of those it rejected for the right reason, i.e. its issues named the actual error.</p>
+      <p class="sub"><strong>Sanity checks, not results.</strong> Hand-made answers with one known error each (and 14 correct controls), reviewed once by every verifier. A cell shows how many it rejected, and how many of those for the right reason, i.e. its issues named the actual error.</p>
     </div>
     <div class="table-wrap"><table class="data heat" id="type-table" aria-label="Seeded errors by type and verifier"></table></div>
     <p class="note" id="type-note"></p>
     <details class="answers"><summary>Every seeded answer and what each verifier decided</summary>
       <div class="table-wrap"><table class="data" id="answer-table" aria-label="Seeded answers by verifier"></table></div>
+    </details>
+    <h3>Before the study: S04</h3>
+    <p id="s04-summary"></p>
+    <details class="answers"><summary>All S04 checks</summary>
+      <p class="note" id="s04-wording"></p>
+      <div class="table-wrap"><table class="data" id="s04-table" aria-label="S04 sanity checks"></table></div>
     </details>
   </section>
 
@@ -192,27 +184,30 @@
       <h2 id="runs-h">Every run</h2>
       <p class="sub">Filter, then open a run to see its draft, the verifier's verdicts and issues, the revision, the final answer and the checks it failed. The answer key is never shown: failed checks list what the answer reported and why it failed.</p>
     </div>
-    <form class="filters" id="run-filters" onsubmit="return false">
-      <label>Setting <select id="f-setting"></select></label>
-      <label>Task <select id="f-task"></select></label>
-      <label>Outcome <select id="f-outcome">
-        <option value="">All</option>
-        <option value="kept_correct">Kept correct</option>
-        <option value="fixed">Fixed (wrong → right)</option>
-        <option value="broken">Broken (right → wrong)</option>
-        <option value="still_wrong">Still wrong</option>
-        <option value="human_review">Human review</option>
-        <option value="failed">Failed call</option>
-      </select></label>
-    </form>
-    <p class="note" id="run-count" aria-live="polite"></p>
-    <h3>Decided runs</h3>
-    <div class="table-wrap"><table class="data runs" id="run-table" aria-label="Runs"></table></div>
-    <button type="button" class="pill more" id="run-more" hidden>Show more</button>
-    <h3>Handed to human review</h3>
-    <p class="note">Counted separately: the verifier abstained, its verdict could not be read, or the second check did not accept the revision. Their final answers are shown as recorded.</p>
-    <div class="table-wrap"><table class="data runs" id="hr-run-table" aria-label="Human-review runs"></table></div>
-    <div class="detail" id="run-detail" tabindex="-1" hidden></div>
+    <button type="button" class="pill browse" id="runs-toggle" aria-expanded="false" aria-controls="runs-body">Browse all runs</button>
+    <div id="runs-body" hidden>
+      <form class="filters" id="run-filters" onsubmit="return false">
+        <label>Setting <select id="f-setting"></select></label>
+        <label>Task <select id="f-task"></select></label>
+        <label>Outcome <select id="f-outcome">
+          <option value="">All</option>
+          <option value="kept_correct">Kept correct</option>
+          <option value="fixed">Fixed (wrong → right)</option>
+          <option value="broken">Broken (right → wrong)</option>
+          <option value="still_wrong">Still wrong</option>
+          <option value="human_review">Human review</option>
+          <option value="failed">Failed call</option>
+        </select></label>
+      </form>
+      <p class="note" id="run-count" aria-live="polite"></p>
+      <h3>Decided runs</h3>
+      <div class="table-wrap"><table class="data runs" id="run-table" aria-label="Runs"></table></div>
+      <button type="button" class="pill more" id="run-more" hidden>Show more</button>
+      <h3>Handed to human review</h3>
+      <p class="note">Counted separately: the verifier abstained, its verdict could not be read, or the second check did not accept the revision. Their final answers are shown as recorded.</p>
+      <div class="table-wrap"><table class="data runs" id="hr-run-table" aria-label="Human-review runs"></table></div>
+      <div class="detail" id="run-detail" tabindex="-1" hidden></div>
+    </div>
   </section>
 
 </main>

@@ -21,11 +21,10 @@ The page loads `data/*.json` with `fetch`, so it needs a web server (opening `in
 | 4 | Fixed (wrong → right) vs broken (right → wrong) per setting | `summary.json` |
 | 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants | `heatmap.json` |
 | 6 | Budget bar, cost and tokens per run, cost vs success | `spend.json`, `summary.json` |
-| 7 | Verifier sanity checks: the seeded set (with "caught with the right reason") and the S04 cases | `seeded.json`, `sanity_s04.json` |
+| 7 | Verifier sanity checks: seeded errors by type × verifier (rejected, for the right reason, false alarms on the controls) with a Total row, every seeded answer's decision (folded), and a one-sentence summary of the pre-study S04 check with its table folded | `seeded.json`, `sanity_s04.json` |
 | 8 | Shown first, under the headline: replay of recorded runs for the chosen setting (its picker stays in sync with view 1) (play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
 | 2b | Compare two finished settings: success of each with CI, paired change B − A with CI and sign test, and the runs right only with A or only with B (each opens in the run table) | `pairs.json`, `summary.json` |
-| 7b | Seeded errors by type × verifier: rejected and "for the right reason", false alarms on the controls, every seeded answer's decision, and the seeded-vs-real catch counts | `seeded.json` |
-| 9 | Every run, filterable by setting, task and outcome; human-review runs in their own table with their route; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
+| 9 | Folded behind "Browse all N runs" (opens by itself when a run is opened from another view): every run, filterable by setting, task and outcome; human-review runs in their own table with their route; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
 
 Design notes: unfinished settings show `pending (n/N)` everywhere and never a number; every rate prints its count and interval next to it; tasks with scoring under review (T06-v003) get a † note beside every figure they affect; every chart has an `aria-label`, printed values and a tooltip on hover and keyboard focus; the setting picker is a radio group (arrow keys); heatmap rows are buttons with `aria-expanded`; the layout works at 400 px with no sideways page scroll (wide tables scroll inside their box); `prefers-reduced-motion` turns off transitions.
 
@@ -80,6 +79,10 @@ All colours are CSS variables at the top of `style.css` (palette "midnight teal 
 `mockup/dashboard_figma.svg` (and a PNG render) is the original concept design (violet to cyan on near-black); the page has since moved to the midnight teal palette above. Its numbers are placeholders from the 10 × 5 pilot baseline; the page will show the main study (32 tasks × 3 runs).
 
 The top of the page shows when the data was built ("Data as of …") and a progress bar per setting, so a setting still running is never quoted as a result.
+
+## Motion
+
+Chart bars grow out of the zero line, intervals open, points fade in, and heatmap and seeded-grid cells fill in one setting at a time, once, when each part first scrolls into view. KPI numbers count up when the setting changes. The printed values never move, nothing animates with `prefers-reduced-motion`, and print/PDF always shows the finished state.
 
 ## Slides and report
 

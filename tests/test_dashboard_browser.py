@@ -240,3 +240,29 @@ def test_compare_view_status_strip_and_seeded_types_render_from_the_data(site):
             assert f"still running ({c['runs_done']}/{c['runs_expected']})" in out["status"]
     assert out["png"] >= 7
     assert out["width"][0] == out["width"][1] == 400
+
+
+def test_motion_plays_once_and_never_hides_data_for_reduced_motion(site):
+    out = {}
+
+    async def scroll_all(page):
+        out["pending_at_load"] = await page.js("document.querySelectorAll('.anim.pending').length")
+        await page.js("""new Promise(async (done) => {
+            for (let y = 0; y < document.body.scrollHeight; y += 250) { window.scrollTo(0, y); await new Promise(r => setTimeout(r, 60)); }
+            done(true); })""")
+        await asyncio.sleep(1.5)
+        out["pending_after_scroll"] = await page.js("document.querySelectorAll('.anim.pending').length")
+        out["runs_hidden"] = await page.js("document.getElementById('runs-body').hidden")
+        out["s04"] = await page.js("document.getElementById('s04-summary').textContent")
+
+    async def reduced(page):
+        out["reduced_anim"] = await page.js("document.querySelectorAll('.anim').length")
+        out["reduced_hidden"] = await page.js(
+            "[...document.querySelectorAll('.anim-bar, .anim-pt, .chip')].filter(e => getComputedStyle(e).opacity === '0').length")
+
+    assert asyncio.run(_with_page(site["url"], scroll_all)) == []
+    assert asyncio.run(_with_page(site["url"], reduced, reduced_motion=True)) == []
+    assert out["pending_at_load"] > 0 and out["pending_after_scroll"] == 0
+    assert out["runs_hidden"] is True  # the run list starts folded away
+    assert out["s04"].startswith("On one known-wrong S04 answer")
+    assert out["reduced_anim"] == 0 and out["reduced_hidden"] == 0

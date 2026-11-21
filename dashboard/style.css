@@ -318,3 +318,21 @@ details.answers summary { cursor: pointer; color: var(--cyan); font-size: 13px; 
   .hero { grid-template-columns: minmax(0, 1fr) 280px !important; }
   .pair-lists li { padding: 2px 0; font-size: 12px; }
 }
+
+/* ---------- run list button ---------- */
+.browse { margin-top: 4px; }
+#type-table tfoot th, #type-table tfoot td { border-top: 1px solid var(--line); border-bottom: 0; padding-top: 10px; }
+#type-table td.total { font-size: 12px; text-align: center; }
+#type-table td.total b { font-size: 14px; }
+
+/* ---------- motion (once, when scrolled into view; off for reduced motion and in print) ---------- */
+svg.anim .anim-bar, svg.anim .anim-ci { transform-box: view-box; transition: transform .8s cubic-bezier(.2, .7, .2, 1); }
+svg.anim .anim-pt { transition: opacity .45s ease-out .45s; }
+svg.anim.pending .anim-bar, svg.anim.pending .anim-ci { transform: scaleX(0); }
+svg.anim.pending .anim-pt { opacity: 0; }
+table.anim .chip { transition: opacity .4s ease-out, transform .4s ease-out; transition-delay: calc(var(--col, 0) * 110ms); }
+table.anim.pending .chip { opacity: 0; transform: scale(.85); }
+@media print {
+  .pending .anim-bar, .pending .anim-ci, .pending .chip { transform: none !important; }
+  .pending .anim-pt, .pending .chip { opacity: 1 !important; }
+}
