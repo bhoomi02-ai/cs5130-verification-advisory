@@ -141,38 +141,47 @@
     }
   }
 
+  // The same setting picker appears twice (above the replay and in "Explore a setting"); both stay in sync.
+  const PICKERS = ["replay-pills", "pills"];
   function renderPills() {
     const { summary } = state.data;
-    const box = document.getElementById("pills");
-    box.innerHTML = "";
-    ORDER.forEach((c) => {
-      const entry = summary.conditions[c];
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "pill";
-      b.setAttribute("role", "radio");
-      b.setAttribute("aria-checked", String(c === state.selected));
-      b.tabIndex = c === state.selected ? 0 : -1;
-      b.dataset.condition = c;
-      b.innerHTML = esc(SHORT[c]) + (isPending(entry) ? `<span class="tag">${esc(pendingLabel(entry))}</span>` : "");
-      b.addEventListener("click", () => select(c, true));
-      box.appendChild(b);
+    PICKERS.forEach((id) => {
+      const box = document.getElementById(id);
+      if (!box) return;
+      box.innerHTML = "";
+      ORDER.forEach((c) => {
+        const entry = summary.conditions[c];
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "pill";
+        b.setAttribute("role", "radio");
+        b.setAttribute("aria-checked", String(c === state.selected));
+        b.tabIndex = c === state.selected ? 0 : -1;
+        b.dataset.condition = c;
+        b.innerHTML = esc(SHORT[c]) + (isPending(entry) ? `<span class="tag">${esc(pendingLabel(entry))}</span>` : "");
+        b.addEventListener("click", () => select(c, id));
+        box.appendChild(b);
+      });
+      box.onkeydown = (e) => {
+        const i = ORDER.indexOf(state.selected);
+        const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (step) { e.preventDefault(); select(ORDER[(i + step + ORDER.length) % ORDER.length], id); }
+        if (e.key === "Home") { e.preventDefault(); select(ORDER[0], id); }
+        if (e.key === "End") { e.preventDefault(); select(ORDER[ORDER.length - 1], id); }
+      };
     });
-    box.onkeydown = (e) => {
-      const i = ORDER.indexOf(state.selected);
-      const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-      if (step) { e.preventDefault(); select(ORDER[(i + step + ORDER.length) % ORDER.length], true); }
-      if (e.key === "Home") { e.preventDefault(); select(ORDER[0], true); }
-      if (e.key === "End") { e.preventDefault(); select(ORDER[ORDER.length - 1], true); }
-    };
   }
 
-  function select(c, focus) {
+  // focusIn: id of the picker to keep keyboard focus in (or a truthy value for the first one).
+  function select(c, focusIn) {
     state.selected = c;
     renderPills();
     renderKpis();
     renderReplay();
-    if (focus) document.querySelector(`.pill[data-condition="${c}"]`).focus();
+    if (focusIn) {
+      const box = document.getElementById(typeof focusIn === "string" ? focusIn : PICKERS[1]);
+      box.querySelector(`.pill[data-condition="${c}"]`).focus();
+    }
   }
 
   function tile(cls, k, v, d, vClass = "") {
@@ -778,7 +787,7 @@
     if (replay) { replay.destroy(); replay = null; }
     mountEl.innerHTML = "";
     document.getElementById("replay-dataset").textContent =
-      `Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs, advisor ${s.advisor_model}. Setting: ${SHORT[c]} (change it in “Explore a setting”).`;
+      `Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs, advisor ${s.advisor_model}. Showing: ${SHORT[c]}. The same choice drives “Explore a setting” below.`;
     if (isPending(entry)) {
       document.getElementById("replay-sub").textContent = `${SHORT[c]} is still running, so it is not replayed yet.`;
       mountEl.innerHTML = `<p class="replay-pending">${esc(pendingLabel(entry))}</p>`;

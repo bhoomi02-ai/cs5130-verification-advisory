@@ -30,6 +30,19 @@
 
 <main id="main">
 
+  <!-- 8. Replay of recorded runs (shown first, like the mockup's "How an answer travels") -->
+  <section class="card" id="replay" aria-labelledby="replay-h">
+    <div class="card-head">
+      <h2 id="replay-h">Replay of recorded runs</h2>
+      <p class="sub" id="replay-sub"></p>
+      <p class="note" id="replay-dataset"></p>
+    </div>
+    <div class="pills" role="radiogroup" aria-label="Setting to replay" id="replay-pills"></div>
+    <div id="replay-mount"></div>
+    <p class="note">Each dot is one saved run, played in the order it was run: task → advisor's first draft → verifier verdict → (reject: one revision, checked again) → final answer → hidden checker. Cyan is right, pink is wrong, amber "?" is a run handed to human review. Nothing is re-run; it only replays results.jsonl.</p>
+    <p class="note review-note" data-review="replay" hidden></p>
+  </section>
+
   <!-- 1. Headline KPIs for one setting -->
   <section class="card" id="explore" aria-labelledby="explore-h">
     <div class="card-head">
@@ -169,18 +182,6 @@
     <details class="answers"><summary>Every seeded answer and what each verifier decided</summary>
       <div class="table-wrap"><table class="data" id="answer-table" aria-label="Seeded answers by verifier"></table></div>
     </details>
-  </section>
-
-  <!-- 8. Replay -->
-  <section class="card" id="replay" aria-labelledby="replay-h">
-    <div class="card-head">
-      <h2 id="replay-h">Replay of recorded runs</h2>
-      <p class="sub" id="replay-sub"></p>
-      <p class="note" id="replay-dataset"></p>
-    </div>
-    <div id="replay-mount"></div>
-    <p class="note">Each dot is one saved run, played in the order it was run: task → advisor's first draft → verifier verdict → (reject: one revision, checked again) → final answer → hidden checker. Cyan is right, pink is wrong, amber "?" is a run handed to human review. Nothing is re-run; it only replays results.jsonl.</p>
-    <p class="note review-note" data-review="replay" hidden></p>
   </section>
 
   <!-- 9. Run table -->

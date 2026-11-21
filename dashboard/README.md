@@ -22,7 +22,7 @@ The page loads `data/*.json` with `fetch`, so it needs a web server (opening `in
 | 5 | Scenario × setting heatmap, right out of 3 runs per task; S01–S10 rows open to show their variants | `heatmap.json` |
 | 6 | Budget bar, cost and tokens per run, cost vs success | `spend.json`, `summary.json` |
 | 7 | Verifier sanity checks: the seeded set (with "caught with the right reason") and the S04 cases | `seeded.json`, `sanity_s04.json` |
-| 8 | Replay of recorded runs for the setting picked in view 1 (play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
+| 8 | Shown first, under the headline: replay of recorded runs for the chosen setting (its picker stays in sync with view 1) (play/pause, 1×/2×/4×, restart; counters, draft-vs-final accuracy, run log). Unfinished settings show `pending (n/N)` and are not replayed | `runs.json` |
 | 2b | Compare two finished settings: success of each with CI, paired change B − A with CI and sign test, and the runs right only with A or only with B (each opens in the run table) | `pairs.json`, `summary.json` |
 | 7b | Seeded errors by type × verifier: rejected and "for the right reason", false alarms on the controls, every seeded answer's decision, and the seeded-vs-real catch counts | `seeded.json` |
 | 9 | Every run, filterable by setting, task and outcome; human-review runs in their own table with their route; open a run for its draft, verdicts, issues, calculator use, revision, final answer and failed checks | `runs.json`, `runs/<run_id>.json` |
