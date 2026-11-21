@@ -119,12 +119,20 @@
     const { summary, meta } = state.data;
     const s = meta.study;
     document.getElementById("headline").textContent = summary.headline.text;
+    // One short line: data set, advisor, when the data was built, and anything still running.
+    const asof = new Date(meta.generated_at);
+    const when = isNaN(asof) ? meta.generated_at
+      : `${asof.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}, ${asof.toISOString().slice(11, 16)} UTC`;
+    const running = meta.conditions.filter((c) => !c.complete)
+      .map((c) => `<span class="pending">${esc(SHORT[c.id])} still running (${c.runs_done}/${c.runs_expected})</span>`);
     document.getElementById("dataset").innerHTML =
-      `<strong>Data set: main study, ${s.n_tasks} tasks × ${s.repeats} runs</strong> ` +
-      `(${s.n_scenarios} scenarios S01–S10 and their variants) · advisor ${esc(s.advisor_model)}, ` +
-      `temperature ${s.temperature}, top-p ${s.top_p}, ${esc(s.thinking_level)} thinking.`;
+      [`<strong>${s.n_tasks} tasks × ${s.repeats} runs</strong>`, `advisor ${esc(s.advisor_model)}`, `data as of ${esc(when)}`, ...running].join(" · ");
     const note = document.getElementById("headline-note");
-    if (reviewNoteText()) { note.hidden = false; note.textContent = reviewNoteText(); }
+    const tasks = Object.keys(meta.scoring_under_review || {});
+    if (tasks.length) {
+      note.hidden = false;
+      note.textContent = `${tasks.length === 1 ? "One task's" : `${tasks.length} tasks'`} scoring is under review (${tasks.join(", ")}); details beside each affected figure.`;
+    }
 
     const none = summary.conditions.none;
     const slot = document.querySelector("#hero-gauge .gauge-slot");
@@ -574,23 +582,6 @@
       `<th class="num">Calls</th><th>Verdict right?</th><th>What it said</th></tr></thead><tbody>${rows}</tbody>`;
   }
 
-  // ------------------------------------------------------------------ status: data as of + progress
-
-  function renderStatus() {
-    const { meta } = state.data;
-    const when = meta.generated_at.replace("T", " ").replace("+00:00", " UTC");
-    const bars = meta.conditions.map((c) => {
-      const share = c.runs_expected ? c.runs_done / c.runs_expected : 0;
-      const partial = !c.complete;
-      const seeded = c.seeded_expected != null ? ` · seeded ${c.seeded_done}/${c.seeded_expected}` : "";
-      return `<div class="prog${partial ? " partial" : ""}" role="img" aria-label="${esc(`${SHORT[c.id]}: ${c.runs_done} of ${c.runs_expected} runs${seeded}${partial ? ", still running" : ", finished"}`)}">` +
-        `<b>${SHORT[c.id]}</b> ${c.runs_done}/${c.runs_expected}${seeded}${partial ? " · running" : ""}` +
-        `<div class="track"><div class="done" style="width:${(share * 100).toFixed(1)}%"></div></div></div>`;
-    }).join("");
-    document.getElementById("status").innerHTML =
-      `<p class="asof">Data as of <strong>${esc(when)}</strong> (when dashboard/build_data.py last ran). Settings still running are shown as pending and are not compared.</p>${bars}`;
-  }
-
   // ------------------------------------------------------------------ 2b. compare two settings
 
   function setupPair() {
@@ -964,8 +955,10 @@
   function renderFooter() {
     const { meta } = state.data;
     const done = meta.conditions.map((c) => `${SHORT[c.id]} ${c.runs_done}/${c.runs_expected}`).join(" · ");
+    const st = meta.study;
     document.getElementById("foot-meta").textContent =
-      `Data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
+      `Main study: ${st.n_tasks} tasks (${st.n_scenarios} scenarios S01–S10 and their variants) × ${st.repeats} runs · advisor ${st.advisor_model}, ` +
+      `temperature ${st.temperature}, top-p ${st.top_p}, ${st.thinking_level} thinking · data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
   }
 
   function renderCharts() {
@@ -991,7 +984,6 @@
     renderHero();
     renderPills();
     renderKpis();
-    renderStatus();
     renderHeatmap();
     renderSanity();
     renderSeededTypes();

@@ -220,7 +220,7 @@ def test_compare_view_status_strip_and_seeded_types_render_from_the_data(site):
         out["pair"] = await page.js("document.getElementById('pair-body').innerText")
         out["disabled"] = await page.js("[...document.querySelectorAll('#pair-b option:disabled')].map(o => o.value)")
         out["types"] = await page.js("document.querySelectorAll('#type-table tbody tr').length")
-        out["status"] = await page.js("document.getElementById('status').innerText")
+        out["status"] = await page.js("document.getElementById('dataset').innerText")
         out["png"] = await page.js("document.querySelectorAll('.png-btn').length")
         # the stacked replay layout below 560 px
         await page.cmd("Emulation.setDeviceMetricsOverride", width=400, height=900, deviceScaleFactor=1, mobile=True)
@@ -234,8 +234,9 @@ def test_compare_view_status_strip_and_seeded_types_render_from_the_data(site):
     pending = [c["id"] for c in site["meta"]["conditions"] if not c["complete"]]
     assert sorted(out["disabled"]) == sorted(pending)
     assert out["types"] == len(seeded["by_error_type"])
-    assert "Data as of" in out["status"]
-    for c in pending:
-        assert "running" in out["status"]
+    assert "data as of" in out["status"] and "32 tasks × 3 runs" in out["status"]
+    for c in site["meta"]["conditions"]:
+        if not c["complete"]:
+            assert f"still running ({c['runs_done']}/{c['runs_expected']})" in out["status"]
     assert out["png"] >= 7
     assert out["width"][0] == out["width"][1] == 400

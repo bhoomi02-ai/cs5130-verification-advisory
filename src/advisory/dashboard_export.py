@@ -353,8 +353,22 @@ def _swap(item: dict) -> dict:
             "b_outcome": item["a_outcome"], "a_status": item["b_status"], "b_status": item["a_status"]}
 
 
+# How each setting reads as the subject of the headline sentence.
+HEADLINE_SUBJECT = {
+    "self": "Having the advisor re-check its own answer",
+    "peer": "A second advisor call checking the answer",
+    "dedicated": "A dedicated verifier with a calculator",
+    "weakened": "A verifier without a calculator",
+    "cross_family": "A verifier from another model family",
+}
+
+
 def headline(metrics: dict, comps: list[dict], n_tasks: int, repeats: int) -> dict:
-    """The one-sentence summary, built only from complete conditions."""
+    """The one-sentence summary, built only from finished settings.
+
+    It names the setting with the largest gain over no check. If that gain's 95% interval
+    includes zero, it says so instead of claiming an improvement.
+    """
     none = metrics.get("none", {})
     if none.get("status") != "complete":
         return {"text": "Pending: the no-check baseline has not finished.", "best": None}
@@ -364,18 +378,21 @@ def headline(metrics: dict, comps: list[dict], n_tasks: int, repeats: int) -> di
         default=None,
     )
     pct = lambda v: f"{v * 100:.1f}%"  # noqa: E731
-    base = none["task_success"]
-    text = f"With no check the advisor is right {pct(base['value'])} of the time ({base['right']}/{base['n']} runs)"
+    pts = lambda v: f"{v * 100:+.1f}"  # noqa: E731
+    text = f"With no check the advisor is right {pct(none['task_success']['value'])} of the time."
     if best is None or best["delta"] <= 0:
-        text += "; no finished setting beats it yet."
+        text += " No finished setting improves on that yet."
     else:
-        b = metrics[best["condition"]]["task_success"]
-        text += (
-            f"; {best['condition']} is {pct(b['value'])} ({b['right']}/{b['n']}). "
-            f"The difference is {best['delta'] * 100:+.1f} points (95% CI {best['ci_low'] * 100:+.1f} to "
-            f"{best['ci_high'] * 100:+.1f}, sign test p = {best['sign_test_p']:.3f}, {n_tasks} tasks × {repeats} runs)."
-        )
-    return {"text": text, "best": best["condition"] if best else None}
+        value = metrics[best["condition"]]["task_success"]["value"]
+        interval = f"95% CI {pts(best['ci_low'])} to {pts(best['ci_high'])}"
+        subject = HEADLINE_SUBJECT.get(best["condition"], best["condition"])
+        if best["ci_low"] > 0:
+            text += f" {subject} raises that to {pct(value)}, {pts(best['delta'])} points ({interval})."
+        else:
+            text += (f" The best setting, {subject[0].lower() + subject[1:]}, reaches {pct(value)}, "
+                     f"{pts(best['delta'])} points, but the interval includes no change ({interval}).")
+    return {"text": text, "best": best["condition"] if best else None,
+            "data_set": f"{n_tasks} tasks × {repeats} runs"}
 
 
 # --------------------------------------------------------------------------- heatmap

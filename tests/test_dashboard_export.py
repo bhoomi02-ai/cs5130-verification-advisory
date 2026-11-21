@@ -246,9 +246,21 @@ def test_rates_carry_counts_and_human_review_both_ways(built):
 
 
 def test_headline_is_built_from_the_data(built):
-    text = built["load"]("summary.json")["headline"]["text"]
-    assert text.startswith("With no check the advisor is right 75.0% of the time (3/4 runs); dedicated is 100.0% (4/4).")
-    assert "2 tasks × 2 runs" in text
+    head = built["load"]("summary.json")["headline"]
+    # With 2 tasks the interval reaches zero, so the sentence must not claim an improvement.
+    assert head["text"] == ("With no check the advisor is right 75.0% of the time. The best setting, a dedicated verifier "
+                            "with a calculator, reaches 100.0%, +25.0 points, but the interval includes no change (95% CI +0.0 to +50.0).")
+    assert head["best"] == "dedicated" and head["data_set"] == "2 tasks × 2 runs"
+
+
+def test_headline_does_not_claim_a_gain_when_the_interval_includes_zero():
+    metrics = {"none": {"status": "complete", "task_success": {"value": 0.8}},
+               "self": {"status": "complete", "task_success": {"value": 0.85}}}
+    comps = [{"condition": "self", "delta": 0.05, "ci_low": -0.02, "ci_high": 0.12, "sign_test_p": 0.5}]
+    text = ex.headline(metrics, comps, 32, 3)["text"]
+    assert "raises" not in text and "the interval includes no change (95% CI -2.0 to +12.0)" in text
+    comps[0].update(ci_low=0.01)
+    assert "Having the advisor re-check its own answer raises that to 85.0%, +5.0 points" in ex.headline(metrics, comps, 32, 3)["text"]
 
 
 def test_heatmap_groups_variants_under_their_base_scenario(built):
