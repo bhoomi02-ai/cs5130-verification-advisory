@@ -1,63 +1,74 @@
 {
  "source": "results/runs.jsonl (every model call, as scripts/spend.py)",
- "total_usd": 11.8147387,
+ "total_usd": 12.0040909,
  "budget_usd": 20.0,
- "left_usd": 8.1852613,
- "calls": 1127,
- "failed_calls": 35,
+ "left_usd": 7.9959091,
+ "calls": 1183,
+ "failed_calls": 46,
  "by_condition": [
   {
    "name": "dedicated",
+   "label": "Dedicated",
    "cost_usd": 3.632781000000001,
    "calls": 346
   },
   {
    "name": "draft",
+   "label": "first drafts",
    "cost_usd": 2.1544350000000003,
    "calls": 116
   },
   {
    "name": "peer",
+   "label": "Peer",
    "cost_usd": 1.7471624999999997,
    "calls": 141
   },
   {
    "name": "weakened",
+   "label": "No calculator",
    "cost_usd": 1.5679020000000004,
    "calls": 139
   },
   {
    "name": "self",
+   "label": "Self",
    "cost_usd": 1.52625675,
    "calls": 143
   },
   {
    "name": "pilot",
+   "label": "pilot",
    "cost_usd": 0.6378538,
    "calls": 78
   },
   {
    "name": "cross_family",
-   "cost_usd": 0.43814257500000015,
-   "calls": 139
+   "label": "Cross-family",
+   "cost_usd": 0.6274947750000002,
+   "calls": 195
   },
   {
    "name": "dedicated-check",
+   "label": "pre-study checks",
    "cost_usd": 0.08757375,
    "calls": 10
   },
   {
    "name": "weakened-check",
+   "label": "pre-study checks",
    "cost_usd": 0.015672,
    "calls": 2
   },
   {
    "name": "cross-check",
+   "label": "pre-study checks",
    "cost_usd": 0.006443325000000001,
    "calls": 12
   },
   {
    "name": "billing-check",
+   "label": "pre-study checks",
    "cost_usd": 0.000516,
    "calls": 1
   }
@@ -65,26 +76,31 @@
  "by_model": [
   {
    "name": "gemini-3.6-flash",
-   "cost_usd": 11.660818499999998,
-   "calls": 970
+   "label": "gemini-3.6-flash",
+   "cost_usd": 11.823719249999996,
+   "calls": 977
+  },
+  {
+   "name": "openai/gpt-oss-20b",
+   "label": "openai/gpt-oss-20b",
+   "cost_usd": 0.1021131,
+   "calls": 174
   },
   {
    "name": "gemini-3.5-flash-lite",
+   "label": "gemini-3.5-flash-lite",
    "cost_usd": 0.07642529999999999,
    "calls": 25
   },
   {
-   "name": "openai/gpt-oss-20b",
-   "cost_usd": 0.07566164999999998,
-   "calls": 125
-  },
-  {
    "name": "gemini-3.1-flash-lite",
+   "label": "gemini-3.1-flash-lite",
    "cost_usd": 0.00183325,
    "calls": 1
   },
   {
    "name": "gemma-4-31b-it",
+   "label": "gemma-4-31b-it",
    "cost_usd": 0.0,
    "calls": 6
   }
@@ -92,38 +108,51 @@
  "by_day": [
   {
    "name": "2026-11-07",
+   "label": "2026-11-07",
    "cost_usd": 0.0051915500000000005,
    "calls": 2
   },
   {
    "name": "2026-11-09",
+   "label": "2026-11-09",
    "cost_usd": 0.042085,
    "calls": 24
   },
   {
    "name": "2026-11-13",
+   "label": "2026-11-13",
    "cost_usd": 0.4045750000000001,
    "calls": 41
   },
   {
    "name": "2026-11-14",
+   "label": "2026-11-14",
    "cost_usd": 0.23244449999999994,
    "calls": 17
   },
   {
    "name": "2026-11-17",
+   "label": "2026-11-17",
    "cost_usd": 0.9833912250000001,
    "calls": 76
   },
   {
    "name": "2026-11-19",
+   "label": "2026-11-19",
    "cost_usd": 1.2794392499999994,
    "calls": 69
   },
   {
    "name": "2026-11-20",
-   "cost_usd": 8.867612175000007,
-   "calls": 898
+   "label": "2026-11-20",
+   "cost_usd": 8.888463300000007,
+   "calls": 901
+  },
+  {
+   "name": "2026-11-21",
+   "label": "2026-11-21",
+   "cost_usd": 0.168501075,
+   "calls": 53
   }
  ],
  "note": "Each run's own cost also includes its share of the shared first draft, so summing run costs across settings counts drafts more than once; this total counts every call once."

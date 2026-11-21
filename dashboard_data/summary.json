@@ -1,7 +1,8 @@
 {
  "headline": {
-  "text": "With no check the advisor is right 88.5% of the time (85/96 runs); dedicated is 97.9% (94/96). The difference is +9.4 points (95% CI +3.1 to +17.7, sign test p = 0.031, 32 tasks × 3 runs).",
-  "best": "dedicated"
+  "text": "With no check the advisor is right 88.5% of the time. A dedicated verifier with a calculator raises that to 97.9%, +9.4 points (95% CI +3.1 to +17.7).",
+  "best": "dedicated",
+  "data_set": "32 tasks × 3 runs"
  },
  "conditions": {
   "none": {
@@ -345,10 +346,10 @@
   },
   "cross_family": {
    "status": "pending",
-   "done": 55,
+   "done": 74,
    "total": 96,
-   "failed": 1,
-   "label": "pending (55/96)"
+   "failed": 2,
+   "label": "pending (74/96)"
   }
  },
  "comparisons": [
@@ -366,7 +367,9 @@
    "tasks_better": 1,
    "tasks_worse": 1,
    "sign_test_p": 1.0,
-   "note": ""
+   "note": "",
+   "sign_test_p_holm": 1.0,
+   "n_comparisons": 4
   },
   {
    "condition": "peer",
@@ -382,7 +385,9 @@
    "tasks_better": 1,
    "tasks_worse": 1,
    "sign_test_p": 1.0,
-   "note": ""
+   "note": "",
+   "sign_test_p_holm": 1.0,
+   "n_comparisons": 4
   },
   {
    "condition": "dedicated",
@@ -398,7 +403,9 @@
    "tasks_better": 6,
    "tasks_worse": 0,
    "sign_test_p": 0.03125,
-   "note": ""
+   "note": "",
+   "sign_test_p_holm": 0.125,
+   "n_comparisons": 4
   },
   {
    "condition": "weakened",
@@ -414,7 +421,9 @@
    "tasks_better": 0,
    "tasks_worse": 1,
    "sign_test_p": 1.0,
-   "note": ""
+   "note": "",
+   "sign_test_p_holm": 1.0,
+   "n_comparisons": 4
   }
  ],
  "interval_note": "Intervals are 95% bootstrap intervals over the 32 tasks; with 32 tasks and 3 runs each they are wide, so small differences are not conclusive."

@@ -1,0 +1,152 @@
+{
+  "run_id": "cross_family-gemini-3.6-flash-T04-v004-r3",
+  "task_id": "T04-v004",
+  "condition": "cross_family",
+  "run_number": 3,
+  "draft": "{\"scenario_id\":\"T04-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":174770.99816271696},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":168052.7410065095},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6718.25715620746}],\"selection\":\"Fund A\"},\"violations\":[],\"explanation\":\"Fund A has an initial investment of $100,000 less a 2.5% entry fee ($97,500 net), and grows at an annual net factor of (1 + 0.08) * (1 - 0.004) = 1.07568. After 8 years, Fund A reaches $174,770.998 (approx. $174,771.00). Fund B has no entry fee ($100,000 net) and grows at an annual net factor of (1 + 0.08) * (1 - 0.012) = 1.06704. After 8 years, Fund B reaches $168,052.741 (approx. $168,052.74). Fund A performs better with an absolute final value difference of $6,718.257 (approx. $6,718.26).\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T04-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":174770.99816271696},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":168052.7410065095},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6718.25715620746}],\"selection\":\"Fund A\"},\"violations\":[],\"explanation\":\"Fund A has an initial investment of $100,000 less a 2.5% entry fee ($97,500 net), and grows at an annual net factor of (1 + 0.08) * (1 - 0.004) = 1.07568. After 8 years, Fund A reaches $174,770.998 (approx. $174,771.00). Fund B has no entry fee ($100,000 net) and grows at an annual net factor of (1 + 0.08) * (1 - 0.012) = 1.06704. After 8 years, Fund B reaches $168,052.741 (approx. $168,052.74). Fund A performs better with an absolute final value difference of $6,718.257 (approx. $6,718.26).\"}",
+  "verdict": "accept",
+  "second_verdict": null,
+  "status": "accepted",
+  "verifier_calls": 2,
+  "reviews": [
+    {
+      "stage": "first",
+      "verdict": "accept",
+      "issues": [],
+      "reason": "All calculations are correct and the response conforms to the required schema.",
+      "error": null,
+      "raw": "{\"verdict\":\"accept\",\"issues\":[],\"reason\":\"All calculations are correct and the response conforms to the required schema.\"}",
+      "trailing": "",
+      "calls": 2,
+      "calculations": [
+        {
+          "expression": "97500*(1.07568**8)",
+          "result": 174770.9983125537
+        },
+        {
+          "expression": "100000*(1.06704**8)",
+          "result": 168052.74109125722
+        }
+      ],
+      "ignored": [],
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are an independent verifier at a financial advisory firm. You did not write\nthe answer you are given. Your only job is to decide whether it is correct before\nit reaches the client. You receive the complete client scenario as JSON and the\nadvisor's answer.\n\nYou have a calculator. Use it to recompute every number the answer depends on\ninstead of doing arithmetic in your head. To use it, reply with only this JSON\nobject:\n{\"calculate\": [\"<expression>\", \"<expression>\"]}\nwith at most 15 expressions. You will get the results back\nand can ask again, up to 3 times in total, so put every\nexpression you need into as few requests as you can. Calculator rules: + - * / // % **\nand parentheses; the functions abs, round, min, max, sum, sqrt, log, log10, exp,\nceil, floor; list literals only inside sum/min/max, e.g. sum([1, 2, 3]);\nfv(rate, nper, pmt, pv, when=0), pv(rate, nper, pmt, fv=0, when=0) and\npmt(rate, nper, pv, fv=0, when=0) with numpy-financial conventions (rate per\nperiod, cash paid out is negative; when=0 end of period, 1 start). One expression\nper item; no variables, so write the numbers out.\n\nWhen you have checked everything, reply with your verdict instead.\n"
+        },
+        {
+          "role": "user",
+          "content": "Scenario:\n{\n  \"scenario_id\": \"T04-v004\",\n  \"schema_version\": \"2.0-revised-draft\",\n  \"answer_type\": \"NUMERIC_RESULT\",\n  \"client\": {},\n  \"valuation_date\": null,\n  \"portfolio\": {\n    \"holdings\": [],\n    \"cash_balance\": null,\n    \"total_value\": 100000\n  },\n  \"investment_policy\": {\n    \"target_allocations\": {},\n    \"restrictions\": []\n  },\n  \"cash_flows\": [],\n  \"client_request\": \"A client is building an investment fund for a planned major purchase. Compare the 8-year final values after all stated fees. Report each fund's final value, absolute difference, and better-performing fund.\",\n  \"assumptions\": [],\n  \"calculation_type\": \"FUND_COMPARISON\",\n  \"investment_options\": [\n    {\n      \"name\": \"Fund A\",\n      \"initial_investment\": 100000,\n      \"gross_annual_return\": 0.08,\n      \"annual_fee\": 0.004,\n      \"entry_fee\": 0.025,\n      \"years\": 8\n    },\n    {\n      \"name\": \"Fund B\",\n      \"initial_investment\": 100000,\n      \"gross_annual_return\": 0.08,\n      \"annual_fee\": 0.012,\n      \"entry_fee\": 0.0,\n      \"years\": 8\n    }\n  ],\n  \"calculation_convention\": {\n    \"entry_fee\": \"Deduct before compounding\",\n    \"annual_growth_factor\": \"(1 + gross_annual_return) * (1 - annual_fee)\",\n    \"compounding\": \"ANNUAL\"\n  },\n  \"output_requirements\": {\n    \"contract_id\": \"NEUTRAL_OUTPUT_V1\",\n    \"delivery\": \"Every Advisor and verifier receives this COMPLETE scenario JSON unchanged plus its role-specific prompt. No scenario-specific filtering, field removal or special delivery logic. The same full scenario and output contract are used by all four conditions. checks.json and ground_truth.json are evaluator-only and must never be supplied to any Advisor or verifier.\",\n    \"required_metrics\": [\n      \"observations\",\n      \"selection\"\n    ],\n    \"response_schema\": {\n      \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n      \"type\": \"object\",\n      \"additionalProperties\": false,\n      \"required\": [\n        \"scenario_id\",\n        \"answer_type\",\n        \"status\",\n        \"trades\",\n        \"metrics\",\n        \"violations\",\n        \"explanation\"\n      ],\n      \"properties\": {\n        \"scenario_id\": {\n          \"enum\": [\n            \"T04-v004\"\n          ]\n        },\n        \"answer_type\": {\n          \"enum\": [\n            \"TRADE_PLAN\",\n            \"VIOLATION_LIST\",\n            \"NUMERIC_RESULT\"\n          ]\n        },\n        \"status\": {\n          \"enum\": [\n            \"FEASIBLE\",\n            \"INFEASIBLE\",\n            \"VIOLATIONS_FOUND\",\n            \"INSUFFICIENT_INFORMATION\"\n          ]\n        },\n        \"trades\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"additionalProperties\": false,\n            \"required\": [\n              \"symbol\",\n              \"quantity_delta\"\n            ],\n            \"properties\": {\n              \"symbol\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"quantity_delta\": {\n                \"type\": \"number\"\n              }\n            }\n          }\n        },\n        \"metrics\": {\n          \"type\": \"object\",\n          \"additionalProperties\": false,\n          \"required\": [\n            \"observations\",\n            \"selection\"\n          ],\n          \"properties\": {\n            \"observations\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"object\",\n                \"additionalProperties\": false,\n                \"required\": [\n                  \"subject\",\n                  \"measure\",\n                  \"stage\",\n                  \"rounding\",\n                  \"unit\",\n                  \"value\"\n                ],\n                \"properties\": {\n                  \"subject\": {\n                    \"type\": \"string\",\n                    \"minLength\": 1\n                  },\n                  \"measure\": {\n                    \"enum\": [\n                      \"VALUE\",\n                      \"ALLOCATION\",\n                      \"QUANTITY\",\n                      \"PAYMENT\",\n                      \"DIFFERENCE\"\n                    ]\n                  },\n                  \"stage\": {\n                    \"enum\": [\n                      \"INITIAL\",\n                      \"HISTORICAL\",\n                      \"BEFORE_TRADES\",\n                      \"BEFORE_WITHDRAWAL\",\n                      \"FINAL\"\n                    ]\n                  },\n                  \"rounding\": {\n                    \"enum\": [\n                      \"NONE\",\n                      \"UPWARD_CENT\"\n                    ]\n                  },\n                  \"unit\": {\n                    \"enum\": [\n                      \"MONEY\",\n                      \"FRACTION\",\n                      \"SHARES\"\n                    ]\n                  },\n                  \"value\": {\n                    \"type\": \"number\"\n                  }\n                }\n              }\n            },\n            \"selection\": {\n              \"oneOf\": [\n                {\n                  \"type\": \"string\",\n                  \"minLength\": 1\n                },\n                {\n                  \"type\": \"null\"\n                }\n              ]\n            }\n          }\n        },\n        \"violations\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"additionalProperties\": false,\n            \"required\": [\n              \"kind\",\n              \"scope\",\n              \"observed\",\n              \"limit\"\n            ],\n            \"properties\": {\n              \"kind\": {\n                \"enum\": [\n                  \"CLASS_MAX\",\n                  \"CLASS_MIN\",\n                  \"INDIVIDUAL_MAX\",\n                  \"PROHIBITED_CLASS\"\n                ]\n              },\n              \"scope\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"observed\": {\n                \"type\": \"number\"\n              },\n              \"limit\": {\n                \"type\": \"number\"\n              }\n            }\n          }\n        },\n        \"explanation\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      },\n      \"$comment\": \"Neutral contract shared by every scenario and condition. Output status is chosen from the analysis; no status or outcome is prescribed by a scenario-specific output requirement.\"\n    },\n    \"status_meanings\": {\n      \"FEASIBLE\": \"The requested plan or calculation is achievable under the supplied conditions.\",\n      \"INFEASIBLE\": \"The requested requirements cannot jointly be met under the supplied conditions.\",\n      \"VIOLATIONS_FOUND\": \"The analysis identified one or more current policy violations.\",\n      \"INSUFFICIENT_INFORMATION\": \"Essential information is unavailable; identify what is missing.\"\n    },\n    \"trades_rule\": \"Always include trades as an array. Positive quantity_delta means buy; negative means sell. [] means no transactions are proposed and does not itself establish feasibility. Use [] for calculations or policy audits that do not propose transactions, or when no executable plan is offered. Enforce whole shares only where stated in the scenario.\",\n    \"observations_rule\": \"Each observation is identified by (subject, measure, stage, rounding); do not duplicate that key. Use PORTFOLIO for the whole account, CASH for cash, exact supplied symbols or asset-class names for holdings, or exact supplied option names; use OPTIONS for a comparison of named options. VALUE and DIFFERENCE use MONEY, ALLOCATION uses FRACTION, QUANTITY uses SHARES, and PAYMENT uses MONEY per monthly payment. Normally rounding is NONE; use UPWARD_CENT only for the upward-rounded payment requested by the client. selection is the exact chosen option name when the client asks to compare named options, otherwise null.\",\n    \"task_completion\": \"Answer only the supplied client request. For executable portfolio plans the evaluator derives balances and allocations from the supplied inputs and your trades; supporting observations may be supplied and must be consistent. For portfolio analysis without an executable plan, include INITIAL VALUE observations for PORTFOLIO, CASH and each supplied holding to support the analysis. For numerical questions report the requested final amounts as FINAL VALUE observations; report requested differences as FINAL DIFFERENCE observations (OPTIONS for absolute option-value differences, PORTFOLIO for target minus projected balance), and any requested exact and upward-cent recurring payment as FINAL PAYMENT observations. This reporting convention applies uniformly; it does not prescribe an outcome.\",\n    \"stage_meanings\": {\n      \"INITIAL\": \"Supplied current portfolio before listed external cash flows and trades.\",\n      \"HISTORICAL\": \"The supplied historical snapshot.\",\n      \"BEFORE_TRADES\": \"After listed deposits, immediately before any proposed trades; no withdrawal has been executed.\",\n      \"BEFORE_WITHDRAWAL\": \"After proposed trades and deposits, immediately before listed withdrawals.\",\n      \"FINAL\": \"After listed trades and external flows, or at the requested calculation horizon.\"\n    },\n    \"violation_meanings\": {\n      \"CLASS_MAX\": \"An asset class exceeds its permitted maximum.\",\n      \"CLASS_MIN\": \"An asset class is below its permitted minimum.\",\n      \"INDIVIDUAL_MAX\": \"An individual stock exceeds its permitted concentration maximum.\",\n      \"PROHIBITED_CLASS\": \"A prohibited asset class is present. Report each rule/scope once.\"\n    },\n    \"violations_rule\": \"Always include violations as an array, [] if none are reported. scope is the exact supplied symbol or class. observed and limit are fractions of the relevant portfolio value. Do not infer a violation merely because the answer_type permits an audit.\",\n    \"explanation_rule\": \"Explain the recommendation and supporting calculation or bound concisely, including any unresolved assumption used conditionally. Do not treat a listed status choice, metric vocabulary or empty array as a hint to the reference outcome.\"\n  },\n  \"story_type\": \"Long-term financial goal\"\n}\n\nThe advisor's answer:\n{\"scenario_id\":\"T04-v004\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":174770.99816271696},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":168052.7410065095},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":6718.25715620746}],\"selection\":\"Fund A\"},\"violations\":[],\"explanation\":\"Fund A has an initial investment of $100,000 less a 2.5% entry fee ($97,500 net), and grows at an annual net factor of (1 + 0.08) * (1 - 0.004) = 1.07568. After 8 years, Fund A reaches $174,770.998 (approx. $174,771.00). Fund B has no entry fee ($100,000 net) and grows at an annual net factor of (1 + 0.08) * (1 - 0.012) = 1.06704. After 8 years, Fund B reaches $168,052.741 (approx. $168,052.74). Fund A performs better with an absolute final value difference of $6,718.257 (approx. $6,718.26).\"}\n\nCheck the answer against the scenario. Check everything that decides whether it is right:\n- It answers the client_request and follows output_requirements and response_schema.\n- Every restriction, policy limit, cash requirement and approved assumption in the scenario is respected.\n- Every number is correct. Recompute trades, cash, values, allocations and totals from the scenario's own data; do not trust the answer's arithmetic.\n- The status (for example FEASIBLE or INFEASIBLE) is right.\n\nThen give exactly one verdict:\n- \"accept\": you checked the answer and found no error.\n- \"reject\": you found at least one specific error. List every error you found, precisely enough for the advisor to fix it.\n- \"abstain\": you cannot decide, for example because the scenario is ambiguous or a figure cannot be checked from the scenario. The answer then goes to a human reviewer.\n\nJudge only against the scenario. Do not reject for style or wording, or because you would have chosen a different plan when the answer's plan also meets every requirement.\n\nReply with a single JSON object and nothing else (no markdown code fences):\n{\"verdict\": \"accept\" or \"reject\" or \"abstain\", \"issues\": [\"one specific error per item; empty unless the verdict is reject\"], \"reason\": \"one or two sentences\"}\n"
+        },
+        {
+          "role": "assistant",
+          "content": "{\"calculate\": [\"97500*(1.07568**8)\", \"100000*(1.06704**8)\"]}"
+        },
+        {
+          "role": "user",
+          "content": "Calculator results:\n1. 97500*(1.07568**8) = 174770.9983125537\n2. 100000*(1.06704**8) = 168052.74109125722"
+        },
+        {
+          "role": "assistant",
+          "content": "{\"verdict\":\"accept\",\"issues\":[],\"reason\":\"All calculations are correct and the response conforms to the required schema.\"}"
+        }
+      ]
+    }
+  ],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T04-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.99816271695,
+          "fund_b_final": 168052.7410065095,
+          "absolute_difference": 6718.25715620746,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.9983125537,
+          "fund_b_final": 168052.74109125722,
+          "absolute_difference": 6718.257221296488,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T04-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.99816271695,
+          "fund_b_final": 168052.7410065095,
+          "absolute_difference": 6718.25715620746,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T04-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "fund_a_final": 174770.9983125537,
+          "fund_b_final": 168052.74109125722,
+          "absolute_difference": 6718.257221296488,
+          "better_fund": "Fund A"
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

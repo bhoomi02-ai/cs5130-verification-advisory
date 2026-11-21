@@ -1,0 +1,460 @@
+{
+ "run_id": "cross_family-gemini-3.6-flash-T05-v003-r3",
+ "task_id": "T05-v003",
+ "condition": "cross_family",
+ "run_number": 3,
+ "status": "human_review",
+ "verdict": "reject",
+ "second_verdict": "reject",
+ "verifier_calls": 3,
+ "draft": {
+  "scenario_id": "T05-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "NVDA",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -14
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 213
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.78
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.18
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.04
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3504
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1496
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The portfolio was rebalanced to achieve target asset allocations within tolerance (50% stocks, 35.04% bonds, and 14.96% cash) while satisfying all constraints. Selling 40 shares of MSFT, 25 shares of NVDA, and 14 shares of VOO generated $28,000 in proceeds. Purchasing 213 shares of BND used $17,040, leaving cash at $14,960. Direct technology exposure (AAPL, MSFT, NVDA) was reduced to 32%, below the 33% maximum limit, and no individual stock exceeds 21% of total portfolio value. AAPL and BND were not sold, and all trades use whole shares with existing portfolio assets."
+ },
+ "revision": {
+  "scenario_id": "T05-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "NVDA",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -14
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 213
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.78
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.18
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.04
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3504
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1496
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The reviewer's calculation is incorrect; trading existing assets at quoted prices without friction does not change the total portfolio value of $100,000. Selling 40 MSFT ($16,000), 25 NVDA ($5,000), and 14 VOO ($7,000) generates $28,000 in cash. Purchasing 213 BND ($17,040) leaves cash at $14,960. The final holdings are Stocks = $50,000 (50.00%), Bonds = $35,040 (35.04%), and Cash = $14,960 (14.96%), perfectly meeting the 50%/35%/15% allocation targets within the 0.5% tolerance. Direct technology exposure (AAPL + MSFT + NVDA = $32,000) is 32.0% (<= 33%), AAPL concentration is 20.0% (<= 21%), no AAPL or BND shares are sold, and all trades use whole shares."
+ },
+ "final": {
+  "scenario_id": "T05-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "FEASIBLE",
+  "trades": [
+   {
+    "symbol": "MSFT",
+    "quantity_delta": -40
+   },
+   {
+    "symbol": "NVDA",
+    "quantity_delta": -25
+   },
+   {
+    "symbol": "VOO",
+    "quantity_delta": -14
+   },
+   {
+    "symbol": "BND",
+    "quantity_delta": 213
+   }
+  ],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000.0
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.78
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.18
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.04
+    },
+    {
+     "subject": "STOCK",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.5
+    },
+    {
+     "subject": "BOND",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.3504
+    },
+    {
+     "subject": "CASH",
+     "measure": "ALLOCATION",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "FRACTION",
+     "value": 0.1496
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The reviewer's calculation is incorrect; trading existing assets at quoted prices without friction does not change the total portfolio value of $100,000. Selling 40 MSFT ($16,000), 25 NVDA ($5,000), and 14 VOO ($7,000) generates $28,000 in cash. Purchasing 213 BND ($17,040) leaves cash at $14,960. The final holdings are Stocks = $50,000 (50.00%), Bonds = $35,040 (35.04%), and Cash = $14,960 (14.96%), perfectly meeting the 50%/35%/15% allocation targets within the 0.5% tolerance. Direct technology exposure (AAPL + MSFT + NVDA = $32,000) is 32.0% (<= 33%), AAPL concentration is 20.0% (<= 21%), no AAPL or BND shares are sold, and all trades use whole shares."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "reject",
+   "issues": [
+    "The final portfolio value is 110,960 (after trades), not 100,000, so the reported final allocations of 0.5, 0.3504, 0.1496 are incorrect. The actual allocations are approximately 0.450 for stocks, 0.315 for bonds, and 0.135 for cash, which do not meet the target 50%/35%/15% within tolerance. The trade plan fails to achieve the required asset‑allocation targets."
+   ],
+   "reason": "",
+   "calls": 2,
+   "calculations": [
+    {
+     "expression": "200*100",
+     "result": 20000
+    },
+    {
+     "expression": "400*50",
+     "result": 20000
+    },
+    {
+     "expression": "200*65",
+     "result": 13000
+    },
+    {
+     "expression": "500*50",
+     "result": 25000
+    },
+    {
+     "expression": "80*225",
+     "result": 18000
+    }
+   ],
+   "error": null
+  },
+  {
+   "stage": "second",
+   "verdict": "reject",
+   "issues": [
+    "The plan changes the total portfolio value from the scenario’s initial 104,000 USD (sum of holdings 100,000 USD + cash 4,000 USD) to 100,000 USD, violating the zero‑friction assumption that total value must remain unchanged; consequently the final allocations (≈81.8% stocks, 33.7% bonds, 14.4% cash) do not meet the 50/35/15 target within tolerance."
+   ],
+   "reason": "",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T05-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "final_cash": 14960.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "direct_technology_pct": 0.32
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 14960.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 10.0,
+      "NVDA": 40.0,
+      "VOO": 36.0,
+      "BND": 438.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "MSFT": 4000.0,
+      "NVDA": 8000.0,
+      "VOO": 18000.0,
+      "BND": 35040.0
+     },
+     "direct_technology_pct": 0.32,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T05-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "final_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "final_cash": 14960.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "direct_technology_pct": 0.32
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T05-v003_replay",
+    "check_type": "REPLAY_TRADES",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "cash_before_trades": 4000.0,
+     "cash_before_withdrawal": null,
+     "final_cash": 14960.0,
+     "final_total": 100000.0,
+     "allocations": {
+      "STOCK": 0.5,
+      "BOND": 0.3504,
+      "CASH": 0.1496
+     },
+     "final_quantities": {
+      "AAPL": 100.0,
+      "MSFT": 10.0,
+      "NVDA": 40.0,
+      "VOO": 36.0,
+      "BND": 438.0
+     },
+     "final_values": {
+      "AAPL": 20000.0,
+      "MSFT": 4000.0,
+      "NVDA": 8000.0,
+      "VOO": 18000.0,
+      "BND": 35040.0
+     },
+     "direct_technology_pct": 0.32,
+     "historical_total": null,
+     "additional_liquidity_needed": null
+    },
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null
+}
