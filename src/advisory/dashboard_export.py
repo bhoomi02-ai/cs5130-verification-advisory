@@ -266,8 +266,8 @@ def condition_metrics(rows: list[dict], complete: list[str], prog: dict, seed: i
         }
         if condition in VERIFIED:
             entry["verifier"] = {
-                "catch_rate": {"value": _stat(m["catch_rate"]), "caught": _int(m["tp"]), "n": wrong_drafts},
-                "false_alarm_rate": {"value": _stat(m["false_alarm_rate"]), "flagged": _int(m["fp"]), "n": right_drafts},
+                "catch_rate": {"value": _stat(m["catch_rate"]), "caught": _int(m["tp"]), "n": (_int(m["tp"]) or 0) + (_int(m["fn"]) or 0)},
+                "false_alarm_rate": {"value": _stat(m["false_alarm_rate"]), "flagged": _int(m["fp"]), "n": (_int(m["fp"]) or 0) + (_int(m["tn"]) or 0)},
                 "mcc": _stat(m["mcc"]),
                 "missing_verdicts": _int(m["n_missing_verdict"]) or 0,
                 "wrong_draft_fates": {k: _int(m[k]) for k in ("missed", "caught_fixed", "caught_not_fixed", "caught_escalated")},
@@ -523,11 +523,9 @@ def seeded(records: list[dict], prog: dict) -> dict:
             "n_failed": _int(m["n_failed"]),
             "missing_verdicts": _int(m["n_missing_verdict"]),
             "catch_rate": {"value": _stat(m["seeded_catch_rate"]),
-                           "caught": sum(1 for r in mine if r.get("seeded_error") and r.get("verdict") == "reject"),
-                           "n": _int(m["n_errors"])},
+                           "caught": _flagged(mine, error=True), "n": _with_verdict(mine, error=True)},
             "false_alarm_rate": {"value": _stat(m["seeded_false_alarm_rate"]),
-                                 "flagged": sum(1 for r in mine if not r.get("seeded_error") and r.get("verdict") == "reject"),
-                                 "n": _int(m["n_controls"])},
+                                 "flagged": _flagged(mine, error=False), "n": _with_verdict(mine, error=False)},
             "right_reason": {k: _int(m[k]) for k in ("right_reason", "consequence_only", "wrong_reason", "abstained")},
             "right_reason_rate": _stat(m["right_reason_rate"]),
             "cost_usd": sum(r.get("cost_usd") or 0.0 for r in mine),
@@ -547,7 +545,7 @@ def seeded(records: list[dict], prog: dict) -> dict:
                 continue
             mine = [r for r in records if r.get("condition") == condition and (r.get("error_type") or "?") == et
                     and r.get("status") != "failed"]
-            rejected = sum(1 for r in mine if r.get("verdict") == "reject")
+            rejected = sum(1 for r in mine if right_reason._first_review(r).get("verdict") in ("reject", "abstain"))
             right = sum(1 for r in mine if decisions.get((r.get("answer_id"), condition)) == "right_reason")
             group["per_condition"][condition] = {"n": len(mine), "rejected": rejected,
                                                  "right_reason": right if group["seeded_error"] else None}
@@ -704,6 +702,27 @@ def _regrade_change(row: dict) -> dict | None:
         return None
     return {"initial_correct": before[0], "final_correct": before[1]}
 
+
+
+def _seeded_scored(records: list[dict], error: bool) -> list[str]:
+    """First-review verdicts of non-failed seeded reviews of errors (or controls) that have a verdict."""
+    out = []
+    for r in records:
+        if r.get("status") == "failed" or bool(r.get("seeded_error")) != error:
+            continue
+        verdict = right_reason._first_review(r).get("verdict")
+        if verdict is not None:
+            out.append(verdict)
+    return out
+
+
+def _flagged(records: list[dict], error: bool) -> int:
+    """Reject or abstain, as right_reason_metrics counts them for the seeded rates."""
+    return sum(1 for v in _seeded_scored(records, error) if v in ("reject", "abstain"))
+
+
+def _with_verdict(records: list[dict], error: bool) -> int:
+    return len(_seeded_scored(records, error))
 
 def run_detail(record: dict, row: dict | None = None, notes: dict | None = None) -> dict:
     return {

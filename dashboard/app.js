@@ -374,9 +374,9 @@
         bar(y + 18, d.false_alarm_rate.value, PINK, `false alarms ${pct(d.false_alarm_rate.value)} (${d.false_alarm_rate.flagged}/${d.false_alarm_rate.n})`);
       },
       tipHtml: (d) => (d.pending ? `<strong>${SHORT[d.condition]}</strong><br>${esc(d.label)}`
-        : `<strong>${SHORT[d.condition]}</strong><br>Catch rate ${pct(d.catch_rate.value)}: rejected ${d.catch_rate.caught} of ${d.catch_rate.n} wrong drafts<br>` +
-          `False alarms ${pct(d.false_alarm_rate.value)}: rejected ${d.false_alarm_rate.flagged} of ${d.false_alarm_rate.n} right drafts<br>` +
-          `MCC ${d.mcc == null ? "–" : d.mcc.toFixed(2)}${d.missing_verdicts ? `<br>${d.missing_verdicts} unreadable verdict(s), counted as not rejected` : ""}<br>` +
+        : `<strong>${SHORT[d.condition]}</strong><br>Catch rate ${pct(d.catch_rate.value)}: flagged ${d.catch_rate.caught} of ${d.catch_rate.n} wrong drafts with a verdict<br>` +
+          `False alarms ${pct(d.false_alarm_rate.value)}: flagged ${d.false_alarm_rate.flagged} of ${d.false_alarm_rate.n} right drafts with a verdict<br>` +
+          `MCC ${d.mcc == null ? "–" : d.mcc.toFixed(2)}${d.missing_verdicts ? `<br>${d.missing_verdicts} unreadable verdict(s), left out of the rates` : ""}<br>` +
           `Mean verifier calls per run: ${d.mean_verifier_calls == null ? "–" : d.mean_verifier_calls.toFixed(1)}`),
     });
     const small = summary.conditions.none;
