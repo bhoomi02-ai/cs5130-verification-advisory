@@ -49,6 +49,11 @@ pytestmark = [
 ]
 
 
+class _Server(http.server.ThreadingHTTPServer):
+    # The page requests about 15 files at once; the default backlog of 5 can refuse some under load.
+    request_queue_size = 64
+
+
 class _Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args):  # keep the output clean
         pass
@@ -71,7 +76,7 @@ def site():
     meta = ex.build(RESULTS, root / "data")
     handler = functools.partial(_Quiet, directory=str(root))
     port = _free_port()
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
+    server = _Server(("127.0.0.1", port), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     yield {"url": f"http://127.0.0.1:{port}/", "meta": meta, "root": root}
     server.shutdown()
@@ -111,7 +116,8 @@ class Page:
             if await self.js(expr):
                 return
             await asyncio.sleep(0.2)
-        raise AssertionError(f"timed out waiting for {expr}")
+        shown = await self.js("(document.getElementById('headline') || {}).textContent")
+        raise AssertionError(f"timed out waiting for {expr}; headline shows: {shown!r}; errors: {self.errors}")
 
 
 async def _with_page(url, body, reduced_motion=False):

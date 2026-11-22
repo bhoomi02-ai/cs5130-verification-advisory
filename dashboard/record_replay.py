@@ -35,6 +35,11 @@ CHROMES = [
 ]
 
 
+class _Server(http.server.ThreadingHTTPServer):
+    # The page requests about 15 files at once; the default backlog of 5 can refuse some under load.
+    request_queue_size = 64
+
+
 class _Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args):  # keep the output clean
         pass
@@ -123,7 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     handler = functools.partial(_Quiet, directory=str(HERE))
     port = _port()
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
+    server = _Server(("127.0.0.1", port), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     try:
         frames = asyncio.run(record(f"http://127.0.0.1:{port}/", chrome, args.setting, args.speed, args.seconds, args.fps, args.width))
