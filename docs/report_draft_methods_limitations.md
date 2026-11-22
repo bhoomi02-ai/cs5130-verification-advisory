@@ -2,6 +2,42 @@
 
 > Draft for the team to edit. Numbers marked **[pending]** wait for the last `cross_family` runs and its seeded reviews. Numbers use the **corrected S06 grading** (PR #63) as the main result and the original grading as the sensitivity check; if the team decides otherwise, swap them.
 
+## Architecture and pipeline
+
+> The study design (conditions, grading, statistics) is in Methods. This section covers how the runs were executed and recorded. Figure 1 shows the whole pipeline.
+
+### Components
+- **Scenarios** (`data/scenarios/`): one JSON file per task with the portfolio, policy, request and answer key; `data/study_tasks.txt` lists the 32 study tasks.
+- **Agents** (`conditions.py`): the advisor and each condition's verifier, built from versioned prompts.
+- **Calculator:** a sandboxed tool the verifiers with a calculator can call to recompute numbers.
+- **Model gateway** (`llm.py`): every model call, Gemini or Groq, goes through one wrapper that logs tokens, cost and latency and stops at the $20 cap.
+- **Checker** (`checker.py`): grades answers against the answer key, which agents never see.
+
+### One run
+- `scripts/run_condition.py` runs one condition over the task list with fixed model settings.
+- For each task and run, the advisor's first draft is written once, saved, and reused by every condition.
+- The condition's verifier reviews the draft; if it rejects, the advisor revises once.
+- The checker grades both the first draft and the final answer.
+- One row is added to `results/results.jsonl` with a run ID, the verdict, both grades, tokens, cost and time.
+
+### Failures and reruns
+- A call that still fails after retries is saved as a failed run, so nothing is silently lost.
+- A rerun skips finished runs, so an interrupted batch can simply be restarted.
+- `--retry-failed` reruns failed runs and replaces their rows instead of adding duplicates.
+- Three failures in a row stop the script; a quota or code error stops it without saving.
+- The script refuses to mix runs with different model settings in one results file.
+- Usage is counted per attempt, so retries show up in the cost.
+
+### Keeping the data trustworthy
+- Results are kept on the `study-results` branch, off `main`.
+- A read-only completeness check (`scripts/check_study_data.py`) confirms every task × condition × run appears exactly once, with the same first draft and settings across conditions.
+- The S06 regrade (`scripts/regrade_results.py`) writes a separate file and never edits the original results.
+
+### How the code was built
+- Each change went through an issue, its own branch and a pull request.
+- A PR was merged only after a teammate reviewed it and the full test suite (about 480 tests) passed.
+- All study runs used the merged code on `main`.
+
 ## Methods
 
 ### Task set
