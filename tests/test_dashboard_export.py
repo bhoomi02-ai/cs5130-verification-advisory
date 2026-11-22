@@ -374,3 +374,42 @@ def test_comparisons_carry_holm_p_and_spend_uses_report_names(built):
     smallest = min(comps, key=lambda c: c["sign_test_p"])
     assert smallest["sign_test_p_holm"] == pytest.approx(min(1.0, len(comps) * smallest["sign_test_p"]))
     assert ex.spend_label("weakened") == "No calculator" and ex.spend_label("cross-check") == "pre-study checks"
+
+
+def test_a_setting_with_every_run_saved_is_complete_even_with_failed_runs(built, tmp_path):
+    rows = [json.loads(l) for l in (tmp_path / "results" / "results.jsonl").read_text().splitlines()]
+    for task, run in (("T01-v001", 1), ("T01-v001", 2)):  # peer: add the 2 missing runs, one of them failed
+        row = next(r for r in rows if r["condition"] == "self" and r["task_id"] == task and r["run_number"] == run)
+        rows.append({**row, "run_id": f"peer-m-{task}-r{run}", "condition": "peer",
+                     **({"status": "failed", "error": "ProviderError: 400 parsing failed"} if run == 2 else {})})
+    (tmp_path / "results" / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    meta = ex.build(tmp_path / "results", tmp_path / "out2", tmp_path / "tasks.txt", REPEATS, injected_dir=tmp_path / "injected")
+    assert "peer" in meta["complete_conditions"]
+    peer = json.loads((tmp_path / "out2" / "summary.json").read_text())["conditions"]["peer"]
+    assert peer["status"] == "complete" and peer["n_failed"] == 2 and peer["n_runs"] == 2  # rates over the 2 runs that ran
+
+
+def test_regraded_file_exports_the_original_grading_as_a_sensitivity_check(built, tmp_path):
+    rows = [json.loads(l) for l in (tmp_path / "results" / "results.jsonl").read_text().splitlines()]
+    for r in rows:  # what scripts/regrade_results.py writes: originals kept, one final grade changed
+        if r["status"] == "failed":
+            continue
+        r["original_initial_correct"], r["original_final_correct"] = r["initial_correct"], r["final_correct"]
+        if r["run_id"] == "self-m-T01-v001-r2":
+            r["final_correct"] = True
+    regraded = tmp_path / "results" / "results_regraded.jsonl"
+    regraded.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    out = tmp_path / "out3"
+    meta = ex.build(tmp_path / "results", out, tmp_path / "tasks.txt", REPEATS, injected_dir=tmp_path / "injected",
+                    results_file=regraded)
+    assert meta["grading"]["regraded"] and meta["scoring_mode"] == "corrected"
+    assert [c["run_id"] for c in meta["grading"]["changed_runs"]] == ["self-m-T01-v001-r2"]
+    assert "Self run 2 was graded wrong" in meta["scoring_notes"]["T01-v001"]
+    summary = json.loads((out / "summary.json").read_text())
+    # Self: S01 r2 accepted wrong, T01-v001 r2 broken -> 2 of 4 right; the corrected grade makes it 3
+    assert summary["conditions"]["self"]["task_success"]["right"] == 3  # corrected
+    assert summary["sensitivity"]["conditions"]["self"]["right"] == 2  # original grading
+    detail = json.loads((out / "runs" / "self-m-T01-v001-r2.json").read_text())
+    assert detail["graded"]["final_correct"] is True and detail["regraded_from"]["final_correct"] is False
+    # the plain file has no originals: no sensitivity block, scoring stays "under review"
+    assert built["load"]("summary.json")["sensitivity"] is None and built["meta"]["scoring_mode"] == "under_review"

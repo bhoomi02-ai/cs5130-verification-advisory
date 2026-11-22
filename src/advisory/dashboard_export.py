@@ -6,9 +6,11 @@ Run it with `python dashboard/build_data.py`; the files go to dashboard/data/
 (gitignored on main).
 
 Honesty rules built in here, so the page cannot get them wrong:
-- A condition is "complete" only when every study run is saved and none
-  failed. Metrics are computed for complete conditions only; the others are
-  exported as {"status": "pending", "done": n, "expected": m} with no rates.
+- A condition is "complete" when every study run is saved. Failed runs (an API
+  error after retries) count as saved: like metrics.summarize, the rates leave
+  them out and report how many failed. Metrics are computed for complete
+  conditions only; the others are exported as {"status": "pending", "done": n,
+  "total": m} with no rates.
 - The seeded metrics follow the same rule per condition (31 answers each).
 - Answer-key values never leave the scorer side: every key named in
   FORBIDDEN_KEYS (the checker's `expected`, the seeded labels'
@@ -175,7 +177,7 @@ def progress(rows: list[dict], tasks: list[str], seeded: list[dict], n_answers: 
             "runs_done": len(keys),
             "runs_expected": expected,
             "runs_failed": failed,
-            "complete": len(keys) >= expected and failed == 0,
+            "complete": len(keys) >= expected,
         }
         if condition in VERIFIED:
             reviews = [s for s in seeded if s.get("condition") == condition]
@@ -184,7 +186,7 @@ def progress(rows: list[dict], tasks: list[str], seeded: list[dict], n_answers: 
                 seeded_done=len({s.get("answer_id") for s in reviews}),
                 seeded_expected=n_answers,
                 seeded_failed=seeded_failed,
-                seeded_complete=len({s.get("answer_id") for s in reviews}) >= n_answers and seeded_failed == 0,
+                seeded_complete=len({s.get("answer_id") for s in reviews}) >= n_answers,
             )
         out[condition] = entry
     return out
@@ -310,12 +312,13 @@ def comparisons(rows: list[dict], complete: list[str], seed: int = 0) -> list[di
     return out
 
 
-def pairwise(rows: list[dict], complete: list[str], seed: int = 0) -> list[dict]:
+def pairwise(rows: list[dict], complete: list[str], seed: int = 0, notes: dict | None = None) -> list[dict]:
     """Every ordered pair of finished settings: paired change, CI, sign test, and the runs where they disagree.
 
     Pairs are matched on (task, run number), i.e. the same shared first draft. Each unordered
     comparison is computed once and stored in both directions, so the page only looks it up.
     """
+    notes = SCORING_UNDER_REVIEW if notes is None else notes
     usable = [r for r in rows if r.get("condition") in complete]
     if len(complete) < 2 or not usable:
         return []
@@ -335,7 +338,7 @@ def pairwise(rows: list[dict], complete: list[str], seed: int = 0) -> list[dict]
                     "a_run_id": ra["run_id"], "b_run_id": rb["run_id"],
                     "a_outcome": outcome(ra), "b_outcome": outcome(rb),
                     "a_status": ra.get("status"), "b_status": rb.get("status"),
-                    "scoring_note": SCORING_UNDER_REVIEW.get(task)}
+                    "scoring_note": notes.get(task)}
             (only_a if ra.get("final_correct") else only_b).append(item)
         base = {
             "n_tasks": _int(c["n_tasks"]), "n_pairs": _int(c["n_pairs"]),
@@ -406,8 +409,9 @@ def headline(metrics: dict, comps: list[dict], n_tasks: int, repeats: int) -> di
 # --------------------------------------------------------------------------- heatmap
 
 
-def heatmap(rows: list[dict], tasks: list[str], complete: list[str], prog: dict) -> dict:
+def heatmap(rows: list[dict], tasks: list[str], complete: list[str], prog: dict, notes: dict | None = None) -> dict:
     """Right final answers out of saved runs, per task and condition, grouped under S01..S10."""
+    notes = SCORING_UNDER_REVIEW if notes is None else notes
     cells: dict[tuple, dict] = defaultdict(lambda: {"right": 0, "n": 0, "failed": 0})
     for r in rows:
         if r.get("task_id") not in tasks:
@@ -438,7 +442,7 @@ def heatmap(rows: list[dict], tasks: list[str], complete: list[str], prog: dict)
             "tasks": members,
             "cells": {c: cell(members, c) for c in CONDITION_ORDER},
             "rows": [
-                {"task_id": t, "note": SCORING_UNDER_REVIEW.get(t), "cells": {c: cell([t], c) for c in CONDITION_ORDER}}
+                {"task_id": t, "note": notes.get(t), "cells": {c: cell([t], c) for c in CONDITION_ORDER}}
                 for t in members
             ],
         })
@@ -617,8 +621,9 @@ def sanity_s04(log: list[dict]) -> dict:
 # --------------------------------------------------------------------------- runs and details
 
 
-def run_rows(rows: list[dict], log: list[dict], tasks: list[str]) -> list[dict]:
+def run_rows(rows: list[dict], log: list[dict], tasks: list[str], notes: dict | None = None) -> list[dict]:
     """One row per run for the table and the replay, ordered by the run's first logged call."""
+    notes = SCORING_UNDER_REVIEW if notes is None else notes
     first = _first_calls(log)
     out = []
     for r in rows:
@@ -644,7 +649,8 @@ def run_rows(rows: list[dict], log: list[dict], tasks: list[str]) -> list[dict]:
             "tokens_in": r.get("tokens_in"),
             "tokens_out": r.get("tokens_out"),
             "error": r.get("error"),
-            "scoring_note": SCORING_UNDER_REVIEW.get(r["task_id"]),
+            "scoring_note": notes.get(r["task_id"]),
+            "regraded_from": _regrade_change(r),
         })
     return sorted(out, key=lambda x: (x["first_call"] or "9999", x["run_id"]))
 
@@ -688,7 +694,18 @@ def _checks(check: dict | None) -> dict | None:
     }
 
 
-def run_detail(record: dict) -> dict:
+def _regrade_change(row: dict) -> dict | None:
+    """The original grades of a run whose grade changed when the results were re-graded, else None."""
+    if "original_final_correct" not in row:
+        return None
+    before = (row.get("original_initial_correct"), row.get("original_final_correct"))
+    after = (row.get("initial_correct"), row.get("final_correct"))
+    if before == after:
+        return None
+    return {"initial_correct": before[0], "final_correct": before[1]}
+
+
+def run_detail(record: dict, row: dict | None = None, notes: dict | None = None) -> dict:
     return {
         "run_id": record.get("run_id"),
         "task_id": record.get("task_id"),
@@ -715,7 +732,10 @@ def run_detail(record: dict) -> dict:
         ],
         "draft_check": _checks(record.get("draft_check")),
         "final_check": _checks(record.get("final_check")),
-        "scoring_note": SCORING_UNDER_REVIEW.get(record.get("task_id") or ""),
+        "scoring_note": (SCORING_UNDER_REVIEW if notes is None else notes).get(record.get("task_id") or ""),
+        # The grades in results (possibly re-graded); the stored checks above are from when the run was graded.
+        "graded": None if row is None else {"initial_correct": row.get("initial_correct"), "final_correct": row.get("final_correct")},
+        "regraded_from": None if row is None else _regrade_change(row),
     }
 
 
@@ -730,10 +750,17 @@ def build(
     injected_dir: Path = INJECTED_DIR,
     budget: float = BUDGET_USD,
     seed: int = 0,
+    results_file: Path | None = None,
 ) -> dict:
-    """Write every dashboard file into out_dir (replacing it) and return the manifest."""
+    """Write every dashboard file into out_dir (replacing it) and return the manifest.
+
+    `results_file` defaults to results_dir/results.jsonl. A re-graded file (scripts/regrade_results.py)
+    keeps each run's original grades; then the original grading is exported as a sensitivity check and
+    the notes say which runs changed.
+    """
     results_dir, out_dir = Path(results_dir), Path(out_dir)
-    rows, rejected = load_results(results_dir / "results.jsonl")
+    results_file = Path(results_file) if results_file else results_dir / "results.jsonl"
+    rows, rejected = load_results(results_file)
     log = _read_jsonl(results_dir / "runs.jsonl")
     seeded_dir = results_dir / "seeded"
     seeded_records = right_reason.load_seeded_records(seeded_dir) if seeded_dir.exists() else []
@@ -744,6 +771,9 @@ def build(
     complete = [c for c in CONDITION_ORDER if prog[c]["complete"]]
     task_set = set(tasks)
     study_rows = [r for r in rows if r.get("task_id") in task_set and 1 <= int(r.get("run_number") or 0) <= repeats]
+    regraded = any("original_final_correct" in r for r in study_rows)
+    changes = regrade_changes(study_rows) if regraded else []
+    notes = scoring_notes(changes) if regraded else SCORING_UNDER_REVIEW
     metrics = condition_metrics(study_rows, complete, prog, seed=seed)
     comps = comparisons(study_rows, complete, seed=seed)
     first_settings = next((r for r in study_rows if r.get("condition") == "none"), study_rows[0] if study_rows else {})
@@ -759,24 +789,26 @@ def build(
             "comparisons": comps,
             "interval_note": f"Intervals are 95% bootstrap intervals over the {len(tasks)} tasks; with {len(tasks)} tasks "
                              f"and {repeats} runs each they are wide, so small differences are not conclusive.",
+            "sensitivity": sensitivity(original_grading(study_rows), complete, prog, seed=seed) if changes else None,
         },
-        "heatmap.json": heatmap(study_rows, tasks, complete, prog),
-        "pairs.json": {"complete": complete, "pairs": pairwise(study_rows, complete, seed=seed),
+        "heatmap.json": heatmap(study_rows, tasks, complete, prog, notes),
+        "pairs.json": {"complete": complete, "pairs": pairwise(study_rows, complete, seed=seed, notes=notes),
                        "note": "Paired on the same task and run number, i.e. the same shared first draft."},
         "spend.json": spend(log, budget),
         "seeded.json": seeded(seeded_records, prog),
         "sanity_s04.json": sanity_s04(log),
-        "runs.json": {"runs": run_rows(study_rows, log, tasks)},
+        "runs.json": {"runs": run_rows(study_rows, log, tasks, notes)},
     }
     for name, payload in files.items():
         _write(out_dir / name, payload)
 
     details = 0
+    by_id = {r["run_id"]: r for r in study_rows}
     for row in files["runs.json"]["runs"]:
         path = results_dir / "answers" / f"{row['run_id']}.json"
         if path.exists():
             record = json.loads(path.read_text(encoding="utf-8"))
-            _write(out_dir / "runs" / f"{_safe_name(row['run_id'])}.json", run_detail(record))
+            _write(out_dir / "runs" / f"{_safe_name(row['run_id'])}.json", run_detail(record, by_id.get(row["run_id"]), notes))
             details += 1
 
     meta = {
@@ -796,13 +828,60 @@ def build(
         },
         "conditions": [{"id": c, "label": CONDITION_LABELS[c], **prog[c]} for c in CONDITION_ORDER],
         "complete_conditions": complete,
-        "scoring_under_review": SCORING_UNDER_REVIEW,
+        "grading": {"file": results_file.name, "regraded": regraded, "changed_runs": changes},
+        "scoring_mode": "corrected" if changes else "under_review",
+        "scoring_notes": notes,
         "rejected_rows": len(rejected),
         "files": sorted(files) + ["runs/<run_id>.json"],
         "run_details": details,
     }
     _write(out_dir / "meta.json", meta)
     return meta
+
+
+SCORING_CORRECTED = (
+    "Scoring corrected: the S06-family tasks ask only for the payment rounded upward to cents, so the checker no "
+    "longer also requires the unrounded payment (same rule for every setting). Under the original rule {changes} "
+    "graded wrong; the original grading is reported as a sensitivity check."
+)
+
+
+def original_grading(rows: list[dict]) -> list[dict]:
+    """The same rows with the grades they had before re-grading (rows without originals are unchanged)."""
+    out = []
+    for r in rows:
+        if "original_final_correct" in r:
+            r = {**r, "initial_correct": r.get("original_initial_correct"), "final_correct": r.get("original_final_correct")}
+        out.append(r)
+    return out
+
+
+def regrade_changes(rows: list[dict]) -> list[dict]:
+    return [{"run_id": r["run_id"], "task_id": r["task_id"], "condition": r["condition"], "run_number": r["run_number"],
+             "before": change, "after": {"initial_correct": r.get("initial_correct"), "final_correct": r.get("final_correct")}}
+            for r in rows if (change := _regrade_change(r))]
+
+
+def scoring_notes(changes: list[dict]) -> dict[str, str]:
+    """One note per task whose grades changed, naming the runs."""
+    by_task: dict[str, list[str]] = defaultdict(list)
+    for c in changes:
+        by_task[c["task_id"]].append(f"{CONDITION_LABELS[c['condition']].split(' ·')[0]} run {c['run_number']}")
+    notes = {}
+    for task, runs in by_task.items():
+        changes_text = (runs[0] + " was") if len(runs) == 1 else (", ".join(runs[:-1]) + " and " + runs[-1] + " were")
+        notes[task] = SCORING_CORRECTED.format(changes=changes_text)
+    return notes
+
+
+def sensitivity(rows: list[dict], complete: list[str], prog: dict, seed: int = 0) -> dict:
+    """Task success and comparisons with None under the original grading."""
+    metrics = condition_metrics(rows, complete, prog, seed=seed)
+    return {
+        "label": "Original grading (before the S06 scoring fix)",
+        "conditions": {c: (m["task_success"] if m.get("status") == "complete" else m) for c, m in metrics.items()},
+        "comparisons": comparisons(rows, complete, seed=seed),
+    }
 
 
 def _safe_name(run_id: str) -> str:

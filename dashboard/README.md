@@ -79,6 +79,18 @@ All colours are CSS variables at the top of `style.css` (palette "midnight teal 
 
 The top of the page shows when the data was built ("Data as of …") and a progress bar per setting, so a setting still running is never quoted as a result.
 
+## Re-graded results (the S06 scoring fix)
+
+`scripts/regrade_results.py` (PR #63) re-grades the saved answers into `results/results_regraded.jsonl` and keeps each run's original grades. Build the dashboard from it with
+
+```bash
+python dashboard/build_data.py --results-file results/results_regraded.jsonl
+```
+
+The page then shows the corrected grades, marks the changed runs with †, notes the fix under the headline, and reports the **original grading as a sensitivity check** under "Settings compared" (task success and the comparisons with None under both gradings). A changed run's details show its current grade above the stored checks from the original grading. Built from the plain `results.jsonl`, the page shows the original grades with the "scoring under review" note instead.
+
+A setting counts as finished when every run is saved; failed runs (API errors after retries) are left out of the rates and shown as "N failed, left out", as in `scripts/analyze.py`.
+
 ## Names and p-values
 
 - **Setting names** on the page, in the report and on slides: None, Self, Peer, Dedicated, **No calculator**, Cross-family. The code keeps its IDs (`weakened`, `cross_family`); `dashboard_export.SPEND_LABELS` maps them for the spend lines.

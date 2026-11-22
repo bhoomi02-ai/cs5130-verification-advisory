@@ -347,3 +347,8 @@ table.anim.pending .chip { opacity: 0; transform: scale(.85); }
 .value-list { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--muted); }
 .value-list b { color: var(--text); font-weight: 600; margin-right: 4px; }
 .value-list .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+/* ---------- sensitivity check ---------- */
+details.sensitivity { margin-top: 12px; }
+details.sensitivity tr.changed td { background: color-mix(in srgb, var(--pending) 10%, transparent); }
+@media print { details.sensitivity { display: block !important; } details.sensitivity > summary { display: none; } }

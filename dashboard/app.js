@@ -29,6 +29,7 @@
   const pval = (p) => (p == null ? "–" : p < 0.001 ? "p < 0.001" : `p = ${p.toFixed(3)}`);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   const isPending = (entry) => !entry || entry.status !== "complete";
+  const DAGGER = () => (state.data && state.data.meta.scoring_mode === "corrected" ? "Scoring corrected (S06 rule)" : "Scoring under review");
   const pendingLabel = (entry) => (entry && entry.label) || "pending";
 
   // ------------------------------------------------------------------ tooltip
@@ -74,7 +75,7 @@
   }
 
   function reviewNoteText() {
-    const notes = state.data.meta.scoring_under_review || {};
+    const notes = state.data.meta.scoring_notes || {};
     return Object.entries(notes).map(([task, text]) => `${task}: ${text}`).join(" ");
   }
 
@@ -149,8 +150,13 @@
     document.getElementById("dataset").innerHTML =
       [`<strong>${s.n_tasks} tasks × ${s.repeats} runs</strong>`, `advisor ${esc(s.advisor_model)}`, `data as of ${esc(when)}`, ...running].join(" · ");
     const note = document.getElementById("headline-note");
-    const tasks = Object.keys(meta.scoring_under_review || {});
-    if (tasks.length) {
+    const tasks = Object.keys(meta.scoring_notes || {});
+    if (meta.scoring_mode === "corrected") {
+      const n = meta.grading.changed_runs.length;
+      note.hidden = false;
+      note.textContent = `Graded with the corrected S06 rule (only the rounded payment the client asked for); ${n} run${n === 1 ? "" : "s"} changed, marked † below. ` +
+        `The original grading is shown as a sensitivity check under “Settings compared”.`;
+    } else if (tasks.length) {
       note.hidden = false;
       note.textContent = `${tasks.length === 1 ? "One task's" : `${tasks.length} tasks'`} scoring is under review (${tasks.join(", ")}), marked † below; details beside the heatmap and in each affected run.`;
     }
@@ -266,7 +272,7 @@
     document.getElementById("interval-note").textContent = summary.interval_note;
     const rows = ORDER.map((c) => {
       const e = summary.conditions[c];
-      return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.task_success };
+      return isPending(e) ? { condition: c, pending: true, label: pendingLabel(e) } : { condition: c, ...e.task_success, failed: e.n_failed };
     });
     const done = rows.filter((r) => !r.pending);
     const lo = Math.min(...done.map((r) => r.ci_low ?? r.value));
@@ -277,7 +283,7 @@
       zero: isPending(base) ? null : base.task_success.value,
       axisFormat: (v) => `${Math.round(v * 100)}%`,
       ariaLabel: "Task success per setting with 95% intervals over tasks; the dashed line is the no-check baseline.",
-      valueText: (d) => (d.pending ? d.label : `${pct(d.value)} (${d.right}/${d.n}) · ${pct(d.ci_low, 0)}–${pct(d.ci_high, 0)}`),
+      valueText: (d) => (d.pending ? d.label : `${pct(d.value)} (${d.right}/${d.n}) · ${pct(d.ci_low, 0)}–${pct(d.ci_high, 0)}${d.failed ? ` · ${d.failed} failed, left out` : ""}`),
       mark: (g, d, x, y) => {
         g.append("line").attr("x1", x(d.ci_low)).attr("x2", x(d.ci_high)).attr("y1", y).attr("y2", y)
           .attr("stroke", color(d.condition)).attr("stroke-width", 3).attr("stroke-linecap", "round").attr("opacity", 0.55);
@@ -324,6 +330,7 @@
         `${SHORT[best.condition]} p = ${best.sign_test_p.toFixed(3)} raw, ${best.sign_test_p_holm.toFixed(3)} adjusted. ` +
         `With only ${best.tasks_better + best.tasks_worse} tasks changing, the raw p cannot go below ${(2 * 0.5 ** (best.tasks_better + best.tasks_worse)).toFixed(3)}. The intervals are not adjusted either.`
       : "";
+    renderSensitivity();
     const t = document.getElementById("hr-table");
     const head = `<thead><tr><th>Setting</th><th class="num">All runs counted</th><th class="num">Sent to human review</th><th>Why (abstain · unreadable · revision not accepted)</th><th class="num">Not counting human review</th></tr></thead>`;
     const body = ORDER.map((c) => {
@@ -427,7 +434,7 @@
 
   function renderHeatmap() {
     const { heatmap, meta } = state.data;
-    const review = meta.scoring_under_review || {};
+    const review = meta.scoring_notes || {};
     const table = document.getElementById("heat-table");
     const head = `<caption class="sr-only">Right final answers per scenario and setting</caption><thead><tr><th scope="col">Scenario</th>` +
       heatmap.conditions.map((c) => {
@@ -559,6 +566,32 @@
       `<th class="num">Calls</th><th>Verdict right?</th><th>What it said</th></tr></thead><tbody>${rows}</tbody>`;
   }
 
+  function renderSensitivity() {
+    const { summary } = state.data;
+    const box = document.getElementById("sensitivity");
+    const sens = summary.sensitivity;
+    if (!sens) { box.hidden = true; return; }
+    const compNow = Object.fromEntries(summary.comparisons.map((c) => [c.condition, c]));
+    const compThen = Object.fromEntries(sens.comparisons.map((c) => [c.condition, c]));
+    const rows = ORDER.map((c) => {
+      const now = summary.conditions[c], then = sens.conditions[c];
+      if (isPending(now) || !then || then.status === "pending") return `<tr><td>${SHORT[c]}</td><td class="pending" colspan="4">${esc(pendingLabel(now))}</td></tr>`;
+      const a = compThen[c], b = compNow[c];
+      const vs = (x) => (x ? `${pts(x.delta)} <span class="tag-small">(${pts(x.ci_low).replace(" pts", "")} to ${pts(x.ci_high)}; Holm p ${x.sign_test_p_holm == null ? "–" : x.sign_test_p_holm.toFixed(3)})</span>` : "–");
+      const changed = then.right !== now.task_success.right;
+      return `<tr${changed ? ' class="changed"' : ""}><td>${SHORT[c]}</td>` +
+        `<td class="num">${pct(then.value)} <span class="tag-small">(${then.right}/${then.n})</span></td>` +
+        `<td class="num">${pct(now.task_success.value)} <span class="tag-small">(${now.task_success.right}/${now.task_success.n})</span></td>` +
+        `<td>${c === "none" ? "–" : vs(a)}</td><td>${c === "none" ? "–" : vs(b)}</td></tr>`;
+    }).join("");
+    box.hidden = false;
+    box.innerHTML = `<summary>${esc(sens.label)}: the sensitivity check</summary>` +
+      `<p class="note">The S06 scoring fix was found after the results were seen, so the original grading is reported too. Only the highlighted rows differ.</p>` +
+      `<div class="table-wrap"><table class="data" aria-label="Task success under the original and the corrected grading">` +
+      `<thead><tr><th>Setting</th><th class="num">Original grading</th><th class="num">Corrected</th><th>vs None, original</th><th>vs None, corrected</th></tr></thead>` +
+      `<tbody>${rows}</tbody></table></div>`;
+  }
+
   // ------------------------------------------------------------------ 2b. compare two settings
 
   function setupPair() {
@@ -585,7 +618,7 @@
       const theirs = side === "a" ? x.b_outcome : x.a_outcome;
       const st = side === "a" ? x.b_status : x.a_status;
       return `<li><button type="button" class="linkish" data-run="${esc(id)}">${esc(x.task_id)} · run ${x.run_number}</button>` +
-        `${x.scoring_note ? ' <span class="dagger" title="Scoring under review">†</span>' : ""} ` +
+        `${x.scoring_note ? ' <span class="dagger" title="${esc(DAGGER())}">†</span>' : ""} ` +
         `<span class="tag-small">draft ${x.draft_correct ? "right" : "wrong"} · here ${esc(OUTCOME[mine] || mine)}; ${esc(SHORT[other])}: ${esc(st === "human_review" ? "human review" : OUTCOME[theirs] || theirs)}</span></li>`;
     }).join("")}</ul>`;
   }
@@ -831,7 +864,7 @@
       : `${esc(r.verdict || "unreadable")}${r.second_verdict ? ` → ${esc(r.second_verdict)}` : ""}`;
     const tick = (v) => (v ? '<span class="ok">right</span>' : '<span class="no">wrong</span>');
     return `<tr data-run="${esc(r.run_id)}"${runState.current === r.run_id ? ' aria-current="true"' : ""}>` +
-      `<td><button type="button" class="linkish" data-run="${esc(r.run_id)}">${esc(r.task_id)} · run ${r.run_number}</button>${r.scoring_note ? ' <span class="dagger" title="Scoring under review">†</span>' : ""}</td>` +
+      `<td><button type="button" class="linkish" data-run="${esc(r.run_id)}">${esc(r.task_id)} · run ${r.run_number}</button>${r.scoring_note ? ' <span class="dagger" title="${esc(DAGGER())}">†</span>' : ""}</td>` +
       `<td>${SHORT[r.condition]}${running.has(r.condition) ? ' <span class="tag-small pending">still running</span>' : ""}</td><td>${r.status === "failed" ? "–" : tick(r.initial_correct)}</td><td>${verdicts}</td>` +
       `<td>${r.status === "failed" ? "–" : tick(r.final_correct)}</td><td>${outcome}</td><td class="num">${usd(r.cost_usd, 3)}</td></tr>`;
   }
@@ -890,6 +923,12 @@
     }).join("")}</ul><p class="tag-small">Only what the answer reported and why the check failed; the answer key stays on the scorer side.</p>`;
   }
 
+  function regradedBlock(d) {
+    const g = (v) => (v ? '<span class="ok">right</span>' : '<span class="no">wrong</span>');
+    return `<h4>Graded now (corrected S06 rule): final ${g(d.graded.final_correct)}, draft ${g(d.graded.initial_correct)}</h4>` +
+      `<p class="tag-small">Under the original rule: final ${d.regraded_from.final_correct ? "right" : "wrong"}, draft ${d.regraded_from.initial_correct ? "right" : "wrong"}. The checks listed below are the stored ones from the original grading.</p>`;
+  }
+
   function reviewBlock(rv) {
     const calc = (rv.calculations || []).length
       ? `<details><summary class="tag-small">Calculator (${rv.calculations.length} expression${rv.calculations.length > 1 ? "s" : ""})</summary><ul class="obs">${rv.calculations.map((c) => `<li>${esc(c.expression)} = ${esc(c.result ?? c.error ?? "")}</li>`).join("")}</ul></details>`
@@ -931,7 +970,7 @@
       `<div class="cols"><div>${answerBlock("First draft", d.draft)}${checksBlock("Checker on the draft", d.draft_check)}</div>` +
       `<div>${d.reviews.length ? d.reviews.map(reviewBlock).join("") : `<h4>Verifier</h4><p class="tag-small">No verifier in this setting.</p>`}</div></div>` +
       `<div class="cols"><div>${d.revision ? answerBlock("Revision", d.revision) : ""}${answerBlock("Final answer", d.final)}</div>` +
-      `<div>${checksBlock("Checker on the final answer", d.final_check)}</div></div>`;
+      `<div>${d.regraded_from ? regradedBlock(d) : ""}${checksBlock(d.regraded_from ? "Checker on the final answer, original rule" : "Checker on the final answer", d.final_check)}</div></div>`;
     document.getElementById("run-close").addEventListener("click", () => {
       panel.hidden = true; runState.current = null;
       const back = document.querySelector(`table.runs button.linkish[data-run="${CSS.escape(runId)}"]`);
@@ -994,8 +1033,8 @@
     renderCharts();
     document.getElementById("print-btn").addEventListener("click", () => window.print());
     // Charts are drawn for the width they have; redraw them for the printed page and back afterwards.
-    window.addEventListener("beforeprint", renderCharts);
-    window.addEventListener("afterprint", renderCharts);
+    window.addEventListener("beforeprint", () => { renderCharts(); const d = document.getElementById("sensitivity"); d.dataset.wasOpen = d.open; d.open = true; });
+    window.addEventListener("afterprint", () => { renderCharts(); const d = document.getElementById("sensitivity"); d.open = d.dataset.wasOpen === "true"; });
     let replayLayout = AdvisoryReplay.layoutFor(document.getElementById("replay-mount").getBoundingClientRect().width);
     let last = window.innerWidth;
     window.addEventListener("resize", () => {
