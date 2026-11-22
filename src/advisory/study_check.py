@@ -52,6 +52,7 @@ class StudyCheckReport:
     missing_runs: list[dict] = field(default_factory=list)
     duplicate_runs: list[dict] = field(default_factory=list)
     extra_rows: list[dict] = field(default_factory=list)
+    malformed_study_rows: list[dict] = field(default_factory=list)
     failed_runs: list[dict] = field(default_factory=list)
     failed_by_condition: dict[str, int] = field(default_factory=dict)
     draft_mismatches: list[dict] = field(default_factory=list)
@@ -71,6 +72,7 @@ class StudyCheckReport:
             "missing_runs": self.missing_runs,
             "duplicate_runs": self.duplicate_runs,
             "extra_rows": self.extra_rows,
+            "malformed_study_rows": self.malformed_study_rows,
             "failed_runs": self.failed_runs,
             "failed_by_condition": self.failed_by_condition,
             "draft_mismatches": self.draft_mismatches,
@@ -161,8 +163,19 @@ def check_study(
     report = StudyCheckReport(ok=True)
 
     rows = load_jsonl(Path(results_path))
-    study_rows, extra_rows = _split_study_rows(rows, tasks, repeats)
+    study_rows, extra_rows, malformed_rows = _split_study_rows(rows, tasks, repeats)
     report.extra_rows = extra_rows
+    report.malformed_study_rows = malformed_rows
+    report.summaries.append(
+        SectionSummary(
+            name="malformed_study_rows",
+            found=len(malformed_rows),
+            mismatches=len(malformed_rows),
+            note="non-integer run_number (error)",
+        )
+    )
+    if malformed_rows:
+        report.ok = False
 
     missing, duplicates, found = _coverage_runs(study_rows, tasks, conditions, repeats)
     report.missing_runs = missing
@@ -325,6 +338,7 @@ def format_report(report: StudyCheckReport) -> str:
         if len(rows) > limit:
             lines.append(f"  … {len(rows) - limit} more")
 
+    _block("Malformed study rows", report.malformed_study_rows)
     _block("Missing study runs", report.missing_runs)
     _block("Duplicate study runs", report.duplicate_runs)
     _block("Extra rows (warning)", report.extra_rows)
@@ -378,26 +392,36 @@ def _fmt(row: dict) -> str:
 
 def _split_study_rows(
     rows: list[dict], tasks: list[str], repeats: int
-) -> tuple[list[dict], list[dict]]:
+) -> tuple[list[dict], list[dict], list[dict]]:
     task_set = set(tasks)
     study: list[dict] = []
     extra: list[dict] = []
+    malformed: list[dict] = []
     for row in rows:
         task_id = row.get("task_id")
         run_number = row.get("run_number")
+        # Strict int only: a string like "2" must not enter coverage/sort keys.
+        if type(run_number) is not int:
+            malformed.append(
+                {
+                    "run_id": row.get("run_id"),
+                    "task_id": task_id,
+                    "condition": row.get("condition"),
+                    "run_number": run_number,
+                    "problem": (
+                        f"run_number is {type(run_number).__name__} "
+                        f"{run_number!r}, not int"
+                    ),
+                }
+            )
+            continue
         reasons = []
         if task_id not in task_set:
             reasons.append("task_not_in_study")
-        try:
-            run_int = int(run_number)
-        except (TypeError, ValueError):
-            reasons.append("bad_run_number")
-            run_int = None
-        else:
-            if run_int > repeats:
-                reasons.append("run_number_above_repeats")
-            elif run_int < 1:
-                reasons.append("run_number_below_one")
+        if run_number > repeats:
+            reasons.append("run_number_above_repeats")
+        elif run_number < 1:
+            reasons.append("run_number_below_one")
         if reasons:
             extra.append(
                 {
@@ -411,7 +435,7 @@ def _split_study_rows(
             )
         else:
             study.append(row)
-    return study, extra
+    return study, extra, malformed
 
 
 def _coverage_runs(
@@ -487,8 +511,12 @@ def _failed_runs(rows: list[dict]) -> tuple[list[dict], dict[str, int]]:
 
 
 def _draft_mismatches(rows: list[dict]) -> list[dict]:
+    # Failed rows store initial_correct=False even when the draft was correct;
+    # they are already listed under failed_runs, so leave them out here.
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for row in rows:
+        if row.get("status") == "failed":
+            continue
         key = (row.get("task_id"), row.get("run_number"), row.get("model"))
         groups[key].append(row)
 

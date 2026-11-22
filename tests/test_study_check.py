@@ -410,6 +410,67 @@ def test_failed_runs_are_warnings_only(tmp_path):
     assert len(report.failed_runs) == 1
 
 
+def test_failed_run_on_correct_draft_is_not_draft_mismatch(tmp_path):
+    """pipeline.py sets initial_correct=False on failed rows; that must not look like a draft split."""
+    paths = _write_complete(tmp_path)
+    rows = [
+        json.loads(line)
+        for line in paths["results"].read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    for row in rows:
+        if row["task_id"] == "t1" and row["run_number"] == 1:
+            assert row["initial_correct"] is True
+            if row["condition"] == "cross_family":
+                row["status"] = "failed"
+                row["initial_correct"] = False
+                row["error"] = "APIError: timeout"
+    paths["results"].write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
+
+    report = check_study(
+        results_path=paths["results"],
+        seeded_dir=paths["seeded_dir"],
+        tasks_file=paths["tasks_file"],
+        repeats=REPEATS,
+        injected_dir=paths["injected"],
+    )
+    assert report.ok
+    assert report.draft_mismatches == []
+    assert report.failed_by_condition == {"cross_family": 1}
+    assert any(
+        item["condition"] == "cross_family" and item["task_id"] == "t1" and item["run_number"] == 1
+        for item in report.failed_runs
+    )
+
+
+def test_string_run_number_is_malformed_not_a_crash(tmp_path):
+    paths = _write_complete(tmp_path)
+    bad = _row("t1", "none", 2)
+    bad["run_number"] = "2"
+    bad["run_id"] = "none-gemini-3.6-flash-t1-r2-bad"
+    with paths["results"].open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(bad) + "\n")
+
+    report = check_study(
+        results_path=paths["results"],
+        seeded_dir=paths["seeded_dir"],
+        tasks_file=paths["tasks_file"],
+        repeats=REPEATS,
+        injected_dir=paths["injected"],
+    )
+    assert not report.ok
+    assert len(report.malformed_study_rows) == 1
+    item = report.malformed_study_rows[0]
+    assert item["run_id"] == bad["run_id"]
+    assert item["task_id"] == "t1"
+    assert item["condition"] == "none"
+    assert item["run_number"] == "2"
+    assert "not int" in item["problem"]
+    text = format_report(report)
+    assert "Malformed study rows" in text
+    assert "run_number='2'" in text
+
+
 def test_empty_seeded_dir_skipped_without_error(tmp_path):
     paths = _write_complete(tmp_path, include_seeded=False)
     report = check_study(
