@@ -1,0 +1,316 @@
+{
+ "run_id": "cross_family-gemini-3.6-flash-T06-v004-r2",
+ "task_id": "T06-v004",
+ "condition": "cross_family",
+ "run_number": 2,
+ "status": "human_review",
+ "verdict": "reject",
+ "second_verdict": "reject",
+ "verifier_calls": 3,
+ "draft": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.82212767
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.17787233
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1247.4107986
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1247.42
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "Starting with an initial balance of $80,000 at a monthly interest rate of 0.4% (4.8% nominal annual compounded monthly), the portfolio accumulates monthly contributions of $2,500 for months 1–60, $3,500 for months 61–120, and a single withdrawal of $20,000 at month 90. At month 120, the projected balance is $558,357.82. Against the target of $750,000, there is a shortfall of $191,642.18. To cover this shortfall over 120 months, the required minimum fixed additional end-of-month contribution is $1,247.4108 per month, which rounds upward to $1,247.42 per month."
+ },
+ "revision": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.82212767
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.17787233
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1247.4107986
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1247.42
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The reviewer feedback was carefully re-evaluated against the scenario inputs. The portfolio starts with $80,000 and grows at 0.4% monthly (4.8% annual nominal rate compounded monthly). Compounding the initial $80,000 balance over 120 months yields $129,162.22. Adding the end-of-month contributions of $2,500/month for months 1–60 (compounded to month 120: $214,929.45) and $3,500/month for months 61–120 ($236,810.63), and subtracting the $20,000 month-90 withdrawal compounded to month 120 ($22,544.54), results in an exact projected month-120 balance of $558,357.82. The reviewer's suggested balance of ~$513,230 omitted or miscalculated the growth of the initial capital. The shortfall against the $750,000 target remains $191,642.18, requiring a fixed additional end-of-month contribution of $1,247.4108 per month over 120 months, which rounds upward to $1,247.42."
+ },
+ "final": {
+  "scenario_id": "T06-v004",
+  "answer_type": "NUMERIC_RESULT",
+  "status": "FEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 558357.82212767
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "DIFFERENCE",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 191642.17787233
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 1247.4107986
+    },
+    {
+     "subject": "PORTFOLIO",
+     "measure": "PAYMENT",
+     "stage": "FINAL",
+     "rounding": "UPWARD_CENT",
+     "unit": "MONEY",
+     "value": 1247.42
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The reviewer feedback was carefully re-evaluated against the scenario inputs. The portfolio starts with $80,000 and grows at 0.4% monthly (4.8% annual nominal rate compounded monthly). Compounding the initial $80,000 balance over 120 months yields $129,162.22. Adding the end-of-month contributions of $2,500/month for months 1–60 (compounded to month 120: $214,929.45) and $3,500/month for months 61–120 ($236,810.63), and subtracting the $20,000 month-90 withdrawal compounded to month 120 ($22,544.54), results in an exact projected month-120 balance of $558,357.82. The reviewer's suggested balance of ~$513,230 omitted or miscalculated the growth of the initial capital. The shortfall against the $750,000 target remains $191,642.18, requiring a fixed additional end-of-month contribution of $1,247.4108 per month over 120 months, which rounds upward to $1,247.42."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "reject",
+   "issues": [
+    "Projected month‑120 balance is incorrectly calculated; the correct balance is approximately $513,230, not $558,358 as stated. Consequently the shortfall against the $750,000 target is about $236,770, not $191,642. The required additional end‑of‑month contribution to cover the shortfall over 120 months is roughly $1,973.08, not $1,247.42. The advisor’s numerical results are therefore incorrect."
+   ],
+   "reason": "The calculations do not match the scenario data.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  },
+  {
+   "stage": "second",
+   "verdict": "reject",
+   "issues": [
+    "The projected month‑120 balance is incorrectly calculated. Using the given monthly rate of 0.004, the future value of the initial $80,000 over 120 months is $129,162.23, the accumulated value of the $2,500/month contributions (months 1–60) is $214,929.45, and the accumulated value of the $3,500/month contributions (months 61–120) is $296,453.99. The $20,000 withdrawal at month 90 grows to $911,136.53 by month 120. Summing these gives a net balance of $129,162.23 + $214,929.45 + $296,453.99 − $911,136.53 = −$270,590.86, not the $558,357.82 reported. Consequently the shortfall against the $750,000 target and the required additional contribution are also incorrect."
+   ],
+   "reason": "The arithmetic in the advisor’s answer does not match the scenario’s cash‑flow calculations.",
+   "calls": 2,
+   "calculations": [
+    {
+     "expression": "80_000*(1+0.004)**120",
+     "result": 129162.2268833284
+    },
+    {
+     "expression": "2500*((1+0.004)**120- (1+0.004)**60)/0.004",
+     "result": 214929.448332809
+    },
+    {
+     "expression": "3500*((1+0.004)**120- (1+0.004)**61)/0.004",
+     "result": 296453.9851504509
+    },
+    {
+     "expression": "20000*((1+0.004)**120- (1+0.004)**90)/0.004",
+     "result": 911136.5271962812
+    }
+   ],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.82212767,
+     "target_shortfall": 191642.17787233,
+     "additional_monthly_contribution": 1247.4107986,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.7640051689,
+     "target_shortfall": 191642.23599483108,
+     "additional_monthly_contribution": 1247.411262794979,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 558357.82212767
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 191642.17787233
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "final_check": {
+  "correct": false,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T06-v004_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.82212767,
+     "target_shortfall": 191642.17787233,
+     "additional_monthly_contribution": 1247.4107986,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "FEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T06-v004_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": false,
+    "observed": {
+     "initial_total": 80000.0,
+     "final_balance": 558357.7640051689,
+     "target_shortfall": 191642.23599483108,
+     "additional_monthly_contribution": 1247.411262794979,
+     "additional_monthly_contribution_cents": 1247.42
+    },
+    "details": {
+     "reason": "value_mismatch",
+     "missing_observation": [],
+     "not_computed": [],
+     "items": [
+      {
+       "reason": "value_mismatch",
+       "metric": "final_balance",
+       "observed": 558357.82212767
+      },
+      {
+       "reason": "value_mismatch",
+       "metric": "target_shortfall",
+       "observed": 191642.17787233
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "scoring_note": null,
+ "graded": {
+  "initial_correct": false,
+  "final_correct": false
+ },
+ "regraded_from": null
+}

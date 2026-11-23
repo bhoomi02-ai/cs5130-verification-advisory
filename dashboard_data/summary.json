@@ -345,11 +345,76 @@
    }
   },
   "cross_family": {
-   "status": "pending",
-   "done": 95,
-   "total": 96,
-   "failed": 2,
-   "label": "pending (95/96)"
+   "status": "complete",
+   "label": "Cross-family · gpt-oss-20b verifier",
+   "n_runs": 95,
+   "n_tasks": 32,
+   "task_success": {
+    "value": 0.9052631578947369,
+    "ci_low": 0.8125,
+    "ci_high": 0.96875,
+    "right": 86,
+    "n": 95
+   },
+   "task_success_excl_human_review": {
+    "value": 0.9404761904761905,
+    "ci_low": 0.8888888888888888,
+    "ci_high": 0.9888888888888889,
+    "right": 79,
+    "n": 84
+   },
+   "first_draft_success": {
+    "value": 0.8947368421052632,
+    "right": 85,
+    "n": 95
+   },
+   "human_review": {
+    "n": 11,
+    "rate": 0.11578947368421053,
+    "final_right": 7,
+    "routes": {
+     "abstain": 0,
+     "unreadable": 1,
+     "revision_not_accepted": 10
+    }
+   },
+   "outcomes": {
+    "kept_correct": 83,
+    "fixed": 3,
+    "broken": 2,
+    "still_wrong": 7
+   },
+   "cost": {
+    "mean_cost_usd": 0.02436185368421052,
+    "total_cost_usd": 2.350447875,
+    "mean_tokens_in": 9204.589473684211,
+    "mean_tokens_out": 7110.221052631579,
+    "median_latency_s": 46.18299374999333,
+    "extra_cost_per_extra_correct": 0.27322299364640756,
+    "includes_shared_draft": true
+   },
+   "n_failed": 1,
+   "verifier": {
+    "catch_rate": {
+     "value": 0.6666666666666666,
+     "caught": 6,
+     "n": 9
+    },
+    "false_alarm_rate": {
+     "value": 0.16470588235294117,
+     "flagged": 14,
+     "n": 85
+    },
+    "mcc": 0.3608856796381446,
+    "missing_verdicts": 1,
+    "wrong_draft_fates": {
+     "missed": 3,
+     "caught_fixed": 3,
+     "caught_not_fixed": 3,
+     "caught_escalated": 0
+    },
+    "mean_verifier_calls": 1.5052631578947369
+   }
   }
  },
  "comparisons": [
@@ -367,9 +432,9 @@
    "tasks_better": 1,
    "tasks_worse": 1,
    "sign_test_p": 1.0,
-   "note": "",
    "sign_test_p_holm": 1.0,
-   "n_comparisons": 4
+   "n_comparisons": 5,
+   "note": ""
   },
   {
    "condition": "peer",
@@ -385,9 +450,9 @@
    "tasks_better": 1,
    "tasks_worse": 1,
    "sign_test_p": 1.0,
-   "note": "",
    "sign_test_p_holm": 1.0,
-   "n_comparisons": 4
+   "n_comparisons": 5,
+   "note": ""
   },
   {
    "condition": "dedicated",
@@ -403,9 +468,9 @@
    "tasks_better": 6,
    "tasks_worse": 0,
    "sign_test_p": 0.03125,
-   "note": "",
-   "sign_test_p_holm": 0.125,
-   "n_comparisons": 4
+   "sign_test_p_holm": 0.15625,
+   "n_comparisons": 5,
+   "note": ""
   },
   {
    "condition": "weakened",
@@ -421,9 +486,27 @@
    "tasks_better": 0,
    "tasks_worse": 1,
    "sign_test_p": 1.0,
-   "note": "",
    "sign_test_p_holm": 1.0,
-   "n_comparisons": 4
+   "n_comparisons": 5,
+   "note": ""
+  },
+  {
+   "condition": "cross_family",
+   "n_tasks": 32,
+   "n_pairs": 95,
+   "success_none": 0.8854166666666666,
+   "success": 0.8958333333333334,
+   "delta": 0.010416666666666668,
+   "ci_low": -0.04166666666666667,
+   "ci_high": 0.06250000000000001,
+   "runs_only_condition_right": 3,
+   "runs_only_none_right": 2,
+   "tasks_better": 2,
+   "tasks_worse": 2,
+   "sign_test_p": 1.0,
+   "sign_test_p_holm": 1.0,
+   "n_comparisons": 5,
+   "note": ""
   }
  ],
  "interval_note": "Intervals are 95% bootstrap intervals over the 32 tasks; with 32 tasks and 3 runs each they are wide, so small differences are not conclusive.",
