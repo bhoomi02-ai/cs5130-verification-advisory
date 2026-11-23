@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated_at": "2026-11-21T17:40:39+00:00",
+ "generated_at": "2026-11-23T02:19:34+00:00",
  "study": {
   "question": "Which verification strategy makes multi-agent financial advisory systems more reliable?",
   "advisor_model": "gemini-3.6-flash",
@@ -73,14 +73,14 @@
   {
    "id": "cross_family",
    "label": "Cross-family · gpt-oss-20b verifier",
-   "runs_done": 74,
+   "runs_done": 95,
    "runs_expected": 96,
    "runs_failed": 2,
    "complete": false,
-   "seeded_done": 0,
+   "seeded_done": 31,
    "seeded_expected": 31,
    "seeded_failed": 0,
-   "seeded_complete": false
+   "seeded_complete": true
   }
  ],
  "complete_conditions": [
@@ -90,7 +90,13 @@
   "dedicated",
   "weakened"
  ],
- "scoring_under_review": {
+ "grading": {
+  "file": "results.jsonl",
+  "regraded": false,
+  "changed_runs": []
+ },
+ "scoring_mode": "under_review",
+ "scoring_notes": {
   "T06-v003": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
  },
  "rejected_rows": 0,
@@ -104,5 +110,5 @@
   "summary.json",
   "runs/<run_id>.json"
  ],
- "run_details": 552
+ "run_details": 573
 }

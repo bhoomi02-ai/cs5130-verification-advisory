@@ -1,0 +1,256 @@
+{
+ "run_id": "cross_family-gemini-3.6-flash-T09-v003-r3",
+ "task_id": "T09-v003",
+ "condition": "cross_family",
+ "run_number": 3,
+ "status": "accepted",
+ "verdict": "accept",
+ "second_verdict": null,
+ "verifier_calls": 1,
+ "draft": {
+  "scenario_id": "T09-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 47000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The current portfolio total value is $100,000, with STOCK-class assets totaling $43,000 (AAPL: $15,000, MSFT: $14,000, VOO: $14,000), which represents 43% of the portfolio. The target STOCK allocation is 40% ± 2%, establishing an upper bound of 42% ($42,000). Reducing the STOCK allocation to 42% or lower would require selling at least $1,000 of STOCK-class assets or injecting external cash. However, selling STOCK-class assets is strictly prohibited by policy restriction (NO_SELL_CLASS: STOCK), and no external deposits, borrowing, or short selling are permitted. Therefore, it is infeasible to rebalance the portfolio to the target allocations within the required tolerance."
+ },
+ "revision": null,
+ "final": {
+  "scenario_id": "T09-v003",
+  "answer_type": "TRADE_PLAN",
+  "status": "INFEASIBLE",
+  "trades": [],
+  "metrics": {
+   "observations": [
+    {
+     "subject": "PORTFOLIO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 100000
+    },
+    {
+     "subject": "CASH",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 10000
+    },
+    {
+     "subject": "AAPL",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 15000
+    },
+    {
+     "subject": "MSFT",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "VOO",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 14000
+    },
+    {
+     "subject": "BND",
+     "measure": "VALUE",
+     "stage": "INITIAL",
+     "rounding": "NONE",
+     "unit": "MONEY",
+     "value": 47000
+    }
+   ],
+   "selection": null
+  },
+  "violations": [],
+  "explanation": "The current portfolio total value is $100,000, with STOCK-class assets totaling $43,000 (AAPL: $15,000, MSFT: $14,000, VOO: $14,000), which represents 43% of the portfolio. The target STOCK allocation is 40% ± 2%, establishing an upper bound of 42% ($42,000). Reducing the STOCK allocation to 42% or lower would require selling at least $1,000 of STOCK-class assets or injecting external cash. However, selling STOCK-class assets is strictly prohibited by policy restriction (NO_SELL_CLASS: STOCK), and no external deposits, borrowing, or short selling are permitted. Therefore, it is infeasible to rebalance the portfolio to the target allocations within the required tolerance."
+ },
+ "reviews": [
+  {
+   "stage": "first",
+   "verdict": "accept",
+   "issues": [],
+   "reason": "The advisor correctly calculated the current allocations and determined that no permissible trades can bring the portfolio within the 40%±2% STOCK target while respecting all restrictions; thus the status INFEASIBLE is correct.",
+   "calls": 1,
+   "calculations": [],
+   "error": null
+  }
+ ],
+ "draft_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T09-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 43000.0,
+     "minimum_stock_pct": 0.43,
+     "maximum_target_stock_pct": 0.42000000000000004,
+     "stock_value_excess_above_tolerance": 999.9999999999927
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 43000.0,
+     "minimum_stock_pct": 0.43,
+     "maximum_target_stock_pct": 0.42000000000000004,
+     "stock_value_excess_above_tolerance": 999.9999999999927
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "final_check": {
+  "correct": true,
+  "format_failure": false,
+  "checks": [
+   {
+    "check_id": "T09-v003_schema",
+    "check_type": "SCHEMA",
+    "passed": true,
+    "observed": null,
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_required",
+    "check_type": "REQUIRED_METRICS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 43000.0,
+     "minimum_stock_pct": 0.43,
+     "maximum_target_stock_pct": 0.42000000000000004,
+     "stock_value_excess_above_tolerance": 999.9999999999927
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_status",
+    "check_type": "STATUS",
+    "passed": true,
+    "observed": "INFEASIBLE",
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_independent",
+    "check_type": "INDEPENDENT_RESULTS",
+    "passed": true,
+    "observed": {
+     "initial_total": 100000.0,
+     "locked_stock_value": 43000.0,
+     "minimum_stock_pct": 0.43,
+     "maximum_target_stock_pct": 0.42000000000000004,
+     "stock_value_excess_above_tolerance": 999.9999999999927
+    },
+    "details": {}
+   },
+   {
+    "check_id": "T09-v003_no_trades",
+    "check_type": "EMPTY_TRADES",
+    "passed": true,
+    "observed": [],
+    "details": {}
+   }
+  ]
+ },
+ "scoring_note": null,
+ "graded": {
+  "initial_correct": true,
+  "final_correct": true
+ },
+ "regraded_from": null
+}

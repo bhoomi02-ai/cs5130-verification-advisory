@@ -305,5 +305,10 @@
    }
   ]
  },
- "scoring_note": null
+ "scoring_note": null,
+ "graded": {
+  "initial_correct": false,
+  "final_correct": false
+ },
+ "regraded_from": null
 }

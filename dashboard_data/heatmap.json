@@ -11,10 +11,10 @@
  "pending": {
   "cross_family": {
    "status": "pending",
-   "done": 74,
+   "done": 95,
    "total": 96,
    "failed": 2,
-   "label": "pending (74/96)"
+   "label": "pending (95/96)"
   }
  },
  "groups": [

@@ -1,10 +1,10 @@
 {
  "source": "results/runs.jsonl (every model call, as scripts/spend.py)",
- "total_usd": 12.0040909,
+ "total_usd": 12.0777724,
  "budget_usd": 20.0,
- "left_usd": 7.9959091,
- "calls": 1183,
- "failed_calls": 46,
+ "left_usd": 7.922227599999999,
+ "calls": 1270,
+ "failed_calls": 65,
  "by_condition": [
   {
    "name": "dedicated",
@@ -37,16 +37,16 @@
    "calls": 143
   },
   {
+   "name": "cross_family",
+   "label": "Cross-family",
+   "cost_usd": 0.7011762750000001,
+   "calls": 282
+  },
+  {
    "name": "pilot",
    "label": "pilot",
    "cost_usd": 0.6378538,
    "calls": 78
-  },
-  {
-   "name": "cross_family",
-   "label": "Cross-family",
-   "cost_usd": 0.6274947750000002,
-   "calls": 195
   },
   {
    "name": "dedicated-check",
@@ -77,14 +77,14 @@
   {
    "name": "gemini-3.6-flash",
    "label": "gemini-3.6-flash",
-   "cost_usd": 11.823719249999996,
-   "calls": 977
+   "cost_usd": 11.857617749999996,
+   "calls": 978
   },
   {
    "name": "openai/gpt-oss-20b",
    "label": "openai/gpt-oss-20b",
-   "cost_usd": 0.1021131,
-   "calls": 174
+   "cost_usd": 0.14189609999999994,
+   "calls": 260
   },
   {
    "name": "gemini-3.5-flash-lite",
@@ -151,8 +151,20 @@
   {
    "name": "2026-11-21",
    "label": "2026-11-21",
-   "cost_usd": 0.168501075,
-   "calls": 53
+   "cost_usd": 0.17103322499999998,
+   "calls": 60
+  },
+  {
+   "name": "2026-11-22",
+   "label": "2026-11-22",
+   "cost_usd": 0.0640413,
+   "calls": 66
+  },
+  {
+   "name": "2026-11-23",
+   "label": "2026-11-23",
+   "cost_usd": 0.0071080499999999994,
+   "calls": 14
   }
  ],
  "note": "Each run's own cost also includes its share of the shared first draft, so summing run costs across settings counts drafts more than once; this total counts every call once."

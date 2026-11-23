@@ -19,7 +19,8 @@
    "tokens_in": 2911,
    "tokens_out": 3805,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S01-r2",
@@ -40,7 +41,8 @@
    "tokens_in": 2911,
    "tokens_out": 4832,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S01-r3",
@@ -61,7 +63,8 @@
    "tokens_in": 2911,
    "tokens_out": 3664,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S02-r1",
@@ -82,7 +85,8 @@
    "tokens_in": 2827,
    "tokens_out": 2462,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S02-r2",
@@ -103,7 +107,8 @@
    "tokens_in": 2827,
    "tokens_out": 2313,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S02-r3",
@@ -124,7 +129,8 @@
    "tokens_in": 2827,
    "tokens_out": 2267,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S03-r1",
@@ -145,7 +151,8 @@
    "tokens_in": 2901,
    "tokens_out": 3178,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S03-r2",
@@ -166,7 +173,8 @@
    "tokens_in": 2901,
    "tokens_out": 3683,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S03-r3",
@@ -187,7 +195,8 @@
    "tokens_in": 2901,
    "tokens_out": 4777,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S04-r1",
@@ -208,7 +217,8 @@
    "tokens_in": 2456,
    "tokens_out": 3321,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S04-r2",
@@ -229,7 +239,8 @@
    "tokens_in": 2456,
    "tokens_out": 3201,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S04-r3",
@@ -250,7 +261,8 @@
    "tokens_in": 2456,
    "tokens_out": 2717,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S05-r1",
@@ -271,7 +283,8 @@
    "tokens_in": 3150,
    "tokens_out": 5779,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S05-r2",
@@ -292,7 +305,8 @@
    "tokens_in": 3150,
    "tokens_out": 6573,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S05-r3",
@@ -313,7 +327,8 @@
    "tokens_in": 3150,
    "tokens_out": 7926,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S06-r1",
@@ -334,7 +349,8 @@
    "tokens_in": 2651,
    "tokens_out": 10490,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S06-r2",
@@ -355,7 +371,8 @@
    "tokens_in": 2651,
    "tokens_out": 5228,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S06-r3",
@@ -376,7 +393,8 @@
    "tokens_in": 2651,
    "tokens_out": 5627,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S07-r1",
@@ -397,7 +415,8 @@
    "tokens_in": 2984,
    "tokens_out": 8183,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S07-r2",
@@ -418,7 +437,8 @@
    "tokens_in": 2984,
    "tokens_out": 5495,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S07-r3",
@@ -439,7 +459,8 @@
    "tokens_in": 2984,
    "tokens_out": 5169,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S08-r1",
@@ -460,7 +481,8 @@
    "tokens_in": 2993,
    "tokens_out": 7551,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S08-r2",
@@ -481,7 +503,8 @@
    "tokens_in": 2993,
    "tokens_out": 3799,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S08-r3",
@@ -502,7 +525,8 @@
    "tokens_in": 2993,
    "tokens_out": 6634,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S09-r1",
@@ -523,7 +547,8 @@
    "tokens_in": 2715,
    "tokens_out": 2870,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S09-r2",
@@ -544,7 +569,8 @@
    "tokens_in": 2715,
    "tokens_out": 2639,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S09-r3",
@@ -565,7 +591,8 @@
    "tokens_in": 2715,
    "tokens_out": 2048,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S10-r1",
@@ -586,7 +613,8 @@
    "tokens_in": 2947,
    "tokens_out": 2531,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S10-r2",
@@ -607,7 +635,8 @@
    "tokens_in": 2947,
    "tokens_out": 2406,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-S10-r3",
@@ -628,7 +657,8 @@
    "tokens_in": 2947,
    "tokens_out": 2463,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S04-r2",
@@ -649,7 +679,8 @@
    "tokens_in": 5423,
    "tokens_out": 6188,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T01-v003-r1",
@@ -670,7 +701,8 @@
    "tokens_in": 2905,
    "tokens_out": 5161,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T01-v003-r2",
@@ -691,7 +723,8 @@
    "tokens_in": 2905,
    "tokens_out": 6393,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T01-v003-r3",
@@ -712,7 +745,8 @@
    "tokens_in": 2905,
    "tokens_out": 4347,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T01-v004-r1",
@@ -733,7 +767,8 @@
    "tokens_in": 2908,
    "tokens_out": 4361,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T01-v004-r2",
@@ -754,7 +789,8 @@
    "tokens_in": 2908,
    "tokens_out": 3555,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T01-v004-r3",
@@ -775,7 +811,8 @@
    "tokens_in": 2908,
    "tokens_out": 4107,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T02-v003-r1",
@@ -796,7 +833,8 @@
    "tokens_in": 2869,
    "tokens_out": 4375,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T02-v003-r2",
@@ -817,7 +855,8 @@
    "tokens_in": 2869,
    "tokens_out": 2594,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T02-v003-r3",
@@ -838,7 +877,8 @@
    "tokens_in": 2869,
    "tokens_out": 2849,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T02-v004-r1",
@@ -859,7 +899,8 @@
    "tokens_in": 2877,
    "tokens_out": 2169,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T02-v004-r2",
@@ -880,7 +921,8 @@
    "tokens_in": 2877,
    "tokens_out": 2637,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T02-v004-r3",
@@ -901,7 +943,8 @@
    "tokens_in": 2877,
    "tokens_out": 2313,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T03-v001-r1",
@@ -922,7 +965,8 @@
    "tokens_in": 2848,
    "tokens_out": 3527,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T03-v001-r2",
@@ -943,7 +987,8 @@
    "tokens_in": 2848,
    "tokens_out": 2399,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T03-v001-r3",
@@ -964,7 +1009,8 @@
    "tokens_in": 2848,
    "tokens_out": 3568,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T03-v002-r1",
@@ -985,7 +1031,8 @@
    "tokens_in": 2845,
    "tokens_out": 3066,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T03-v002-r2",
@@ -1006,7 +1053,8 @@
    "tokens_in": 2845,
    "tokens_out": 2272,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T03-v002-r3",
@@ -1027,7 +1075,8 @@
    "tokens_in": 2845,
    "tokens_out": 2760,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T04-v003-r1",
@@ -1048,7 +1097,8 @@
    "tokens_in": 2440,
    "tokens_out": 4236,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T04-v003-r2",
@@ -1069,7 +1119,8 @@
    "tokens_in": 2440,
    "tokens_out": 4084,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T04-v003-r3",
@@ -1090,7 +1141,8 @@
    "tokens_in": 2440,
    "tokens_out": 6364,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T04-v004-r1",
@@ -1111,7 +1163,8 @@
    "tokens_in": 2438,
    "tokens_out": 3750,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T04-v004-r2",
@@ -1132,7 +1185,8 @@
    "tokens_in": 2438,
    "tokens_out": 3543,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T04-v004-r3",
@@ -1153,7 +1207,8 @@
    "tokens_in": 2438,
    "tokens_out": 3445,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T05-v003-r1",
@@ -1174,7 +1229,8 @@
    "tokens_in": 3165,
    "tokens_out": 5347,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T05-v003-r2",
@@ -1195,7 +1251,8 @@
    "tokens_in": 3165,
    "tokens_out": 5813,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T05-v003-r3",
@@ -1216,7 +1273,8 @@
    "tokens_in": 3165,
    "tokens_out": 5303,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T05-v004-r1",
@@ -1237,7 +1295,8 @@
    "tokens_in": 3167,
    "tokens_out": 5009,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T05-v004-r2",
@@ -1258,7 +1317,8 @@
    "tokens_in": 3167,
    "tokens_out": 4959,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T05-v004-r3",
@@ -1279,7 +1339,8 @@
    "tokens_in": 3167,
    "tokens_out": 6022,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T06-v003-r1",
@@ -1300,7 +1361,8 @@
    "tokens_in": 2599,
    "tokens_out": 7927,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T06-v003-r2",
@@ -1321,7 +1383,8 @@
    "tokens_in": 2599,
    "tokens_out": 8765,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T06-v003-r3",
@@ -1342,7 +1405,8 @@
    "tokens_in": 2599,
    "tokens_out": 7938,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T06-v004-r1",
@@ -1363,7 +1427,8 @@
    "tokens_in": 2595,
    "tokens_out": 10640,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T06-v004-r2",
@@ -1384,7 +1449,8 @@
    "tokens_in": 2595,
    "tokens_out": 15925,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T06-v004-r3",
@@ -1405,7 +1471,8 @@
    "tokens_in": 2595,
    "tokens_out": 6757,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T07-v003-r1",
@@ -1426,7 +1493,8 @@
    "tokens_in": 3000,
    "tokens_out": 4628,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T07-v003-r2",
@@ -1447,7 +1515,8 @@
    "tokens_in": 3000,
    "tokens_out": 6634,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T07-v003-r3",
@@ -1468,7 +1537,8 @@
    "tokens_in": 3000,
    "tokens_out": 6056,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T07-v004-r1",
@@ -1489,7 +1559,8 @@
    "tokens_in": 3001,
    "tokens_out": 4456,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T07-v004-r2",
@@ -1510,7 +1581,8 @@
    "tokens_in": 3001,
    "tokens_out": 4675,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T07-v004-r3",
@@ -1531,7 +1603,8 @@
    "tokens_in": 3001,
    "tokens_out": 5780,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T08-v003-r1",
@@ -1552,7 +1625,8 @@
    "tokens_in": 2979,
    "tokens_out": 7176,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T08-v003-r2",
@@ -1573,7 +1647,8 @@
    "tokens_in": 2979,
    "tokens_out": 6871,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T08-v003-r3",
@@ -1594,7 +1669,8 @@
    "tokens_in": 2979,
    "tokens_out": 6579,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T08-v004-r1",
@@ -1615,7 +1691,8 @@
    "tokens_in": 2977,
    "tokens_out": 4035,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T08-v004-r2",
@@ -1636,7 +1713,8 @@
    "tokens_in": 2977,
    "tokens_out": 4387,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T08-v004-r3",
@@ -1657,7 +1735,8 @@
    "tokens_in": 2977,
    "tokens_out": 3567,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v001-r1",
@@ -1678,7 +1757,8 @@
    "tokens_in": 2662,
    "tokens_out": 2957,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v001-r2",
@@ -1699,7 +1779,8 @@
    "tokens_in": 2662,
    "tokens_out": 2810,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v001-r3",
@@ -1720,7 +1801,8 @@
    "tokens_in": 2662,
    "tokens_out": 3317,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v002-r1",
@@ -1741,7 +1823,8 @@
    "tokens_in": 2662,
    "tokens_out": 2875,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v002-r2",
@@ -1762,7 +1845,8 @@
    "tokens_in": 2662,
    "tokens_out": 2417,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v002-r3",
@@ -1783,7 +1867,8 @@
    "tokens_in": 2662,
    "tokens_out": 3275,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v003-r1",
@@ -1804,7 +1889,8 @@
    "tokens_in": 2659,
    "tokens_out": 2401,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v003-r2",
@@ -1825,7 +1911,8 @@
    "tokens_in": 2659,
    "tokens_out": 2420,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T09-v003-r3",
@@ -1846,7 +1933,8 @@
    "tokens_in": 2659,
    "tokens_out": 4546,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v001-r1",
@@ -1867,7 +1955,8 @@
    "tokens_in": 2894,
    "tokens_out": 3095,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v001-r2",
@@ -1888,7 +1977,8 @@
    "tokens_in": 2894,
    "tokens_out": 3011,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v001-r3",
@@ -1909,7 +1999,8 @@
    "tokens_in": 2894,
    "tokens_out": 2728,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v002-r1",
@@ -1930,7 +2021,8 @@
    "tokens_in": 2895,
    "tokens_out": 2568,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v002-r2",
@@ -1951,7 +2043,8 @@
    "tokens_in": 2895,
    "tokens_out": 2958,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v002-r3",
@@ -1972,7 +2065,8 @@
    "tokens_in": 2895,
    "tokens_out": 2983,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v003-r1",
@@ -1993,7 +2087,8 @@
    "tokens_in": 2895,
    "tokens_out": 2789,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v003-r2",
@@ -2014,7 +2109,8 @@
    "tokens_in": 2895,
    "tokens_out": 3655,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "none-gemini-3.6-flash-T10-v003-r3",
@@ -2035,7 +2131,8 @@
    "tokens_in": 2895,
    "tokens_out": 2798,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S01-r1",
@@ -2056,7 +2153,8 @@
    "tokens_in": 6237,
    "tokens_out": 4394,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S02-r1",
@@ -2077,7 +2175,8 @@
    "tokens_in": 12812,
    "tokens_out": 5805,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S03-r1",
@@ -2098,7 +2197,8 @@
    "tokens_in": 6709,
    "tokens_out": 3326,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S04-r1",
@@ -2119,7 +2219,8 @@
    "tokens_in": 19005,
    "tokens_out": 12397,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S05-r1",
@@ -2140,7 +2241,8 @@
    "tokens_in": 7114,
    "tokens_out": 6442,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S06-r1",
@@ -2161,7 +2263,8 @@
    "tokens_in": 32306,
    "tokens_out": 29426,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S01-r1",
@@ -2182,7 +2285,8 @@
    "tokens_in": 6417,
    "tokens_out": 5160,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S01-r2",
@@ -2203,7 +2307,8 @@
    "tokens_in": 6472,
    "tokens_out": 5912,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S01-r3",
@@ -2224,7 +2329,8 @@
    "tokens_in": 6506,
    "tokens_out": 4787,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S02-r1",
@@ -2245,7 +2351,8 @@
    "tokens_in": 6316,
    "tokens_out": 3401,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S02-r2",
@@ -2266,7 +2373,8 @@
    "tokens_in": 6278,
    "tokens_out": 3146,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S02-r3",
@@ -2287,7 +2395,8 @@
    "tokens_in": 6528,
    "tokens_out": 3146,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S03-r1",
@@ -2308,7 +2417,8 @@
    "tokens_in": 7030,
    "tokens_out": 4369,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S03-r2",
@@ -2329,7 +2439,8 @@
    "tokens_in": 6642,
    "tokens_out": 4798,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S03-r3",
@@ -2350,7 +2461,8 @@
    "tokens_in": 6672,
    "tokens_out": 6116,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S04-r1",
@@ -2371,7 +2483,8 @@
    "tokens_in": 5575,
    "tokens_out": 6104,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S04-r2",
@@ -2392,7 +2505,8 @@
    "tokens_in": 5576,
    "tokens_out": 4800,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S04-r3",
@@ -2413,7 +2527,8 @@
    "tokens_in": 11705,
    "tokens_out": 10310,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S07-r1",
@@ -2434,7 +2549,8 @@
    "tokens_in": 19210,
    "tokens_out": 15602,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S05-r1",
@@ -2455,7 +2571,8 @@
    "tokens_in": 7467,
    "tokens_out": 7276,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S05-r2",
@@ -2476,7 +2593,8 @@
    "tokens_in": 7287,
    "tokens_out": 7988,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S05-r3",
@@ -2497,7 +2615,8 @@
    "tokens_in": 7065,
    "tokens_out": 9474,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S06-r1",
@@ -2518,7 +2637,8 @@
    "tokens_in": 12632,
    "tokens_out": 20894,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S08-r1",
@@ -2539,7 +2659,8 @@
    "tokens_in": 6754,
    "tokens_out": 9095,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S06-r2",
@@ -2560,7 +2681,8 @@
    "tokens_in": 12847,
    "tokens_out": 21726,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S09-r1",
@@ -2581,7 +2703,8 @@
    "tokens_in": 5940,
    "tokens_out": 3331,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S10-r1",
@@ -2602,7 +2725,8 @@
    "tokens_in": 6323,
    "tokens_out": 2661,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T01-v003-r1",
@@ -2623,7 +2747,8 @@
    "tokens_in": 6333,
    "tokens_out": 6327,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T01-v004-r1",
@@ -2644,7 +2769,8 @@
    "tokens_in": 14172,
    "tokens_out": 9136,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T02-v003-r1",
@@ -2665,7 +2791,8 @@
    "tokens_in": 6256,
    "tokens_out": 4861,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T02-v004-r1",
@@ -2686,7 +2813,8 @@
    "tokens_in": 6404,
    "tokens_out": 2810,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T03-v001-r1",
@@ -2707,7 +2835,8 @@
    "tokens_in": 6554,
    "tokens_out": 3780,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T03-v002-r1",
@@ -2728,7 +2857,8 @@
    "tokens_in": 6338,
    "tokens_out": 3278,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T04-v003-r1",
@@ -2749,7 +2879,8 @@
    "tokens_in": 5399,
    "tokens_out": 4549,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T04-v004-r1",
@@ -2770,7 +2901,8 @@
    "tokens_in": 9952,
    "tokens_out": 6820,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T05-v003-r1",
@@ -2791,7 +2923,8 @@
    "tokens_in": 6845,
    "tokens_out": 6175,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T05-v004-r1",
@@ -2812,7 +2945,8 @@
    "tokens_in": 6908,
    "tokens_out": 5902,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T06-v003-r1",
@@ -2825,15 +2959,16 @@
    "final_correct": false,
    "verdict": null,
    "second_verdict": null,
-   "status": "failed",
-   "human_review_route": null,
-   "outcome": "failed",
-   "verifier_calls": null,
-   "cost_usd": 0.0316755,
-   "tokens_in": 2599,
-   "tokens_out": 7927,
-   "error": "ProviderError: 400 {\"error\":{\"message\":\"Parsing failed. The model generated output that could not be parsed. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"output_parse_failed\",\"failed_generation\":\"We need verify calculations. Let's compute. Initial balance 250k. Monthly interest 0.0055. Contributions: 1500 months1-90 end of month. 2000 months91-180 end of month. Withdrawal 50000 at month60 end.\\n\\nWe can compute using formulas. For e",
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "status": "human_review",
+   "human_review_route": "unreadable",
+   "outcome": "still_wrong",
+   "verifier_calls": 1,
+   "cost_usd": 0.031939425,
+   "tokens_in": 5758,
+   "tokens_out": 8017,
+   "error": null,
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S06-r3",
@@ -2854,7 +2989,8 @@
    "tokens_in": 12567,
    "tokens_out": 24830,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S07-r1",
@@ -2875,7 +3011,8 @@
    "tokens_in": 6745,
    "tokens_out": 9658,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S07-r2",
@@ -2896,7 +3033,8 @@
    "tokens_in": 7112,
    "tokens_out": 7055,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S07-r3",
@@ -2917,7 +3055,8 @@
    "tokens_in": 6714,
    "tokens_out": 6750,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S08-r1",
@@ -2938,7 +3077,8 @@
    "tokens_in": 7092,
    "tokens_out": 8879,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T06-v004-r1",
@@ -2959,7 +3099,8 @@
    "tokens_in": 15598,
    "tokens_out": 17745,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S08-r2",
@@ -2980,7 +3121,8 @@
    "tokens_in": 7056,
    "tokens_out": 4814,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S08-r3",
@@ -3001,7 +3143,8 @@
    "tokens_in": 6732,
    "tokens_out": 7880,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S09-r1",
@@ -3022,7 +3165,8 @@
    "tokens_in": 6105,
    "tokens_out": 3800,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S09-r2",
@@ -3043,7 +3187,8 @@
    "tokens_in": 6111,
    "tokens_out": 3418,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S09-r3",
@@ -3064,7 +3209,8 @@
    "tokens_in": 6312,
    "tokens_out": 2466,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S10-r1",
@@ -3085,7 +3231,8 @@
    "tokens_in": 6576,
    "tokens_out": 3767,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S10-r2",
@@ -3106,7 +3253,8 @@
    "tokens_in": 6812,
    "tokens_out": 3354,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-S10-r3",
@@ -3127,7 +3275,8 @@
    "tokens_in": 6591,
    "tokens_out": 3543,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T01-v003-r1",
@@ -3148,7 +3297,8 @@
    "tokens_in": 6561,
    "tokens_out": 6661,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T01-v003-r2",
@@ -3169,7 +3319,8 @@
    "tokens_in": 6663,
    "tokens_out": 7708,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T01-v003-r3",
@@ -3190,7 +3341,8 @@
    "tokens_in": 6594,
    "tokens_out": 5809,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T01-v004-r1",
@@ -3211,7 +3363,8 @@
    "tokens_in": 6979,
    "tokens_out": 5535,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T01-v004-r2",
@@ -3232,7 +3385,8 @@
    "tokens_in": 6469,
    "tokens_out": 4685,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T01-v004-r3",
@@ -3253,7 +3407,8 @@
    "tokens_in": 6630,
    "tokens_out": 5037,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T02-v003-r1",
@@ -3274,7 +3429,8 @@
    "tokens_in": 6465,
    "tokens_out": 4986,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T02-v003-r2",
@@ -3295,7 +3451,8 @@
    "tokens_in": 6416,
    "tokens_out": 3498,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T02-v003-r3",
@@ -3316,7 +3473,8 @@
    "tokens_in": 6414,
    "tokens_out": 3992,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T02-v004-r1",
@@ -3337,7 +3495,8 @@
    "tokens_in": 6654,
    "tokens_out": 3368,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T02-v004-r2",
@@ -3358,7 +3517,8 @@
    "tokens_in": 6517,
    "tokens_out": 4003,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T02-v004-r3",
@@ -3379,7 +3539,8 @@
    "tokens_in": 6434,
    "tokens_out": 3125,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T07-v003-r1",
@@ -3400,7 +3561,8 @@
    "tokens_in": 14077,
    "tokens_out": 12078,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T03-v001-r1",
@@ -3421,7 +3583,8 @@
    "tokens_in": 6860,
    "tokens_out": 4617,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T03-v001-r2",
@@ -3442,7 +3605,8 @@
    "tokens_in": 6555,
    "tokens_out": 3578,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T03-v001-r3",
@@ -3463,7 +3627,8 @@
    "tokens_in": 6887,
    "tokens_out": 4904,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T03-v002-r1",
@@ -3484,7 +3649,8 @@
    "tokens_in": 6593,
    "tokens_out": 4334,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T03-v002-r2",
@@ -3505,7 +3671,8 @@
    "tokens_in": 6380,
    "tokens_out": 3454,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T03-v002-r3",
@@ -3526,7 +3693,8 @@
    "tokens_in": 6431,
    "tokens_out": 3794,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T04-v003-r1",
@@ -3547,7 +3715,8 @@
    "tokens_in": 5559,
    "tokens_out": 5350,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T04-v003-r2",
@@ -3568,7 +3737,8 @@
    "tokens_in": 5704,
    "tokens_out": 5477,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T04-v003-r3",
@@ -3589,7 +3759,8 @@
    "tokens_in": 5743,
    "tokens_out": 7594,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T04-v004-r1",
@@ -3610,7 +3781,8 @@
    "tokens_in": 5540,
    "tokens_out": 4965,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T04-v004-r2",
@@ -3631,7 +3803,8 @@
    "tokens_in": 5700,
    "tokens_out": 6394,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T04-v004-r3",
@@ -3652,7 +3825,8 @@
    "tokens_in": 5604,
    "tokens_out": 4950,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T05-v003-r1",
@@ -3673,7 +3847,8 @@
    "tokens_in": 7096,
    "tokens_out": 7077,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T05-v003-r2",
@@ -3694,7 +3869,8 @@
    "tokens_in": 7189,
    "tokens_out": 7662,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T07-v004-r1",
@@ -3715,7 +3891,8 @@
    "tokens_in": 13658,
    "tokens_out": 11196,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T05-v003-r3",
@@ -3736,7 +3913,8 @@
    "tokens_in": 7135,
    "tokens_out": 6949,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T05-v004-r1",
@@ -3757,7 +3935,8 @@
    "tokens_in": 7173,
    "tokens_out": 6618,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T05-v004-r2",
@@ -3778,7 +3957,8 @@
    "tokens_in": 7177,
    "tokens_out": 6251,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T05-v004-r3",
@@ -3799,7 +3979,8 @@
    "tokens_in": 7285,
    "tokens_out": 7162,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T06-v003-r1",
@@ -3820,7 +4001,8 @@
    "tokens_in": 12818,
    "tokens_out": 20991,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T08-v003-r1",
@@ -3841,7 +4023,8 @@
    "tokens_in": 6497,
    "tokens_out": 7843,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T08-v004-r1",
@@ -3862,7 +4045,8 @@
    "tokens_in": 14113,
    "tokens_out": 7620,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T06-v003-r2",
@@ -3883,7 +4067,8 @@
    "tokens_in": 5872,
    "tokens_out": 15394,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T06-v003-r3",
@@ -3904,7 +4089,8 @@
    "tokens_in": 6001,
    "tokens_out": 14773,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T06-v004-r1",
@@ -3925,7 +4111,8 @@
    "tokens_in": 12587,
    "tokens_out": 28356,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T09-v001-r1",
@@ -3946,7 +4133,8 @@
    "tokens_in": 5827,
    "tokens_out": 3442,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T09-v002-r1",
@@ -3967,7 +4155,8 @@
    "tokens_in": 5848,
    "tokens_out": 3003,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T09-v003-r1",
@@ -3988,7 +4177,8 @@
    "tokens_in": 12338,
    "tokens_out": 5477,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T06-v004-r2",
@@ -4009,7 +4199,8 @@
    "tokens_in": 12494,
    "tokens_out": 36719,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T10-v001-r1",
@@ -4030,7 +4221,8 @@
    "tokens_in": 13263,
    "tokens_out": 6890,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T06-v004-r3",
@@ -4051,7 +4243,8 @@
    "tokens_in": 12418,
    "tokens_out": 27696,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T10-v002-r1",
@@ -4072,7 +4265,8 @@
    "tokens_in": 6257,
    "tokens_out": 2808,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T10-v003-r1",
@@ -4093,7 +4287,8 @@
    "tokens_in": 6298,
    "tokens_out": 3064,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T07-v003-r1",
@@ -4114,7 +4309,8 @@
    "tokens_in": 6780,
    "tokens_out": 6349,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T07-v003-r2",
@@ -4135,7 +4331,8 @@
    "tokens_in": 6927,
    "tokens_out": 8536,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S01-r2",
@@ -4156,7 +4353,8 @@
    "tokens_in": 6276,
    "tokens_out": 5895,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S01-r3",
@@ -4177,7 +4375,8 @@
    "tokens_in": 6307,
    "tokens_out": 4254,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T07-v003-r3",
@@ -4198,7 +4397,8 @@
    "tokens_in": 6954,
    "tokens_out": 8180,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T07-v004-r1",
@@ -4219,7 +4419,8 @@
    "tokens_in": 6742,
    "tokens_out": 6315,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T07-v004-r2",
@@ -4240,7 +4441,8 @@
    "tokens_in": 6855,
    "tokens_out": 6350,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T07-v004-r3",
@@ -4261,7 +4463,8 @@
    "tokens_in": 7053,
    "tokens_out": 7269,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T08-v003-r1",
@@ -4282,7 +4485,8 @@
    "tokens_in": 6742,
    "tokens_out": 8511,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T08-v003-r2",
@@ -4303,7 +4507,8 @@
    "tokens_in": 6683,
    "tokens_out": 8708,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T08-v003-r3",
@@ -4324,7 +4529,8 @@
    "tokens_in": 6877,
    "tokens_out": 7933,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T08-v004-r1",
@@ -4345,7 +4551,8 @@
    "tokens_in": 6923,
    "tokens_out": 5918,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T08-v004-r2",
@@ -4366,7 +4573,8 @@
    "tokens_in": 6804,
    "tokens_out": 6024,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T08-v004-r3",
@@ -4387,7 +4595,8 @@
    "tokens_in": 6770,
    "tokens_out": 5277,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v001-r1",
@@ -4408,7 +4617,8 @@
    "tokens_in": 5979,
    "tokens_out": 3973,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v001-r2",
@@ -4429,7 +4639,8 @@
    "tokens_in": 6046,
    "tokens_out": 3669,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v001-r3",
@@ -4450,7 +4661,8 @@
    "tokens_in": 6039,
    "tokens_out": 4149,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v002-r1",
@@ -4471,7 +4683,8 @@
    "tokens_in": 6004,
    "tokens_out": 3711,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v002-r2",
@@ -4492,7 +4705,8 @@
    "tokens_in": 5987,
    "tokens_out": 3197,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v002-r3",
@@ -4513,7 +4727,8 @@
    "tokens_in": 6049,
    "tokens_out": 4389,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v003-r1",
@@ -4534,7 +4749,8 @@
    "tokens_in": 6014,
    "tokens_out": 3201,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v003-r2",
@@ -4555,7 +4771,8 @@
    "tokens_in": 5999,
    "tokens_out": 3375,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T09-v003-r3",
@@ -4576,7 +4793,8 @@
    "tokens_in": 6056,
    "tokens_out": 5356,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v001-r1",
@@ -4597,7 +4815,8 @@
    "tokens_in": 6556,
    "tokens_out": 3928,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v001-r2",
@@ -4618,7 +4837,8 @@
    "tokens_in": 6567,
    "tokens_out": 4025,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v001-r3",
@@ -4639,7 +4859,8 @@
    "tokens_in": 6495,
    "tokens_out": 3631,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v002-r1",
@@ -4660,7 +4881,8 @@
    "tokens_in": 6507,
    "tokens_out": 3312,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v002-r2",
@@ -4681,7 +4903,8 @@
    "tokens_in": 6487,
    "tokens_out": 3880,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v002-r3",
@@ -4702,7 +4925,8 @@
    "tokens_in": 6487,
    "tokens_out": 4182,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v003-r1",
@@ -4723,7 +4947,8 @@
    "tokens_in": 6568,
    "tokens_out": 3549,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v003-r2",
@@ -4744,7 +4969,8 @@
    "tokens_in": 6526,
    "tokens_out": 4720,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "self-gemini-3.6-flash-T10-v003-r3",
@@ -4765,7 +4991,8 @@
    "tokens_in": 6523,
    "tokens_out": 3999,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S01-r1",
@@ -4786,7 +5013,8 @@
    "tokens_in": 6314,
    "tokens_out": 5206,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S01-r2",
@@ -4807,7 +5035,8 @@
    "tokens_in": 6369,
    "tokens_out": 6065,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S01-r3",
@@ -4828,7 +5057,8 @@
    "tokens_in": 6403,
    "tokens_out": 4787,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S02-r1",
@@ -4849,7 +5079,8 @@
    "tokens_in": 6213,
    "tokens_out": 3648,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S02-r2",
@@ -4870,7 +5101,8 @@
    "tokens_in": 6175,
    "tokens_out": 3636,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S02-r3",
@@ -4891,7 +5123,8 @@
    "tokens_in": 6425,
    "tokens_out": 3420,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S03-r1",
@@ -4912,7 +5145,8 @@
    "tokens_in": 6927,
    "tokens_out": 4829,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S03-r2",
@@ -4933,7 +5167,8 @@
    "tokens_in": 6539,
    "tokens_out": 5197,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S03-r3",
@@ -4954,7 +5189,8 @@
    "tokens_in": 6569,
    "tokens_out": 6016,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S04-r1",
@@ -4975,7 +5211,8 @@
    "tokens_in": 5472,
    "tokens_out": 4458,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S04-r2",
@@ -4996,7 +5233,8 @@
    "tokens_in": 5473,
    "tokens_out": 4256,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S04-r3",
@@ -5017,7 +5255,8 @@
    "tokens_in": 5469,
    "tokens_out": 4652,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S05-r1",
@@ -5038,7 +5277,8 @@
    "tokens_in": 7364,
    "tokens_out": 7544,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S05-r2",
@@ -5059,7 +5299,8 @@
    "tokens_in": 7184,
    "tokens_out": 8105,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S05-r3",
@@ -5080,7 +5321,8 @@
    "tokens_in": 6962,
    "tokens_out": 9392,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S06-r1",
@@ -5101,7 +5343,8 @@
    "tokens_in": 12498,
    "tokens_out": 33518,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S06-r2",
@@ -5122,7 +5365,8 @@
    "tokens_in": 5963,
    "tokens_out": 7887,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S06-r3",
@@ -5143,7 +5387,8 @@
    "tokens_in": 5863,
    "tokens_out": 7803,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S07-r1",
@@ -5164,7 +5409,8 @@
    "tokens_in": 6642,
    "tokens_out": 9665,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S07-r2",
@@ -5185,7 +5431,8 @@
    "tokens_in": 7009,
    "tokens_out": 7304,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S07-r3",
@@ -5206,7 +5453,8 @@
    "tokens_in": 6611,
    "tokens_out": 6950,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S08-r1",
@@ -5227,7 +5475,8 @@
    "tokens_in": 6989,
    "tokens_out": 9389,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S08-r2",
@@ -5248,7 +5497,8 @@
    "tokens_in": 6953,
    "tokens_out": 5779,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S08-r3",
@@ -5269,7 +5519,8 @@
    "tokens_in": 6629,
    "tokens_out": 7800,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S09-r1",
@@ -5290,7 +5541,8 @@
    "tokens_in": 6002,
    "tokens_out": 3937,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S09-r2",
@@ -5311,7 +5563,8 @@
    "tokens_in": 6008,
    "tokens_out": 3782,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S09-r3",
@@ -5332,7 +5585,8 @@
    "tokens_in": 6209,
    "tokens_out": 3133,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S10-r1",
@@ -5353,7 +5607,8 @@
    "tokens_in": 6473,
    "tokens_out": 3605,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S10-r2",
@@ -5374,7 +5629,8 @@
    "tokens_in": 6709,
    "tokens_out": 3414,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-S10-r3",
@@ -5395,7 +5651,8 @@
    "tokens_in": 6488,
    "tokens_out": 3239,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T01-v003-r1",
@@ -5416,7 +5673,8 @@
    "tokens_in": 6458,
    "tokens_out": 6691,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T01-v003-r2",
@@ -5437,7 +5695,8 @@
    "tokens_in": 6560,
    "tokens_out": 8238,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T01-v003-r3",
@@ -5458,7 +5717,8 @@
    "tokens_in": 6491,
    "tokens_out": 5861,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T01-v004-r1",
@@ -5479,7 +5739,8 @@
    "tokens_in": 6876,
    "tokens_out": 6271,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T01-v004-r2",
@@ -5500,7 +5761,8 @@
    "tokens_in": 6366,
    "tokens_out": 5163,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T01-v004-r3",
@@ -5521,7 +5783,8 @@
    "tokens_in": 6527,
    "tokens_out": 5884,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T02-v003-r1",
@@ -5542,7 +5805,8 @@
    "tokens_in": 6362,
    "tokens_out": 5856,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T02-v003-r2",
@@ -5563,7 +5827,8 @@
    "tokens_in": 6313,
    "tokens_out": 3824,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T02-v003-r3",
@@ -5584,7 +5849,8 @@
    "tokens_in": 6311,
    "tokens_out": 4071,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T02-v004-r1",
@@ -5605,7 +5871,8 @@
    "tokens_in": 6551,
    "tokens_out": 3451,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T02-v004-r2",
@@ -5626,7 +5893,8 @@
    "tokens_in": 6414,
    "tokens_out": 4167,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T02-v004-r3",
@@ -5647,7 +5915,8 @@
    "tokens_in": 6331,
    "tokens_out": 3464,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T03-v001-r1",
@@ -5668,7 +5937,8 @@
    "tokens_in": 6757,
    "tokens_out": 4701,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T03-v001-r2",
@@ -5689,7 +5959,8 @@
    "tokens_in": 6452,
    "tokens_out": 3884,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T03-v001-r3",
@@ -5710,7 +5981,8 @@
    "tokens_in": 6784,
    "tokens_out": 4854,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T03-v002-r1",
@@ -5731,7 +6003,8 @@
    "tokens_in": 6490,
    "tokens_out": 4452,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T03-v002-r2",
@@ -5752,7 +6025,8 @@
    "tokens_in": 6277,
    "tokens_out": 3503,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T03-v002-r3",
@@ -5773,7 +6047,8 @@
    "tokens_in": 6328,
    "tokens_out": 4174,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T04-v003-r1",
@@ -5794,7 +6069,8 @@
    "tokens_in": 5456,
    "tokens_out": 5347,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T04-v003-r2",
@@ -5815,7 +6091,8 @@
    "tokens_in": 5601,
    "tokens_out": 5334,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T04-v003-r3",
@@ -5836,7 +6113,8 @@
    "tokens_in": 5640,
    "tokens_out": 7954,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T04-v004-r1",
@@ -5857,7 +6135,8 @@
    "tokens_in": 5437,
    "tokens_out": 5126,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T04-v004-r2",
@@ -5878,7 +6157,8 @@
    "tokens_in": 5597,
    "tokens_out": 4854,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T04-v004-r3",
@@ -5899,7 +6179,8 @@
    "tokens_in": 5501,
    "tokens_out": 4836,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T05-v003-r1",
@@ -5920,7 +6201,8 @@
    "tokens_in": 6993,
    "tokens_out": 7362,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T05-v003-r2",
@@ -5941,7 +6223,8 @@
    "tokens_in": 7086,
    "tokens_out": 7644,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T05-v003-r3",
@@ -5962,7 +6245,8 @@
    "tokens_in": 7032,
    "tokens_out": 7218,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T05-v004-r1",
@@ -5983,7 +6267,8 @@
    "tokens_in": 7070,
    "tokens_out": 6684,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T05-v004-r2",
@@ -6004,7 +6289,8 @@
    "tokens_in": 7074,
    "tokens_out": 6642,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T05-v004-r3",
@@ -6025,7 +6311,8 @@
    "tokens_in": 7182,
    "tokens_out": 7609,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T06-v003-r1",
@@ -6046,7 +6333,8 @@
    "tokens_in": 12351,
    "tokens_out": 28467,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T06-v003-r2",
@@ -6067,7 +6355,8 @@
    "tokens_in": 12127,
    "tokens_out": 29277,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T06-v003-r3",
@@ -6088,7 +6377,8 @@
    "tokens_in": 12568,
    "tokens_out": 33324,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T06-v004-r1",
@@ -6109,7 +6399,8 @@
    "tokens_in": 12336,
    "tokens_out": 33961,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T06-v004-r2",
@@ -6130,7 +6421,8 @@
    "tokens_in": 12251,
    "tokens_out": 48439,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T06-v004-r3",
@@ -6151,7 +6443,8 @@
    "tokens_in": 12617,
    "tokens_out": 34023,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T07-v003-r1",
@@ -6172,7 +6465,8 @@
    "tokens_in": 6677,
    "tokens_out": 6287,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T07-v003-r2",
@@ -6193,7 +6487,8 @@
    "tokens_in": 6824,
    "tokens_out": 8992,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T07-v003-r3",
@@ -6214,7 +6509,8 @@
    "tokens_in": 6851,
    "tokens_out": 8221,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T07-v004-r1",
@@ -6235,7 +6531,8 @@
    "tokens_in": 6639,
    "tokens_out": 5849,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T07-v004-r2",
@@ -6256,7 +6553,8 @@
    "tokens_in": 6752,
    "tokens_out": 6790,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T07-v004-r3",
@@ -6277,7 +6575,8 @@
    "tokens_in": 6950,
    "tokens_out": 7857,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T08-v003-r1",
@@ -6298,7 +6597,8 @@
    "tokens_in": 6639,
    "tokens_out": 8880,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T08-v003-r2",
@@ -6319,7 +6619,8 @@
    "tokens_in": 6580,
    "tokens_out": 8004,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T08-v003-r3",
@@ -6340,7 +6641,8 @@
    "tokens_in": 6774,
    "tokens_out": 8277,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T08-v004-r1",
@@ -6361,7 +6663,8 @@
    "tokens_in": 6820,
    "tokens_out": 6019,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T08-v004-r2",
@@ -6382,7 +6685,8 @@
    "tokens_in": 6701,
    "tokens_out": 6246,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T08-v004-r3",
@@ -6403,7 +6707,8 @@
    "tokens_in": 6667,
    "tokens_out": 5295,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v001-r1",
@@ -6424,7 +6729,8 @@
    "tokens_in": 5876,
    "tokens_out": 4059,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v001-r2",
@@ -6445,7 +6751,8 @@
    "tokens_in": 5943,
    "tokens_out": 4222,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v001-r3",
@@ -6466,7 +6773,8 @@
    "tokens_in": 5936,
    "tokens_out": 4909,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v002-r1",
@@ -6487,7 +6795,8 @@
    "tokens_in": 5901,
    "tokens_out": 4039,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v002-r2",
@@ -6508,7 +6817,8 @@
    "tokens_in": 5884,
    "tokens_out": 3772,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v002-r3",
@@ -6529,7 +6839,8 @@
    "tokens_in": 5946,
    "tokens_out": 4208,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v003-r1",
@@ -6550,7 +6861,8 @@
    "tokens_in": 5911,
    "tokens_out": 3137,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v003-r2",
@@ -6571,7 +6883,8 @@
    "tokens_in": 5896,
    "tokens_out": 3345,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T09-v003-r3",
@@ -6592,7 +6905,8 @@
    "tokens_in": 5953,
    "tokens_out": 6005,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v001-r1",
@@ -6613,7 +6927,8 @@
    "tokens_in": 6453,
    "tokens_out": 4181,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v001-r2",
@@ -6634,7 +6949,8 @@
    "tokens_in": 6464,
    "tokens_out": 4066,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v001-r3",
@@ -6655,7 +6971,8 @@
    "tokens_in": 6392,
    "tokens_out": 3968,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v002-r1",
@@ -6676,7 +6993,8 @@
    "tokens_in": 6404,
    "tokens_out": 3747,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v002-r2",
@@ -6697,7 +7015,8 @@
    "tokens_in": 6384,
    "tokens_out": 3885,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v002-r3",
@@ -6718,7 +7037,8 @@
    "tokens_in": 6384,
    "tokens_out": 3857,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v003-r1",
@@ -6739,7 +7059,8 @@
    "tokens_in": 6465,
    "tokens_out": 4152,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v003-r2",
@@ -6760,7 +7081,8 @@
    "tokens_in": 6423,
    "tokens_out": 5045,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "peer-gemini-3.6-flash-T10-v003-r3",
@@ -6781,7 +7103,8 @@
    "tokens_in": 6420,
    "tokens_out": 3993,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S01-r1",
@@ -6802,7 +7125,8 @@
    "tokens_in": 10514,
    "tokens_out": 8220,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S01-r2",
@@ -6823,7 +7147,8 @@
    "tokens_in": 10680,
    "tokens_out": 9045,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S01-r3",
@@ -6844,7 +7169,8 @@
    "tokens_in": 10920,
    "tokens_out": 8190,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S02-r1",
@@ -6865,7 +7191,8 @@
    "tokens_in": 10379,
    "tokens_out": 6553,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S02-r2",
@@ -6886,7 +7213,8 @@
    "tokens_in": 10199,
    "tokens_out": 6245,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S02-r3",
@@ -6907,7 +7235,8 @@
    "tokens_in": 10741,
    "tokens_out": 6450,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S03-r1",
@@ -6928,7 +7257,8 @@
    "tokens_in": 11719,
    "tokens_out": 7337,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S03-r2",
@@ -6949,7 +7279,8 @@
    "tokens_in": 11060,
    "tokens_out": 7996,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S03-r3",
@@ -6970,7 +7301,8 @@
    "tokens_in": 11003,
    "tokens_out": 9152,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S04-r1",
@@ -6991,7 +7323,8 @@
    "tokens_in": 31630,
    "tokens_out": 18631,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S04-r2",
@@ -7012,7 +7345,8 @@
    "tokens_in": 27536,
    "tokens_out": 15325,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S04-r3",
@@ -7033,7 +7367,8 @@
    "tokens_in": 31064,
    "tokens_out": 18331,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S05-r1",
@@ -7054,7 +7389,8 @@
    "tokens_in": 12772,
    "tokens_out": 10147,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S05-r2",
@@ -7075,7 +7411,8 @@
    "tokens_in": 12199,
    "tokens_out": 11026,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S05-r3",
@@ -7096,7 +7433,8 @@
    "tokens_in": 11596,
    "tokens_out": 12334,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S06-r1",
@@ -7117,7 +7455,8 @@
    "tokens_in": 34968,
    "tokens_out": 23251,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S06-r2",
@@ -7138,7 +7477,8 @@
    "tokens_in": 31126,
    "tokens_out": 18713,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S06-r3",
@@ -7159,7 +7499,8 @@
    "tokens_in": 14513,
    "tokens_out": 10206,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S07-r1",
@@ -7180,7 +7521,8 @@
    "tokens_in": 11452,
    "tokens_out": 12455,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S07-r2",
@@ -7201,7 +7543,8 @@
    "tokens_in": 12037,
    "tokens_out": 9852,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S07-r3",
@@ -7222,7 +7565,8 @@
    "tokens_in": 11244,
    "tokens_out": 9671,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S08-r1",
@@ -7243,7 +7587,8 @@
    "tokens_in": 11799,
    "tokens_out": 12107,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S08-r2",
@@ -7264,7 +7609,8 @@
    "tokens_in": 11835,
    "tokens_out": 8050,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S08-r3",
@@ -7285,7 +7631,8 @@
    "tokens_in": 11039,
    "tokens_out": 10980,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S09-r1",
@@ -7306,7 +7653,8 @@
    "tokens_in": 9984,
    "tokens_out": 6831,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S09-r2",
@@ -7327,7 +7675,8 @@
    "tokens_in": 10069,
    "tokens_out": 6576,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S09-r3",
@@ -7348,7 +7697,8 @@
    "tokens_in": 10533,
    "tokens_out": 6095,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S10-r1",
@@ -7369,7 +7719,8 @@
    "tokens_in": 10833,
    "tokens_out": 6719,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S10-r2",
@@ -7390,7 +7741,8 @@
    "tokens_in": 11328,
    "tokens_out": 6517,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-S10-r3",
@@ -7411,7 +7763,8 @@
    "tokens_in": 10801,
    "tokens_out": 6399,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S02-r2",
@@ -7432,7 +7785,8 @@
    "tokens_in": 6062,
    "tokens_out": 2870,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T01-v003-r1",
@@ -7453,7 +7807,8 @@
    "tokens_in": 10825,
    "tokens_out": 9188,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T01-v003-r2",
@@ -7474,7 +7829,8 @@
    "tokens_in": 10969,
    "tokens_out": 11922,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T01-v003-r3",
@@ -7495,7 +7851,8 @@
    "tokens_in": 11290,
    "tokens_out": 8800,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T01-v004-r1",
@@ -7516,7 +7873,8 @@
    "tokens_in": 11593,
    "tokens_out": 9207,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T01-v004-r2",
@@ -7537,7 +7895,8 @@
    "tokens_in": 10775,
    "tokens_out": 7766,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T01-v004-r3",
@@ -7558,7 +7917,8 @@
    "tokens_in": 11390,
    "tokens_out": 8334,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T02-v003-r1",
@@ -7579,7 +7939,8 @@
    "tokens_in": 10614,
    "tokens_out": 8685,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T02-v003-r2",
@@ -7600,7 +7961,8 @@
    "tokens_in": 10635,
    "tokens_out": 6570,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T02-v003-r3",
@@ -7621,7 +7983,8 @@
    "tokens_in": 10547,
    "tokens_out": 6979,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T02-v004-r1",
@@ -7642,7 +8005,8 @@
    "tokens_in": 10958,
    "tokens_out": 6201,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T02-v004-r2",
@@ -7663,7 +8027,8 @@
    "tokens_in": 10643,
    "tokens_out": 6800,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T02-v004-r3",
@@ -7684,7 +8049,8 @@
    "tokens_in": 10583,
    "tokens_out": 6353,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T03-v001-r1",
@@ -7705,7 +8071,8 @@
    "tokens_in": 11514,
    "tokens_out": 7742,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T03-v001-r2",
@@ -7726,7 +8093,8 @@
    "tokens_in": 10979,
    "tokens_out": 6794,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T03-v001-r3",
@@ -7747,7 +8115,8 @@
    "tokens_in": 11607,
    "tokens_out": 7570,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T03-v002-r1",
@@ -7768,7 +8137,8 @@
    "tokens_in": 10952,
    "tokens_out": 7255,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T03-v002-r2",
@@ -7789,7 +8159,8 @@
    "tokens_in": 10470,
    "tokens_out": 6766,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T03-v002-r3",
@@ -7810,7 +8181,8 @@
    "tokens_in": 10563,
    "tokens_out": 7440,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T04-v003-r1",
@@ -7831,7 +8203,8 @@
    "tokens_in": 27815,
    "tokens_out": 15178,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T04-v003-r2",
@@ -7852,7 +8225,8 @@
    "tokens_in": 18102,
    "tokens_out": 10059,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T04-v003-r3",
@@ -7873,7 +8247,8 @@
    "tokens_in": 24707,
    "tokens_out": 17319,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T04-v004-r1",
@@ -7894,7 +8269,8 @@
    "tokens_in": 13156,
    "tokens_out": 8838,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T04-v004-r2",
@@ -7915,7 +8291,8 @@
    "tokens_in": 18201,
    "tokens_out": 9495,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T04-v004-r3",
@@ -7936,7 +8313,8 @@
    "tokens_in": 17470,
    "tokens_out": 9094,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T05-v003-r1",
@@ -7957,7 +8335,8 @@
    "tokens_in": 12048,
    "tokens_out": 10100,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T05-v003-r2",
@@ -7978,7 +8357,8 @@
    "tokens_in": 12096,
    "tokens_out": 10427,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T05-v003-r3",
@@ -7999,7 +8379,8 @@
    "tokens_in": 11885,
    "tokens_out": 9777,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T05-v004-r1",
@@ -8020,7 +8401,8 @@
    "tokens_in": 11957,
    "tokens_out": 9362,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T05-v004-r2",
@@ -8041,7 +8423,8 @@
    "tokens_in": 12116,
    "tokens_out": 9370,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T05-v004-r3",
@@ -8062,7 +8445,8 @@
    "tokens_in": 12060,
    "tokens_out": 10118,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T06-v003-r1",
@@ -8083,7 +8467,8 @@
    "tokens_in": 29737,
    "tokens_out": 20588,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T06-v003-r2",
@@ -8104,7 +8489,8 @@
    "tokens_in": 33837,
    "tokens_out": 24771,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T06-v003-r3",
@@ -8125,7 +8511,8 @@
    "tokens_in": 34677,
    "tokens_out": 25369,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T06-v004-r1",
@@ -8146,7 +8533,8 @@
    "tokens_in": 20319,
    "tokens_out": 16387,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T06-v004-r2",
@@ -8167,7 +8555,8 @@
    "tokens_in": 34094,
    "tokens_out": 33382,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T06-v004-r3",
@@ -8188,7 +8577,8 @@
    "tokens_in": 38756,
    "tokens_out": 25304,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T07-v003-r1",
@@ -8209,7 +8599,8 @@
    "tokens_in": 11280,
    "tokens_out": 9134,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T07-v003-r2",
@@ -8230,7 +8621,8 @@
    "tokens_in": 11674,
    "tokens_out": 11213,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T07-v003-r3",
@@ -8251,7 +8643,8 @@
    "tokens_in": 16229,
    "tokens_out": 11735,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T07-v004-r1",
@@ -8272,7 +8665,8 @@
    "tokens_in": 11013,
    "tokens_out": 9235,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T07-v004-r2",
@@ -8293,7 +8687,8 @@
    "tokens_in": 16076,
    "tokens_out": 9596,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T07-v004-r3",
@@ -8314,7 +8709,8 @@
    "tokens_in": 16384,
    "tokens_out": 10542,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T08-v003-r1",
@@ -8335,7 +8731,8 @@
    "tokens_in": 11579,
    "tokens_out": 11411,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T08-v003-r2",
@@ -8356,7 +8753,8 @@
    "tokens_in": 11200,
    "tokens_out": 11314,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T08-v003-r3",
@@ -8377,7 +8775,8 @@
    "tokens_in": 16138,
    "tokens_out": 11228,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T08-v004-r1",
@@ -8398,7 +8797,8 @@
    "tokens_in": 28606,
    "tokens_out": 17406,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T08-v004-r2",
@@ -8419,7 +8819,8 @@
    "tokens_in": 11438,
    "tokens_out": 8427,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T08-v004-r3",
@@ -8440,7 +8841,8 @@
    "tokens_in": 11294,
    "tokens_out": 7378,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v001-r1",
@@ -8461,7 +8863,8 @@
    "tokens_in": 9960,
    "tokens_out": 7336,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v001-r2",
@@ -8482,7 +8885,8 @@
    "tokens_in": 9973,
    "tokens_out": 6747,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v001-r3",
@@ -8503,7 +8907,8 @@
    "tokens_in": 9985,
    "tokens_out": 7399,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v002-r1",
@@ -8524,7 +8929,8 @@
    "tokens_in": 9908,
    "tokens_out": 7201,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v002-r2",
@@ -8545,7 +8951,8 @@
    "tokens_in": 9766,
    "tokens_out": 6464,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v002-r3",
@@ -8566,7 +8973,8 @@
    "tokens_in": 9930,
    "tokens_out": 7357,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v003-r1",
@@ -8587,7 +8995,8 @@
    "tokens_in": 9879,
    "tokens_out": 6443,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v003-r2",
@@ -8608,7 +9017,8 @@
    "tokens_in": 9802,
    "tokens_out": 4561,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T09-v003-r3",
@@ -8629,7 +9039,8 @@
    "tokens_in": 9995,
    "tokens_out": 8444,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v001-r1",
@@ -8650,7 +9061,8 @@
    "tokens_in": 10794,
    "tokens_out": 7245,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v001-r2",
@@ -8671,7 +9083,8 @@
    "tokens_in": 10773,
    "tokens_out": 7202,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v001-r3",
@@ -8692,7 +9105,8 @@
    "tokens_in": 10592,
    "tokens_out": 6896,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v002-r1",
@@ -8713,7 +9127,8 @@
    "tokens_in": 10615,
    "tokens_out": 6792,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v002-r2",
@@ -8734,7 +9149,8 @@
    "tokens_in": 10718,
    "tokens_out": 7307,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v002-r3",
@@ -8755,7 +9171,8 @@
    "tokens_in": 10539,
    "tokens_out": 7200,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v003-r1",
@@ -8776,7 +9193,8 @@
    "tokens_in": 10806,
    "tokens_out": 6750,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v003-r2",
@@ -8797,7 +9215,8 @@
    "tokens_in": 10759,
    "tokens_out": 7649,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "dedicated-gemini-3.6-flash-T10-v003-r3",
@@ -8818,7 +9237,8 @@
    "tokens_in": 6706,
    "tokens_out": 5827,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S01-r1",
@@ -8839,7 +9259,8 @@
    "tokens_in": 6328,
    "tokens_out": 5216,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S01-r2",
@@ -8860,7 +9281,8 @@
    "tokens_in": 6383,
    "tokens_out": 6440,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S01-r3",
@@ -8881,7 +9303,8 @@
    "tokens_in": 6417,
    "tokens_out": 5154,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S02-r1",
@@ -8902,7 +9325,8 @@
    "tokens_in": 6227,
    "tokens_out": 3438,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S02-r2",
@@ -8923,7 +9347,8 @@
    "tokens_in": 6189,
    "tokens_out": 3282,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S02-r3",
@@ -8944,7 +9369,8 @@
    "tokens_in": 6439,
    "tokens_out": 3277,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S03-r1",
@@ -8965,7 +9391,8 @@
    "tokens_in": 6941,
    "tokens_out": 4609,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S03-r2",
@@ -8986,7 +9413,8 @@
    "tokens_in": 6553,
    "tokens_out": 5009,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S03-r3",
@@ -9007,7 +9435,8 @@
    "tokens_in": 6583,
    "tokens_out": 6349,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S04-r1",
@@ -9028,7 +9457,8 @@
    "tokens_in": 5486,
    "tokens_out": 7336,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S04-r2",
@@ -9049,7 +9479,8 @@
    "tokens_in": 5487,
    "tokens_out": 6542,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S04-r3",
@@ -9070,7 +9501,8 @@
    "tokens_in": 5483,
    "tokens_out": 4835,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S05-r1",
@@ -9091,7 +9523,8 @@
    "tokens_in": 7378,
    "tokens_out": 7756,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S05-r2",
@@ -9112,7 +9545,8 @@
    "tokens_in": 7198,
    "tokens_out": 8233,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S05-r3",
@@ -9133,7 +9567,8 @@
    "tokens_in": 6976,
    "tokens_out": 9806,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S06-r1",
@@ -9154,7 +9589,8 @@
    "tokens_in": 12480,
    "tokens_out": 24704,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S06-r2",
@@ -9175,7 +9611,8 @@
    "tokens_in": 5977,
    "tokens_out": 9610,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S06-r3",
@@ -9196,7 +9633,8 @@
    "tokens_in": 5877,
    "tokens_out": 12484,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S07-r1",
@@ -9217,7 +9655,8 @@
    "tokens_in": 6656,
    "tokens_out": 9950,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S07-r2",
@@ -9238,7 +9677,8 @@
    "tokens_in": 7023,
    "tokens_out": 7455,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S07-r3",
@@ -9259,7 +9699,8 @@
    "tokens_in": 6625,
    "tokens_out": 6867,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S08-r1",
@@ -9280,7 +9721,8 @@
    "tokens_in": 7003,
    "tokens_out": 9099,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S08-r2",
@@ -9301,7 +9743,8 @@
    "tokens_in": 6967,
    "tokens_out": 5672,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S08-r3",
@@ -9322,7 +9765,8 @@
    "tokens_in": 6643,
    "tokens_out": 8010,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S09-r1",
@@ -9343,7 +9787,8 @@
    "tokens_in": 6016,
    "tokens_out": 3897,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S09-r2",
@@ -9364,7 +9809,8 @@
    "tokens_in": 6022,
    "tokens_out": 3744,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S09-r3",
@@ -9385,7 +9831,8 @@
    "tokens_in": 6223,
    "tokens_out": 2859,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S10-r1",
@@ -9406,7 +9853,8 @@
    "tokens_in": 6487,
    "tokens_out": 3501,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S10-r2",
@@ -9427,7 +9875,8 @@
    "tokens_in": 6723,
    "tokens_out": 3535,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-S10-r3",
@@ -9448,7 +9897,8 @@
    "tokens_in": 6502,
    "tokens_out": 3557,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T01-v003-r1",
@@ -9469,7 +9919,8 @@
    "tokens_in": 6472,
    "tokens_out": 6546,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T01-v003-r2",
@@ -9490,7 +9941,8 @@
    "tokens_in": 6574,
    "tokens_out": 8522,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T01-v003-r3",
@@ -9511,7 +9963,8 @@
    "tokens_in": 6505,
    "tokens_out": 5868,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T01-v004-r1",
@@ -9532,7 +9985,8 @@
    "tokens_in": 6890,
    "tokens_out": 5871,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T01-v004-r2",
@@ -9553,7 +10007,8 @@
    "tokens_in": 6380,
    "tokens_out": 4955,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T01-v004-r3",
@@ -9574,7 +10029,8 @@
    "tokens_in": 6541,
    "tokens_out": 5392,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T02-v003-r1",
@@ -9595,7 +10051,8 @@
    "tokens_in": 6376,
    "tokens_out": 5744,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T02-v003-r2",
@@ -9616,7 +10073,8 @@
    "tokens_in": 6327,
    "tokens_out": 3985,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T02-v003-r3",
@@ -9637,7 +10095,8 @@
    "tokens_in": 6325,
    "tokens_out": 4162,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T02-v004-r1",
@@ -9658,7 +10117,8 @@
    "tokens_in": 6565,
    "tokens_out": 3195,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T02-v004-r2",
@@ -9679,7 +10139,8 @@
    "tokens_in": 6428,
    "tokens_out": 3961,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T02-v004-r3",
@@ -9700,7 +10161,8 @@
    "tokens_in": 6345,
    "tokens_out": 3678,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T03-v001-r1",
@@ -9721,7 +10183,8 @@
    "tokens_in": 6771,
    "tokens_out": 4925,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T03-v001-r2",
@@ -9742,7 +10205,8 @@
    "tokens_in": 6466,
    "tokens_out": 3907,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T03-v001-r3",
@@ -9763,7 +10227,8 @@
    "tokens_in": 6798,
    "tokens_out": 4867,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T03-v002-r1",
@@ -9784,7 +10249,8 @@
    "tokens_in": 6504,
    "tokens_out": 4409,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T03-v002-r2",
@@ -9805,7 +10271,8 @@
    "tokens_in": 6291,
    "tokens_out": 3636,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T03-v002-r3",
@@ -9826,7 +10293,8 @@
    "tokens_in": 6342,
    "tokens_out": 4113,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T04-v003-r1",
@@ -9847,7 +10315,8 @@
    "tokens_in": 5470,
    "tokens_out": 5583,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T04-v003-r2",
@@ -9868,7 +10337,8 @@
    "tokens_in": 5615,
    "tokens_out": 5552,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T04-v003-r3",
@@ -9889,7 +10359,8 @@
    "tokens_in": 5654,
    "tokens_out": 7766,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T04-v004-r1",
@@ -9910,7 +10381,8 @@
    "tokens_in": 5451,
    "tokens_out": 5456,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T04-v004-r2",
@@ -9931,7 +10403,8 @@
    "tokens_in": 5611,
    "tokens_out": 5062,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T04-v004-r3",
@@ -9952,7 +10425,8 @@
    "tokens_in": 5515,
    "tokens_out": 4544,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T05-v003-r1",
@@ -9973,7 +10447,8 @@
    "tokens_in": 7007,
    "tokens_out": 7089,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T05-v003-r2",
@@ -9994,7 +10469,8 @@
    "tokens_in": 7100,
    "tokens_out": 7814,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T05-v003-r3",
@@ -10015,7 +10491,8 @@
    "tokens_in": 7046,
    "tokens_out": 8058,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T05-v004-r1",
@@ -10036,7 +10513,8 @@
    "tokens_in": 7084,
    "tokens_out": 6539,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T05-v004-r2",
@@ -10057,7 +10535,8 @@
    "tokens_in": 7088,
    "tokens_out": 6371,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T05-v004-r3",
@@ -10078,7 +10557,8 @@
    "tokens_in": 7196,
    "tokens_out": 7591,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T06-v003-r1",
@@ -10099,7 +10579,8 @@
    "tokens_in": 5878,
    "tokens_out": 10084,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T06-v003-r2",
@@ -10120,7 +10601,8 @@
    "tokens_in": 12266,
    "tokens_out": 30055,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T06-v003-r3",
@@ -10141,7 +10623,8 @@
    "tokens_in": 12409,
    "tokens_out": 32468,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T06-v004-r1",
@@ -10162,7 +10645,8 @@
    "tokens_in": 12586,
    "tokens_out": 24026,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T06-v004-r2",
@@ -10183,7 +10667,8 @@
    "tokens_in": 12377,
    "tokens_out": 43218,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S02-r3",
@@ -10204,7 +10689,8 @@
    "tokens_in": 6273,
    "tokens_out": 2424,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T06-v004-r3",
@@ -10225,7 +10711,8 @@
    "tokens_in": 12243,
    "tokens_out": 27950,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T07-v003-r1",
@@ -10246,7 +10733,8 @@
    "tokens_in": 6691,
    "tokens_out": 6552,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T07-v003-r2",
@@ -10267,7 +10755,8 @@
    "tokens_in": 6838,
    "tokens_out": 8743,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T07-v003-r3",
@@ -10288,7 +10777,8 @@
    "tokens_in": 6865,
    "tokens_out": 8747,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T07-v004-r1",
@@ -10309,7 +10799,8 @@
    "tokens_in": 6653,
    "tokens_out": 6183,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T07-v004-r2",
@@ -10330,7 +10821,8 @@
    "tokens_in": 6766,
    "tokens_out": 6286,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T07-v004-r3",
@@ -10351,7 +10843,8 @@
    "tokens_in": 6964,
    "tokens_out": 7842,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T08-v003-r1",
@@ -10372,7 +10865,8 @@
    "tokens_in": 6653,
    "tokens_out": 8822,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T08-v003-r2",
@@ -10393,7 +10887,8 @@
    "tokens_in": 6594,
    "tokens_out": 8118,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T08-v003-r3",
@@ -10414,7 +10909,8 @@
    "tokens_in": 6788,
    "tokens_out": 8121,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T08-v004-r1",
@@ -10435,7 +10931,8 @@
    "tokens_in": 6834,
    "tokens_out": 5647,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T08-v004-r2",
@@ -10456,7 +10953,8 @@
    "tokens_in": 6715,
    "tokens_out": 6587,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T08-v004-r3",
@@ -10477,7 +10975,8 @@
    "tokens_in": 6681,
    "tokens_out": 5072,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v001-r1",
@@ -10498,7 +10997,8 @@
    "tokens_in": 5890,
    "tokens_out": 3782,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v001-r2",
@@ -10519,7 +11019,8 @@
    "tokens_in": 5957,
    "tokens_out": 3716,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v001-r3",
@@ -10540,7 +11041,8 @@
    "tokens_in": 5950,
    "tokens_out": 4373,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v002-r1",
@@ -10561,7 +11063,8 @@
    "tokens_in": 5915,
    "tokens_out": 4220,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v002-r2",
@@ -10582,7 +11085,8 @@
    "tokens_in": 5898,
    "tokens_out": 3608,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v002-r3",
@@ -10603,7 +11107,8 @@
    "tokens_in": 5960,
    "tokens_out": 4261,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v003-r1",
@@ -10624,7 +11129,8 @@
    "tokens_in": 5925,
    "tokens_out": 3408,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v003-r2",
@@ -10645,7 +11151,8 @@
    "tokens_in": 5910,
    "tokens_out": 3665,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T09-v003-r3",
@@ -10666,7 +11173,8 @@
    "tokens_in": 5967,
    "tokens_out": 5338,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v001-r1",
@@ -10687,7 +11195,8 @@
    "tokens_in": 6467,
    "tokens_out": 4303,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v001-r2",
@@ -10708,7 +11217,8 @@
    "tokens_in": 6478,
    "tokens_out": 3908,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v001-r3",
@@ -10729,7 +11239,8 @@
    "tokens_in": 6406,
    "tokens_out": 3966,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v002-r1",
@@ -10750,7 +11261,8 @@
    "tokens_in": 6418,
    "tokens_out": 3970,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v002-r2",
@@ -10771,7 +11283,8 @@
    "tokens_in": 6398,
    "tokens_out": 4075,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v002-r3",
@@ -10792,7 +11305,8 @@
    "tokens_in": 6398,
    "tokens_out": 3852,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v003-r1",
@@ -10813,7 +11327,8 @@
    "tokens_in": 6479,
    "tokens_out": 3787,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v003-r2",
@@ -10834,7 +11349,8 @@
    "tokens_in": 6437,
    "tokens_out": 4484,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "weakened-gemini-3.6-flash-T10-v003-r3",
@@ -10855,7 +11371,8 @@
    "tokens_in": 6434,
    "tokens_out": 3839,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S03-r2",
@@ -10876,7 +11393,8 @@
    "tokens_in": 6428,
    "tokens_out": 3810,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S03-r3",
@@ -10897,7 +11415,8 @@
    "tokens_in": 6441,
    "tokens_out": 4992,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S04-r3",
@@ -10918,7 +11437,8 @@
    "tokens_in": 5421,
    "tokens_out": 3387,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S05-r2",
@@ -10939,7 +11459,8 @@
    "tokens_in": 6966,
    "tokens_out": 7099,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S05-r3",
@@ -10960,7 +11481,8 @@
    "tokens_in": 14337,
    "tokens_out": 12572,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S06-r2",
@@ -10981,7 +11503,8 @@
    "tokens_in": 26993,
    "tokens_out": 21801,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S06-r3",
@@ -11002,7 +11525,8 @@
    "tokens_in": 23455,
    "tokens_out": 22262,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S07-r2",
@@ -11023,7 +11547,8 @@
    "tokens_in": 20094,
    "tokens_out": 13888,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S07-r3",
@@ -11044,7 +11569,8 @@
    "tokens_in": 13579,
    "tokens_out": 10042,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S08-r2",
@@ -11065,7 +11591,8 @@
    "tokens_in": 6728,
    "tokens_out": 4143,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S08-r3",
@@ -11086,7 +11613,8 @@
    "tokens_in": 6483,
    "tokens_out": 8162,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S09-r2",
@@ -11107,7 +11635,8 @@
    "tokens_in": 5947,
    "tokens_out": 3011,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S09-r3",
@@ -11128,7 +11657,8 @@
    "tokens_in": 6088,
    "tokens_out": 2238,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S10-r2",
@@ -11149,7 +11679,8 @@
    "tokens_in": 6499,
    "tokens_out": 2581,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-S10-r3",
@@ -11170,7 +11701,8 @@
    "tokens_in": 6331,
    "tokens_out": 2651,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T01-v003-r2",
@@ -11191,7 +11723,8 @@
    "tokens_in": 6462,
    "tokens_out": 7153,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T01-v003-r3",
@@ -11212,7 +11745,8 @@
    "tokens_in": 6356,
    "tokens_out": 5248,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T01-v004-r2",
@@ -11233,7 +11767,8 @@
    "tokens_in": 6237,
    "tokens_out": 4165,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T01-v004-r3",
@@ -11254,7 +11789,8 @@
    "tokens_in": 6423,
    "tokens_out": 4555,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T02-v003-r2",
@@ -11275,7 +11811,8 @@
    "tokens_in": 6215,
    "tokens_out": 3036,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T02-v003-r3",
@@ -11296,7 +11833,8 @@
    "tokens_in": 6210,
    "tokens_out": 3228,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T02-v004-r2",
@@ -11317,7 +11855,8 @@
    "tokens_in": 6329,
    "tokens_out": 2974,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T02-v004-r3",
@@ -11338,7 +11877,8 @@
    "tokens_in": 6245,
    "tokens_out": 2735,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T03-v001-r2",
@@ -11359,7 +11899,8 @@
    "tokens_in": 6332,
    "tokens_out": 2530,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T03-v001-r3",
@@ -11380,7 +11921,8 @@
    "tokens_in": 6581,
    "tokens_out": 3787,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T03-v002-r2",
@@ -11401,7 +11943,8 @@
    "tokens_in": 6178,
    "tokens_out": 2459,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T03-v002-r3",
@@ -11422,7 +11965,8 @@
    "tokens_in": 6221,
    "tokens_out": 3014,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T04-v003-r2",
@@ -11443,7 +11987,8 @@
    "tokens_in": 10121,
    "tokens_out": 7271,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T04-v003-r3",
@@ -11464,7 +12009,8 @@
    "tokens_in": 5536,
    "tokens_out": 6792,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T04-v004-r2",
@@ -11485,7 +12031,8 @@
    "tokens_in": 10179,
    "tokens_out": 6668,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T04-v004-r3",
@@ -11506,7 +12053,8 @@
    "tokens_in": 9997,
    "tokens_out": 6559,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T05-v003-r2",
@@ -11527,7 +12075,8 @@
    "tokens_in": 6939,
    "tokens_out": 6715,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T05-v003-r3",
@@ -11548,7 +12097,8 @@
    "tokens_in": 20154,
    "tokens_out": 14488,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T05-v004-r2",
@@ -11569,7 +12119,8 @@
    "tokens_in": 14595,
    "tokens_out": 10278,
    "error": null,
-   "scoring_note": null
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T05-v004-r3",
@@ -11590,28 +12141,8 @@
    "tokens_in": 14792,
    "tokens_out": 12015,
    "error": null,
-   "scoring_note": null
-  },
-  {
-   "run_id": "cross_family-gemini-3.6-flash-T06-v003-r2",
-   "task_id": "T06-v003",
-   "scenario": "S06",
-   "condition": "cross_family",
-   "run_number": 2,
-   "first_call": "2026-11-21T17:33:20.405801+00:00",
-   "initial_correct": false,
-   "final_correct": false,
-   "verdict": null,
-   "second_verdict": null,
-   "status": "failed",
-   "human_review_route": null,
-   "outcome": "failed",
-   "verifier_calls": null,
-   "cost_usd": 0.034818,
-   "tokens_in": 2599,
-   "tokens_out": 8765,
-   "error": "ProviderError: 400 {\"error\":{\"message\":\"Parsing failed. The model generated output that could not be parsed. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"output_parse_failed\",\"failed_generation\":\"Need compute balance. Let's calculate quickly using python? I'll approximate. Let's simulate: initial 250k. Monthly rate 0.0055. For months 1-90: contribution 1500 end. month 60 withdrawal 50000 end. months 91-180: contribution 2000 end.\\n\\",
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": null,
+   "regraded_from": null
   },
   {
    "run_id": "cross_family-gemini-3.6-flash-T06-v003-r3",
@@ -11632,7 +12163,492 @@
    "tokens_in": 32251,
    "tokens_out": 32427,
    "error": null,
-   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+   "scoring_note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T06-v004-r2",
+   "task_id": "T06-v004",
+   "scenario": "S06",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-21T17:36:45.542352+00:00",
+   "initial_correct": false,
+   "final_correct": false,
+   "verdict": null,
+   "second_verdict": null,
+   "status": "failed",
+   "human_review_route": null,
+   "outcome": "failed",
+   "verifier_calls": null,
+   "cost_usd": 0.061665,
+   "tokens_in": 2595,
+   "tokens_out": 15925,
+   "error": "ProviderError: 403 {\"error\":{\"message\":\"Access denied. Please check your network settings.\"}}",
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T06-v004-r3",
+   "task_id": "T06-v004",
+   "scenario": "S06",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:30:02.471030+00:00",
+   "initial_correct": false,
+   "final_correct": false,
+   "verdict": null,
+   "second_verdict": null,
+   "status": "failed",
+   "human_review_route": null,
+   "outcome": "failed",
+   "verifier_calls": null,
+   "cost_usd": 0.06417247499999999,
+   "tokens_in": 18672,
+   "tokens_out": 21902,
+   "error": "ProviderError: 400 {\"error\":{\"message\":\"Parsing failed. The model generated output that could not be parsed. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"output_parse_failed\",\"failed_generation\":\"We need compute projected balance month 120. Let's calculate with calculator. We'll need to compute contributions and interest. Use monthly rate 0.004. Starting 80k. Contributions: months 1-60: 2500 end of month. months 61-120: 3500 end. Wi",
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T07-v003-r2",
+   "task_id": "T07-v003",
+   "scenario": "S07",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:31:27.296592+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.027680625,
+   "tokens_in": 6675,
+   "tokens_out": 7559,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T07-v003-r3",
+   "task_id": "T07-v003",
+   "scenario": "S07",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:31:58.916915+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.025431824999999998,
+   "tokens_in": 6695,
+   "tokens_out": 6705,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T07-v004-r2",
+   "task_id": "T07-v004",
+   "scenario": "S07",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:32:41.276015+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.020496300000000002,
+   "tokens_in": 6593,
+   "tokens_out": 6158,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T07-v004-r3",
+   "task_id": "T07-v004",
+   "scenario": "S07",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:33:09.410141+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.0244488,
+   "tokens_in": 6751,
+   "tokens_out": 6586,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T08-v003-r2",
+   "task_id": "T08-v003",
+   "scenario": "S08",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:33:47.637977+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.028391700000000002,
+   "tokens_in": 6447,
+   "tokens_out": 7308,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T08-v003-r3",
+   "task_id": "T08-v003",
+   "scenario": "S08",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:34:19.384313+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.027409575,
+   "tokens_in": 6608,
+   "tokens_out": 7352,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T08-v004-r2",
+   "task_id": "T08-v004",
+   "scenario": "S08",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:34:44.977101+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.019132649999999998,
+   "tokens_in": 6551,
+   "tokens_out": 4989,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T08-v004-r3",
+   "task_id": "T08-v004",
+   "scenario": "S08",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:35:22.419951+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.01608705,
+   "tokens_in": 6515,
+   "tokens_out": 4276,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T09-v001-r2",
+   "task_id": "T09-v001",
+   "scenario": "S09",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:35:43.680186+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.0128376,
+   "tokens_in": 5882,
+   "tokens_out": 3017,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T09-v001-r3",
+   "task_id": "T09-v001",
+   "scenario": "S09",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:36:14.450124+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.014747775,
+   "tokens_in": 5881,
+   "tokens_out": 3554,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T09-v002-r2",
+   "task_id": "T09-v002",
+   "scenario": "S09",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:36:31.241884+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.0115335,
+   "tokens_in": 5832,
+   "tokens_out": 3202,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T09-v002-r3",
+   "task_id": "T09-v002",
+   "scenario": "S09",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:37:01.618265+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.01463415,
+   "tokens_in": 5882,
+   "tokens_out": 3658,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T09-v003-r2",
+   "task_id": "T09-v003",
+   "scenario": "S09",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:37:28.999542+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.011357774999999999,
+   "tokens_in": 5846,
+   "tokens_out": 2585,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T09-v003-r3",
+   "task_id": "T09-v003",
+   "scenario": "S09",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T03:37:51.253131+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.0194253,
+   "tokens_in": 5889,
+   "tokens_out": 5017,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T10-v001-r2",
+   "task_id": "T10-v001",
+   "scenario": "S10",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T03:37:51.556630+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.01377345,
+   "tokens_in": 6306,
+   "tokens_out": 3197,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T10-v001-r3",
+   "task_id": "T10-v001",
+   "scenario": "S10",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T04:07:54.285839+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.0127044,
+   "tokens_in": 6246,
+   "tokens_out": 2903,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T10-v002-r2",
+   "task_id": "T10-v002",
+   "scenario": "S10",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T04:07:54.647452+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.0135552,
+   "tokens_in": 6245,
+   "tokens_out": 3092,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T10-v002-r3",
+   "task_id": "T10-v002",
+   "scenario": "S10",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T04:37:56.086902+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.013670475,
+   "tokens_in": 6236,
+   "tokens_out": 3191,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T10-v003-r2",
+   "task_id": "T10-v003",
+   "scenario": "S10",
+   "condition": "cross_family",
+   "run_number": 2,
+   "first_call": "2026-11-22T05:10:46.203624+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.01618305,
+   "tokens_in": 6269,
+   "tokens_out": 3830,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
+  },
+  {
+   "run_id": "cross_family-gemini-3.6-flash-T10-v003-r3",
+   "task_id": "T10-v003",
+   "scenario": "S10",
+   "condition": "cross_family",
+   "run_number": 3,
+   "first_call": "2026-11-22T05:10:46.428734+00:00",
+   "initial_correct": true,
+   "final_correct": true,
+   "verdict": "accept",
+   "second_verdict": null,
+   "status": "accepted",
+   "human_review_route": null,
+   "outcome": "kept_correct",
+   "verifier_calls": 1,
+   "cost_usd": 0.012980325,
+   "tokens_in": 6264,
+   "tokens_out": 3011,
+   "error": null,
+   "scoring_note": null,
+   "regraded_from": null
   }
  ]
 }

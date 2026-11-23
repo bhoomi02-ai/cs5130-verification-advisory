@@ -259,7 +259,7 @@
     "false_alarm_rate": {
      "value": 0.023809523809523808,
      "flagged": 2,
-     "n": 85
+     "n": 84
     },
     "mcc": 0.9088494517835867,
     "missing_verdicts": 1,
@@ -346,10 +346,10 @@
   },
   "cross_family": {
    "status": "pending",
-   "done": 74,
+   "done": 95,
    "total": 96,
    "failed": 2,
-   "label": "pending (74/96)"
+   "label": "pending (95/96)"
   }
  },
  "comparisons": [
@@ -426,5 +426,6 @@
    "n_comparisons": 4
   }
  ],
- "interval_note": "Intervals are 95% bootstrap intervals over the 32 tasks; with 32 tasks and 3 runs each they are wide, so small differences are not conclusive."
+ "interval_note": "Intervals are 95% bootstrap intervals over the 32 tasks; with 32 tasks and 3 runs each they are wide, so small differences are not conclusive.",
+ "sensitivity": null
 }
