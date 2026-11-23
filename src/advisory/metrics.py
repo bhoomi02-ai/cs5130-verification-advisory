@@ -134,6 +134,7 @@ __all__ = [
     "summarize",
     "paired_comparison",
     "compare_conditions",
+    "holm_adjust",
 ]
 
 
@@ -742,6 +743,65 @@ def paired_comparison(
     return result
 
 
+def holm_adjust(p_values, m=None):
+    """Holm step-down adjustment of raw p-values.
+
+    Parameters
+    ----------
+    p_values : sequence of float or None
+        Raw p-values in arbitrary order. ``None`` / NaN entries are left as
+        ``None`` in the output but still count toward ``m`` when ``m`` is
+        omitted (``m = len(p_values)``).
+    m : int, optional
+        Size of the planned family. Defaults to ``len(p_values)``. Must be at
+        least ``len(p_values)``.
+
+    Returns
+    -------
+    list of float or None
+        Adjusted p-values in the same order as ``p_values``. Missing inputs
+        stay ``None``.
+
+    Notes
+    -----
+    Sort the non-missing p-values ascending as ``p_(1) … p_(k)``. The raw
+    step-down value at rank ``j`` (1-based) is
+    ``min(1, (m - j + 1) * p_(j))``. Monotonicity is then enforced:
+    ``adjusted_(i) = max_{j ≤ i} raw_(j)``.
+    """
+    values = list(p_values)
+    n = len(values)
+    family = n if m is None else int(m)
+    if family < n:
+        raise ValueError(f"m must be >= len(p_values); got m={family}, n={n}")
+
+    def _missing(value) -> bool:
+        if value is None:
+            return True
+        try:
+            return bool(pd.isna(value))
+        except (TypeError, ValueError):
+            return False
+
+    indexed = [
+        (index, float(value))
+        for index, value in enumerate(values)
+        if not _missing(value)
+    ]
+    indexed.sort(key=lambda item: item[1])
+    adjusted_at: dict[int, float] = {}
+    running_max = 0.0
+    for rank_zero, (index, value) in enumerate(indexed):
+        j = rank_zero + 1
+        raw = min(1.0, (family - j + 1) * value)
+        running_max = max(running_max, raw)
+        adjusted_at[index] = running_max
+    return [
+        None if _missing(value) else adjusted_at[index]
+        for index, value in enumerate(values)
+    ]
+
+
 def compare_conditions(
     runs: list[dict] | pd.DataFrame,
     baseline: str = "none",
@@ -771,6 +831,14 @@ def compare_conditions(
         ``None``, and a ``note`` explaining why; other pairs are unaffected.
         When a ``model`` column is present, comparisons are within each model
         and the frame includes ``model``.
+
+        When ``all_pairs`` is false, ``sign_test_p_holm`` is the Holm
+        step-down adjustment of ``sign_test_p`` across the fixed family of
+        comparisons versus ``baseline`` (one planned comparison per
+        non-baseline condition present in that model slice, including rows
+        with a note and no p-value). When ``all_pairs`` is true,
+        ``sign_test_p_holm`` is ``None`` on every row: the planned family is
+        the comparisons versus ``none``, not the full pairwise set.
     """
     frame = validate_runs(runs)
     has_model = "model" in frame.columns
@@ -800,6 +868,7 @@ def compare_conditions(
                 pairs = [
                     (baseline, other) for other in conditions if other != baseline
                 ]
+        model_rows: list[dict] = []
         for condition_a, condition_b in pairs:
             try:
                 row = paired_comparison(
@@ -818,10 +887,21 @@ def compare_conditions(
                     n_draft_mismatch=int(getattr(exc, "n_draft_mismatch", 0)),
                     note=str(exc),
                 )
-            rows.append(row)
+            model_rows.append(row)
+        if all_pairs:
+            for row in model_rows:
+                row["sign_test_p_holm"] = None
+        else:
+            adjusted = holm_adjust(
+                [row["sign_test_p"] for row in model_rows],
+                m=len(model_rows),
+            )
+            for row, holm_p in zip(model_rows, adjusted):
+                row["sign_test_p_holm"] = holm_p
+        rows.extend(model_rows)
     if not rows:
         return pd.DataFrame(columns=_comparison_columns(has_model=has_model))
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows).reindex(columns=_comparison_columns(has_model=has_model))
 
 
 def _comparison_columns(has_model: bool = False) -> list[str]:
@@ -842,6 +922,7 @@ def _comparison_columns(has_model: bool = False) -> list[str]:
         "task_a_better",
         "task_b_better",
         "sign_test_p",
+        "sign_test_p_holm",
         "note",
     ]
     if has_model:

@@ -268,3 +268,42 @@ def test_all_failed_condition_still_writes(tmp_path):
     )
     none_row = summary[summary.condition == "none"].iloc[0]
     assert none_row.task_success == 1.0
+
+
+def test_comparisons_csv_and_md_include_sign_test_p_holm(tmp_path):
+    # All six conditions; dedicated fixes six wrong drafts → sign_test_p = 0.03125,
+    # Holm with m=5 → 0.15625. Peer is all-failed so it still counts in m with no p.
+    conditions = ("none", "cross_family", "dedicated", "peer", "self", "weakened")
+    rows = []
+    for index in range(6):
+        task_id = f"S{index:02d}"
+        for condition in conditions:
+            failed = condition == "peer"
+            rows.append(
+                _row(
+                    run_id=f"{condition}-m-{task_id}-r1",
+                    draft_run_id=f"draft-m-{task_id}-r1",
+                    task_id=task_id,
+                    condition=condition,
+                    run_number=1,
+                    initial_correct=False,
+                    final_correct=(condition == "dedicated") and not failed,
+                    verdict=None if condition == "none" else "reject",
+                    status="failed" if failed else ("revised" if condition == "dedicated" else "unchecked"),
+                )
+            )
+    path = _write_jsonl(tmp_path / "results.jsonl", rows)
+    analyze(results_path=path, out_dir=tmp_path / "report", seed=0)
+
+    comparisons = pd.read_csv(tmp_path / "report" / "comparisons.csv")
+    columns = list(comparisons.columns)
+    assert "sign_test_p" in columns
+    assert "sign_test_p_holm" in columns
+    assert columns.index("sign_test_p_holm") == columns.index("sign_test_p") + 1
+    dedicated = comparisons.loc[comparisons["condition_b"] == "dedicated"].iloc[0]
+    assert dedicated["sign_test_p"] == 0.03125
+    assert dedicated["sign_test_p_holm"] == 0.15625
+
+    markdown = (tmp_path / "report" / "comparisons.md").read_text(encoding="utf-8")
+    assert "sign_test_p_holm" in markdown
+    assert "0.1562" in markdown  # _format_cell uses .4g on 0.15625

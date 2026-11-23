@@ -12,6 +12,7 @@ from advisory.metrics import (
     compare_conditions,
     extra_cost_per_extra_correct,
     fixed_broken,
+    holm_adjust,
     human_review_metrics,
     outcome_counts,
     paired_comparison,
@@ -1464,3 +1465,133 @@ def test_exact_binomial_fallback_without_scipy(monkeypatch):
     monkeypatch.setitem(sys.modules, "scipy.stats", None)
     assert metrics._exact_binomial_two_sided(0, 6) == 0.03125
     assert metrics._exact_binomial_two_sided(0, 0) == 1.0
+
+
+def test_holm_adjust_hand_checked_example_preserves_order():
+    # Sorted: 0.01 → 4*0.01=0.04; 0.03 → 3*0.03=0.09; 0.04 → max(0.09, 0.08)=0.09;
+    # 0.20 → 0.20. Mapped back to input order.
+    assert holm_adjust([0.01, 0.04, 0.03, 0.20], m=4) == [0.04, 0.09, 0.09, 0.20]
+
+
+def test_holm_adjust_bhoomika_dedicated_with_m_five():
+    # Smallest of five planned comparisons: 5 * 0.03125 = 0.15625.
+    assert holm_adjust([0.03125], m=5) == [0.15625]
+
+
+def test_holm_adjust_missing_stays_none_but_counts_in_m():
+    # One missing among four slots: m=4, available sorted 0.01 then 0.04.
+    # j=1 → 4*0.01=0.04; j=2 → max(0.04, 3*0.04=0.12)=0.12.
+    assert holm_adjust([0.01, None, 0.04], m=4) == [0.04, None, 0.12]
+
+
+def test_holm_adjust_monotonicity_and_cap_at_one():
+    # Cap: 2 * 0.6 = 1.2 → 1.0; second rank stays at 1.0 via monotonicity.
+    assert holm_adjust([0.6, 0.6], m=2) == [1.0, 1.0]
+    # Monotonicity: raw second rank would be 0.08, but must not undercut 0.09.
+    assert holm_adjust([0.01, 0.04, 0.03, 0.20], m=4) == [0.04, 0.09, 0.09, 0.20]
+
+
+def test_compare_conditions_holm_row_with_note_counts_in_m():
+    # Five non-baseline conditions; peer has only failed pairs → note, no p.
+    # Dedicated wins all six tasks → raw p = 0.03125; with m=5, Holm = 0.15625
+    # when it is the sole (hence smallest) available p.
+    conditions = ["none", "cross_family", "dedicated", "peer", "self", "weakened"]
+    rows = []
+    for index in range(6):
+        for condition in conditions:
+            failed = condition == "peer"
+            rows.append(
+                _run(
+                    condition=condition,
+                    task_id=f"t{index}",
+                    run_number=1,
+                    initial_correct=False,
+                    final_correct=(condition == "dedicated") and not failed,
+                    verdict=None if condition == "none" else "reject",
+                    status="failed" if failed else "unchecked",
+                )
+            )
+    frame = compare_conditions(rows, baseline="none", seed=0)
+    assert len(frame) == 5
+    peer = frame.loc[frame["condition_b"] == "peer"].iloc[0]
+    assert peer["note"] != ""
+    assert pd.isna(peer["sign_test_p"]) or peer["sign_test_p"] is None
+    assert pd.isna(peer["sign_test_p_holm"]) or peer["sign_test_p_holm"] is None
+    dedicated = frame.loc[frame["condition_b"] == "dedicated"].iloc[0]
+    assert dedicated["sign_test_p"] == 0.03125
+    assert dedicated["sign_test_p_holm"] == 0.15625
+
+
+def test_compare_conditions_holm_separate_families_per_model():
+    rows = []
+    for model, n_favor in (("m1", 6), ("m2", 1)):
+        for index in range(n_favor):
+            rows.append(
+                _run(
+                    condition="none",
+                    model=model,
+                    task_id=f"t{index}",
+                    run_number=1,
+                    final_correct=False,
+                    initial_correct=False,
+                    verdict=None,
+                )
+            )
+            rows.append(
+                _run(
+                    condition="dedicated",
+                    model=model,
+                    task_id=f"t{index}",
+                    run_number=1,
+                    final_correct=True,
+                    initial_correct=False,
+                    verdict="reject",
+                )
+            )
+        # Second non-baseline condition so m=2 within each model.
+        rows.append(
+            _run(
+                condition="none",
+                model=model,
+                task_id="tie",
+                run_number=1,
+                final_correct=False,
+                initial_correct=False,
+                verdict=None,
+            )
+        )
+        rows.append(
+            _run(
+                condition="peer",
+                model=model,
+                task_id="tie",
+                run_number=1,
+                final_correct=False,
+                initial_correct=False,
+                verdict="accept",
+            )
+        )
+    frame = compare_conditions(rows, baseline="none", seed=0)
+    m1 = frame.loc[(frame["model"] == "m1") & (frame["condition_b"] == "dedicated")].iloc[0]
+    m2 = frame.loc[(frame["model"] == "m2") & (frame["condition_b"] == "dedicated")].iloc[0]
+    # m1: p=0.03125 is smallest of m=2 → 2*0.03125=0.0625.
+    assert m1["sign_test_p"] == 0.03125
+    assert m1["sign_test_p_holm"] == 0.0625
+    # m2: one task favouring B → p=1.0; Holm with m=2 stays 1.0.
+    assert m2["sign_test_p"] == 1.0
+    assert m2["sign_test_p_holm"] == 1.0
+    assert m1["sign_test_p_holm"] != m2["sign_test_p_holm"]
+
+
+def test_compare_conditions_all_pairs_holm_is_none():
+    rows = [
+        _run(condition="none", task_id="t1", run_number=1, final_correct=False, initial_correct=False, verdict=None),
+        _run(condition="dedicated", task_id="t1", run_number=1, final_correct=True, initial_correct=False, verdict="reject"),
+        _run(condition="peer", task_id="t1", run_number=1, final_correct=True, initial_correct=False, verdict="reject"),
+    ]
+    frame = compare_conditions(rows, baseline="none", seed=0, all_pairs=True)
+    assert len(frame) == 3
+    assert frame["sign_test_p_holm"].isna().all() or all(
+        value is None or (isinstance(value, float) and pd.isna(value))
+        for value in frame["sign_test_p_holm"].tolist()
+    )
