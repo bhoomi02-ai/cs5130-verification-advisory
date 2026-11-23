@@ -994,9 +994,13 @@
     const { meta } = state.data;
     const done = meta.conditions.map((c) => `${SHORT[c.id]} ${c.runs_done}/${c.runs_expected}`).join(" · ");
     const st = meta.study;
+    // Name a verifier model only where it differs from the advisor (in the study: cross_family's gpt-oss-20b).
+    const other = Object.entries(st.verifier_models || {})
+      .flatMap(([c, ms]) => ms.filter((m) => m !== st.advisor_model).map((m) => `${SHORT[c] || c} verifier ${m}`));
+    const verifiers = other.length ? ` · ${other.join(", ")}` : "";
     document.getElementById("foot-meta").textContent =
       `Main study: ${st.n_tasks} tasks (${st.n_scenarios} scenarios S01–S10 and their variants) × ${st.repeats} runs · advisor ${st.advisor_model}, ` +
-      `temperature ${st.temperature}, top-p ${st.top_p}, ${st.thinking_level} thinking · data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
+      `temperature ${st.temperature}, top-p ${st.top_p}, ${st.thinking_level} thinking${verifiers} · data generated ${meta.generated_at.replace("T", " ").replace("+00:00", " UTC")} · runs saved: ${done}.`;
   }
 
   function renderCharts() {

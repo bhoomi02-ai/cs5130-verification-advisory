@@ -280,11 +280,15 @@ def condition_metrics(rows: list[dict], complete: list[str], prog: dict, seed: i
 def comparisons(rows: list[dict], complete: list[str], seed: int = 0) -> list[dict]:
     if "none" not in complete:
         return []
-    usable = [r for r in rows if r.get("condition") in complete]
-    frame = compare_conditions(usable, baseline="none", seed=seed)
+    # All rows go in, so the Holm family is the fixed set of planned comparisons with none
+    # (metrics.compare_conditions); only finished settings are shown.
+    frame = compare_conditions(rows, baseline="none", seed=seed)
+    n_family = len(frame)
     order = {c: i for i, c in enumerate(CONDITION_ORDER)}
     out = []
     for _, c in frame.iterrows():
+        if c["condition_b"] not in complete:
+            continue
         out.append({
             "condition": c["condition_b"],
             "n_tasks": _int(c["n_tasks"]),
@@ -299,17 +303,11 @@ def comparisons(rows: list[dict], complete: list[str], seed: int = 0) -> list[di
             "tasks_better": _int(c["task_b_better"]),
             "tasks_worse": _int(c["task_a_better"]),
             "sign_test_p": _stat(c["sign_test_p"]),
+            "sign_test_p_holm": _stat(c["sign_test_p_holm"]),
+            "n_comparisons": n_family,
             "note": None if pd.isna(c.get("note")) else c.get("note"),
         })
-    out = sorted(out, key=lambda x: order.get(x["condition"], 99))
-    # Holm adjustment over the comparisons against none that are shown (finished settings only).
-    usable = sorted((c for c in out if c["sign_test_p"] is not None), key=lambda c: c["sign_test_p"])
-    m, running = len(usable), 0.0
-    for i, c in enumerate(usable):
-        running = max(running, min(1.0, (m - i) * c["sign_test_p"]))
-        c["sign_test_p_holm"] = running
-        c["n_comparisons"] = m
-    return out
+    return sorted(out, key=lambda x: order.get(x["condition"], 99))
 
 
 def pairwise(rows: list[dict], complete: list[str], seed: int = 0, notes: dict | None = None) -> list[dict]:
@@ -836,6 +834,9 @@ def build(
         "study": {
             "question": "Which verification strategy makes multi-agent financial advisory systems more reliable?",
             "advisor_model": first_settings.get("model"),
+            "verifier_models": {c: sorted({r.get("verifier_model") for r in study_rows
+                                            if r.get("condition") == c and r.get("verifier_model")})
+                                for c in CONDITION_ORDER if c != "none"},
             "temperature": first_settings.get("temperature"),
             "top_p": first_settings.get("top_p"),
             "thinking_level": first_settings.get("thinking_level") or "default",
