@@ -221,7 +221,6 @@
           "initial_total",
           "final_balance",
           "target_shortfall",
-          "additional_monthly_contribution",
           "additional_monthly_contribution_cents"
         ]
       }
@@ -1303,7 +1302,6 @@
           "initial_total",
           "final_balance",
           "target_shortfall",
-          "additional_monthly_contribution",
           "additional_monthly_contribution_cents"
         ]
       }
@@ -1337,7 +1335,6 @@
           "initial_total",
           "final_balance",
           "target_shortfall",
-          "additional_monthly_contribution",
           "additional_monthly_contribution_cents"
         ]
       }
@@ -1371,7 +1368,6 @@
           "initial_total",
           "final_balance",
           "target_shortfall",
-          "additional_monthly_contribution",
           "additional_monthly_contribution_cents"
         ]
       }
@@ -1405,7 +1401,6 @@
           "initial_total",
           "final_balance",
           "target_shortfall",
-          "additional_monthly_contribution",
           "additional_monthly_contribution_cents"
         ]
       }
