@@ -8,14 +8,15 @@
    Returns {destroy(), restart(), setSpeed(n), toggle()}.
    Adapted for the CS 5130 dashboard from the team's reference module (assets/replay.js):
    colours come from the page's CSS variables, unreadable verdicts get their own stamp,
-   failed runs are not replayed, and the controls announce their state (aria-pressed). */
+   failed runs are not replayed, the controls announce their state (aria-pressed), and a
+   stacked layout is used below 560 px so the diagram stays readable on phones. */
 (function(){
 'use strict';
-const TOKENS={cy:['--cyan','#22D3EE'],vi:['--violet','#8B5CF6'],vs:['--violet-soft','#C4B5FD'],bad:['--pink','#FF5C8A'],amber:['--amber','#FBBF24'],mute:['--muted','#A9A4C8'],line:['--line','#2A2650'],fg:['--text','#ECEAF7'],panel:['--card-top','#1A1735'],bg:['--bg','#07060F']};
+const TOKENS={cy:['--right','#2DD4BF'],vi:['--accent-to','#60A5FA'],vs:['--accent-soft','#93C5FD'],bad:['--wrong','#F25F5C'],amber:['--pending','#F59E0B'],mute:['--muted','#9AA8BF'],line:['--line','#2A3650'],fg:['--text','#E6EDF7'],panel:['--card-top','#182238'],bg:['--bg','#0B1220']};
 const C={};
 function readTokens(){const cs=getComputedStyle(document.documentElement);Object.entries(TOKENS).forEach(([k,[v,f]])=>{C[k]=(cs.getPropertyValue(v)||'').trim()||f})}
 readTokens();
-const NAMES={none:['No verifier','answer goes straight out'],self:['Self-check','advisor re-reads'],peer:['Peer check','second advisor'],dedicated:['Dedicated verifier','+ calculator'],weakened:['Verifier','no calculator'],cross_family:['Cross-family verifier','gpt-oss-20b + calculator'],'cross-family':['Cross-family verifier','gpt-oss-20b + calculator']};
+const NAMES={none:['No verifier','answer goes straight out'],self:['Self-check','advisor re-reads'],peer:['Peer check','second advisor'],dedicated:['Dedicated verifier','+ calculator'],weakened:['No-calculator verifier','same role, no calculator'],cross_family:['Cross-family verifier','gpt-oss-20b + calculator'],'cross-family':['Cross-family verifier','gpt-oss-20b + calculator']};
 const lerp=(a,b,t)=>a+(b-a)*Math.max(0,Math.min(1,t));
 const seg=(p,a,b)=>Math.max(0,Math.min(1,(p-a)/(b-a)));
 const reduce=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -39,15 +40,32 @@ const CSS=()=>`.ar-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minm
 .ar-side{display:flex;flex-direction:column;gap:12px;min-width:0}
 .ar-ctls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .ar-btn{font:inherit;font-size:13px;color:${C.mute};background:${C.panel};border:1px solid ${C.line};border-radius:8px;padding:7px 14px;cursor:pointer}
-.ar-btn:hover{color:${C.fg}}.ar-btn.on{color:#fff;border-color:${C.cy};box-shadow:0 0 14px rgba(34,211,238,.4)}
+.ar-btn:hover{color:${C.fg}}.ar-btn.on{color:${C.fg};border-color:${C.cy};box-shadow:0 0 14px ${C.cy}66}
 .ar-btn:focus-visible{outline:2px solid ${C.fg};outline-offset:2px}
 .ar-cnts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ar-cnt{background:rgba(255,255,255,.04);border:1px solid ${C.line};border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
-.ar-cnt span{font-size:12px;color:${C.mute}}.ar-cnt b{font-size:21px;font-variant-numeric:tabular-nums;color:#fff}
+.ar-cnt span{font-size:12px;color:${C.mute}}.ar-cnt b{font-size:21px;font-variant-numeric:tabular-nums;color:${C.fg}}
 .ar-log{display:flex;flex-direction:column;gap:4px;font-size:12px;min-height:150px;overflow:hidden}
 .ar-log div{display:flex;gap:8px;padding:5px 8px;border-radius:6px;background:rgba(255,255,255,.035);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ar-banner{font-size:12px;color:${C.amber};margin-top:6px}
 svg.ar text{fill:${C.mute};font-size:12px}`;
+
+/* Layout coordinates. Boxes are [x, y, width, height]; pts are packet stops (box centres). */
+const LAYOUTS={
+  wide:{name:'side by side',vb:'0 0 760 330',
+    task:[20,110,120,70],adv:[190,110,140,70],ver:[400,95,150,100],fin:[620,110,120,70],chk:[590,232,170,56],
+    lines:[[140,145,190,145],[330,145,400,145],[550,145,620,145]],
+    loop:'M475 205 C475 262 260 262 260 190',loopLabel:[370,268],bump:[0,26],
+    stamp:[475,178],flo:[680,100],done:[380,60,22],
+    pts:{task:[80,145],adv:[260,145],ver:[475,145],fin:[680,145]}},
+  stacked:{name:'stacked',vb:'0 0 360 620',
+    task:[120,16,120,56],adv:[105,112,150,64],ver:[100,224,160,100],fin:[120,372,120,74],chk:[95,486,170,58],
+    lines:[[180,72,180,112],[180,176,180,224],[180,324,180,372]],
+    loop:'M262 274 C334 274 334 144 257 144',loopLabel:[300,232],bump:[64,0],
+    stamp:[180,307],flo:[290,392],done:[180,590,15],
+    pts:{task:[180,44],adv:[180,144],ver:[180,274],fin:[180,409]}}};
+const NARROW=560;
+function pickLayout(el,opts){const w=(el.getBoundingClientRect&&el.getBoundingClientRect().width)||9999;return LAYOUTS[opts.layout||(w<NARROW?'stacked':'wide')]}
 
 function mount(el,opts){
   readTokens();
@@ -62,29 +80,30 @@ function mount(el,opts){
   ctl.append('button').attr('type','button').attr('class','ar-btn').text('Restart').on('click',()=>api.restart());
   const grid=root.append('div').attr('class','ar-grid');
   const L=grid.append('div').style('min-width',0),R=grid.append('div').attr('class','ar-side');
-  const svg=L.append('svg').attr('class','ar').attr('width','100%').attr('viewBox','0 0 760 330').attr('role','img').attr('aria-label','Animated replay of '+N+' advisor runs through the verification pipeline');
+  // Two layouts with the same parts: side by side (wide) and stacked top to bottom (narrow, e.g. phones).
+  const LY=pickLayout(el,opts);
+  const svg=L.append('svg').attr('class','ar').attr('width','100%').attr('viewBox',LY.vb).attr('role','img').attr('aria-label','Animated replay of '+N+' recorded advisor runs through the verification pipeline ('+LY.name+' layout)');
   const df=svg.append('defs'),gl=df.append('filter').attr('id','ar-glow').attr('x','-60%').attr('y','-60%').attr('width','220%').attr('height','220%');
   gl.append('feGaussianBlur').attr('stdDeviation',5).attr('result','b');const mg=gl.append('feMerge');mg.append('feMergeNode').attr('in','b');mg.append('feMergeNode').attr('in','SourceGraphic');
-  const box=(x,y,w,h,l1,l2)=>{svg.append('rect').attr('x',x).attr('y',y).attr('width',w).attr('height',h).attr('rx',14).style('fill',C.panel).style('stroke',C.line);svg.append('text').attr('x',x+w/2).attr('y',y+22).attr('text-anchor','middle').style('fill',C.fg).style('font-weight',600).text(l1);svg.append('text').attr('x',x+w/2).attr('y',y+39).attr('text-anchor','middle').text(l2||'')};
-  [[140,190],[330,400],[550,620]].forEach(p=>svg.append('line').attr('x1',p[0]).attr('y1',145).attr('x2',p[1]).attr('y2',145).style('stroke',C.line).attr('stroke-width',2));
-  svg.append('path').attr('d','M475 205 C475 262 260 262 260 190').style('fill','none').style('stroke',C.line).attr('stroke-width',2).attr('stroke-dasharray','4 5');
-  svg.append('text').attr('x',370).attr('y',268).attr('text-anchor','middle').style('font-size','11px').text('reject: revise once');
-  box(20,110,120,70,'Task');box(190,110,140,70,'Advisor',opts.advisorLabel||'gemini-3.6-flash');
-  const verBox=svg.append('rect').attr('x',400).attr('y',95).attr('width',150).attr('height',100).attr('rx',14).style('fill',C.panel).style('stroke',C.line);
-  svg.append('text').attr('x',475).attr('y',122).attr('text-anchor','middle').style('fill',C.fg).style('font-weight',600).text(nm[0]);
-  svg.append('text').attr('x',475).attr('y',140).attr('text-anchor','middle').text(nm[1]);
-  const stamp=svg.append('text').attr('x',475).attr('y',178).attr('text-anchor','middle').style('font-size','17px').style('font-weight',800).attr('opacity',0);
-  const finBox=svg.append('rect').attr('x',620).attr('y',110).attr('width',120).attr('height',70).attr('rx',14).style('fill',C.panel).style('stroke',C.line);
-  svg.append('text').attr('x',680).attr('y',132).attr('text-anchor','middle').style('fill',C.fg).style('font-weight',600).text('Final answer');
-  const finMark=svg.append('text').attr('x',680).attr('y',168).attr('text-anchor','middle').style('font-size','26px').style('font-weight',800).attr('opacity',0);
-  svg.append('rect').attr('x',590).attr('y',232).attr('width',170).attr('height',56).attr('rx',12).style('fill','none').style('stroke',C.cy).attr('stroke-dasharray','5 4');
-  svg.append('text').attr('x',675).attr('y',255).attr('text-anchor','middle').style('fill',C.cy).text('Hidden checker');
-  const scan=svg.append('rect').attr('x',592).attr('y',266).attr('width',0).attr('height',3).attr('rx',2).style('fill',C.cy).attr('filter','url(#ar-glow)');
-  const chk=svg.append('text').attr('x',675).attr('y',281).attr('text-anchor','middle').style('font-size','11px');
-  const ring=svg.append('circle').attr('cx',260).attr('cy',145).attr('r',0).style('fill','none').style('stroke',C.vi).attr('stroke-width',3).attr('opacity',0);
-  const flo=svg.append('text').attr('x',680).attr('y',100).attr('text-anchor','middle').style('font-size','15px').style('font-weight',700).attr('opacity',0);
+  const box=(b,l1,l2)=>{const r=svg.append('rect').attr('x',b[0]).attr('y',b[1]).attr('width',b[2]).attr('height',b[3]).attr('rx',14).style('fill',C.panel).style('stroke',C.line);svg.append('text').attr('x',b[0]+b[2]/2).attr('y',b[1]+22).attr('text-anchor','middle').style('fill',C.fg).style('font-weight',600).text(l1);svg.append('text').attr('x',b[0]+b[2]/2).attr('y',b[1]+39).attr('text-anchor','middle').text(l2||'');return r};
+  LY.lines.forEach(q=>svg.append('line').attr('x1',q[0]).attr('y1',q[1]).attr('x2',q[2]).attr('y2',q[3]).style('stroke',C.line).attr('stroke-width',2));
+  svg.append('path').attr('d',LY.loop).style('fill','none').style('stroke',C.line).attr('stroke-width',2).attr('stroke-dasharray','4 5');
+  svg.append('text').attr('x',LY.loopLabel[0]).attr('y',LY.loopLabel[1]).attr('text-anchor','middle').style('font-size','11px').text('reject: revise once');
+  box(LY.task,'Task');box(LY.adv,'Advisor',opts.advisorLabel||'gemini-3.6-flash');
+  const verBox=box(LY.ver,nm[0],nm[1]);
+  const stamp=svg.append('text').attr('x',LY.stamp[0]).attr('y',LY.stamp[1]).attr('text-anchor','middle').style('font-size','17px').style('font-weight',800).attr('opacity',0);
+  const finBox=svg.append('rect').attr('x',LY.fin[0]).attr('y',LY.fin[1]).attr('width',LY.fin[2]).attr('height',LY.fin[3]).attr('rx',14).style('fill',C.panel).style('stroke',C.line);
+  svg.append('text').attr('x',LY.fin[0]+LY.fin[2]/2).attr('y',LY.fin[1]+22).attr('text-anchor','middle').style('fill',C.fg).style('font-weight',600).text('Final answer');
+  const finMark=svg.append('text').attr('x',LY.fin[0]+LY.fin[2]/2).attr('y',LY.fin[1]+58).attr('text-anchor','middle').style('font-size','26px').style('font-weight',800).attr('opacity',0);
+  const ck=LY.chk;
+  svg.append('rect').attr('x',ck[0]).attr('y',ck[1]).attr('width',ck[2]).attr('height',ck[3]).attr('rx',12).style('fill','none').style('stroke',C.cy).attr('stroke-dasharray','5 4');
+  svg.append('text').attr('x',ck[0]+ck[2]/2).attr('y',ck[1]+23).attr('text-anchor','middle').style('fill',C.cy).text('Hidden checker');
+  const scan=svg.append('rect').attr('x',ck[0]+2).attr('y',ck[1]+34).attr('width',0).attr('height',3).attr('rx',2).style('fill',C.cy).attr('filter','url(#ar-glow)');
+  const chk=svg.append('text').attr('x',ck[0]+ck[2]/2).attr('y',ck[1]+49).attr('text-anchor','middle').style('font-size','11px');
+  const ring=svg.append('circle').attr('cx',LY.pts.adv[0]).attr('cy',LY.pts.adv[1]).attr('r',0).style('fill','none').style('stroke',C.vi).attr('stroke-width',3).attr('opacity',0);
+  const flo=svg.append('text').attr('x',LY.flo[0]).attr('y',LY.flo[1]).attr('text-anchor','middle').style('font-size','15px').style('font-weight',700).attr('opacity',0);
   const pk=svg.append('g').attr('opacity',0),pkc=pk.append('circle').attr('r',17).attr('filter','url(#ar-glow)'),pkt=pk.append('text').attr('text-anchor','middle').attr('y',4).style('fill',C.bg).style('font-weight',800).style('font-size','10px');
-  const done=svg.append('text').attr('x',380).attr('y',60).attr('text-anchor','middle').style('font-size','22px').style('font-weight',700).style('fill',C.fg).attr('opacity',0);
+  const done=svg.append('text').attr('x',LY.done[0]).attr('y',LY.done[1]).attr('text-anchor','middle').style('font-size',LY.done[2]+'px').style('font-weight',700).style('fill',C.fg).attr('opacity',0);
   if(opts.measured===false)L.append('p').attr('class','ar-banner').text('Sample outcomes, not study results.');
   const cn=R.append('div').attr('class','ar-cnts'),cv={};
   [['n','Runs'],['acc','Final accuracy'],['dacc','Draft accuracy'],['caught','Errors caught'],['fixed','Fixed'],['broken','Broken'],['fa','False alarms'],['hr','Human review'],['cost','Cost']].forEach(([k,l])=>{const d=cn.append('div').attr('class','ar-cnt');d.append('span').text(l);cv[k]=d.append('b').text('0')});
@@ -103,17 +122,19 @@ function mount(el,opts){
     if(r.humanReview){msg=r.route==='revision_not_accepted'?'human review: revision not accepted':r.route==='unreadable'?'human review: verdict unreadable':r.route==='abstain'?'human review: verifier abstained':'sent to human review';col=C.amber}else if(r.verdict==='none')msg=r.finalCorrect?'correct':'wrong';else if(r.verdict==='accept')msg=r.finalCorrect?'accepted, correct':'accepted, missed the error';else msg=r.draftCorrect?'rejected a right answer':(r.finalCorrect?'rejected, fixed':'rejected, still wrong');
     const row=log.insert('div',':first-child');row.append('b').style('color',col).text(r.task);row.append('span').text(msg);const kids=log.selectAll('div').nodes();if(kids.length>7)kids[kids.length-1].remove();paint()}
   function frame(r,p){
-    const rej=r.verdict==='reject',dcol=r.draftCorrect?C.cy:C.bad,fcol=r.finalCorrect?C.cy:C.bad;let x=80,col=C.vs;
-    if(p<.18)x=lerp(80,260,seg(p,0,.18));else if(p<.36)x=260;else if(p<.52)x=lerp(260,475,seg(p,.36,.52));else if(p<.68)x=475;else if(rej){if(p<.78)x=lerp(475,260,seg(p,.68,.78));else if(p<.86)x=260;else x=lerp(260,680,seg(p,.86,.96))}else x=lerp(475,680,seg(p,.68,.9));
+    const rej=r.verdict==='reject',dcol=r.draftCorrect?C.cy:C.bad,fcol=r.finalCorrect?C.cy:C.bad;let col=C.vs;
+    const P=LY.pts,mix=(a,b,t)=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t)];let q;
+    if(p<.18)q=mix(P.task,P.adv,seg(p,0,.18));else if(p<.36)q=P.adv;else if(p<.52)q=mix(P.adv,P.ver,seg(p,.36,.52));else if(p<.68)q=P.ver;else if(rej){if(p<.78)q=mix(P.ver,P.adv,seg(p,.68,.78));else if(p<.86)q=P.adv;else q=mix(P.adv,P.fin,seg(p,.86,.96))}else q=mix(P.ver,P.fin,seg(p,.68,.9));
     if(p>=.36)col=dcol;if(rej&&p>=.82)col=fcol;
-    const y=(rej&&p>.68&&p<.86)?145+26*Math.sin(seg(p,.68,.78)*Math.PI):145;
+    const bump=(rej&&p>.68&&p<.78)?Math.sin(seg(p,.68,.78)*Math.PI):0;
+    const x=q[0]+LY.bump[0]*bump,y=q[1]+LY.bump[1]*bump;
     pk.attr('opacity',p<.96&&!(p>=.9&&!rej)?1:Math.max(0,1-seg(p,.9,1))).attr('transform','translate('+x+','+y+')');pkc.style('fill',col);pkt.text((r.task||'').slice(-8));
     const pulse=(p>=.18&&p<.36)||(rej&&p>=.78&&p<.86);ring.attr('opacity',pulse?.9:0).attr('r',pulse?12+((p*40)%1)*34:0);
     const showS=r.verdict!=='none'&&p>=.56&&p<.9,odd=r.verdict==='abstain'||r.verdict==='unreadable',sc=rej?C.bad:(odd?C.amber:C.cy);
     stamp.attr('opacity',showS?1:0).text(rej?'REJECT':r.verdict==='abstain'?'ABSTAIN':r.verdict==='unreadable'?'UNREADABLE':'ACCEPT').style('fill',sc).style('font-size',r.verdict==='unreadable'?'14px':'17px');verBox.style('stroke',showS?sc:C.line);
     const fin=p>=.93;finMark.attr('opacity',fin?1:0).text(r.humanReview?'?':(r.finalCorrect?'✓':'✗')).style('fill',r.humanReview?C.amber:fcol);finBox.style('stroke',fin?(r.humanReview?C.amber:fcol):C.line);
-    scan.attr('width',fin?lerp(0,166,seg(p,.93,1)):0);chk.text(fin?(r.finalCorrect?'all checks pass':'failed a hidden check'):'').style('fill',r.finalCorrect?C.cy:C.bad);
-    const ev=!r.draftCorrect&&r.finalCorrect?['+1 fixed',C.cy]:(r.draftCorrect&&!r.finalCorrect?['broken',C.bad]:null);flo.attr('opacity',fin&&ev?1:0).attr('y',100-(fin?seg(p,.93,1)*14:0)).text(ev?ev[0]:'').style('fill',ev?ev[1]:C.fg)}
+    scan.attr('width',fin?lerp(0,LY.chk[2]-4,seg(p,.93,1)):0);chk.text(fin?(r.finalCorrect?'all checks pass':'failed a hidden check'):'').style('fill',r.finalCorrect?C.cy:C.bad);
+    const ev=!r.draftCorrect&&r.finalCorrect?['+1 fixed',C.cy]:(r.draftCorrect&&!r.finalCorrect?['broken',C.bad]:null);flo.attr('opacity',fin&&ev?1:0).attr('y',LY.flo[1]-(fin?seg(p,.93,1)*14:0)).text(ev?ev[0]:'').style('fill',ev?ev[1]:C.fg)}
   function tick(){const now=performance.now(),dt=Math.min(80,now-(st.last||now));st.last=now;
     root.selectAll('.ar-spd').classed('on',function(){return +this.getAttribute('data-v')===st.speed}).attr('aria-pressed',function(){return String(+this.getAttribute('data-v')===st.speed)});bPlay.text(st.paused?'Play':'Pause').attr('aria-pressed',String(st.paused)).attr('aria-label',st.paused?'Play the replay':'Pause the replay');
     if(st.paused)return;
@@ -126,5 +147,5 @@ function mount(el,opts){
   timer=d3.timer(tick);
   const api={destroy(){timer.stop();root.selectAll('*').remove()},restart(){reset();st.paused=false},setSpeed(v){st.speed=v},toggle(){st.paused=!st.paused}};
   return api}
-window.AdvisoryReplay={mount,normalize};
+window.AdvisoryReplay={mount,normalize,layoutFor:(w)=>w<NARROW?'stacked':'wide'};
 })();

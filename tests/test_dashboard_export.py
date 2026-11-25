@@ -246,9 +246,21 @@ def test_rates_carry_counts_and_human_review_both_ways(built):
 
 
 def test_headline_is_built_from_the_data(built):
-    text = built["load"]("summary.json")["headline"]["text"]
-    assert text.startswith("With no check the advisor is right 75.0% of the time (3/4 runs); dedicated is 100.0% (4/4).")
-    assert "2 tasks × 2 runs" in text
+    head = built["load"]("summary.json")["headline"]
+    # With 2 tasks the interval reaches zero, so the sentence must not claim an improvement.
+    assert head["text"] == ("With no check the advisor is right 75.0% of the time. The best setting, a dedicated verifier "
+                            "with a calculator, reaches 100.0%, +25.0 points, but the interval includes no change (95% CI +0.0 to +50.0).")
+    assert head["best"] == "dedicated" and head["data_set"] == "2 tasks × 2 runs"
+
+
+def test_headline_does_not_claim_a_gain_when_the_interval_includes_zero():
+    metrics = {"none": {"status": "complete", "task_success": {"value": 0.8}},
+               "self": {"status": "complete", "task_success": {"value": 0.85}}}
+    comps = [{"condition": "self", "delta": 0.05, "ci_low": -0.02, "ci_high": 0.12, "sign_test_p": 0.5}]
+    text = ex.headline(metrics, comps, 32, 3)["text"]
+    assert "raises" not in text and "the interval includes no change (95% CI -2.0 to +12.0)" in text
+    comps[0].update(ci_low=0.01)
+    assert "Having the advisor re-check its own answer raises that to 85.0%, +5.0 points" in ex.headline(metrics, comps, 32, 3)["text"]
 
 
 def test_heatmap_groups_variants_under_their_base_scenario(built):
@@ -318,3 +330,88 @@ def test_build_replaces_old_output(built, tmp_path):
 def test_cli_refuses_a_folder_without_results(tmp_path, capsys):
     assert build_data.main(["--results", str(tmp_path), "--out", str(tmp_path / "out")]) == 1
     assert "No results.jsonl" in capsys.readouterr().err
+
+
+# --------------------------------------------------------------------------- pairs and seeded by type
+
+
+def test_pairs_cover_every_ordered_pair_of_finished_settings_and_mirror(built):
+    pairs = built["load"]("pairs.json")
+    assert pairs["complete"] == ["none", "self", "dedicated"]
+    keyed = {(p["a"], p["b"]): p for p in pairs["pairs"]}
+    assert set(keyed) == {(a, b) for a in pairs["complete"] for b in pairs["complete"] if a != b}
+    fwd, back = keyed[("none", "dedicated")], keyed[("dedicated", "none")]
+    assert fwd["delta"] == pytest.approx(0.25) and back["delta"] == pytest.approx(-0.25)
+    assert (back["ci_low"], back["ci_high"]) == (-fwd["ci_high"], -fwd["ci_low"])
+    assert fwd["tasks_b_better"] == back["tasks_a_better"]
+    # dedicated fixed S01 r2, which none left wrong; nothing the other way round
+    assert [(x["task_id"], x["run_number"], x["b_outcome"]) for x in fwd["runs_only_b_right"]] == [("S01", 2, "fixed")]
+    assert fwd["runs_only_a_right"] == []
+    assert back["runs_only_a_right"][0]["a_run_id"] == "dedicated-m-S01-r2"
+    # self broke T01-v001 r2 (none kept it right)
+    assert [(x["task_id"], x["a_outcome"], x["b_outcome"]) for x in keyed[("none", "self")]["runs_only_a_right"]] == [
+        ("T01-v001", "kept_correct", "broken")]
+    assert not any(p["a"] == "peer" or p["b"] == "peer" for p in pairs["pairs"])  # peer is unfinished
+
+
+def test_seeded_grouped_by_error_type_with_pending_settings(built):
+    groups = {g["error_type"]: g for g in built["load"]("seeded.json")["by_error_type"]}
+    assert set(groups) == {"policy_violation", "none"}
+    errors = groups["policy_violation"]
+    assert errors["answers"] == [ERROR_ID] and errors["seeded_error"] is True
+    assert errors["per_condition"]["dedicated"]["rejected"] == 1
+    assert errors["per_condition"]["dedicated"]["right_reason"] in (0, 1)
+    assert errors["per_condition"]["peer"] == {"status": "pending"}  # 1 of 2 seeded answers reviewed
+    controls = groups["none"]
+    assert controls["seeded_error"] is False and controls["per_condition"]["self"]["right_reason"] is None
+
+
+def test_comparisons_carry_holm_p_and_spend_uses_report_names(built):
+    comps = built["load"]("summary.json")["comparisons"]
+    # The family is every planned comparison with none in the data, finished or not (metrics.compare_conditions).
+    family = len({r["condition"] for r in _fixture_rows()} - {"none"})
+    assert all("sign_test_p_holm" in c and c["n_comparisons"] == family for c in comps)
+    assert all(c["sign_test_p_holm"] >= c["sign_test_p"] for c in comps)
+    # Holm: the smallest p is multiplied by the number of comparisons (capped at 1)
+    smallest = min(comps, key=lambda c: c["sign_test_p"])
+    assert smallest["sign_test_p_holm"] == pytest.approx(min(1.0, smallest["n_comparisons"] * smallest["sign_test_p"]))
+    assert ex.spend_label("weakened") == "No calculator" and ex.spend_label("cross-check") == "pre-study checks"
+
+
+def test_a_setting_with_every_run_saved_is_complete_even_with_failed_runs(built, tmp_path):
+    rows = [json.loads(l) for l in (tmp_path / "results" / "results.jsonl").read_text().splitlines()]
+    for task, run in (("T01-v001", 1), ("T01-v001", 2)):  # peer: add the 2 missing runs, one of them failed
+        row = next(r for r in rows if r["condition"] == "self" and r["task_id"] == task and r["run_number"] == run)
+        rows.append({**row, "run_id": f"peer-m-{task}-r{run}", "condition": "peer",
+                     **({"status": "failed", "error": "ProviderError: 400 parsing failed"} if run == 2 else {})})
+    (tmp_path / "results" / "results.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    meta = ex.build(tmp_path / "results", tmp_path / "out2", tmp_path / "tasks.txt", REPEATS, injected_dir=tmp_path / "injected")
+    assert "peer" in meta["complete_conditions"]
+    peer = json.loads((tmp_path / "out2" / "summary.json").read_text())["conditions"]["peer"]
+    assert peer["status"] == "complete" and peer["n_failed"] == 2 and peer["n_runs"] == 2  # rates over the 2 runs that ran
+
+
+def test_regraded_file_exports_the_original_grading_as_a_sensitivity_check(built, tmp_path):
+    rows = [json.loads(l) for l in (tmp_path / "results" / "results.jsonl").read_text().splitlines()]
+    for r in rows:  # what scripts/regrade_results.py writes: originals kept, one final grade changed
+        if r["status"] == "failed":
+            continue
+        r["original_initial_correct"], r["original_final_correct"] = r["initial_correct"], r["final_correct"]
+        if r["run_id"] == "self-m-T01-v001-r2":
+            r["final_correct"] = True
+    regraded = tmp_path / "results" / "results_regraded.jsonl"
+    regraded.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    out = tmp_path / "out3"
+    meta = ex.build(tmp_path / "results", out, tmp_path / "tasks.txt", REPEATS, injected_dir=tmp_path / "injected",
+                    results_file=regraded)
+    assert meta["grading"]["regraded"] and meta["scoring_mode"] == "corrected"
+    assert [c["run_id"] for c in meta["grading"]["changed_runs"]] == ["self-m-T01-v001-r2"]
+    assert "Self run 2 was graded wrong" in meta["scoring_notes"]["T01-v001"]
+    summary = json.loads((out / "summary.json").read_text())
+    # Self: S01 r2 accepted wrong, T01-v001 r2 broken -> 2 of 4 right; the corrected grade makes it 3
+    assert summary["conditions"]["self"]["task_success"]["right"] == 3  # corrected
+    assert summary["sensitivity"]["conditions"]["self"]["right"] == 2  # original grading
+    detail = json.loads((out / "runs" / "self-m-T01-v001-r2.json").read_text())
+    assert detail["graded"]["final_correct"] is True and detail["regraded_from"]["final_correct"] is False
+    # the plain file has no originals: no sensitivity block, scoring stays "under review"
+    assert built["load"]("summary.json")["sensitivity"] is None and built["meta"]["scoring_mode"] == "under_review"
