@@ -94,7 +94,7 @@ A setting counts as finished when every run is saved; failed runs (API errors af
 ## Names and p-values
 
 - **Setting names** on the page, in the report and on slides: None, Self, Peer, Dedicated, **No calculator**, Cross-family. The code keeps its IDs (`weakened`, `cross_family`); `dashboard_export.SPEND_LABELS` maps them for the spend lines.
-- **p-values** are task-level sign tests. Comparisons with None are shown raw and Holm-adjusted for the number of finished comparisons (`sign_test_p_holm`); "Compare two settings" shows the raw value, marked unadjusted. The proposal predicted the dedicated verifier would help most but did not name one primary test. Bootstrap intervals are not adjusted.
+- **p-values** are task-level sign tests. Comparisons with None are shown raw and Holm-adjusted over the five planned comparisons with None (`sign_test_p_holm` from `metrics.compare_conditions`, so it matches the report); "Compare two settings" shows the raw value, marked unadjusted. The proposal predicted the dedicated verifier would help most but did not name one primary test. Bootstrap intervals are not adjusted.
 
 ## Motion
 
@@ -104,7 +104,7 @@ Chart bars grow out of the zero line, intervals open, points fade in, and heatma
 
 - **PNG:** every chart has a PNG button. It downloads the chart at 2× with its caption and a "32 tasks × 3 runs · data as of …" footer.
 - **PDF:** "Save as PDF" (or the browser's print) lays the page out as 16:10 pages, one view per page, dark theme kept; the replay and the run table are left out.
-- **Replay clip:** `python dashboard/record_replay.py --setting dedicated --seconds 40 --out replay.webp` records the replay panel as an animated WebP (or `.gif`) in headless Chrome. It refuses settings that are still pending.
+- **Replay clip:** `python dashboard/record_replay.py --setting dedicated --seconds 40 --out replay.webp` records the replay panel as an animated WebP (or `.gif`) in headless Chrome (needs Chrome plus `pip install -e ".[dashboard]"`, which includes websockets and Pillow). It refuses settings that are still pending.
 
 ## Replay module
 

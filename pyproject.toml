@@ -22,7 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest"]
-dashboard = ["streamlit>=1.50"]
+dashboard = ["streamlit>=1.50", "websockets>=12", "Pillow>=10"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
