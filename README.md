@@ -37,7 +37,7 @@
 - **The goal:** find out which kind of check makes the advisor most reliable, and what each one costs in tokens and time.
 
 > [!NOTE]
-> **Status: all runs finished (November 23).** 32 tasks × 3 runs × 6 conditions (576 runs, 1 failed) plus 155 seeded reviews, for **$12.22** of the $20 cap. Results are graded with the S06 scoring fix (#63); the original grading is kept as a sensitivity check.
+> **Status: all runs finished (November 23); follow-up on new tasks done (November 25).** Main study: 32 tasks × 3 runs × 6 conditions (576 runs, 1 failed) plus 155 seeded reviews, $12.22. Follow-up: 168 runs, $3.20. Total **$15.42** of the $20 cap. Results are graded with the S06 scoring fix (#63); the original grading is kept as a sensitivity check.
 
 **Results** (task success = share of final answers the checker grades right; change vs `none` with a 95% bootstrap interval over tasks):
 
@@ -53,7 +53,8 @@
 - Only the dedicated verifier with a calculator helped: it caught every real error, and removing the calculator (`weakened`) erased the gain. Sign test for `dedicated` vs `none`: p = 0.031, **0.156 after Holm adjustment** over the five comparisons with `none`.
 - Under the original grading `dedicated` is 97.9% (+9.4 pts, +3.1 to +17.7); the fix changed only two of its runs.
 - Every verifier caught 94–100% of the 17 seeded errors, which were easier than the advisor's own compounding-arithmetic slips.
-- Full tables: `results/report_regraded/` on the `study-results` branch; interactive view: [`dashboard/`](dashboard/README.md).
+- **Follow-up on new tasks** (Nov 25, $3.20, reported separately): 14 variants outside the main set × 3 runs. Same pattern: `dedicated` 97.6% (41/42) vs 85.7% for `none`, flagging 6 of 6 wrong drafts and fixing 5; `self` and `weakened` changed nothing, and no verifier flagged a correct draft. The errors came from only two tasks (T04-v002, T06-v002), so this repeats the direction, not the significance.
+- Full tables: `results/report_regraded/` (main study) and `extension/` (follow-up) on the `study-results` branch; interactive view: [`dashboard/`](dashboard/README.md).
 
 ## Research question
 
@@ -223,7 +224,7 @@ Verifier metrics use runs that have a verdict, and an abstain counts as a flag, 
 - **Statistics:** the bootstrap resamples tasks, not runs, and conditions are compared in pairs on the same tasks, with a sign test over tasks, raw and Holm-adjusted over the five comparisons with `none`.
 - **Settings:** temperature 0.7, top-p 0.9, the model's default thinking level. Results made with other settings or prompt versions are refused, so runs can't be mixed by accident.
 - **Budget:** **$20** for the whole project. `llm.py` refuses a paid call that could take total logged spend past `ADVISORY_BUDGET_USD` (default 20) before it is sent. That spend is summed from the local, gitignored `results/runs.jsonl`, so **the cap is enforced per machine**. The rule: **all paid study runs go through one machine and key (Bhoomika's); everyone else uses their own free keys for testing.** The paid key also has prepaid Google credit with auto-reload off, a hard limit on Google's side. `python scripts/spend.py` shows spend so far.
-- **Actual cost:** **$12.22** for the whole project, at list prices (Groq's gpt-oss-20b calls are priced at $0.075 / $0.30 per 1M tokens even though they ran on Groq's free tier). Mean cost per run ranged from $0.019 (`none`) to $0.049 (`dedicated`); `dedicated` cost about $0.26 per extra correct answer.
+- **Actual cost:** **$12.22** for the main study and **$3.20** for the follow-up ($15.42 in all), at list prices (Groq's gpt-oss-20b calls are priced at $0.075 / $0.30 per 1M tokens even though they ran on Groq's free tier). Mean cost per run ranged from $0.019 (`none`) to $0.049 (`dedicated`); `dedicated` cost about $0.26 per extra correct answer.
 - **Something to catch:** a model that never makes mistakes leaves verification nothing to do, and one that breaks the output format fails before the math matters. The advisor model was chosen with a pilot so that it is right most but not all of the time, and answers with **known injected errors** (`data/injected/`) are added so every verifier faces real mistakes.
 
 ## Models
@@ -314,6 +315,7 @@ dashboard/        static web dashboard (d3): build_data.py, index.html, replay, 
 tests/            pytest suite
 data/scenarios/   scenario files (S01–S10 and their variants), given to agents
 data/study_tasks.txt  the 32 tasks of the main study
+data/extension_tasks.txt  the 14 tasks of the follow-up experiment
 data/scripts/     scenario toolkit that generated and validated the variants
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
 data/injected/    answers with known injected errors, plus correct controls
@@ -361,6 +363,7 @@ python scripts/check_study_data.py                        # completeness check
 python scripts/regrade_results.py                         # results/results_regraded.jsonl (S06 fix)
 python scripts/analyze.py --results results/results_regraded.jsonl --out results/report_regraded
 python scripts/analyze.py --results results/results.jsonl --out results/report_original  # sensitivity check
+python scripts/analyze.py --results extension/results/results.jsonl --out results/report_follow_up  # follow-up
 ```
 
 ## Report outputs
@@ -388,7 +391,8 @@ python scripts/analyze.py --results results/results.jsonl --out results/report_o
 **Web dashboard** (`dashboard/`, for presenting): a static d3 page with a replay of the runs, the comparisons, the verifier and seeded-error views, cost, and every run. It reads only JSON derived from `results/` and never calls a model. Details in [`dashboard/README.md`](dashboard/README.md).
 
 ```bash
-python dashboard/build_data.py --results-file results/results_regraded.jsonl   # original grading kept as a sensitivity check
+python dashboard/build_data.py --results-file results/results_regraded.jsonl   # original grading kept as a sensitivity check;
+                                                                                # adds the follow-up if results/extension/ exists
 python -m http.server 8000 -d dashboard                                         # open http://127.0.0.1:8000
 ```
 

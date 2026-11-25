@@ -1,0 +1,17 @@
+# Follow-up experiment (not part of the main study): 14 study-quality variants left out of
+# data/study_tasks.txt for budget. Excludes T04-v001, T06-v001 and T03-v005, which repeat a
+# base scenario's numbers. Conditions: none, self, dedicated, weakened; 3 repeats.
+T01-v001
+T01-v002
+T02-v001
+T02-v002
+T03-v003
+T03-v004
+T04-v002
+T05-v001
+T05-v002
+T06-v002
+T07-v001
+T07-v002
+T08-v001
+T08-v002
