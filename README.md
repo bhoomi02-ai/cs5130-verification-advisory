@@ -358,7 +358,7 @@ python scripts/run_condition.py --condition none --model gemini-3.6-flash \
     --tasks-file data/study_tasks.txt --repeats 3
 
 # Reproduce the reported numbers from the saved results (no model calls):
-git fetch origin study-results && git archive origin/study-results results | tar -x
+git fetch origin study-results && git archive origin/study-results results extension | tar -x
 python scripts/check_study_data.py                        # completeness check
 python scripts/regrade_results.py                         # results/results_regraded.jsonl (S06 fix)
 python scripts/analyze.py --results results/results_regraded.jsonl --out results/report_regraded
