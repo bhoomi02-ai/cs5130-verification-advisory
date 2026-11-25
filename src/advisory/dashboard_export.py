@@ -768,12 +768,14 @@ def build(
     budget: float = BUDGET_USD,
     seed: int = 0,
     results_file: Path | None = None,
+    follow_up_file: Path | None = None,
 ) -> dict:
     """Write every dashboard file into out_dir (replacing it) and return the manifest.
 
     `results_file` defaults to results_dir/results.jsonl. A re-graded file (scripts/regrade_results.py)
     keeps each run's original grades; then the original grading is exported as a sensitivity check and
-    the notes say which runs changed.
+    the notes say which runs changed. `follow_up_file` is a separate experiment's results JSONL (new tasks,
+    same settings); it is summarised on its own in follow_up.json and never mixed into the main study.
     """
     results_dir, out_dir = Path(results_dir), Path(out_dir)
     results_file = Path(results_file) if results_file else results_dir / "results.jsonl"
@@ -815,6 +817,7 @@ def build(
         "seeded.json": seeded(seeded_records, prog),
         "sanity_s04.json": sanity_s04(log),
         "runs.json": {"runs": run_rows(study_rows, log, tasks, notes)},
+        "follow_up.json": follow_up(load_results(Path(follow_up_file))[0] if follow_up_file else [], seed=seed),
     }
     for name, payload in files.items():
         _write(out_dir / name, payload)
@@ -857,6 +860,49 @@ def build(
     }
     _write(out_dir / "meta.json", meta)
     return meta
+
+
+def follow_up(rows: list[dict], seed: int = 0) -> dict:
+    """A follow-up experiment on new tasks, summarised on its own: task success, the paired change vs none,
+    and what each verifier did with the wrong first drafts. Empty rows give {"available": False}."""
+    rows = [r for r in rows if r.get("status") != "failed"]
+    if not rows or not any(r.get("condition") == "none" for r in rows):
+        return {"available": False}
+    present = [c for c in CONDITION_ORDER if any(r.get("condition") == c for r in rows)]
+    table = summarize(rows, seed=seed).reset_index().set_index("condition")
+    comps = {c["condition_b"]: c for _, c in compare_conditions(rows, baseline="none", seed=seed).iterrows()}
+    tasks = sorted({r["task_id"] for r in rows})
+    repeats = max(int(r.get("run_number") or 0) for r in rows)
+    wrong_tasks = sorted({r["task_id"] for r in rows if r.get("condition") == "none" and not r.get("initial_correct")})
+    conditions = {}
+    for c in present:
+        mine = [r for r in rows if r.get("condition") == c]
+        m = table.loc[c]
+        wrong = [r for r in mine if not r.get("initial_correct")]
+        right = [r for r in mine if r.get("initial_correct")]
+        entry = {
+            "label": CONDITION_LABELS[c],
+            "task_success": {"value": _stat(m["task_success"]), "ci_low": _stat(m["task_success_ci_low"]),
+                             "ci_high": _stat(m["task_success_ci_high"]),
+                             "right": sum(1 for r in mine if r.get("final_correct")), "n": len(mine)},
+            "mean_cost_usd": _stat(m["mean_cost_usd"]),
+        }
+        if c != "none":
+            comp = comps.get(c)
+            entry["vs_none"] = None if comp is None else {
+                "delta": _stat(comp["delta"]), "ci_low": _stat(comp["delta_ci_low"]), "ci_high": _stat(comp["delta_ci_high"]),
+                "tasks_better": _int(comp["task_b_better"]), "tasks_worse": _int(comp["task_a_better"]),
+                "sign_test_p": _stat(comp["sign_test_p"])}
+            entry["wrong_drafts"] = {"n": len(wrong),
+                                     "flagged": sum(1 for r in wrong if r.get("verdict") in ("reject", "abstain")),
+                                     "fixed": sum(1 for r in wrong if r.get("final_correct"))}
+            entry["false_alarms"] = {"n": len(right),
+                                     "flagged": sum(1 for r in right if r.get("verdict") in ("reject", "abstain"))}
+        conditions[c] = entry
+    return {"available": True, "tasks": tasks, "n_tasks": len(tasks), "repeats": repeats,
+            "wrong_draft_tasks": wrong_tasks, "conditions": conditions,
+            "note": "A follow-up on tasks outside the main study, with the same advisor and settings. "
+                    "It is reported separately and not pooled with the main results."}
 
 
 SCORING_CORRECTED = (

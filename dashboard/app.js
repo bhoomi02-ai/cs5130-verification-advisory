@@ -61,7 +61,7 @@
   // ------------------------------------------------------------------ data
 
   async function loadAll() {
-    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs", "pairs"];
+    const names = ["meta", "summary", "heatmap", "spend", "seeded", "sanity_s04", "runs", "pairs", "follow_up"];
     const files = await Promise.all(names.map(async (n) => {
       const res = await fetch(`data/${n}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error(`data/${n}.json: HTTP ${res.status}`);
@@ -592,6 +592,33 @@
       `<tbody>${rows}</tbody></table></div>`;
   }
 
+  // ------------------------------------------------------------------ 2a. follow-up on new tasks
+
+  function renderFollowUp() {
+    const fu = state.data.follow_up;
+    const box = document.getElementById("followup");
+    if (!fu || !fu.available) { box.hidden = true; return; }
+    box.hidden = false;
+    document.getElementById("followup-sub").textContent =
+      `${fu.n_tasks} tasks outside the main study × ${fu.repeats} runs, same advisor and settings. Reported on its own, not pooled with the results above.`;
+    const order = ORDER.filter((c) => fu.conditions[c]);
+    const rows = order.map((c) => {
+      const d = fu.conditions[c], ts = d.task_success;
+      const vs = d.vs_none ? `${pts(d.vs_none.delta)} <span class="tag-small">(${pts(d.vs_none.ci_low).replace(" pts", "")} to ${pts(d.vs_none.ci_high)}; better on ${d.vs_none.tasks_better}, worse on ${d.vs_none.tasks_worse} tasks)</span>` : "–";
+      const caught = d.wrong_drafts ? `${d.wrong_drafts.flagged} of ${d.wrong_drafts.n} <span class="tag-small">(${d.wrong_drafts.fixed} fixed)</span>` : "–";
+      const fa = d.false_alarms ? `${d.false_alarms.flagged} of ${d.false_alarms.n}` : "–";
+      return `<tr${c === state.data.summary.headline.best ? ' class="best"' : ""}><td>${esc(SHORT[c])}</td>` +
+        `<td class="num">${pct(ts.value)} <span class="tag-small">(${ts.right}/${ts.n})</span></td><td>${c === "none" ? "–" : vs}</td>` +
+        `<td>${caught}</td><td>${fa}</td><td class="num">${usd(d.mean_cost_usd, 3)}</td></tr>`;
+    }).join("");
+    document.getElementById("followup-table").innerHTML =
+      `<thead><tr><th>Setting</th><th class="num">Task success</th><th>vs None</th><th>Wrong drafts flagged</th><th>Right drafts flagged</th><th class="num">Cost per run</th></tr></thead><tbody>${rows}</tbody>`;
+    const n = fu.wrong_draft_tasks.length;
+    document.getElementById("followup-note").textContent =
+      `The wrong first drafts came from ${n} task${n === 1 ? "" : "s"} (${fu.wrong_draft_tasks.join(", ")}), so this shows whether the pattern repeats on new tasks, ` +
+      `not new statistical evidence: with errors on so few tasks a sign test cannot reach significance.`;
+  }
+
   // ------------------------------------------------------------------ 2b. compare two settings
 
   function setupPair() {
@@ -1027,6 +1054,7 @@
     renderPills();
     renderHeatmap();
     renderSanity();
+    renderFollowUp();
     renderSeededTypes();
     setupPair();
     setupRunFilters();

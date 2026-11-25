@@ -415,3 +415,24 @@ def test_regraded_file_exports_the_original_grading_as_a_sensitivity_check(built
     assert detail["graded"]["final_correct"] is True and detail["regraded_from"]["final_correct"] is False
     # the plain file has no originals: no sensitivity block, scoring stays "under review"
     assert built["load"]("summary.json")["sensitivity"] is None and built["meta"]["scoring_mode"] == "under_review"
+
+
+def test_follow_up_is_absent_by_default_and_never_pooled(built, tmp_path):
+    assert built["load"]("follow_up.json") == {"available": False}
+    # A follow-up on new tasks: none gets 1 of 2 right, dedicated fixes the wrong draft.
+    rows = [_row("T02-v001", "none", 1, True, True, "unchecked"), _row("T02-v001", "none", 2, False, False, "unchecked"),
+            _row("T02-v001", "dedicated", 1, True, True, "accepted", "accept"),
+            _row("T02-v001", "dedicated", 2, False, True, "revised", "reject", "accept")]
+    follow = tmp_path / "follow.jsonl"
+    follow.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    out = tmp_path / "out4"
+    ex.build(tmp_path / "results", out, tmp_path / "tasks.txt", REPEATS, injected_dir=tmp_path / "injected",
+             follow_up_file=follow)
+    fu = json.loads((out / "follow_up.json").read_text())
+    assert fu["available"] and fu["tasks"] == ["T02-v001"] and fu["wrong_draft_tasks"] == ["T02-v001"]
+    assert fu["conditions"]["none"]["task_success"]["right"] == 1
+    ded = fu["conditions"]["dedicated"]
+    assert ded["task_success"]["right"] == 2 and ded["wrong_drafts"] == {"n": 1, "flagged": 1, "fixed": 1}
+    assert ded["vs_none"]["delta"] == pytest.approx(0.5)
+    # the main study's numbers are unchanged by the follow-up
+    assert json.loads((out / "summary.json").read_text())["conditions"] == built["load"]("summary.json")["conditions"]
