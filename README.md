@@ -391,8 +391,8 @@ python scripts/analyze.py --results extension/results/results.jsonl --out result
 **Web dashboard** (`dashboard/`, for presenting): a static d3 page with a replay of the runs, the comparisons, the verifier and seeded-error views, cost, and every run. It reads only JSON derived from `results/` and never calls a model. Details in [`dashboard/README.md`](dashboard/README.md).
 
 ```bash
-python dashboard/build_data.py --results-file results/results_regraded.jsonl   # original grading kept as a sensitivity check;
-                                                                                # adds the follow-up if results/extension/ exists
+python dashboard/build_data.py --results-file results/results_regraded.jsonl \
+    --follow-up extension/results/results.jsonl   # original grading kept as a sensitivity check; follow-up shown separately
 python -m http.server 8000 -d dashboard                                         # open http://127.0.0.1:8000
 ```
 
