@@ -1,0 +1,11 @@
+{
+  "task_id": "T04-v002",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T04-v002\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":305888.74456359584},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":246876.40456170662},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":59012.340001889224}],\"selection\":\"Fund A\"},\"violations\":[],\"explanation\":\"Fund A begins with an initial invested amount of $97,000 after deducting the 3% entry fee from $100,000. With an annual net growth factor of (1 + 0.085) * (1 - 0.005) = 1.079575, its final value after 15 years is $305,888.74. Fund B has no entry fee, starting at $100,000 with an annual net growth factor of (1 + 0.075) * (1 - 0.012) = 1.0621, resulting in a 15-year final value of $246,876.40. Fund A is the better-performing option by an absolute difference of $59,012.34.\"}",
+  "run_id": "draft-gemini-3.6-flash-T04-v002-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

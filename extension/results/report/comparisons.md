@@ -1,0 +1,8 @@
+# Paired comparisons vs none
+
+| model | condition_a | condition_b | n_tasks | n_pairs | n_dropped | n_draft_mismatch | success_a | success_b | delta | delta_ci_low | delta_ci_high | a_only_correct | b_only_correct | task_a_better | task_b_better | sign_test_p | sign_test_p_holm | note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| gemini-3.6-flash | none | dedicated | 14 | 42 | 0 | 0 | 0.8571 | 0.9762 | 0.119 | 0 | 0.2857 | 0 | 5 | 0 | 2 | 0.5 | 1 |  |
+| gemini-3.6-flash | none | self | 14 | 42 | 0 | 0 | 0.8571 | 0.8571 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  |
+| gemini-3.6-flash | none | weakened | 14 | 42 | 0 | 0 | 0.8571 | 0.8571 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |  |
+

@@ -1,0 +1,5 @@
+condition,model,task_success,task_success_excl_human_review,human_review_rate,task_success_excl_human_review_ci_low,task_success_excl_human_review_ci_high,kept_correct,fixed,broken,still_wrong,missed,caught_fixed,caught_not_fixed,caught_escalated,catch_fix_rate
+none,gemini-3.6-flash,0.8571428571428571,0.8571428571428571,0.0,0.6428571428571429,1.0,36,0,0,6,,,,,
+dedicated,gemini-3.6-flash,0.9761904761904762,1.0,0.07142857142857142,1.0,1.0,36,5,0,1,0,5,1,0,0.8333333333333334
+self,gemini-3.6-flash,0.8571428571428571,0.9,0.047619047619047616,0.6428571428571429,1.0,36,0,0,6,4,0,2,0,0.0
+weakened,gemini-3.6-flash,0.8571428571428571,0.9230769230769231,0.07142857142857142,0.7692307692307693,1.0,36,0,0,6,3,0,3,0,0.0

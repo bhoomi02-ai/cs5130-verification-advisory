@@ -1,0 +1,11 @@
+{
+  "task_id": "T01-v002",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T01-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"AAPL\",\"quantity_delta\":-20},{\"symbol\":\"TSLA\",\"quantity_delta\":-15},{\"symbol\":\"VOO\",\"quantity_delta\":-10},{\"symbol\":\"BND\",\"quantity_delta\":177}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.55},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3496},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1004}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio can be successfully rebalanced to meet target asset allocations within the 0.5% tolerance while complying with all constraints. Selling 20 shares of AAPL ($4,000), 15 shares of TSLA ($4,500), and 10 shares of VOO ($5,000) reduces total stock allocation to exactly 55.0% ($55,000) without selling any MSFT. Buying 177 shares of BND ($14,160) brings the bond allocation to 34.96% ($34,960), leaving cash at 10.04% ($10,040). No individual stock exceeds 22% of the portfolio.\"}",
+  "run_id": "draft-gemini-3.6-flash-T01-v002-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

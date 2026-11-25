@@ -1,0 +1,158 @@
+{
+  "run_id": "none-gemini-3.6-flash-T03-v004-r1",
+  "task_id": "T03-v004",
+  "condition": "none",
+  "run_number": 1,
+  "draft": "{\"scenario_id\":\"T03-v004\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10800.0},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15200.0},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000.0},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000.0}],\"selection\":null},\"violations\":[{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.152,\"limit\":0.15}],\"explanation\":\"A portfolio audit against the investment policy restrictions reveals one violation: AAPL represents $15,200 of the total $100,000 portfolio, or 15.2%, exceeding the 15% maximum concentration limit for individual stocks. All asset class allocations (Stock: 49.2%, Bond: 40.0%, Cash: 10.8%) and other individual holdings remain within policy limits.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T03-v004\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10800.0},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15200.0},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000.0},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000.0}],\"selection\":null},\"violations\":[{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.152,\"limit\":0.15}],\"explanation\":\"A portfolio audit against the investment policy restrictions reveals one violation: AAPL represents $15,200 of the total $100,000 portfolio, or 15.2%, exceeding the 15% maximum concentration limit for individual stocks. All asset class allocations (Stock: 49.2%, Bond: 40.0%, Cash: 10.8%) and other individual holdings remain within policy limits.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T03-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.492,
+            "BOND": 0.4,
+            "CASH": 0.108
+          },
+          "violation_count": 1
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "VIOLATIONS_FOUND",
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.492,
+            "BOND": 0.4,
+            "CASH": 0.108
+          },
+          "violation_count": 1
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_violations",
+        "check_type": "EXACT_SCOPED_VIOLATIONS",
+        "passed": true,
+        "observed": [
+          {
+            "kind": "INDIVIDUAL_MAX",
+            "scope": "AAPL",
+            "observed": 0.152,
+            "limit": 0.15
+          }
+        ],
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T03-v004_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.492,
+            "BOND": 0.4,
+            "CASH": 0.108
+          },
+          "violation_count": 1
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "VIOLATIONS_FOUND",
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_independent",
+        "check_type": "INDEPENDENT_RESULTS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.492,
+            "BOND": 0.4,
+            "CASH": 0.108
+          },
+          "violation_count": 1
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_violations",
+        "check_type": "EXACT_SCOPED_VIOLATIONS",
+        "passed": true,
+        "observed": [
+          {
+            "kind": "INDIVIDUAL_MAX",
+            "scope": "AAPL",
+            "observed": 0.152,
+            "limit": 0.15
+          }
+        ],
+        "details": {}
+      },
+      {
+        "check_id": "T03-v004_no_trades",
+        "check_type": "EMPTY_TRADES",
+        "passed": true,
+        "observed": [],
+        "details": {}
+      }
+    ],
+    "restriction_results": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v001",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"VOO\",\"quantity_delta\":-20},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":80000},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.5},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.375},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.125},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000}],\"selection\":null},\"violations\":[],\"explanation\":\" To fulfill the $20,000 withdrawal while maintaining the requested post-withdrawal allocations on the remaining $80,000 portfolio (50% Stock = $40,000, 37.5% Bond = $30,000, 12.5% Cash = $10,000), execute the following whole-share trades: sell 50 shares of MSFT ($20,000 proceeds) and 20 shares of VOO ($10,000 proceeds), and buy 125 shares of BND ($10,000 cost). Net trade proceeds generate $20,000 cash, bringing cash to $30,000 prior to withdrawal. After withdrawing $20,000, cash balance remains at $10,000 (12.5%), AAPL ($20,000) and VOO ($20,000) total $40,000 in stocks (50.0%), and BND total is $30,000 (37.5%). AAPL is untouched, complying with the NO_SELL restriction.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v001-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

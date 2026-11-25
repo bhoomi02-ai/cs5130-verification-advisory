@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v001",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[],\"selection\":null},\"violations\":[],\"explanation\":\"The requested rebalancing can be fully achieved by selling 50 shares of MSFT ($20,000) and buying 125 shares of BND ($10,000), leaving $10,000 in cash. After execution, the portfolio consists of $60,000 in stocks (60%), $30,000 in bonds (30%), and $10,000 in cash (10%). All restrictions are satisfied: AAPL is untouched (20% allocation), MSFT concentration is reduced to 10% (below the 25% individual stock limit), direct technology sector exposure (AAPL, MSFT, NVDA) is reduced to exactly $40,000 (40%), and all trades use whole shares of existing holdings without external funding or borrowing.\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v001-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

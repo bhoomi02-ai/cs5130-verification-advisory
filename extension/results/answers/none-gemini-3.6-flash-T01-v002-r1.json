@@ -1,0 +1,288 @@
+{
+  "run_id": "none-gemini-3.6-flash-T01-v002-r1",
+  "task_id": "T01-v002",
+  "condition": "none",
+  "run_number": 1,
+  "draft": "{\"scenario_id\":\"T01-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"TSLA\",\"quantity_delta\":-45},{\"symbol\":\"BND\",\"quantity_delta\":177}],\"metrics\":{\"observations\":[],\"selection\":null},\"violations\":[],\"explanation\":\" selling 45 shares of TSLA generating $13,500 in cash and buying 177 shares of BND for $14,160 brings the portfolio to $55,000 in stocks (55.00%), $34,960 in bonds (34.96%), and $10,040 in cash (10.04%). This satisfies all target allocations within the \u00b10.5% tolerance band while keeping MSFT untouched, respecting the 22% individual stock concentration cap, and utilizing whole-share transactions without borrowing.\"}",
+  "revision": null,
+  "final": "{\"scenario_id\":\"T01-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"TSLA\",\"quantity_delta\":-45},{\"symbol\":\"BND\",\"quantity_delta\":177}],\"metrics\":{\"observations\":[],\"selection\":null},\"violations\":[],\"explanation\":\" selling 45 shares of TSLA generating $13,500 in cash and buying 177 shares of BND for $14,160 brings the portfolio to $55,000 in stocks (55.00%), $34,960 in bonds (34.96%), and $10,040 in cash (10.04%). This satisfies all target allocations within the \u00b10.5% tolerance band while keeping MSFT untouched, respecting the 22% individual stock concentration cap, and utilizing whole-share transactions without borrowing.\"}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T01-v002_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T01-v002_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "final_total": 100000.0,
+          "cash_before_trades": 10700.0,
+          "final_cash": 10040.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3496,
+            "CASH": 0.1004
+          }
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T01-v002_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T01-v002_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "cash_before_trades": 10700.0,
+          "cash_before_withdrawal": null,
+          "final_cash": 10040.0,
+          "final_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3496,
+            "CASH": 0.1004
+          },
+          "final_quantities": {
+            "AAPL": 90.0,
+            "TSLA": 10.0,
+            "MSFT": 45.0,
+            "VOO": 32.0,
+            "BND": 437.0
+          },
+          "final_values": {
+            "AAPL": 18000.0,
+            "TSLA": 3000.0,
+            "MSFT": 18000.0,
+            "VOO": 16000.0,
+            "BND": 34960.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": null
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": -45.0,
+        "limit": -45
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "BND",
+        "passed": true,
+        "observed": 177.0,
+        "limit": 177
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.18,
+        "limit": 0.22
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": 0.03,
+        "limit": 0.22
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.18,
+        "limit": 0.22
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "STOCK",
+        "passed": true,
+        "observed": 0.55,
+        "limit": 0.55
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "BOND",
+        "passed": true,
+        "observed": 0.3496,
+        "limit": 0.35
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0.1004,
+        "limit": 0.1
+      }
+    ]
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T01-v002_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T01-v002_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "final_total": 100000.0,
+          "cash_before_trades": 10700.0,
+          "final_cash": 10040.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3496,
+            "CASH": 0.1004
+          }
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T01-v002_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T01-v002_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 100000.0,
+          "cash_before_trades": 10700.0,
+          "cash_before_withdrawal": null,
+          "final_cash": 10040.0,
+          "final_total": 100000.0,
+          "allocations": {
+            "STOCK": 0.55,
+            "BOND": 0.3496,
+            "CASH": 0.1004
+          },
+          "final_quantities": {
+            "AAPL": 90.0,
+            "TSLA": 10.0,
+            "MSFT": 45.0,
+            "VOO": 32.0,
+            "BND": 437.0
+          },
+          "final_values": {
+            "AAPL": 18000.0,
+            "TSLA": 3000.0,
+            "MSFT": 18000.0,
+            "VOO": 16000.0,
+            "BND": 34960.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": null
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": -45.0,
+        "limit": -45
+      },
+      {
+        "rule": "WHOLE_SHARES",
+        "scope": "BND",
+        "passed": true,
+        "observed": 177.0,
+        "limit": 177
+      },
+      {
+        "rule": "NO_SELL",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.0,
+        "limit": 0
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "AAPL",
+        "passed": true,
+        "observed": 0.18,
+        "limit": 0.22
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "TSLA",
+        "passed": true,
+        "observed": 0.03,
+        "limit": 0.22
+      },
+      {
+        "rule": "MAX_INDIVIDUAL_STOCK",
+        "scope": "MSFT",
+        "passed": true,
+        "observed": 0.18,
+        "limit": 0.22
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "STOCK",
+        "passed": true,
+        "observed": 0.55,
+        "limit": 0.55
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "BOND",
+        "passed": true,
+        "observed": 0.3496,
+        "limit": 0.35
+      },
+      {
+        "rule": "TARGET_ALLOCATION",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0.1004,
+        "limit": 0.1
+      }
+    ]
+  }
+}

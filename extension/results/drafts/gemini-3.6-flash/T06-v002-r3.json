@@ -1,0 +1,11 @@
+{
+  "task_id": "T06-v002",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T06-v002\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":767690.12},{\"subject\":\"PORTFOLIO\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":632309.88},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":1685.518260463959},{\"subject\":\"PORTFOLIO\",\"measure\":\"PAYMENT\",\"stage\":\"FINAL\",\"rounding\":\"UPWARD_CENT\",\"unit\":\"MONEY\",\"value\":1685.52}],\"selection\":null},\"violations\":[],\"explanation\":\"Starting with an initial balance of $120,000 and compounding at a monthly rate of 0.35% (4.2% nominal annual return):\\n1. Initial balance grows over 240 months to $120,000 * (1.0035)^240 = $277,559.94.\\n2. Monthly contributions of $1,200 for months 1-120 grow to $178,578.81 at month 120 and then to $271,592.44 at month 240.\\n3. Monthly contributions of $1,800 for months 121-240 grow to $267,868.21 at month 240.\\n4. The $40,000 withdrawal at month 180 compounds for 60 months to -$49,330.47 at month 240.\\nSumming these yields a projected month-240 portfolio balance of $767,690.12.\\nComparing this against the target of $1,400,000 results in a target shortfall of $632,309.88.\\nDividing the shortfall by the 240-month annuity future value factor ((1.0035^240 - 1) / 0.0035 = 375.142704) requires an exact additional end-of-month contribution of $1,685.51826, which rounds upward to $1,685.52 per month.\"}",
+  "run_id": "draft-gemini-3.6-flash-T06-v002-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

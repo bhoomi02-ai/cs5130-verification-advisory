@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v001",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.6},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1}],\"selection\":null},\"violations\":[],\"explanation\":\" standard portfolio rebalancing is achieved by selling 50 shares of MSFT ($20,000 proceeds) and purchasing 125 shares of BND ($10,000 cost), leaving $10,000 in cash. AAPL is held without selling. The final asset allocation is 60% Stock ($60,000), 30% Bond ($30,000), and 10% Cash ($10,000). Direct technology exposure (AAPL $20,000 + MSFT $10,000 + NVDA $10,000 = $40,000) is exactly 40%, meeting the sector cap, and no individual stock exceeds 25% of total portfolio value.\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v001-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

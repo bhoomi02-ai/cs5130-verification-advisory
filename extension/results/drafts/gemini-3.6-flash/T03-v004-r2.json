@@ -1,0 +1,11 @@
+{
+  "task_id": "T03-v004",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T03-v004\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10800.0},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15200.0},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000.0},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000.0}],\"selection\":null},\"violations\":[{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.152,\"limit\":0.15}],\"explanation\":\"The portfolio audit identified one investment policy violation: AAPL constitutes 15.2% ($15,200) of the total $100,000 portfolio value, exceeding the individual stock concentration limit of 15.0%. All asset class allocations (Stock: 49.2%, Bond: 40.0%, Cash: 10.8%) are within their specified target ranges, and no cryptocurrency is held.\"}",
+  "run_id": "draft-gemini-3.6-flash-T03-v004-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

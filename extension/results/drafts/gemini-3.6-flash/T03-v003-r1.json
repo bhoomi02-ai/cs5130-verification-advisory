@@ -1,0 +1,11 @@
+{
+  "task_id": "T03-v003",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T03-v003\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":38000.0},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":4000.0},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":8000.0},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000.0},{\"subject\":\"BTC\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":5000.0}],\"selection\":null},\"violations\":[{\"kind\":\"CLASS_MIN\",\"scope\":\"STOCK\",\"observed\":0.17,\"limit\":0.2},{\"kind\":\"CLASS_MIN\",\"scope\":\"BOND\",\"observed\":0.4,\"limit\":0.45},{\"kind\":\"CLASS_MAX\",\"scope\":\"CASH\",\"observed\":0.38,\"limit\":0.25},{\"kind\":\"PROHIBITED_CLASS\",\"scope\":\"CRYPTO\",\"observed\":0.05,\"limit\":0.0}],\"explanation\":\"The portfolio audit identified four policy violations across a total portfolio value of $100,000: Stock allocation is 17% (below the 20% minimum), Bond allocation is 40% (below the 45% minimum), Cash is 38% (above the 25% maximum), and Cryptocurrency (BTC) is 5% (prohibited). Individual stock concentrations (AAPL at 4% and MSFT at 8%) are compliant with the 15% limit.\"}",
+  "run_id": "draft-gemini-3.6-flash-T03-v003-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

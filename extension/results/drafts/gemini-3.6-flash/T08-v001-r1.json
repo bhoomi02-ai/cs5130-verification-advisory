@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v001",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"VOO\",\"quantity_delta\":-20},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":80000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.5},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.375},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.125}],\"selection\":null},\"violations\":[],\"explanation\":\"The initial portfolio value is $100,000. After the $20,000 planned withdrawal, the target post-withdrawal portfolio value is $80,000, requiring target balances of $40,000 in stocks (50.0%), $30,000 in bonds (37.5%), and $10,000 in cash (12.5%). AAPL (100 shares at $200 = $20,000) cannot be sold per restriction. Selling 50 shares of MSFT (-$20,000) and 20 shares of VOO (-$10,000) generates $30,000 in cash. Purchasing 125 shares of BND (+$10,000 at $80/share) increases bond holdings to $30,000 (375 total shares). After executing these trades and processing the $20,000 cash withdrawal, remaining cash is exactly $10,000 and all target asset class allocations are precisely satisfied.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v001-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

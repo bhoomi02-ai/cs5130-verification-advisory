@@ -1,0 +1,11 @@
+{
+  "task_id": "T07-v001",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T07-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-37},{\"symbol\":\"BND\",\"quantity_delta\":220}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":2000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":11200.0}],\"selection\":null},\"violations\":[],\"explanation\":\"Depositing $12,000 increases the total portfolio value to $112,000 and cash balance to $14,000. To achieve exact target allocations of 60% stocks ($67,200), 30% bonds ($33,600), and 10% cash ($11,200) while respecting the NO_SELL restriction on AAPL, we sell 37 shares of MSFT (generating $14,800 in cash) and buy 220 shares of BND (costing $17,600). This results in final holdings of 100 AAPL ($22,000), 13 MSFT ($5,200), 80 VOO ($40,000), 420 BND ($33,600), and $11,200 in cash. All whole-share, concentration max (30%), and target allocation requirements are satisfied.\"}",
+  "run_id": "draft-gemini-3.6-flash-T07-v001-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

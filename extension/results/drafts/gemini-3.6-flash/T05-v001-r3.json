@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v001",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-50},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.6},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1}],\"selection\":null},\"violations\":[],\"explanation\":\"To rebalance the $100,000 portfolio to the target allocation of 60% stock ($60,000), 30% bond ($30,000), and 10% cash ($10,000), sell 50 shares of MSFT at $400/share to generate $20,000 in cash, and purchase 125 shares of BND at $80/share for $10,000. This leaves $10,000 (10%) in cash balance. AAPL is held unchanged at 100 shares ($20,000 / 20%), fulfilling the NO_SELL restriction. Total direct technology holdings (AAPL $20,000 + MSFT $10,000 + NVDA $10,000) equal $40,000 (40%), satisfying the MAX_DIRECT_SECTOR constraint. No individual stock exceeds the 25% limit.\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v001-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

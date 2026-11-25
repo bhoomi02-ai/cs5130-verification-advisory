@@ -1,0 +1,11 @@
+{
+  "task_id": "T01-v002",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"T01-v002\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"AAPL\",\n      \"quantity_delta\": -30\n    },\n    {\n      \"symbol\": \"TSLA\",\n      \"quantity_delta\": -25\n    },\n    {\n      \"symbol\": \"BND\",\n      \"quantity_delta\": 177\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 100000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 10700.0\n      },\n      {\n        \"subject\": \"STOCK\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.55\n      },\n      {\n        \"subject\": \"BOND\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.3496\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"ALLOCATION\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"FRACTION\",\n        \"value\": 0.1004\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"The trade plan sells 30 shares of AAPL ($6,000) and 25 shares of TSLA ($7,500), and buys 177 shares of BND ($14,160). This brings the stock allocation to 55.00% ($55,000), bond allocation to 34.96% ($34,960), and cash balance to 10.04% ($10,040), all within the target tolerance range (0.5%). MSFT is untouched per the NO_SELL restriction, whole-share trading is respected, and no individual stock exceeds 22% of portfolio value.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-T01-v002-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

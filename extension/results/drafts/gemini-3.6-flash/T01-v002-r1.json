@@ -1,0 +1,11 @@
+{
+  "task_id": "T01-v002",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T01-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"TSLA\",\"quantity_delta\":-45},{\"symbol\":\"BND\",\"quantity_delta\":177}],\"metrics\":{\"observations\":[],\"selection\":null},\"violations\":[],\"explanation\":\" selling 45 shares of TSLA generating $13,500 in cash and buying 177 shares of BND for $14,160 brings the portfolio to $55,000 in stocks (55.00%), $34,960 in bonds (34.96%), and $10,040 in cash (10.04%). This satisfies all target allocations within the \u00b10.5% tolerance band while keeping MSFT untouched, respecting the 22% individual stock concentration cap, and utilizing whole-share transactions without borrowing.\"}",
+  "run_id": "draft-gemini-3.6-flash-T01-v002-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

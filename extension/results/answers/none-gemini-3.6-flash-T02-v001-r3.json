@@ -1,0 +1,202 @@
+{
+  "run_id": "none-gemini-3.6-flash-T02-v001-r3",
+  "task_id": "T02-v001",
+  "condition": "none",
+  "run_number": 3,
+  "draft": "{\n  \"scenario_id\": \"T02-v001\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": -38\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 98000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 18000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"BEFORE_WITHDRAWAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 37000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 12000.0\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 73000.0\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To complete the $25,000 withdrawal while maintaining the required minimum cash reserve of $12,000, total cash prior to the withdrawal must be at least $37,000. Starting from an initial cash balance of $18,000, $19,000 in additional cash must be raised. Selling 38 shares of VOO at $500 per share raises exactly $19,000. After executing the trade, cash reaches $37,000, leaving exactly $12,000 in cash after the $25,000 withdrawal is executed.\"\n}",
+  "revision": null,
+  "final": "{\n  \"scenario_id\": \"T02-v001\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": -38\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 98000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 18000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"BEFORE_WITHDRAWAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 37000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 12000.0\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 73000.0\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To complete the $25,000 withdrawal while maintaining the required minimum cash reserve of $12,000, total cash prior to the withdrawal must be at least $37,000. Starting from an initial cash balance of $18,000, $19,000 in additional cash must be raised. Selling 38 shares of VOO at $500 per share raises exactly $19,000. After executing the trade, cash reaches $37,000, leaving exactly $12,000 in cash after the $25,000 withdrawal is executed.\"\n}",
+  "verdict": null,
+  "second_verdict": null,
+  "status": "unchecked",
+  "verifier_calls": 0,
+  "reviews": [],
+  "draft_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T02-v001_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T02-v001_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 98000.0,
+          "final_total": 73000.0,
+          "cash_before_withdrawal": 37000.0,
+          "final_cash": 12000.0,
+          "allocations": {
+            "STOCK": 0.5068493150684932,
+            "BOND": 0.3287671232876712,
+            "CASH": 0.1643835616438356
+          },
+          "additional_liquidity_needed": 19000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T02-v001_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T02-v001_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 98000.0,
+          "cash_before_trades": 18000.0,
+          "cash_before_withdrawal": 37000.0,
+          "final_cash": 12000.0,
+          "final_total": 73000.0,
+          "allocations": {
+            "STOCK": 0.5068493150684932,
+            "BOND": 0.3287671232876712,
+            "CASH": 0.1643835616438356
+          },
+          "final_quantities": {
+            "AAPL": 50.0,
+            "MSFT": 40.0,
+            "VOO": 22.0,
+            "BND": 300.0
+          },
+          "final_values": {
+            "AAPL": 10000.0,
+            "MSFT": 16000.0,
+            "VOO": 11000.0,
+            "BND": 24000.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": 19000.0
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "NO_EXTERNAL_DEPOSITS",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_BORROWING",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 0
+      },
+      {
+        "rule": "MIN_CASH",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 12000.0
+      }
+    ]
+  },
+  "final_check": {
+    "correct": true,
+    "format_failure": false,
+    "checks": [
+      {
+        "check_id": "T02-v001_schema",
+        "check_type": "SCHEMA",
+        "passed": true,
+        "observed": null,
+        "details": {}
+      },
+      {
+        "check_id": "T02-v001_required",
+        "check_type": "REQUIRED_METRICS",
+        "passed": true,
+        "observed": {
+          "initial_total": 98000.0,
+          "final_total": 73000.0,
+          "cash_before_withdrawal": 37000.0,
+          "final_cash": 12000.0,
+          "allocations": {
+            "STOCK": 0.5068493150684932,
+            "BOND": 0.3287671232876712,
+            "CASH": 0.1643835616438356
+          },
+          "additional_liquidity_needed": 19000.0
+        },
+        "details": {}
+      },
+      {
+        "check_id": "T02-v001_status",
+        "check_type": "STATUS",
+        "passed": true,
+        "observed": "FEASIBLE",
+        "details": {}
+      },
+      {
+        "check_id": "T02-v001_replay",
+        "check_type": "REPLAY_TRADES",
+        "passed": true,
+        "observed": {
+          "initial_total": 98000.0,
+          "cash_before_trades": 18000.0,
+          "cash_before_withdrawal": 37000.0,
+          "final_cash": 12000.0,
+          "final_total": 73000.0,
+          "allocations": {
+            "STOCK": 0.5068493150684932,
+            "BOND": 0.3287671232876712,
+            "CASH": 0.1643835616438356
+          },
+          "final_quantities": {
+            "AAPL": 50.0,
+            "MSFT": 40.0,
+            "VOO": 22.0,
+            "BND": 300.0
+          },
+          "final_values": {
+            "AAPL": 10000.0,
+            "MSFT": 16000.0,
+            "VOO": 11000.0,
+            "BND": 24000.0
+          },
+          "direct_technology_pct": null,
+          "historical_total": null,
+          "additional_liquidity_needed": 19000.0
+        },
+        "details": {}
+      }
+    ],
+    "restriction_results": [
+      {
+        "rule": "NO_EXTERNAL_DEPOSITS",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 0,
+        "limit": 0
+      },
+      {
+        "rule": "NO_BORROWING",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 0
+      },
+      {
+        "rule": "MIN_CASH",
+        "scope": "CASH",
+        "passed": true,
+        "observed": 12000.0,
+        "limit": 12000.0
+      }
+    ]
+  }
+}

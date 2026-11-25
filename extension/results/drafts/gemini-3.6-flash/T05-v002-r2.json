@@ -1,0 +1,11 @@
+{
+  "task_id": "T05-v002",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T05-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"AAPL\",\"quantity_delta\":-50},{\"symbol\":\"NVDA\",\"quantity_delta\":-60},{\"symbol\":\"BND\",\"quantity_delta\":187}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":3000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10040.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.55},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3496},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1004}],\"selection\":null},\"violations\":[],\"explanation\":\"The portfolio was rebalanced to meet target asset allocations and policy constraints without selling MSFT. Selling 50 shares of AAPL ($10,000) and 60 shares of NVDA ($12,000) generates $22,000 in proceeds. Purchasing 187 shares of BND ($14,960) increases bond exposure to $34,960 (34.96%), while cash increases to $10,040 (10.04%) and stocks settle at $55,000 (55.00%), all within the 0.5% tolerance. Direct technology exposure (AAPL + MSFT + NVDA) is reduced to $34,000 (34.0%), below the 38.0% limit, and no individual stock exceeds 27.0% of portfolio value (MSFT remains highest at 26.0%).\"}",
+  "run_id": "draft-gemini-3.6-flash-T05-v002-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

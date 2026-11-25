@@ -1,0 +1,11 @@
+{
+  "task_id": "T02-v002",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T02-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"AAPL\",\"quantity_delta\":-60},{\"symbol\":\"MSFT\",\"quantity_delta\":-45},{\"symbol\":\"BND\",\"quantity_delta\":-75}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":91000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":9000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_WITHDRAWAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":45000},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000}],\"selection\":null},\"violations\":[],\"explanation\":\"To fulfill the $35,000 withdrawal and maintain the required minimum cash reserve of $10,000, total cash needed prior to withdrawal is $45,000. Starting from $9,000 in cash, an additional $36,000 must be raised through asset sales. Selling 60 shares of AAPL ($12,000), 45 shares of MSFT ($18,000), and 75 shares of BND ($6,000) generates exactly $36,000 in cash while fully preserving the VOO holding as requested. After the $35,000 withdrawal, exactly $10,000 remains in cash.\"}",
+  "run_id": "draft-gemini-3.6-flash-T02-v002-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

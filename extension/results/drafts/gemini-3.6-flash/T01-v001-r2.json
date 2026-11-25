@@ -1,0 +1,11 @@
+{
+  "task_id": "T01-v001",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T01-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"VOO\",\"quantity_delta\":-20},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[],\"selection\":null},\"violations\":[],\"explanation\":\"To rebalance the portfolio to 60% stocks, 30% bonds, and 10% cash while respecting all constraints, sell 20 shares of VOO for $10,000 and buy 125 shares of BND for $10,000. This leaves $60,000 in stocks, $30,000 in bonds, and $10,000 in cash without selling AAPL or violating individual stock concentration limits.\"}",
+  "run_id": "draft-gemini-3.6-flash-T01-v001-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

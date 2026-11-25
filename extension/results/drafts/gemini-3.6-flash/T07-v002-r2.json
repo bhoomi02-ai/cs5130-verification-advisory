@@ -1,0 +1,11 @@
+{
+  "task_id": "T07-v002",
+  "run_number": 2,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T07-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"VOO\",\"quantity_delta\":-31},{\"symbol\":\"BND\",\"quantity_delta\":306}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":102200.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":120200.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":21000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":120200.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":12020.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.5499168053244592},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.35008319467554077},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1}],\"selection\":null},\"violations\":[],\"explanation\":\"After the $18,000 deposit, total portfolio value increases to $120,200 and available cash reaches $21,000. To reach target allocations (55% Stock, 35% Bond, 10% Cash) without selling MSFT and while maintaining whole-share trades: selling 31 shares of VOO generates $15,500 in cash, and buying 306 shares of BND uses $24,480. The post-trade portfolio yields stock allocation of ~54.99%, bond allocation of ~35.01%, and cash allocation of 10.00% ($12,020), all within the 0.5% tolerance band. Neither AAPL (19.22%) nor MSFT (21.63%) exceeds the 27% individual stock maximum.\"}",
+  "run_id": "draft-gemini-3.6-flash-T07-v002-r2",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

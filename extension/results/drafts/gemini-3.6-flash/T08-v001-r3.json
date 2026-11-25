@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v001",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-30},{\"symbol\":\"VOO\",\"quantity_delta\":-36},{\"symbol\":\"BND\",\"quantity_delta\":125}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":80000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.5},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.375},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.125}],\"selection\":null},\"violations\":[],\"explanation\":\"The requested withdrawal of $20,000 reduces the portfolio value from $100,000 to $80,000. To achieve target allocations of 50.0% STOCK ($40,000), 37.5% BOND ($30,000), and 12.5% CASH ($10,000) without selling AAPL, we sell 30 shares of MSFT ($12,000) and 36 shares of VOO ($18,000), generating $30,000 in cash. We then buy 125 shares of BND ($10,000), leaving $20,000 in net generated cash to fund the $20,000 withdrawal while maintaining the required $10,000 cash balance.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v001-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

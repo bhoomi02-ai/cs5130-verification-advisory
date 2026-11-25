@@ -1,0 +1,11 @@
+{
+  "task_id": "T02-v001",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\n  \"scenario_id\": \"T02-v001\",\n  \"answer_type\": \"TRADE_PLAN\",\n  \"status\": \"FEASIBLE\",\n  \"trades\": [\n    {\n      \"symbol\": \"VOO\",\n      \"quantity_delta\": -38\n    }\n  ],\n  \"metrics\": {\n    \"observations\": [\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 98000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"INITIAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 18000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"BEFORE_WITHDRAWAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 37000.0\n      },\n      {\n        \"subject\": \"CASH\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 12000.0\n      },\n      {\n        \"subject\": \"PORTFOLIO\",\n        \"measure\": \"VALUE\",\n        \"stage\": \"FINAL\",\n        \"rounding\": \"NONE\",\n        \"unit\": \"MONEY\",\n        \"value\": 73000.0\n      }\n    ],\n    \"selection\": null\n  },\n  \"violations\": [],\n  \"explanation\": \"To complete the $25,000 withdrawal while maintaining the required minimum cash reserve of $12,000, total cash prior to the withdrawal must be at least $37,000. Starting from an initial cash balance of $18,000, $19,000 in additional cash must be raised. Selling 38 shares of VOO at $500 per share raises exactly $19,000. After executing the trade, cash reaches $37,000, leaving exactly $12,000 in cash after the $25,000 withdrawal is executed.\"\n}",
+  "run_id": "draft-gemini-3.6-flash-T02-v001-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

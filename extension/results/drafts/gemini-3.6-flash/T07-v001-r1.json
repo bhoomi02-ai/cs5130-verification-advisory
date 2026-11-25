@@ -1,0 +1,11 @@
+{
+  "task_id": "T07-v001",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T07-v001\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"MSFT\",\"quantity_delta\":-37},{\"symbol\":\"BND\",\"quantity_delta\":220}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"BEFORE_TRADES\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":112000.0},{\"subject\":\"STOCK\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.6},{\"subject\":\"BOND\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.3},{\"subject\":\"CASH\",\"measure\":\"ALLOCATION\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"FRACTION\",\"value\":0.1}],\"selection\":null},\"violations\":[],\"explanation\":\"The $12,000 deposit brings total portfolio value to $112,000 and cash balance to $14,000. Target allocations are $67,200 (60%) in stocks, $33,600 (30%) in bonds, and $11,200 (10%) in cash. To reach the bond target, buy 220 shares of BND at $80/share ($17,600). To reach the stock target without selling AAPL, sell 37 shares of MSFT at $400/share ($14,800). After these trades, the final cash balance is exactly $11,200 (10%), stock value is $67,200 (60%), bond value is $33,600 (30%), and all individual stock concentrations remain well under the 30% limit.\"}",
+  "run_id": "draft-gemini-3.6-flash-T07-v001-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

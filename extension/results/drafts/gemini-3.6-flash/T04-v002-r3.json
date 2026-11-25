@@ -1,0 +1,11 @@
+{
+  "task_id": "T04-v002",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T04-v002\",\"answer_type\":\"NUMERIC_RESULT\",\"status\":\"FEASIBLE\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"Fund A\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":305889.02934189996},{\"subject\":\"Fund B\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":246877.9659357591},{\"subject\":\"OPTIONS\",\"measure\":\"DIFFERENCE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":59011.06340614086}],\"selection\":\"Fund A\"},\"violations\":[],\"explanation\":\"Fund A starts with an initial investment of $97,000 after deducting the 3% entry fee ($100,000 * 0.97). Its net annual growth factor is (1 + 0.085) * (1 - 0.005) = 1.079575. After 15 years, Fund A grows to $97,000 * (1.079575)^15 \u2248 $305,889.03. Fund B has no entry fee, starting at $100,000, with a net annual growth factor of (1 + 0.075) * (1 - 0.012) = 1.0621. After 15 years, Fund B grows to $100,000 * (1.0621)^15 \u2248 $246,877.97. Fund A outperforms Fund B by an absolute difference of approximately $59,011.06.\"}",
+  "run_id": "draft-gemini-3.6-flash-T04-v002-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "T03-v004",
+  "run_number": 3,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T03-v004\",\"answer_type\":\"VIOLATION_LIST\",\"status\":\"VIOLATIONS_FOUND\",\"trades\":[],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100000.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10800.0},{\"subject\":\"AAPL\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":15200.0},{\"subject\":\"MSFT\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":14000.0},{\"subject\":\"VOO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":20000.0},{\"subject\":\"BND\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":40000.0}],\"selection\":null},\"violations\":[{\"kind\":\"INDIVIDUAL_MAX\",\"scope\":\"AAPL\",\"observed\":0.152,\"limit\":0.15}],\"explanation\":\"The total portfolio value is $100,000. Asset class allocations are: Stock at 49.2% ($49,200, within 20%-50%), Bond at 40.0% ($40,000, within 35%-65%), Cash at 10.8% ($10,800, within 5%-25%), and Crypto at 0.0% (prohibited). However, AAPL accounts for $15,200 or 15.2% of the portfolio, exceeding the 15.0% maximum individual stock limit.\"}",
+  "run_id": "draft-gemini-3.6-flash-T03-v004-r3",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}

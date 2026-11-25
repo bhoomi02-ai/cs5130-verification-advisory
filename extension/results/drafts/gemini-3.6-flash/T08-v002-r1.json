@@ -1,0 +1,11 @@
+{
+  "task_id": "T08-v002",
+  "run_number": 1,
+  "model": "gemini-3.6-flash",
+  "text": "{\"scenario_id\":\"T08-v002\",\"answer_type\":\"TRADE_PLAN\",\"status\":\"FEASIBLE\",\"trades\":[{\"symbol\":\"AAPL\",\"quantity_delta\":-71},{\"symbol\":\"VOO\",\"quantity_delta\":-45},{\"symbol\":\"BND\",\"quantity_delta\":85}],\"metrics\":{\"observations\":[{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":100900.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"INITIAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":9000.0},{\"subject\":\"PORTFOLIO\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":72900.0},{\"subject\":\"CASH\",\"measure\":\"VALUE\",\"stage\":\"FINAL\",\"rounding\":\"NONE\",\"unit\":\"MONEY\",\"value\":10900.0}],\"selection\":null},\"violations\":[],\"explanation\":\"The initial portfolio value of $100,900 is reduced to $72,900 following the requested $28,000 withdrawal. To rebalance the remaining portfolio to target allocations of 45.0% stock, 40.0% bond, and 15.0% cash (within the \u00b10.5% tolerance) while complying with whole-share trading, no borrowing, keeping minimum cash above $10,000, and preserving all MSFT shares: sell 71 shares of AAPL (-$14,200), sell 45 shares of VOO (-$22,500), and purchase 85 shares of BND (+$6,800). The resulting final portfolio has $32,800 in stocks (44.99%), $29,200 in bonds (40.05%), and $10,900 in cash (14.95%), meeting all target allocations and restrictions.\"}",
+  "run_id": "draft-gemini-3.6-flash-T08-v002-r1",
+  "prompt_version": "advisor-v1",
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "thinking_level": null
+}
