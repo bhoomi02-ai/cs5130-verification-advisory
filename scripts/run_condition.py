@@ -2,7 +2,7 @@
 
 Real API calls: start small, the free tier has a daily limit. Example:
 
-    python scripts/run_condition.py --condition none --model gemini-3.1-flash-lite --tasks S01 --repeats 1
+    python scripts/run_condition.py --condition none --model gemini-3.6-flash --tasks S01 --repeats 1
 
 Runs already in results/results.jsonl are skipped, so after hitting the daily
 limit you can run the same command again the next day and it continues. A
@@ -34,10 +34,10 @@ MAX_FAILED_IN_A_ROW = 3
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--condition", required=True, choices=sorted(CONDITIONS))
-    parser.add_argument("--model", required=True, help="exact model name, e.g. gemini-3.1-flash-lite")
+    parser.add_argument("--model", required=True, help="exact model name, e.g. gemini-3.6-flash")
     parser.add_argument("--tasks", nargs="+", help="scenario IDs (default: every file in data/scenarios)")
     parser.add_argument("--tasks-file", help="file with one task ID per line (# starts a comment), e.g. data/study_tasks.txt")
-    parser.add_argument("--repeats", type=int, default=1, help="runs per scenario (the study uses 5)")
+    parser.add_argument("--repeats", type=int, default=1, help="runs per scenario (the study uses 3, with --tasks-file data/study_tasks.txt)")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--top-p", type=float, default=0.9)
     parser.add_argument("--thinking-level", choices=["minimal", "low", "medium", "high"])

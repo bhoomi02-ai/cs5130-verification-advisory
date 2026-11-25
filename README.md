@@ -37,11 +37,23 @@
 - **The goal:** find out which kind of check makes the advisor most reliable, and what each one costs in tokens and time.
 
 > [!NOTE]
-> **Status: in progress (November 17).**
-> - **Merged:** scenarios S01–S10 and the first variant (T03-v001); the checker and seeded error set; the model wrapper (`llm.py`: logging, retries, pricing, $20 spending cap, Groq provider, finish reasons); the calculator; every prompt and verifier (self, peer, dedicated with the calculator, weakened, cross-family); the pipeline with the `none` condition; the model pilot and its write-up (`docs/pilot.md`); metrics, the results report and the spending report.
-> - **Done:** the `none` baseline (gemini-3.6-flash, S01–S10 × 5): **84% (42/50)**, no format failures, $0.90.
-> - **In review:** `self` and `peer` in the pipeline (#33).
-> - **Next:** wire the dedicated, weakened and cross-family verifiers into the pipeline, more scenario variants, then the main runs.
+> **Status: all runs finished (November 23).** 32 tasks × 3 runs × 6 conditions (576 runs, 1 failed) plus 155 seeded reviews, for **$12.22** of the $20 cap. Results are graded with the S06 scoring fix (#63); the original grading is kept as a sensitivity check.
+
+**Results** (task success = share of final answers the checker grades right; change vs `none` with a 95% bootstrap interval over tasks):
+
+| Condition | Task success | Change vs `none` | Advisor's real errors caught | Correct drafts flagged |
+|---|---|---|---|---|
+| `none` | 88.5% | – | – | – |
+| `self` | 88.5% | 0 (−3.1 to +3.1) | 6 of 11 | 2 of 85 |
+| `peer` | 88.5% | 0 (−3.1 to +3.1) | 6 of 11 | 1 of 85 |
+| **`dedicated`** (calculator) | **100%** | **+11.5 pts (+4.2 to +20.8)** | **11 of 11** | 2 of 84 |
+| `weakened` (no calculator) | 87.5% | −1.0 (−3.2 to 0) | 5 of 11 | 1 of 85 |
+| `cross_family` (gpt-oss-20b) | 90.5% | +1.0 (−4.2 to +6.3) | 6 of 9 | 14 of 85 |
+
+- Only the dedicated verifier with a calculator helped: it caught every real error, and removing the calculator (`weakened`) erased the gain. Sign test for `dedicated` vs `none`: p = 0.031, **0.156 after Holm adjustment** over the five comparisons with `none`.
+- Under the original grading `dedicated` is 97.9% (+9.4 pts, +3.1 to +17.7); the fix changed only two of its runs.
+- Every verifier caught 94–100% of the 17 seeded errors, which were easier than the advisor's own compounding-arithmetic slips.
+- Full tables: `results/report_regraded/` on the `study-results` branch; interactive view: [`dashboard/`](dashboard/README.md).
 
 ## Research question
 
@@ -102,7 +114,7 @@ Self, peer and dedicated use the **same review instructions, verdict format and 
 
 <sub>**Static version for the report:** the same flow with all six conditions, the review outcomes and the seeded error set. `docs/study_design.png` is a 2400×1520 render for slides and the PDF.</sub>
 
-1. **Scenario.** Each task is a scenario file in `data/scenarios/` with a hidden answer key in `data/evaluation/`. The ten templates and the first variant are built by hand; a seeded generator is planned (`generator.py` is still a stub).
+1. **Scenario.** Each task is a scenario file in `data/scenarios/` with a hidden answer key in `data/evaluation/`. The ten templates, T03-v001 and the six T09/T10 variants are built by hand; the other variants come from the scenario toolkit (`data/scripts/scenario_toolkit.py`, driven by `variant_specs.json`). The study uses the 32 tasks in `data/study_tasks.txt`.
 2. **Draft once.** The advisor answers with the shared `advisor-v1` prompt, following the scenario's `NEUTRAL_OUTPUT_V1` contract. The draft is **saved once per task and repeat (`results/drafts/`), then reused in every condition**.
 3. **Verify.** The selected condition checks the draft (or doesn't) and produces the final answer: accepted, revised once, or sent to human review.
 4. **Grade.** `checker.py` replays the trades at the quoted prices and tests every constraint against the hidden answer key. It grades **both the first draft and the final answer**, which is how fixed answers are told apart from broken ones. Any valid solution passes, not just one fixed answer.
@@ -110,7 +122,7 @@ Self, peer and dedicated use the **same review instructions, verdict format and 
 
 ## Scenarios
 
-The study starts from **10 scenario templates (S01–S10): 4 medium, 4 hard and 2 infeasible**, and grows by adding variants of them (IDs like `T03-v001`, the first variant of S03). How many tasks the main runs use is set by the budget: about 30 tasks fit the $20 cap with room for reruns. Each scenario gives the advisor a natural client request plus separate structured data: the client profile, investment policy, portfolio holdings, asset prices, cash flows and restrictions. Everything is synthetic, and no real client data is used.
+The study starts from **10 scenario templates (S01–S10): 4 medium, 4 hard and 2 infeasible**, and grows by adding variants of them (IDs like `T03-v001`, the first variant of S03). The main study uses **32 tasks** (`data/study_tasks.txt`): S01–S10 and 22 variants, chosen to fit the $20 cap. Each scenario gives the advisor a natural client request plus separate structured data: the client profile, investment policy, portfolio holdings, asset prices, cash flows and restrictions. Everything is synthetic, and no real client data is used.
 
 | Answer type | What the advisor must return |
 |---|---|
@@ -207,11 +219,11 @@ Verifier metrics use runs that have a verdict, and an abstain counts as a flag, 
 
 **Study settings**
 
-- **Repeats:** every scenario runs 5 times per condition, at temperature 0.7 so repeats can differ.
-- **Statistics:** the bootstrap resamples tasks, not runs, and conditions are compared in pairs on the same tasks.
+- **Repeats:** every task runs 3 times per condition (32 tasks × 3), at temperature 0.7 so repeats can differ. The proposal planned about 40 × 5; the budget and Groq's free-tier limits set the final size.
+- **Statistics:** the bootstrap resamples tasks, not runs, and conditions are compared in pairs on the same tasks, with a sign test over tasks, raw and Holm-adjusted over the five comparisons with `none`.
 - **Settings:** temperature 0.7, top-p 0.9, the model's default thinking level. Results made with other settings or prompt versions are refused, so runs can't be mixed by accident.
 - **Budget:** **$20** for the whole project. `llm.py` refuses a paid call that could take total logged spend past `ADVISORY_BUDGET_USD` (default 20) before it is sent. That spend is summed from the local, gitignored `results/runs.jsonl`, so **the cap is enforced per machine**. The rule: **all paid study runs go through one machine and key (Bhoomika's); everyone else uses their own free keys for testing.** The paid key also has prepaid Google credit with auto-reload off, a hard limit on Google's side. `python scripts/spend.py` shows spend so far.
-- **Projected cost:** about **$10 for 20 tasks, $14 for 30 and $19 for 40** (6 settings × 5 repeats). This is an estimate from calls logged on Nov 13–17: a first draft costs $0.018 (the 50 baseline runs and 30 pilot runs), a gemini-3.6-flash verifier call $0.0076 (8 live verifier checks), a gpt-oss-20b call $0.001 (6 live checks). It assumes a quarter of first verdicts are rejects that trigger a revision. To be updated once real self and peer runs exist.
+- **Actual cost:** **$12.22** for the whole project, at list prices (Groq's gpt-oss-20b calls are priced at $0.075 / $0.30 per 1M tokens even though they ran on Groq's free tier). Mean cost per run ranged from $0.019 (`none`) to $0.049 (`dedicated`); `dedicated` cost about $0.26 per extra correct answer.
 - **Something to catch:** a model that never makes mistakes leaves verification nothing to do, and one that breaks the output format fails before the math matters. The advisor model was chosen with a pilot so that it is right most but not all of the time, and answers with **known injected errors** (`data/injected/`) are added so every verifier faces real mistakes.
 
 ## Models
@@ -229,9 +241,9 @@ Every model call goes through `advisory.llm.call_model`. Gemini and Gemma use th
 
 - **Model pilot:** `gemini-3.6-flash` was right on **83% (25/30)** of pilot runs (S01–S10 × 3, `none`, prompt `advisor-v1`), with every answer valid JSON. Its errors were arithmetic slips on S04, S06 and S07. That's just above the 50–80% target; the injected-error set makes sure every verifier still faces errors. Details: [`docs/pilot.md`](docs/pilot.md).
 - **Why not the proposal's models:** Gemini 2.5 Flash and Flash-Lite now return *"no longer available to new users"*, so the candidates moved to the Gemini 3.x family.
-- **Why gpt-oss for cross-family:** Gemma is also built by Google and may share Gemini's blind spots; gpt-oss-20b comes from another company and was a candidate in the proposal. Groq's limits on our account are 8,000 tokens a minute and 200,000 a day ([rate limits](https://console.groq.com/docs/rate-limits), checked Nov 17), about 15–25 verifier reviews a day, so the cross-family runs take several days.
+- **Why gpt-oss for cross-family:** Gemma is also built by Google and may share Gemini's blind spots; gpt-oss-20b comes from another company and was a candidate in the proposal. Groq's limits on our account are 8,000 tokens a minute and 200,000 a day ([rate limits](https://console.groq.com/docs/rate-limits), checked Nov 17), about 15–25 verifier reviews a day, so the cross-family runs took Nov 19–23.
 - **Cost is never undercounted:** `llm.py` refuses any model without a `PRICING` entry, and logs a deliberately high estimate when a provider reports no output tokens for a reply that has text (#36).
-- **Baseline:** `none` on S01–S10 × 5 was right on **84% (42/50)** (95% bootstrap interval over tasks 60–100%), with no format failures and no failed calls, for $0.90. All 8 errors are on S04 and S06, so the advisor gives the verifiers only two distinct real errors; the seeded error set supplies the rest.
+- **Baseline:** in the main study `none` was right on **88.5% (85/96)**. The 11 wrong first drafts came from six tasks (S04, S06, T06-v003, T06-v004, T04-v003, T08-v004), mostly compounding-arithmetic slips; the seeded error set supplies other error types. (The earlier pilot baseline, S01–S10 × 5, was 84%.)
 - **Free tier:** gemini-3.6-flash allows 20 requests a day per model there; the main runs need the paid tier.
 
 ## Architecture, tools and flow
@@ -275,27 +287,37 @@ src/advisory/
   conditions.py   the conditions and the CONDITIONS registry
   pipeline.py     runs one condition on one task, grades it, saves a results row
   checker.py      deterministic constraint checker (hidden from agents)
+  regrade.py      re-grades saved answers with the current checker (scripts/regrade_results.py)
   evaluation/     reference answers for the checker's tests (scorer only)
   inject.py       builds the seeded error set
   seeded.py       verifier reviews of the seeded error set
+  right_reason.py did a seeded review name the actual error?
   metrics.py      per-condition metrics: task success, verifier, fixed vs broken, cost
   report.py       summary tables, per-scenario tables and a chart from the results
   spend.py        spending totals from the run log (used by scripts/spend.py)
+  study_check.py  read-only completeness check of the study data
+  dashboard_data.py    data for the Streamlit dashboard
+  dashboard_export.py  JSON for the web dashboard (dashboard/build_data.py)
   pilot.py        model pilot: picks the advisor model
-  generator.py    scenario generator (planned)
+  generator.py    unused stub; variants come from data/scripts/scenario_toolkit.py
   schemas.py      early Pydantic answer models (the live contract is NEUTRAL_OUTPUT_V1)
 scripts/
   run_pilot.py      model pilot (resumable after the daily quota)
   spend.py          spending so far, by model, condition and day
   run_condition.py  run one condition over a set of tasks (resumable)
   run_seeded.py     one condition's verifier reviews the seeded answers (resumable)
-  analyze.py        build the report from results/results.jsonl
+  check_study_data.py  every task × condition × run present once, same drafts and settings
+  regrade_results.py   re-grade saved answers into results/results_regraded.jsonl
+  analyze.py        build the report from a results file
   dashboard.py      Streamlit dashboard of the results (pip install -e ".[dashboard]")
+dashboard/        static web dashboard (d3): build_data.py, index.html, replay, clip export
 tests/            pytest suite
-data/scenarios/   scenario files (S01.json … S10.json, T03-v001.json), given to agents
+data/scenarios/   scenario files (S01–S10 and their variants), given to agents
+data/study_tasks.txt  the 32 tasks of the main study
+data/scripts/     scenario toolkit that generated and validated the variants
 data/evaluation/  checks, ground truth and metric mapping (scorer only, never given to agents)
 data/injected/    answers with known injected errors, plus correct controls
-results/          runs.jsonl (every model call), results.jsonl (one row per run), drafts/, answers/, seeded/, pilot/, report/
+results/          runs.jsonl (every model call), results.jsonl (one row per run), results_regraded.jsonl, drafts/, answers/, seeded/, report*/ (gitignored on main; backed up on study-results)
 docs/             proposal.pdf, topic_selection.pdf, CS5130_progress_report.pdf, pilot write-up, study_design.svg/.png (report diagram)
 assets/           README images and animations
 pyproject.toml    package metadata and dependencies (pip install -e ".[dev]")
@@ -329,12 +351,16 @@ Requires **Python 3.10 or newer**. Typical commands:
 python scripts/run_pilot.py --dry-run                     # show the pilot plan, no calls
 python scripts/spend.py                                   # spend so far against the cap
 
-# Makes PAID calls (about $0.90 for this command): run only on the paid-run machine.
+# Makes PAID calls: run only on the paid-run machine. This is one condition of the main study.
 python scripts/run_condition.py --condition none --model gemini-3.6-flash \
-    --tasks S01 S02 S03 S04 S05 S06 S07 S08 S09 S10 --repeats 5
+    --tasks-file data/study_tasks.txt --repeats 3
 
-# After at least one condition run (it reads results/results.jsonl):
-python scripts/analyze.py                                 # tables and chart in results/report/
+# Reproduce the reported numbers from the saved results (no model calls):
+git fetch origin study-results && git archive origin/study-results results | tar -x
+python scripts/check_study_data.py                        # completeness check
+python scripts/regrade_results.py                         # results/results_regraded.jsonl (S06 fix)
+python scripts/analyze.py --results results/results_regraded.jsonl --out results/report_regraded
+python scripts/analyze.py --results results/results.jsonl --out results/report_original  # sensitivity check
 ```
 
 ## Report outputs
@@ -359,7 +385,14 @@ python scripts/analyze.py                                 # tables and chart in 
 | `cost_vs_success.png` | Mean cost per run vs task success |
 | `right_reason.png` | Stacked right-reason decisions on flagged seeded errors (when seeded present) |
 
-**Dashboard.** An interactive view of the same numbers, for exploring results and for demos. It only reads `results/`; it never calls a model.
+**Web dashboard** (`dashboard/`, for presenting): a static d3 page with a replay of the runs, the comparisons, the verifier and seeded-error views, cost, and every run. It reads only JSON derived from `results/` and never calls a model. Details in [`dashboard/README.md`](dashboard/README.md).
+
+```bash
+python dashboard/build_data.py --results-file results/results_regraded.jsonl   # original grading kept as a sensitivity check
+python -m http.server 8000 -d dashboard                                         # open http://127.0.0.1:8000
+```
+
+**Streamlit dashboard** (for exploring): an interactive view of the same numbers. It only reads `results/`; it never calls a model.
 
 ```bash
 pip install -e ".[dashboard]"
@@ -424,7 +457,7 @@ All images live in `assets/` as self-contained SVG files. They animate on their 
 |---|---|
 | **Advisor** | The AI agent that drafts the answer to a client request |
 | **Verifier** | The agent that checks a draft: the advisor itself (`self`), a second advisor (`peer`) or a separate verifier with a calculator (`dedicated`) |
-| **Condition** | One way of verifying an answer; the study compares four |
+| **Condition** | One way of verifying an answer; the study compares four, plus two ablations |
 | **Ablation** | A variant of the dedicated verifier with one setting changed, to see which part matters |
 | **Scenario** | One synthetic client task with a known correct answer |
 | **First draft** | The advisor's first answer, saved once and reused across conditions |
