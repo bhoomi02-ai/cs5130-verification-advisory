@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated_at": "2026-11-23T17:43:35+00:00",
+ "generated_at": "2026-11-25T02:11:00+00:00",
  "study": {
   "question": "Which verification strategy makes multi-agent financial advisory systems more reliable?",
   "advisor_model": "gemini-3.6-flash",
@@ -109,13 +109,42 @@
   "cross_family"
  ],
  "grading": {
-  "file": "results.jsonl",
-  "regraded": false,
-  "changed_runs": []
+  "file": "results_regraded.jsonl",
+  "regraded": true,
+  "changed_runs": [
+   {
+    "run_id": "dedicated-gemini-3.6-flash-T06-v003-r2",
+    "task_id": "T06-v003",
+    "condition": "dedicated",
+    "run_number": 2,
+    "before": {
+     "initial_correct": false,
+     "final_correct": false
+    },
+    "after": {
+     "initial_correct": false,
+     "final_correct": true
+    }
+   },
+   {
+    "run_id": "dedicated-gemini-3.6-flash-T06-v003-r3",
+    "task_id": "T06-v003",
+    "condition": "dedicated",
+    "run_number": 3,
+    "before": {
+     "initial_correct": false,
+     "final_correct": false
+    },
+    "after": {
+     "initial_correct": false,
+     "final_correct": true
+    }
+   }
+  ]
  },
- "scoring_mode": "under_review",
+ "scoring_mode": "corrected",
  "scoring_notes": {
-  "T06-v003": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong."
+  "T06-v003": "Scoring corrected: the S06-family tasks ask only for the payment rounded upward to cents, so the checker no longer also requires the unrounded payment (same rule for every setting). Under the original rule Dedicated run 2 and Dedicated run 3 were graded wrong; the original grading is reported as a sensitivity check."
  },
  "rejected_rows": 0,
  "files": [

@@ -784,7 +784,7 @@
      "failed": 0
     },
     "dedicated": {
-     "right": 7,
+     "right": 9,
      "n": 9,
      "failed": 0
     },
@@ -838,7 +838,7 @@
     },
     {
      "task_id": "T06-v003",
-     "note": "Scoring under review: the checker also requires the unrounded payment, which the client did not ask for; two dedicated revisions report the requested values but are graded wrong.",
+     "note": "Scoring corrected: the S06-family tasks ask only for the payment rounded upward to cents, so the checker no longer also requires the unrounded payment (same rule for every setting). Under the original rule Dedicated run 2 and Dedicated run 3 were graded wrong; the original grading is reported as a sensitivity check.",
      "cells": {
       "none": {
        "right": 0,
@@ -856,7 +856,7 @@
        "failed": 0
       },
       "dedicated": {
-       "right": 1,
+       "right": 3,
        "n": 3,
        "failed": 0
       },

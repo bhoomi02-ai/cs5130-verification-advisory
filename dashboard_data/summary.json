@@ -1,6 +1,6 @@
 {
  "headline": {
-  "text": "With no check the advisor is right 88.5% of the time. A dedicated verifier with a calculator raises that to 97.9%, +9.4 points (95% CI +3.1 to +17.7).",
+  "text": "With no check the advisor is right 88.5% of the time. A dedicated verifier with a calculator raises that to 100.0%, +11.5 points (95% CI +4.2 to +20.8).",
   "best": "dedicated",
   "data_set": "32 tasks × 3 runs"
  },
@@ -206,17 +206,17 @@
    "n_runs": 96,
    "n_tasks": 32,
    "task_success": {
-    "value": 0.9791666666666666,
-    "ci_low": 0.9375,
+    "value": 1.0,
+    "ci_low": 1.0,
     "ci_high": 1.0,
-    "right": 94,
+    "right": 96,
     "n": 96
    },
    "task_success_excl_human_review": {
-    "value": 0.9789473684210527,
-    "ci_low": 0.9375,
+    "value": 1.0,
+    "ci_low": 1.0,
     "ci_high": 1.0,
-    "right": 93,
+    "right": 95,
     "n": 95
    },
    "first_draft_success": {
@@ -236,9 +236,9 @@
    },
    "outcomes": {
     "kept_correct": 85,
-    "fixed": 9,
+    "fixed": 11,
     "broken": 0,
-    "still_wrong": 2
+    "still_wrong": 0
    },
    "cost": {
     "mean_cost_usd": 0.04892725781250001,
@@ -246,7 +246,7 @@
     "mean_tokens_in": 14290.875,
     "mean_tokens_out": 10189.09375,
     "median_latency_s": 31.33198902150434,
-    "extra_cost_per_extra_correct": 0.31987116666666676,
+    "extra_cost_per_extra_correct": 0.2617127727272727,
     "includes_shared_draft": true
    },
    "n_failed": 0,
@@ -265,8 +265,8 @@
     "missing_verdicts": 1,
     "wrong_draft_fates": {
      "missed": 0,
-     "caught_fixed": 9,
-     "caught_not_fixed": 2,
+     "caught_fixed": 11,
+     "caught_not_fixed": 0,
      "caught_escalated": 0
     },
     "mean_verifier_calls": 2.7395833333333335
@@ -459,11 +459,11 @@
    "n_tasks": 32,
    "n_pairs": 96,
    "success_none": 0.8854166666666666,
-   "success": 0.9791666666666667,
-   "delta": 0.09375,
-   "ci_low": 0.03125,
-   "ci_high": 0.17708333333333334,
-   "runs_only_condition_right": 9,
+   "success": 1.0,
+   "delta": 0.11458333333333334,
+   "ci_low": 0.04166666666666667,
+   "ci_high": 0.20833333333333334,
+   "runs_only_condition_right": 11,
    "runs_only_none_right": 0,
    "tasks_better": 6,
    "tasks_worse": 0,
@@ -510,5 +510,143 @@
   }
  ],
  "interval_note": "Intervals are 95% bootstrap intervals over the 32 tasks; with 32 tasks and 3 runs each they are wide, so small differences are not conclusive.",
- "sensitivity": null
+ "sensitivity": {
+  "label": "Original grading (before the S06 scoring fix)",
+  "conditions": {
+   "none": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.7916666666666666,
+    "ci_high": 0.9583333333333333,
+    "right": 85,
+    "n": 96
+   },
+   "self": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.78125,
+    "ci_high": 0.96875,
+    "right": 85,
+    "n": 96
+   },
+   "peer": {
+    "value": 0.8854166666666666,
+    "ci_low": 0.78125,
+    "ci_high": 0.96875,
+    "right": 85,
+    "n": 96
+   },
+   "dedicated": {
+    "value": 0.9791666666666666,
+    "ci_low": 0.9375,
+    "ci_high": 1.0,
+    "right": 94,
+    "n": 96
+   },
+   "weakened": {
+    "value": 0.875,
+    "ci_low": 0.7708333333333333,
+    "ci_high": 0.9583333333333333,
+    "right": 84,
+    "n": 96
+   },
+   "cross_family": {
+    "value": 0.9052631578947369,
+    "ci_low": 0.8125,
+    "ci_high": 0.96875,
+    "right": 86,
+    "n": 95
+   }
+  },
+  "comparisons": [
+   {
+    "condition": "self",
+    "n_tasks": 32,
+    "n_pairs": 96,
+    "success_none": 0.8854166666666666,
+    "success": 0.8854166666666666,
+    "delta": 0.0,
+    "ci_low": -0.03125,
+    "ci_high": 0.03125,
+    "runs_only_condition_right": 1,
+    "runs_only_none_right": 1,
+    "tasks_better": 1,
+    "tasks_worse": 1,
+    "sign_test_p": 1.0,
+    "sign_test_p_holm": 1.0,
+    "n_comparisons": 5,
+    "note": ""
+   },
+   {
+    "condition": "peer",
+    "n_tasks": 32,
+    "n_pairs": 96,
+    "success_none": 0.8854166666666666,
+    "success": 0.8854166666666666,
+    "delta": 0.0,
+    "ci_low": -0.03125,
+    "ci_high": 0.03125,
+    "runs_only_condition_right": 1,
+    "runs_only_none_right": 1,
+    "tasks_better": 1,
+    "tasks_worse": 1,
+    "sign_test_p": 1.0,
+    "sign_test_p_holm": 1.0,
+    "n_comparisons": 5,
+    "note": ""
+   },
+   {
+    "condition": "dedicated",
+    "n_tasks": 32,
+    "n_pairs": 96,
+    "success_none": 0.8854166666666666,
+    "success": 0.9791666666666667,
+    "delta": 0.09375,
+    "ci_low": 0.03125,
+    "ci_high": 0.17708333333333334,
+    "runs_only_condition_right": 9,
+    "runs_only_none_right": 0,
+    "tasks_better": 6,
+    "tasks_worse": 0,
+    "sign_test_p": 0.03125,
+    "sign_test_p_holm": 0.15625,
+    "n_comparisons": 5,
+    "note": ""
+   },
+   {
+    "condition": "weakened",
+    "n_tasks": 32,
+    "n_pairs": 96,
+    "success_none": 0.8854166666666666,
+    "success": 0.875,
+    "delta": -0.010416666666666666,
+    "ci_low": -0.03151041666666665,
+    "ci_high": 0.0,
+    "runs_only_condition_right": 0,
+    "runs_only_none_right": 1,
+    "tasks_better": 0,
+    "tasks_worse": 1,
+    "sign_test_p": 1.0,
+    "sign_test_p_holm": 1.0,
+    "n_comparisons": 5,
+    "note": ""
+   },
+   {
+    "condition": "cross_family",
+    "n_tasks": 32,
+    "n_pairs": 95,
+    "success_none": 0.8854166666666666,
+    "success": 0.8958333333333334,
+    "delta": 0.010416666666666668,
+    "ci_low": -0.04166666666666667,
+    "ci_high": 0.06250000000000001,
+    "runs_only_condition_right": 3,
+    "runs_only_none_right": 2,
+    "tasks_better": 2,
+    "tasks_worse": 2,
+    "sign_test_p": 1.0,
+    "sign_test_p_holm": 1.0,
+    "n_comparisons": 5,
+    "note": ""
+   }
+  ]
+ }
 }
