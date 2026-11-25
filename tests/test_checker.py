@@ -13,6 +13,11 @@ import pytest
 
 from advisory.checker import check, strip_outer_fence
 from advisory.evaluation.reference import reference_response
+from tests.s06_helpers import (
+    S06_FAMILY,
+    S06_OPTIONAL_GROUND_TRUTH_KEYS,
+    s06_family_rounded_only,
+)
 
 _ROOT = Path(__file__).resolve().parents[1]
 _GROUND_TRUTH = json.loads((_ROOT / "data" / "evaluation" / "ground_truth.json").read_text())
@@ -412,7 +417,16 @@ def _result_response(scenario_id):
 
 def _assert_independent_matches_ground_truth(result, ground_truth):
     expected = _of_type(result, "INDEPENDENT_RESULTS")["observed"]
+    # S06-family ground_truth still records the unrounded payment, but that key is
+    # no longer required/graded — skip only that optional key for those tasks.
+    optional = (
+        S06_OPTIONAL_GROUND_TRUTH_KEYS
+        if ground_truth["scenario_id"] in S06_FAMILY
+        else frozenset()
+    )
     for key, recorded in ground_truth["metrics"].items():
+        if key in optional:
+            continue
         assert key in expected, key
         if key == "allocations":
             for name, fraction in recorded.items():
@@ -1180,3 +1194,52 @@ def test_empty_fence_is_a_format_failure():
     result = check("S01", "```json\n```")
     assert result["format_failure"] is True
     assert result["correct"] is False
+
+
+@pytest.mark.parametrize("scenario_id", S06_FAMILY)
+def test_s06_family_rounded_payment_alone_passes(scenario_id):
+    result = check(scenario_id, s06_family_rounded_only(scenario_id))
+    assert result["format_failure"] is False
+    assert result["correct"] is True
+    required = _of_type(result, "REQUIRED_METRICS")
+    assert required["passed"] is True
+    assert "additional_monthly_contribution" not in (required["observed"] or {})
+    assert "additional_monthly_contribution_cents" in required["observed"]
+
+
+@pytest.mark.parametrize("scenario_id", S06_FAMILY)
+def test_s06_family_wrong_rounded_payment_still_fails(scenario_id):
+    result = check(scenario_id, s06_family_rounded_only(scenario_id, wrong_cents=True))
+    assert result["format_failure"] is False
+    assert result["correct"] is False
+    independent = _of_type(result, "INDEPENDENT_RESULTS")
+    assert independent["passed"] is False
+    assert independent["details"]["reason"] == "value_mismatch"
+
+
+def test_non_s06_reference_grades_unchanged_vs_stored_expectation():
+    """Every non-S06 reference answer stays correct after the S06-family change."""
+    for scenario_id in _evaluated_scenario_ids():
+        if scenario_id in S06_FAMILY:
+            continue
+        result = check(scenario_id, reference_response(scenario_id))
+        assert result["format_failure"] is False, scenario_id
+        assert result["correct"] is True, scenario_id
+
+
+def test_seeded_s06_answers_still_grade_as_labelled():
+    injected = _ROOT / "data" / "injected"
+    for name, expect_correct in (
+        ("S06_none_reference.json", True),
+        ("S06_arithmetic_payment_over_months.json", False),
+        ("S06_grounding_omit_withdrawal.json", False),
+    ):
+        entry = json.loads((injected / name).read_text(encoding="utf-8"))
+        result = check(entry["scenario_id"], entry["response"])
+        assert result["format_failure"] is False, name
+        assert result["correct"] is expect_correct, name
+        if "expected_correct" in entry:
+            assert entry["expected_correct"] is expect_correct
+        else:
+            # Seeded errors use error_type != "none"; controls use "none".
+            assert (entry.get("error_type") == "none") is expect_correct

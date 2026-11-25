@@ -204,7 +204,6 @@
         "initial_total",
         "final_balance",
         "target_shortfall",
-        "additional_monthly_contribution",
         "additional_monthly_contribution_cents"
       ],
       "metric_routes": {
@@ -1153,7 +1152,6 @@
         "initial_total",
         "final_balance",
         "target_shortfall",
-        "additional_monthly_contribution",
         "additional_monthly_contribution_cents"
       ],
       "metric_routes": {
@@ -1185,7 +1183,6 @@
         "initial_total",
         "final_balance",
         "target_shortfall",
-        "additional_monthly_contribution",
         "additional_monthly_contribution_cents"
       ],
       "metric_routes": {
@@ -1217,7 +1214,6 @@
         "initial_total",
         "final_balance",
         "target_shortfall",
-        "additional_monthly_contribution",
         "additional_monthly_contribution_cents"
       ],
       "metric_routes": {
@@ -1249,7 +1245,6 @@
         "initial_total",
         "final_balance",
         "target_shortfall",
-        "additional_monthly_contribution",
         "additional_monthly_contribution_cents"
       ],
       "metric_routes": {

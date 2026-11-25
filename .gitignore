@@ -25,6 +25,7 @@ results/results.jsonl
 results/drafts/
 results/answers/
 results/seeded/
+results/results_regraded.jsonl
 
 # Web dashboard data: derived from results/, regenerate with python dashboard/build_data.py
 dashboard/data/
