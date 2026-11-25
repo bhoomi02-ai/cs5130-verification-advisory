@@ -24,6 +24,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--results-file", type=Path, default=None,
                         help="results JSONL to show (default: <results>/results.jsonl); e.g. results/results_regraded.jsonl "
                              "from scripts/regrade_results.py, whose original grades become the sensitivity check")
+    parser.add_argument("--follow-up", type=Path, default=None,
+                        help="results JSONL of the follow-up experiment on new tasks (default: "
+                             "<results>/extension/results.jsonl if it exists); shown separately, never pooled")
     parser.add_argument("--tasks-file", type=Path, default=STUDY_TASKS_PATH)
     parser.add_argument("--repeats", type=int, default=STUDY_REPEATS)
     args = parser.parse_args(argv)
@@ -31,11 +34,15 @@ def main(argv: list[str] | None = None) -> int:
     if not results_file.exists():
         print(f"No {results_file.name} in {results_file.parent}", file=sys.stderr)
         return 1
-    meta = build(args.results, args.out, args.tasks_file, args.repeats, results_file=results_file)
+    follow = args.follow_up or args.results / "extension" / "results.jsonl"
+    follow = follow if follow.exists() else None
+    meta = build(args.results, args.out, args.tasks_file, args.repeats, results_file=results_file, follow_up_file=follow)
     done = ", ".join(f"{c['id']} {c['runs_done']}/{c['runs_expected']}" for c in meta["conditions"])
     print(f"Wrote {len(meta['files']) - 1} files and {meta['run_details']} run details to {args.out}")
     print(f"Runs: {done}")
     print(f"Complete: {', '.join(meta['complete_conditions']) or 'none'}")
+    if follow:
+        print(f"Follow-up experiment: {follow}")
     if meta["grading"]["regraded"]:
         print(f"Re-graded file: {len(meta['grading']['changed_runs'])} run(s) changed grade; original grading exported as a sensitivity check")
     return 0

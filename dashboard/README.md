@@ -121,3 +121,10 @@ The replay's "Final accuracy" counts every replayed run, human-review runs inclu
 
 - `tests/test_dashboard_export.py`: the data script, from a tiny fixture with planted answer-key values and account identifiers.
 - `tests/test_dashboard_browser.py`: builds the data from the real `results/`, serves the page and drives headless Chrome. It checks that the replay mounts for every finished setting with no JavaScript errors, that unfinished settings show `pending (n/N)`, that reduced motion shows the finished state, and that opening run details never brings an `expected` key into the page (neither in the fetched JSON nor in the DOM). It is skipped without Chrome, the `websockets` package or `results/` (set `DASHBOARD_TEST_RESULTS` to point it at another results folder).
+
+## Follow-up experiment
+
+If `results/extension/results.jsonl` exists (the follow-up on 14 new tasks, from `extension/` on the
+`study-results` branch), `build_data.py` writes `follow_up.json` and the page shows a "Follow-up on new tasks"
+card under "Settings compared". It is summarised on its own and never pooled with the main study. Pass
+`--follow-up path/to/results.jsonl` to use another file; without one the card is hidden.
